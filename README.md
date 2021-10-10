@@ -1,18 +1,10 @@
-# BaldiBot.NET
- BaldiBot rewritten for the third time, but in C#. Code is messy right now since I began the project yesterday.
+# SammBot.NET
+SammBot rewritten for the fourth time, but in C#.
  
- <h1>Packages & Nuget</h1>
- Visual Studio should already detect the packages you need and install them, but if it doesn't, here are the packages needed:
- 
- * Pastel
- * Figgle
- * Discord.NET
- * Microsoft.Extensions.DependencyInjection
- * Microsoft.Extensions.Configuration
- * Microsoft.EntityFrameworkCore.Design
- * dotnet-ef (dotnet tool install --global dotnet-ef)
+# Packages & Nuget
+Visual Studio should already detect the packages you need and install them.
 
-<h1>Building Databases</h1>
+# Building Databases
 Grab the command line, and type in this command:
 
 ```
