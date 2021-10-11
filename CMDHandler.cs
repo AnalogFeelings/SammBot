@@ -21,7 +21,6 @@ namespace SammBotNET
         //Jesus christ this is the ugliest solution i've ever made for custom commands.
         private string CommandName;
         private readonly PhrasesDB PhrasesDatabase;
-        private readonly BlacklistedUsersDB BlacklistDatabase;
         private readonly CommandDB CommandDatabase;
 
         public CMDHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services, Logger logger)
@@ -35,7 +34,6 @@ namespace SammBotNET
 
             PhrasesDatabase = services.GetRequiredService<PhrasesDB>();
             CommandDatabase = services.GetRequiredService<CommandDB>();
-            BlacklistDatabase = services.GetRequiredService<BlacklistedUsersDB>();
         }
 
         public async Task OnCommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
@@ -91,9 +89,9 @@ namespace SammBotNET
                 try
                 {
                     if (message.Content.Length < 15) return;
+                    if (message.Attachments.Count > 0 && message.Content.Length == 0) return;
 
                     List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-                    if (message.Attachments.Count > 0 && message.Content.Length == 0) return;
 
                     foreach (Phrase phrase in phrases)
                     {

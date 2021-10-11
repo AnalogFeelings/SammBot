@@ -72,7 +72,6 @@ namespace SammBotNET
             .AddSingleton<FlagService>()
             .AddDbContext<PhrasesDB>()
             .AddDbContext<CommandDB>()
-            .AddDbContext<BlacklistedUsersDB>()
             .AddDbContext<PeoneImagesDB>()
             .AddDbContext<EmotionalSupportDB>();
         }

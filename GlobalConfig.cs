@@ -64,18 +64,14 @@ namespace SammBotNET
 
     public class JsonConfig
     {
-        [DefaultValue("Samm-Bot")]
-        public string BotName { get; set; }
-        [DefaultValue("v0.1")]
-        public string BotVersion { get; set; }
-        [DefaultValue("s.")]
-        public string BotPrefix { get; set; }
-        [DefaultValue(true)]
-        public bool RotatingStatus { get; set; }
-        [DefaultValue("")]
-        public string BotToken { get; set; }
-        [DefaultValue("https://www.twitch.tv/vanebrain")]
-        public string TwitchUrl { get; set; }
+        public string BotName { get; set; } = "Samm-Bot";
+        public string BotVersion { get; set; } = "v0.1";
+        public string BotPrefix { get; set; } = "s.";
+        public bool RotatingStatus { get; set; } = true;
+        public string BotToken { get; set; } = "";
+        public string TwitchUrl { get; set; } = "https://www.twitch.tv/vanebrain";
+        public ulong AestheticalUid { get; set; } = 337950448130719754;
+        public ulong NeveahUid { get; set; } = 850874605434175500;
     }
 
     public class BotStatus

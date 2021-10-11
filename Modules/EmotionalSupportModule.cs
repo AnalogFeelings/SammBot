@@ -24,7 +24,8 @@ namespace SammBotNET.Modules
         [Summary("I love you, Neveah <3")]
         public async Task RandomSupportAsync()
         {
-            if (Context.Message.Author.Id != 850874605434175500 && Context.Message.Author.Id != 337950448130719754) return;
+            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.NeveahUid &&
+                Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid) return;
 
             List<EmotionalSupport> emotionalSupports = await SupportDatabase.EmotionalSupport.ToListAsync();
             EmotionalSupport finalEmotionalSupport = emotionalSupports.PickRandom();
@@ -36,7 +37,7 @@ namespace SammBotNET.Modules
         [Summary("Edits a support message!")]
         public async Task EditSupportAsync(int supportId, [Remainder] string supportMessage)
         {
-            if (Context.Message.Author.Id != 337950448130719754) return;
+            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid) return;
 
             List<EmotionalSupport> supportObjects = await SupportDatabase.EmotionalSupport.ToListAsync();
             EmotionalSupport supportObject = supportObjects.FirstOrDefault(x => x.SupportId == supportId);
@@ -59,7 +60,7 @@ namespace SammBotNET.Modules
         [Summary("Lists all of the support messages!")]
         public async Task ListSupportAsync()
         {
-            if (Context.Message.Author.Id != 337950448130719754) return;
+            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid) return;
 
             List<EmotionalSupport> supportObjects = await SupportDatabase.EmotionalSupport.ToListAsync();
 
@@ -79,7 +80,7 @@ namespace SammBotNET.Modules
         [Summary("Adds a cute little support message!")]
         public async Task AddSupportAsync(string supportMessage)
         {
-            if (Context.Message.Author.Id != 337950448130719754) return;
+            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid) return;
 
             if (supportMessage == string.Empty)
             {
