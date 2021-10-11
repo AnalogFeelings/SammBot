@@ -17,10 +17,14 @@ namespace SammBotNET.Migrations.EmotionalSupportDBMigrations
 
             modelBuilder.Entity("SammBotNET.Database.EmotionalSupport", b =>
                 {
+                    b.Property<int>("SupportId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("SupportMessage")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("SupportMessage");
+                    b.HasKey("SupportId");
 
                     b.ToTable("EmotionalSupport");
                 });

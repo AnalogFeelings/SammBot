@@ -10,11 +10,13 @@ namespace SammBotNET.Migrations.EmotionalSupportDBMigrations
                 name: "EmotionalSupport",
                 columns: table => new
                 {
-                    SupportMessage = table.Column<string>(type: "TEXT", nullable: false)
+                    SupportId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    SupportMessage = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmotionalSupport", x => x.SupportMessage);
+                    table.PrimaryKey("PK_EmotionalSupport", x => x.SupportId);
                 });
         }
 

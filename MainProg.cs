@@ -20,6 +20,7 @@ namespace SammBotNET
 
         public async Task MainAsync()
         {
+            Console.Title = "Samm-Bot";
             Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));
             SocketClient = new DiscordSocketClient();
 
@@ -37,7 +38,7 @@ namespace SammBotNET
             provider.GetRequiredService<InteractiveService>();
             provider.GetRequiredService<MathService>();
             provider.GetRequiredService<RandomService>();
-            provider.GetRequiredService<EmotionalSupportService>();
+            provider.GetRequiredService<FlagService>();
 
             Console.WriteLine("Starting Startup Service...".Pastel("#3d9785"));
             await provider.GetRequiredService<StartupService>().StartAsync();
@@ -68,7 +69,7 @@ namespace SammBotNET
             .AddSingleton<InteractiveService>()
             .AddSingleton<MathService>()
             .AddSingleton<RandomService>()
-            .AddSingleton<EmotionalSupportService>()
+            .AddSingleton<FlagService>()
             .AddDbContext<PhrasesDB>()
             .AddDbContext<CommandDB>()
             .AddDbContext<BlacklistedUsersDB>()

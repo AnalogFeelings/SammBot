@@ -28,7 +28,8 @@ namespace SammBotNET.Modules
                 {
                     Color = Color.DarkPurple,
                     Title = "SAMM-BOT HELP",
-                    Description = "These are all the commands available.\n Syntax: s.<module (sometimes)> <cmdname>"
+                    Description = $"These are all the commands available." +
+                    $"\n Syntax: {GlobalConfig.Instance.LoadedConfig.BotPrefix}<module (sometimes)> <cmdname>"
                 };
 
                 foreach (ModuleInfo module in CommandService.Modules)
@@ -38,7 +39,7 @@ namespace SammBotNET.Modules
                     {
                         var result = await cmd.CheckPreconditionsAsync(Context);
                         if (result.IsSuccess)
-                            description += $"s.{cmd.Aliases[0]}\n";
+                            description += $"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.Aliases[0]}\n";
                     }
 
                     if (!string.IsNullOrWhiteSpace(description))

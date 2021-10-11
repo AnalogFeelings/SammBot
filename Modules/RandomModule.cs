@@ -3,6 +3,7 @@ using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
+using SammBotNET.Extensions;
 using SammBotNET.Services;
 using SharpCat.Types.Cat;
 using SharpCat.Types.Dog;
@@ -120,7 +121,7 @@ namespace SammBotNET.Modules
         public async Task GetSCPAsync()
         {
             int maxSCP = 5999;
-            int result = RandomModuleService.random.Next(maxSCP + 1);
+            int result = GlobalConfig.Instance.GlobalRng.Next(maxSCP + 1);
             EmbedBuilder embed = new EmbedBuilder
             {
                 Color = Color.DarkPurple,

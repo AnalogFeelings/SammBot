@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,8 +14,9 @@ namespace SammBotNET
 
         public string ConfigFile = "config.json";
         public string StatusFile = "status.xml";
+        public Random GlobalRng = new Random(Guid.NewGuid().GetHashCode());
 
-        public JsonConfig LoadedConfig;
+        public JsonConfig LoadedConfig = new JsonConfig();
         public List<BotStatus> StatusList = new List<BotStatus>();
 
         public bool LoadConfiguration()
@@ -44,6 +46,7 @@ namespace SammBotNET
                 string unconvertedType = element.GetAttribute("type");
                 int statusType = int.Parse(unconvertedType);
 
+                StatusList.Add(new BotStatus(status, statusType));
                 Debug.WriteLine($"Loaded status with content \"{status}\", type {statusType}");
             }
             return true;
@@ -72,7 +75,7 @@ namespace SammBotNET
         [DefaultValue("")]
         public string BotToken { get; set; }
         [DefaultValue("https://www.twitch.tv/vanebrain")]
-        public string TwitchUrl {  get; set; }
+        public string TwitchUrl { get; set; }
     }
 
     public class BotStatus

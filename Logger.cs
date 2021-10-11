@@ -5,6 +5,7 @@ using Pastel;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Color = System.Drawing.Color;
 
 namespace SammBotNET
 {
@@ -15,23 +16,20 @@ namespace SammBotNET
             client.Log += LogAsync;
             command.Log += LogAsync;
         }
+
         public Task LogAsync(LogMessage message)
         {
+            string time = DateTime.Now.ToString("dd/MM/yy HH:mm:ss");
             if (message.Exception is CommandException cmdException)
             {
-                string time = DateTime.Now.ToString("dd:MM::yy HH:mm:ss");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(string.Format("{0} Exception --> ", time));
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine(string.Format("in {0}, at channel {1}. Exception: {2}",
-                    cmdException.Command.Aliases.First(), cmdException.Context.Channel, cmdException));
-                Console.ResetColor();
+                string formattedException = string.Format("in {0}, at channel {1}.\n{2}",
+                    cmdException.Command.Aliases.First(), cmdException.Context.Channel, cmdException);
+
+                Console.WriteLine($"{time} EXCEPTION >> ".Pastel(Color.Red) + formattedException.Pastel(Color.Yellow));
             }
             else
             {
-                string time = DateTime.Now.ToString("dd/MM/yy HH:mm:ss");
-                Console.Write(string.Format("{0} --> ", time).Pastel(System.Drawing.Color.LavenderBlush));
-                Console.WriteLine(message.Message.Pastel(System.Drawing.Color.LimeGreen));
+                Console.WriteLine($"{time} >> ".Pastel(Color.LavenderBlush) + message.Message.Pastel(Color.LimeGreen));
             }
 
             return Task.CompletedTask;
@@ -40,8 +38,7 @@ namespace SammBotNET
         public void Log(string msg)
         {
             string time = DateTime.Now.ToString("dd/MM/yy HH:mm:ss");
-            Console.Write(string.Format("{0} --> ", time).Pastel(System.Drawing.Color.Lavender));
-            Console.WriteLine(msg);
+            Console.WriteLine($"{time} >> ".Pastel(Color.LavenderBlush) + msg);
         }
     }
 }

@@ -77,9 +77,9 @@ namespace SammBotNET.Modules
             }
 
             #region Validity Checks
-            if (Name.Length > 20)
+            if (Name.Length > 15)
             {
-                await ReplyAsync("Please make the command name shorter than 20 characters!");
+                await ReplyAsync("Please make the command name shorter than 15 characters!");
                 return;
             }
             else if (Name.StartsWith(GlobalConfig.Instance.LoadedConfig.BotPrefix))

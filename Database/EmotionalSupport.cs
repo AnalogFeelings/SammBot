@@ -4,6 +4,7 @@ namespace SammBotNET.Database
 {
     public partial class EmotionalSupport
     {
-        [Key] public string SupportMessage { get; set; }
+        [Key] public int SupportId {  get; set; }
+        public string SupportMessage { get; set; }
     }
 }

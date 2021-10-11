@@ -2,8 +2,10 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Figgle;
+using Newtonsoft.Json;
 using Pastel;
 using System;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +21,7 @@ namespace SammBotNET.Services
         public readonly Logger BotLogger;
 
         public Timer StatusTimer;
-        public Random Rand = new Random();
+        public Timer RngResetTimer;
 
         private bool UseRotatingStatus = true;
 
@@ -38,11 +40,20 @@ namespace SammBotNET.Services
             {
                 StatusTimer = new Timer(async _ =>
                 {
-                    BotStatus status = GlobalConfig.Instance.StatusList[Rand.Next(GlobalConfig.Instance.StatusList.Count)];
+                    BotStatus status = GlobalConfig.Instance.StatusList[GlobalConfig.Instance.GlobalRng.Next(GlobalConfig.Instance.StatusList.Count)];
+
                     await SocketClient.SetGameAsync(status.Content,
                         status.Type == 1 ? GlobalConfig.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)status.Type);
-                }, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(25));
+                }, null, TimeSpan.Zero, TimeSpan.FromSeconds(25));
             }
+
+            RngResetTimer = new Timer(_ =>
+            {
+                int hash = Guid.NewGuid().GetHashCode();
+                
+                GlobalConfig.Instance.GlobalRng = new Random(hash);
+                BotLogger.Log($"Regenerated RNG instance with hash {hash}.".Pastel(Color.LimeGreen));
+            }, null, TimeSpan.FromMinutes(25), TimeSpan.FromMinutes(25));
 
             return Task.CompletedTask;
         }
@@ -50,9 +61,11 @@ namespace SammBotNET.Services
         public async Task StartAsync()
         {
             Console.WriteLine($"Loading {GlobalConfig.Instance.ConfigFile}...".Pastel("#3d9785"));
-            if(!GlobalConfig.Instance.LoadConfiguration())
+            if (!GlobalConfig.Instance.LoadConfiguration())
             {
                 Console.WriteLine($"FATAL! Could not load {GlobalConfig.Instance.ConfigFile} correctly!".Pastel(Color.Red));
+                File.WriteAllText(GlobalConfig.Instance.ConfigFile,
+                    JsonConvert.SerializeObject(GlobalConfig.Instance.LoadedConfig, Formatting.Indented));
                 Environment.Exit(1);
             }
 
