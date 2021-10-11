@@ -24,11 +24,11 @@ namespace SammBotNET
                 string formattedException = string.Format("in {0}, at channel {1}.\n{2}",
                     cmdException.Command.Aliases[0], cmdException.Context.Channel, cmdException);
 
-                Console.WriteLine($"{time} EXCEPTION >> ".Pastel(Color.Red) + formattedException.Pastel(Color.Yellow));
+                Console.WriteLine($"{time} EXCEPTION >> ".Pastel(Color.LavenderBlush) + formattedException.Pastel(Color.Yellow));
             }
             else
             {
-                Console.WriteLine($"{time} >> ".Pastel(Color.LavenderBlush) + message.Message.Pastel(Color.LimeGreen));
+                Console.WriteLine($"{time} >> ".Pastel(Color.LavenderBlush) + message.Message.Pastel(Color.CadetBlue));
             }
 
             return Task.CompletedTask;

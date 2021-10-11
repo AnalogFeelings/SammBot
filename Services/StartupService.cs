@@ -52,7 +52,7 @@ namespace SammBotNET.Services
                 int hash = Guid.NewGuid().GetHashCode();
 
                 GlobalConfig.Instance.GlobalRng = new Random(hash);
-                BotLogger.Log($"Regenerated RNG instance with hash {hash}.".Pastel(Color.LimeGreen));
+                BotLogger.Log($"Regenerated RNG instance with hash {hash}.".Pastel(Color.CadetBlue));
             }, null, TimeSpan.FromMinutes(25), TimeSpan.FromMinutes(25));
 
             return Task.CompletedTask;
@@ -90,6 +90,7 @@ namespace SammBotNET.Services
             await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
             Console.Write(FiggleFonts.Slant.Render(GlobalConfig.Instance.LoadedConfig.BotName).Pastel("#77b6a9"));
             Console.WriteLine($"----------Source code {GlobalConfig.Instance.LoadedConfig.BotVersion}, Discord.NET 2.4.0----------".Pastel(Color.CornflowerBlue));
+            Console.WriteLine();
         }
     }
 }

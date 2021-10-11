@@ -77,17 +77,10 @@ namespace SammBotNET
             int argPos = 0;
             if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos) && !message.Author.IsBot)
             {
-                if (BlacklistDatabase.BlacklistedUser.Any(x => x.userID == message.Author.Id))
-                {
-                    BlacklistedUser user = BlacklistDatabase.BlacklistedUser.SingleOrDefault(wew => wew.userID == message.Author.Id);
-                    if (user.banType == "total")
-                    {
-                        await context.Channel.SendMessageAsync($"<@{message.Author.Id}>, you are blacklisted from using my commands!");
-                        return;
-                    }
-                }
                 CommandName = message.Content.Remove(0, GlobalConfig.Instance.LoadedConfig.BotPrefix.Length);
-                BotLogger.Log($"Executing command \"{message.Content.Pastel("#bde0ff")}\". Channel: {message.Channel.Name.Pastel("#bde0ff")}. User: {message.Author.Username.Pastel("#bde0ff")}.".Pastel("#64daed"));
+                CommandName = CommandName.Split()[0];
+
+                BotLogger.Log($"Executing command \"{message.Content.Pastel("#bde0ff")}\". Channel: {message.Channel.Name.Pastel("#bde0ff")}. User: {message.Author.Username.Pastel("#bde0ff")}.".Pastel(Color.Blue));
                 await CommandsService.ExecuteAsync(
                     context: context,
                     argPos: argPos,
@@ -97,8 +90,6 @@ namespace SammBotNET
             {
                 try
                 {
-                    if (BlacklistDatabase.BlacklistedUser.Any(x => x.userID == message.Author.Id)) return;
-
                     if (message.Content.Length < 15) return;
 
                     List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
