@@ -29,7 +29,7 @@ namespace SammBotNET.Modules
         [Command("cat")]
         [Alias(new string[] { "kit", "kitto", "cogga" })]
         [Summary("Returns a random cat!")]
-        public async Task GetCatAsync()
+        public async Task<RuntimeResult> GetCatAsync()
         {
             CatSearchParams searchParams = new()
             {
@@ -56,12 +56,14 @@ namespace SammBotNET.Modules
             embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
         }
 
         [Command("dog")]
         [Alias(new string[] { "doggo", "dogger" })]
         [Summary("Returns a random cat!")]
-        public async Task GetDogAsync()
+        public async Task<RuntimeResult> GetDogAsync()
         {
             DogSearchParams searchParams = new()
             {
@@ -88,11 +90,13 @@ namespace SammBotNET.Modules
             embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
         }
 
         [Command("peone")]
         [Summary("Returns a random image of Peone.")]
-        public async Task GetPeoneAsync()
+        public async Task<RuntimeResult> GetPeoneAsync()
         {
             List<PeoneImage> peoneImages = await PeoneDatabase.PeoneImage.ToListAsync();
             PeoneImage selectedPeoneImage = peoneImages.PickRandom();
@@ -114,11 +118,13 @@ namespace SammBotNET.Modules
             embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
         }
 
         [Command("scp")]
         [Summary("Returns a random SCP!")]
-        public async Task GetSCPAsync()
+        public async Task<RuntimeResult> GetSCPAsync()
         {
             int maxSCP = 5999;
             int result = GlobalConfig.Instance.GlobalRng.Next(maxSCP + 1);
@@ -135,6 +141,8 @@ namespace SammBotNET.Modules
             embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using SammBotNET.Extensions;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace SammBotNET.Modules
     {
         [Command("full", RunMode = RunMode.Async)]
         [Summary("Shows the FULL information of the bot.")]
-        public async Task InformationFullAsync()
+        public async Task<RuntimeResult> InformationFullAsync()
         {
             EmbedBuilder embed = new()
             {
@@ -34,12 +35,14 @@ namespace SammBotNET.Modules
             embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
         }
 
         [Command("servers", RunMode = RunMode.Async)]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Shows a list of all the servers the bot is in.")]
-        public async Task ServersAsync()
+        public async Task<RuntimeResult> ServersAsync()
         {
             string builtMsg = "I am invited in the following servers:\n```md\n";
             string inside = string.Empty;
@@ -53,6 +56,8 @@ namespace SammBotNET.Modules
             inside += "```";
             builtMsg += inside;
             await ReplyAsync(builtMsg);
+
+            return ExecutionResult.Succesful();
         }
 
         public string FriendlyOSName()

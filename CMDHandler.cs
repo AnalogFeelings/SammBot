@@ -55,8 +55,11 @@ namespace SammBotNET
                         }
                         await context.Channel.SendMessageAsync("Unknown command! Use the s.help command.");
                     }
-                    else await context.Channel.SendMessageAsync("**__Woops! There has been an error!__**\n"
+                    if(result.ErrorReason != "Execution succesful.")
+                    {
+                        await context.Channel.SendMessageAsync("**__Woops! There has been an error!__**\n"
                                                                 + result.ErrorReason);
+                    }
                 }
             }
             catch (Exception ex)
@@ -78,7 +81,11 @@ namespace SammBotNET
                 CommandName = message.Content.Remove(0, GlobalConfig.Instance.LoadedConfig.BotPrefix.Length);
                 CommandName = CommandName.Split()[0];
 
-                BotLogger.Log($"Executing command \"{message.Content.Pastel("#bde0ff")}\". Channel: {message.Channel.Name.Pastel("#bde0ff")}. User: {message.Author.Username.Pastel("#bde0ff")}.".Pastel(Color.Blue));
+                BotLogger.Log($"Executing command \"{message.Content.Pastel("#bde0ff")}\". ".Pastel(Color.Blue) +
+                    $"Channel: {("#" + message.Channel.Name).Pastel("#bde0ff")}. ".Pastel(Color.Blue) +
+                    $"Guild: {(message.Channel as SocketGuildChannel).Guild.Name.Pastel("#bde0ff")}. ".Pastel(Color.Blue) +
+                    $"User: {message.Author.Username.Pastel("#bde0ff")}.".Pastel(Color.Blue));
+
                 await CommandsService.ExecuteAsync(
                     context: context,
                     argPos: argPos,

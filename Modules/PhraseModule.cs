@@ -25,13 +25,11 @@ namespace SammBotNET.Modules
 
         [Command("random", RunMode = RunMode.Async)]
         [Summary("Sends a random quote from a user in the server!")]
-        public async Task RandomAsync()
+        public async Task<RuntimeResult> RandomAsync()
         {
             if (PhrasesService.IsDisabled)
-            {
-                await ReplyAsync($"The module \"{this.GetType().Name}\" is disabled.");
-                return;
-            }
+                return ExecutionResult.FromError($"The module \"{nameof(PhraseModule)}\" is disabled.");
+
             List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
             Phrase finalPhrase = phrases.Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
 
@@ -42,30 +40,22 @@ namespace SammBotNET.Modules
 
             embed.AddField($"**\"{finalPhrase.content}\"**", $"By <@{finalPhrase.authorID}>");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
         }
 
         [Command("by", RunMode = RunMode.Async)]
         [Summary("Sends a quote from a user in the server!")]
-        public async Task PhraseAsync([Remainder] string userID)
+        public async Task<RuntimeResult> PhraseAsync(IUser user)
         {
             if (PhrasesService.IsDisabled)
-            {
-                await ReplyAsync($"The module \"{this.GetType().Name}\" is disabled.");
-                return;
-            }
-            if (!ulong.TryParse(userID, out ulong id))
-            {
-                await ReplyAsync("The user ID is invalid.");
-                return;
-            }
+                return ExecutionResult.FromError($"The module \"{nameof(PhraseModule)}\" is disabled.");
 
             List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-            if (!phrases.Any(x => x.authorID == id))
-            {
-                await ReplyAsync($"This user doesn't have any phrases!");
-                return;
-            }
-            Phrase finalPhrase = phrases.Where(x => x.authorID == id)
+            if (!phrases.Any(x => x.authorID == user.Id))
+                return ExecutionResult.FromError($"This user doesn't have any phrases!");
+
+            Phrase finalPhrase = phrases.Where(x => x.authorID == user.Id)
                 .Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
 
             EmbedBuilder embed = new()
@@ -75,6 +65,8 @@ namespace SammBotNET.Modules
 
             embed.AddField($"**\"{finalPhrase.content}\"**", $"By <@{finalPhrase.authorID}>");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
         }
     }
 }

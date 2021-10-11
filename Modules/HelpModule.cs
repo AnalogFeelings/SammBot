@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using SammBotNET.Extensions;
 using SammBotNET.Services;
 using System.Data;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace SammBotNET.Modules
 
         [Command("help")]
         [Summary("Provides all commands available.")]
-        public async Task HelpAsync([Remainder] string CommandName = null)
+        public async Task<RuntimeResult> HelpAsync([Remainder] string CommandName = null)
         {
             if (CommandName == null)
             {
@@ -58,10 +59,8 @@ namespace SammBotNET.Modules
                 SearchResult result = CommandService.Search(Context, CommandName);
 
                 if (!result.IsSuccess)
-                {
-                    await ReplyAsync($"The command \"{CommandName}\" doesn't exist.");
-                    return;
-                }
+                    return ExecutionResult.FromError($"The command \"{CommandName}\" doesn't exist.");
+
                 EmbedBuilder embed = new()
                 {
                     Title = "SAMM-BOT HELP",
@@ -86,6 +85,8 @@ namespace SammBotNET.Modules
 
                 await ReplyAsync("", false, embed.Build());
             }
+
+            return ExecutionResult.Succesful();
         }
     }
 }

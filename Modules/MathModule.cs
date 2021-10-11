@@ -1,5 +1,6 @@
 ﻿using Discord.Addons.Interactive;
 using Discord.Commands;
+using SammBotNET.Extensions;
 using SammBotNET.Services;
 using System;
 using System.Data;
@@ -15,13 +16,10 @@ namespace SammBotNET.Modules
 
         [Command("calculate", RunMode = RunMode.Async)]
         [Summary("Calculates the math expression from the parameter Expression.")]
-        public async Task CalculateAsync([Remainder] string Expression)
+        public async Task<RuntimeResult> CalculateAsync([Remainder] string Expression)
         {
             if (MathService.IsDisabled)
-            {
-                await ReplyAsync($"The module \"{this.GetType().Name}\" is disabled.");
-                return;
-            }
+                return ExecutionResult.FromError($"The module \"{nameof(MathModule)}\" is disabled.");
 
             string authorid = Context.Message.Author.Id.ToString();
             try
@@ -32,16 +30,16 @@ namespace SammBotNET.Modules
             }
             catch (EvaluateException)
             {
-                await ReplyAsync($"<@{authorid}>, invalid syntax." +
+                return ExecutionResult.FromError($"<@{authorid}>, invalid syntax." +
                     $" Make sure your expression doesn't contain letters, or operators other than +-/*%.");
-                return;
             }
             catch (SyntaxErrorException)
             {
-                await ReplyAsync($"<@{authorid}>, invalid math." +
+                return ExecutionResult.FromError($"<@{authorid}>, invalid math." +
                     $" Make sure your expression doesn't do multi-column things like in Microsoft Excel.");
-                return;
             }
+
+            return ExecutionResult.Succesful();
         }
     }
 }

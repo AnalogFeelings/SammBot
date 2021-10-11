@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using SammBotNET.Extensions;
 using SammBotNET.Services;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace SammBotNET.Modules
         [Command("enable")]
         [RequireUserPermission(GuildPermission.ManageGuild)]
         [Summary("Enables a module. Requires permission ManageGuild.")]
-        public async Task EnableModAsync([Remainder] string ModuleName)
+        public async Task<RuntimeResult> EnableModAsync([Remainder] string ModuleName)
         {
             switch (ModuleName) //Dirty way to do this, maybe we can use System.Reflection?
             {
@@ -27,10 +28,7 @@ namespace SammBotNET.Modules
                         CommandService.IsDisabled = false;
                         await ReplyAsync($"Enabled module \"{ModuleName}\".");
                     }
-                    else
-                    {
-                        await ReplyAsync($"Module \"{ModuleName}\" is already enabled.");
-                    }
+                    else return ExecutionResult.FromError($"Module \"{ModuleName}\" is already enabled.");
                     break;
                 case "Help":
                     if (HelpService.IsDisabled == true)
@@ -38,10 +36,7 @@ namespace SammBotNET.Modules
                         HelpService.IsDisabled = false;
                         await ReplyAsync($"Enabled module \"{ModuleName}\".");
                     }
-                    else
-                    {
-                        await ReplyAsync($"Module \"{ModuleName}\" is already enabled.");
-                    }
+                    else return ExecutionResult.FromError($"Module \"{ModuleName}\" is already enabled.");
                     break;
                 case "Math":
                     if (MathService.IsDisabled == true)
@@ -49,10 +44,7 @@ namespace SammBotNET.Modules
                         MathService.IsDisabled = false;
                         await ReplyAsync($"Enabled module \"{ModuleName}\".");
                     }
-                    else
-                    {
-                        await ReplyAsync($"Module \"{ModuleName}\" is already enabled.");
-                    }
+                    else return ExecutionResult.FromError($"Module \"{ModuleName}\" is already enabled.");
                     break;
                 case "Phrases":
                     if (PhraseService.IsDisabled == true)
@@ -60,19 +52,17 @@ namespace SammBotNET.Modules
                         PhraseService.IsDisabled = false;
                         await ReplyAsync($"Enabled module \"{ModuleName}\".");
                     }
-                    else
-                    {
-                        await ReplyAsync($"Module \"{ModuleName}\" is already enabled.");
-                    }
+                    else return ExecutionResult.FromError($"Module \"{ModuleName}\" is already enabled.");
                     break;
             }
-            return;
+
+            return ExecutionResult.Succesful();
         }
 
         [Command("disable")]
         [RequireUserPermission(GuildPermission.ManageGuild)]
         [Summary("Disables a module. Requires permission ManageGuild")]
-        public async Task DisableModAsync([Remainder] string ModuleName)
+        public async Task<RuntimeResult> DisableModAsync([Remainder] string ModuleName)
         {
             switch (ModuleName) //Dirty way to do this, maybe we can use System.Reflection?
             {
@@ -82,10 +72,7 @@ namespace SammBotNET.Modules
                         CommandService.IsDisabled = true;
                         await ReplyAsync($"Disabled module \"{ModuleName}\".");
                     }
-                    else
-                    {
-                        await ReplyAsync($"Module \"{ModuleName}\" is already disabled.");
-                    }
+                    else return ExecutionResult.FromError($"Module \"{ModuleName}\" is already disabled.");
                     break;
                 case "Help":
                     if (HelpService.IsDisabled == false)
@@ -93,10 +80,7 @@ namespace SammBotNET.Modules
                         HelpService.IsDisabled = true;
                         await ReplyAsync($"Disabled module \"{ModuleName}\".");
                     }
-                    else
-                    {
-                        await ReplyAsync($"Module \"{ModuleName}\" is already disabled.");
-                    }
+                    else return ExecutionResult.FromError($"Module \"{ModuleName}\" is already disabled.");
                     break;
                 case "Math":
                     if (MathService.IsDisabled == false)
@@ -104,10 +88,7 @@ namespace SammBotNET.Modules
                         MathService.IsDisabled = true;
                         await ReplyAsync($"Disabled module \"{ModuleName}\".");
                     }
-                    else
-                    {
-                        await ReplyAsync($"Module \"{ModuleName}\" is already disabled.");
-                    }
+                    else return ExecutionResult.FromError($"Module \"{ModuleName}\" is already disabled.");
                     break;
                 case "Phrases":
                     if (PhraseService.IsDisabled == false)
@@ -115,13 +96,11 @@ namespace SammBotNET.Modules
                         PhraseService.IsDisabled = true;
                         await ReplyAsync($"Disabled module \"{ModuleName}\".");
                     }
-                    else
-                    {
-                        await ReplyAsync($"Module \"{ModuleName}\" is already disabled.");
-                    }
+                    else return ExecutionResult.FromError($"Module \"{ModuleName}\" is already disabled.");
                     break;
             }
-            return;
+
+            return ExecutionResult.Succesful();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
+using SammBotNET.Extensions;
 using SammBotNET.Services;
 using System;
 using System.Collections.Generic;
@@ -28,13 +29,10 @@ namespace SammBotNET.Modules
 
         [Command("list", RunMode = RunMode.Async)]
         [Summary("Lists all the custom commands that have been created.")]
-        public async Task CustomsAsync()
+        public async Task<RuntimeResult> CustomsAsync()
         {
             if (CustomCommandService.IsDisabled)
-            {
-                await ReplyAsync($"The module \"{nameof(CustomCommands)}\" is disabled.");
-                return;
-            }
+                return ExecutionResult.FromError($"The module \"{nameof(CustomCommands)}\" is disabled.");
 
             List<CustomCommand> commands = await CommandDatabase.CustomCommand.ToListAsync();
 
@@ -58,64 +56,42 @@ namespace SammBotNET.Modules
             embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
         }
 
         [Command("create", RunMode = RunMode.Async)]
         [Summary("Creates a custom command.")]
-        public async Task CreateCMDAsync(string Name, string Response)
+        public async Task<RuntimeResult> CreateCMDAsync(string Name, string Response)
         {
             if (CustomCommandService.IsDisabled)
-            {
-                await ReplyAsync($"The module \"{this.GetType().Name}\" is disabled.");
-                return;
-            }
+                return ExecutionResult.FromError($"The module \"{nameof(CustomCommands)}\" is disabled.");
 
             if (CustomCommandService.IsCreatingCommand == true)
-            {
-                await ReplyAsync("A command is already being created! Please wait for a bit.");
-                return;
-            }
+                return ExecutionResult.FromError("A command is already being created! Please wait for a bit.");
 
             #region Validity Checks
+
             if (Name.Length > 15)
-            {
-                await ReplyAsync("Please make the command name shorter than 15 characters!");
-                return;
-            }
+                return ExecutionResult.FromError("Please make the command name shorter than 15 characters!");
             else if (Name.StartsWith(GlobalConfig.Instance.LoadedConfig.BotPrefix))
-            {
-                await ReplyAsync("Custom command names can't begin with my prefix!");
-                return;
-            }
+                return ExecutionResult.FromError("Custom command names can't begin with my prefix!");
             else if (Context.Message.MentionedUsers.Count > 0)
-            {
-                await ReplyAsync("Custom command names or replies cannot contain pings!");
-                return;
-            }
+                return ExecutionResult.FromError("Custom command names or replies cannot contain pings!");
             else if (Name.Contains(" "))
-            {
-                await ReplyAsync("Custom command names cannot contain spaces!");
-                return;
-            }
+                return ExecutionResult.FromError("Custom command names cannot contain spaces!");
 
             foreach (CommandInfo cmdInf in CommandService.Commands)
             {
-                if (Name == cmdInf.Name)
-                {
-                    await ReplyAsync("That command name already exists!");
-                    return;
-                }
+                if (Name == cmdInf.Name) return ExecutionResult.FromError("That command name already exists!");
             }
 
             List<CustomCommand> dbCommands = await CommandDatabase.CustomCommand.ToListAsync();
             foreach (CustomCommand ccmd in dbCommands)
             {
-                if (Name == ccmd.name)
-                {
-                    await ReplyAsync("That command name already exists!");
-                    return;
-                }
+                if (Name == ccmd.name) return ExecutionResult.FromError("That command name already exists!");
             }
+
             #endregion
 
             CustomCommandService.IsCreatingCommand = true;
@@ -131,6 +107,8 @@ namespace SammBotNET.Modules
 
             await ReplyAsync("Command created succesfully!");
             CustomCommandService.IsCreatingCommand = false;
+
+            return ExecutionResult.Succesful();
         }
     }
 }
