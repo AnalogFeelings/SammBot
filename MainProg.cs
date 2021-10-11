@@ -15,7 +15,7 @@ namespace SammBotNET
     {
         public DiscordSocketClient SocketClient;
 
-        public static void Main(string[] args)
+        public static void Main()
             => new MainProg().MainAsync().GetAwaiter().GetResult();
 
         public async Task MainAsync()
@@ -26,7 +26,7 @@ namespace SammBotNET
 
             Console.WriteLine("Configuring Services...".Pastel("#3d9785"));
 
-            ServiceCollection services = new ServiceCollection();
+            ServiceCollection services = new();
             ConfigureServices(services);
 
             ServiceProvider provider = services.BuildServiceProvider();

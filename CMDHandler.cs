@@ -72,7 +72,7 @@ namespace SammBotNET
             SocketUserMessage message = messageParam as SocketUserMessage;
             if (message == null) return;
 
-            SocketCommandContext context = new SocketCommandContext(DiscordClient, message);
+            SocketCommandContext context = new(DiscordClient, message);
 
             int argPos = 0;
             if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos) && !message.Author.IsBot)

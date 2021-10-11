@@ -24,7 +24,7 @@ namespace SammBotNET.Modules
         {
             if (CommandName == null)
             {
-                EmbedBuilder embed = new EmbedBuilder()
+                EmbedBuilder embed = new()
                 {
                     Color = Color.DarkPurple,
                     Title = "SAMM-BOT HELP",
@@ -62,7 +62,7 @@ namespace SammBotNET.Modules
                     await ReplyAsync($"The command \"{CommandName}\" doesn't exist.");
                     return;
                 }
-                EmbedBuilder embed = new EmbedBuilder()
+                EmbedBuilder embed = new()
                 {
                     Title = "SAMM-BOT HELP",
                     Description = $"All commands that are called \"{CommandName}\":",

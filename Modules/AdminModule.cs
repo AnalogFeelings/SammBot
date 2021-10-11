@@ -12,7 +12,7 @@ namespace SammBotNET.Modules
     [Group("admin")]
     public class AdminModule : ModuleBase<SocketCommandContext>
     {
-        private BlacklistedUsersDB BlacklistDatabase;
+        private readonly BlacklistedUsersDB BlacklistDatabase;
 
         public AdminModule(IServiceProvider services)
         {

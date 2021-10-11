@@ -14,10 +14,10 @@ namespace SammBotNET
 
         public string ConfigFile = "config.json";
         public string StatusFile = "status.xml";
-        public Random GlobalRng = new Random(Guid.NewGuid().GetHashCode());
+        public Random GlobalRng = new(Guid.NewGuid().GetHashCode());
 
-        public JsonConfig LoadedConfig = new JsonConfig();
-        public List<BotStatus> StatusList = new List<BotStatus>();
+        public JsonConfig LoadedConfig = new();
+        public List<BotStatus> StatusList = new();
 
         public bool LoadConfiguration()
         {
@@ -33,7 +33,7 @@ namespace SammBotNET
         {
             if (!File.Exists(StatusFile)) return false;
 
-            XmlDocument document = new XmlDocument();
+            XmlDocument document = new();
             document.Load(StatusFile);
 
             XmlNodeList cmdNodes = document.DocumentElement.SelectNodes("/Statuses/Status");

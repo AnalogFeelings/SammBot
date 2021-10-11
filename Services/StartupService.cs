@@ -50,7 +50,7 @@ namespace SammBotNET.Services
             RngResetTimer = new Timer(_ =>
             {
                 int hash = Guid.NewGuid().GetHashCode();
-                
+
                 GlobalConfig.Instance.GlobalRng = new Random(hash);
                 BotLogger.Log($"Regenerated RNG instance with hash {hash}.".Pastel(Color.LimeGreen));
             }, null, TimeSpan.FromMinutes(25), TimeSpan.FromMinutes(25));

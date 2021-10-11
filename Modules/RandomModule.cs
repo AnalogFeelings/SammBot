@@ -31,7 +31,7 @@ namespace SammBotNET.Modules
         [Summary("Returns a random cat!")]
         public async Task GetCatAsync()
         {
-            CatSearchParams searchParams = new CatSearchParams
+            CatSearchParams searchParams = new()
             {
                 has_breeds = true,
                 mime_types = "jpg,png",
@@ -42,7 +42,7 @@ namespace SammBotNET.Modules
 
             List<CatImage> images = await RandomModuleService.requesterCat.GetImageAsync(searchParams);
 
-            EmbedBuilder embed = new EmbedBuilder
+            EmbedBuilder embed = new()
             {
                 Color = Color.DarkPurple,
                 Title = "RANDOM CAT"
@@ -63,7 +63,7 @@ namespace SammBotNET.Modules
         [Summary("Returns a random cat!")]
         public async Task GetDogAsync()
         {
-            DogSearchParams searchParams = new DogSearchParams
+            DogSearchParams searchParams = new()
             {
                 has_breeds = true,
                 mime_types = "jpg,png",
@@ -74,7 +74,7 @@ namespace SammBotNET.Modules
 
             List<DogImage> images = await RandomModuleService.requesterDog.GetImageAsync(searchParams);
 
-            EmbedBuilder embed = new EmbedBuilder
+            EmbedBuilder embed = new()
             {
                 Color = Color.DarkPurple,
                 Title = "RANDOM DOG"
@@ -97,7 +97,7 @@ namespace SammBotNET.Modules
             List<PeoneImage> peoneImages = await PeoneDatabase.PeoneImage.ToListAsync();
             PeoneImage selectedPeoneImage = peoneImages.PickRandom();
 
-            EmbedBuilder embed = new EmbedBuilder
+            EmbedBuilder embed = new()
             {
                 Color = new Color(105, 219, 221),
                 Title = "RANDOM PEONE"
@@ -122,7 +122,8 @@ namespace SammBotNET.Modules
         {
             int maxSCP = 5999;
             int result = GlobalConfig.Instance.GlobalRng.Next(maxSCP + 1);
-            EmbedBuilder embed = new EmbedBuilder
+
+            EmbedBuilder embed = new()
             {
                 Color = Color.DarkPurple,
                 Title = "RANDOM SCP"

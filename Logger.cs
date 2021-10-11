@@ -3,7 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Pastel;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Color = System.Drawing.Color;
 
@@ -23,7 +22,7 @@ namespace SammBotNET
             if (message.Exception is CommandException cmdException)
             {
                 string formattedException = string.Format("in {0}, at channel {1}.\n{2}",
-                    cmdException.Command.Aliases.First(), cmdException.Context.Channel, cmdException);
+                    cmdException.Command.Aliases[0], cmdException.Context.Channel, cmdException);
 
                 Console.WriteLine($"{time} EXCEPTION >> ".Pastel(Color.Red) + formattedException.Pastel(Color.Yellow));
             }

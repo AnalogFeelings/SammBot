@@ -15,7 +15,7 @@ namespace SammBotNET.Modules
         [Summary("Shows the FULL information of the bot.")]
         public async Task InformationFullAsync()
         {
-            EmbedBuilder embed = new EmbedBuilder
+            EmbedBuilder embed = new()
             {
                 Color = Color.DarkPurple,
                 Title = "SAMM-BOT INFORMATION",
@@ -62,27 +62,31 @@ namespace SammBotNET.Modules
             switch (version.Major)
             {
                 case 6:
-                    switch (version.Minor)
+                    os = version.Minor switch
                     {
-                        case 1: os = $"Windows 7 (NT {version.Major}.{version.Minor})"; break;
-                        case 2: os = $"Windows 8 (NT {version.Major}.{version.Minor})"; break;
-                        case 3: os = $"Windows 8.1 (NT {version.Major}.{version.Minor})"; break;
-                        default: os = "Unknown"; break;
-                    }
+                        1 => "Windows 7",
+                        2 => "Windows 8",
+                        3 => "Windows 8.1",
+                        _ => "Unknown System",
+                    };
                     break;
                 case 10:
                     switch (version.Minor)
                     {
-                        case 0: os = $"Windows 10 (NT {version.Major}.{version.Minor})"; break;
-                        default: os = "Unknown"; break;
+                        case 0:
+                            if (version.Build >= 22000) os = "Windows 11";
+                            else os = "Windows 10";
+
+                            break;
+                        default: os = "Unknown System"; break;
                     }
                     break;
                 default:
                     os = "Unknown System";
                     break;
             }
+            os += $" (NT {version.Major}.{version.Minor})";
             return os;
         }
-
     }
 }

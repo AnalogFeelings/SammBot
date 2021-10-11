@@ -2,12 +2,12 @@
 using Discord.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
+using SammBotNET.Extensions;
 using SammBotNET.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SammBotNET.Extensions;
 
 namespace SammBotNET.Modules
 {
@@ -35,7 +35,7 @@ namespace SammBotNET.Modules
             List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
             Phrase finalPhrase = phrases.Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
 
-            EmbedBuilder embed = new EmbedBuilder
+            EmbedBuilder embed = new()
             {
                 Color = Color.DarkPurple
             };
@@ -68,7 +68,7 @@ namespace SammBotNET.Modules
             Phrase finalPhrase = phrases.Where(x => x.authorID == id)
                 .Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
 
-            EmbedBuilder embed = new EmbedBuilder
+            EmbedBuilder embed = new()
             {
                 Color = Color.DarkPurple
             };

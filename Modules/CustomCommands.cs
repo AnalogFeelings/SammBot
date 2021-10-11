@@ -38,7 +38,7 @@ namespace SammBotNET.Modules
 
             List<CustomCommand> commands = await CommandDatabase.CustomCommand.ToListAsync();
 
-            EmbedBuilder embed = new EmbedBuilder
+            EmbedBuilder embed = new()
             {
                 Title = "SAMM-BOT CUSTOM COMMANDS",
                 Description = "All custom commands that have been created.",

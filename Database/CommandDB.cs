@@ -9,8 +9,8 @@ namespace SammBotNET.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            SqliteConnectionStringBuilder cSb = new SqliteConnectionStringBuilder { DataSource = "customcmds.db" };
-            SqliteConnection connection = new SqliteConnection(cSb.ToString());
+            SqliteConnectionStringBuilder cSb = new() { DataSource = "customcmds.db" };
+            SqliteConnection connection = new(cSb.ToString());
             optionsBuilder.UseSqlite(connection);
         }
     }

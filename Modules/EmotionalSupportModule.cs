@@ -42,7 +42,7 @@ namespace SammBotNET.Modules
             EmotionalSupport supportObject = supportObjects.FirstOrDefault(x => x.SupportId == supportId);
             string previousValue = string.Empty;
 
-            if(supportObject == null)
+            if (supportObject == null)
             {
                 await ReplyAsync($"A support message with the ID {supportId} does not exist!");
                 return;
