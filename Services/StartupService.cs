@@ -88,8 +88,8 @@ namespace SammBotNET.Services
             Console.Clear();
 
             await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
-            Console.WriteLine(FiggleFonts.Standard.Render(GlobalConfig.Instance.LoadedConfig.BotName.ToUpper()).Pastel("#77b6a9"));
-            Console.WriteLine($"Source code {GlobalConfig.Instance.LoadedConfig.BotVersion}, Discord.NET 2.2.0".Pastel(Color.DarkGoldenrod));
+            Console.Write(FiggleFonts.Slant.Render(GlobalConfig.Instance.LoadedConfig.BotName).Pastel("#77b6a9"));
+            Console.WriteLine($"----------Source code {GlobalConfig.Instance.LoadedConfig.BotVersion}, Discord.NET 2.4.0----------".Pastel(Color.CornflowerBlue));
         }
     }
 }
