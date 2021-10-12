@@ -52,7 +52,7 @@ namespace SammBotNET.Services
                 int hash = Guid.NewGuid().GetHashCode();
 
                 GlobalConfig.Instance.GlobalRng = new Random(hash);
-                BotLogger.Log($"Regenerated RNG instance with hash {hash}.".Pastel(Color.CadetBlue));
+                BotLogger.Log(LogLevel.Message, $"Regenerated RNG instance with hash {hash}.");
             }, null, TimeSpan.FromMinutes(25), TimeSpan.FromMinutes(25));
 
             return Task.CompletedTask;

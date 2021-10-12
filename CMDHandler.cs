@@ -2,7 +2,6 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using Pastel;
 using SammBotNET.Database;
 using System;
 using System.Collections.Generic;
@@ -54,8 +53,9 @@ namespace SammBotNET
                             }
                         }
                         await context.Channel.SendMessageAsync("Unknown command! Use the s.help command.");
+                        return;
                     }
-                    if(result.ErrorReason != "Execution succesful.")
+                    if (result.ErrorReason != "Execution succesful.")
                     {
                         await context.Channel.SendMessageAsync("**__Woops! There has been an error!__**\n"
                                                                 + result.ErrorReason);
@@ -64,7 +64,7 @@ namespace SammBotNET
             }
             catch (Exception ex)
             {
-                BotLogger.Log(ex.Message.Pastel(System.Drawing.Color.IndianRed) + ex.StackTrace.Pastel(System.Drawing.Color.DarkRed));
+                BotLogger.LogException(ex);
             }
         }
 
@@ -81,10 +81,8 @@ namespace SammBotNET
                 CommandName = message.Content.Remove(0, GlobalConfig.Instance.LoadedConfig.BotPrefix.Length);
                 CommandName = CommandName.Split()[0];
 
-                BotLogger.Log($"Executing command \"{message.Content.Pastel("#bde0ff")}\". ".Pastel(Color.Blue) +
-                    $"Channel: {("#" + message.Channel.Name).Pastel("#bde0ff")}. ".Pastel(Color.Blue) +
-                    $"Guild: {(message.Channel as SocketGuildChannel).Guild.Name.Pastel("#bde0ff")}. ".Pastel(Color.Blue) +
-                    $"User: {message.Author.Username.Pastel("#bde0ff")}.".Pastel(Color.Blue));
+                BotLogger.Log(LogLevel.Message, string.Format(GlobalConfig.Instance.LoadedConfig.CommandLogFormat,
+                                                message.Content, message.Channel.Name, message.Author.Username));
 
                 await CommandsService.ExecuteAsync(
                     context: context,
@@ -95,7 +93,7 @@ namespace SammBotNET
             {
                 try
                 {
-                    if (message.Content.Length < 15) return;
+                    if (message.Content.Length < 15 || message.Content.Length > 64) return;
                     if (message.Attachments.Count > 0 && message.Content.Length == 0) return;
 
                     List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
@@ -118,7 +116,7 @@ namespace SammBotNET
                 }
                 catch (Exception ex)
                 {
-                    BotLogger.Log(ex.Message.Pastel(System.Drawing.Color.IndianRed) + ex.StackTrace.Pastel(System.Drawing.Color.DarkRed));
+                    BotLogger.LogException(ex);
                 }
             }
         }
