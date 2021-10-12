@@ -44,7 +44,7 @@ namespace SammBotNET.Services
 
                     await SocketClient.SetGameAsync(status.Content,
                         status.Type == 1 ? GlobalConfig.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)status.Type);
-                }, null, TimeSpan.Zero, TimeSpan.FromSeconds(25));
+                }, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
             }
 
             RngResetTimer = new Timer(_ =>
@@ -53,7 +53,8 @@ namespace SammBotNET.Services
 
                 GlobalConfig.Instance.GlobalRng = new Random(hash);
                 BotLogger.Log(LogLevel.Message, $"Regenerated RNG instance with hash {hash}.");
-            }, null, TimeSpan.FromMinutes(25), TimeSpan.FromMinutes(25));
+            }, null, TimeSpan.FromMinutes(GlobalConfig.Instance.LoadedConfig.RngResetTime),
+                     TimeSpan.FromMinutes(GlobalConfig.Instance.LoadedConfig.RngResetTime));
 
             return Task.CompletedTask;
         }

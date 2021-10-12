@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace SammBotNET
@@ -18,12 +19,15 @@ namespace SammBotNET
         public JsonConfig LoadedConfig = new();
         public List<BotStatus> StatusList = new();
 
+        public Regex UrlRegex;
+
         public bool LoadConfiguration()
         {
             if (!File.Exists(ConfigFile)) return false;
 
             string configFileContent = File.ReadAllText(ConfigFile);
             LoadedConfig = JsonConvert.DeserializeObject<JsonConfig>(configFileContent);
+            UrlRegex = new(LoadedConfig.UrlRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             return true;
         }
@@ -72,6 +76,10 @@ namespace SammBotNET
         public ulong AestheticalUid { get; set; } = 337950448130719754;
         public ulong NeveahUid { get; set; } = 850874605434175500;
         public string CommandLogFormat { get; set; } = "Executing command {0}!";
+        public string LogFolder { get; set; } = "Logs";
+        public string UrlRegex { get; set; } = "";
+        public int RngResetTime { get; set; } = 25;
+        public List<string> BannedPrefixes { get; set; } = null;
     }
 
     public class BotStatus

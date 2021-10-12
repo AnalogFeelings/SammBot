@@ -34,7 +34,7 @@ namespace SammBotNET
             provider.GetRequiredService<CMDHandler>();
             provider.GetRequiredService<CustomCommandService>();
             provider.GetRequiredService<HelpService>();
-            provider.GetRequiredService<PhraseService>();
+            provider.GetRequiredService<QuoteService>();
             provider.GetRequiredService<InteractiveService>();
             provider.GetRequiredService<MathService>();
             provider.GetRequiredService<RandomService>();
@@ -65,7 +65,7 @@ namespace SammBotNET
             .AddSingleton<CustomCommandService>()
             .AddSingleton<HelpService>()
             .AddSingleton<Random>()
-            .AddSingleton<PhraseService>()
+            .AddSingleton<QuoteService>()
             .AddSingleton<InteractiveService>()
             .AddSingleton<MathService>()
             .AddSingleton<RandomService>()

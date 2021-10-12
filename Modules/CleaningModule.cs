@@ -30,20 +30,20 @@ namespace SammBotNET.Modules
         public async Task<RuntimeResult> FlushCMDsAsync()
         {
             await ReplyAsync("Flushing database...");
-            await CommandDatabase.Database.ExecuteSqlRawAsync("delete from CustomCommand");
-            await ReplyAsync("Success!");
+            int rows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from CustomCommand");
+            await ReplyAsync($"Success! `{rows}` rows affected.");
 
             return ExecutionResult.Succesful();
         }
 
-        [Command("phrases")]
+        [Command("quotes")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Deletes all quotes.")]
-        public async Task<RuntimeResult> FlushPhrasesAsync()
+        public async Task<RuntimeResult> FlushQuotesAsync()
         {
             await ReplyAsync("Flushing database...");
-            await PhrasesDatabase.Database.ExecuteSqlRawAsync("delete from Phrase");
-            await ReplyAsync("Success!");
+            int rows = await PhrasesDatabase.Database.ExecuteSqlRawAsync("delete from Phrase");
+            await ReplyAsync($"Success! `{rows}` rows affected.");
 
             return ExecutionResult.Succesful();
         }

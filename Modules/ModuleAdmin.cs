@@ -13,7 +13,7 @@ namespace SammBotNET.Modules
         public CustomCommandService CommandService { get; set; }
         public HelpService HelpService { get; set; }
         public MathService MathService { get; set; }
-        public PhraseService PhraseService { get; set; }
+        public QuoteService PhraseService { get; set; }
 
         [Command("enable")]
         [RequireUserPermission(GuildPermission.ManageGuild)]

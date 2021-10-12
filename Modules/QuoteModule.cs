@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-    [Name("User Phrases")]
-    [Group("phrases")]
-    public class PhraseModule : ModuleBase<SocketCommandContext>
+    [Name("User Quotes")]
+    [Group("quotes")]
+    public class QuoteModule : ModuleBase<SocketCommandContext>
     {
-        public PhraseService PhrasesService { get; set; }
+        public QuoteService PhrasesService { get; set; }
         private readonly PhrasesDB PhrasesDatabase;
 
-        public PhraseModule(IServiceProvider services)
+        public QuoteModule(IServiceProvider services)
         {
             PhrasesDatabase = services.GetRequiredService<PhrasesDB>();
         }
@@ -28,7 +28,7 @@ namespace SammBotNET.Modules
         public async Task<RuntimeResult> RandomAsync()
         {
             if (PhrasesService.IsDisabled)
-                return ExecutionResult.FromError($"The module \"{nameof(PhraseModule)}\" is disabled.");
+                return ExecutionResult.FromError($"The module \"{nameof(QuoteModule)}\" is disabled.");
 
             List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
             Phrase finalPhrase = phrases.Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
@@ -49,7 +49,7 @@ namespace SammBotNET.Modules
         public async Task<RuntimeResult> PhraseAsync(IUser user)
         {
             if (PhrasesService.IsDisabled)
-                return ExecutionResult.FromError($"The module \"{nameof(PhraseModule)}\" is disabled.");
+                return ExecutionResult.FromError($"The module \"{nameof(QuoteModule)}\" is disabled.");
 
             List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
             if (!phrases.Any(x => x.authorID == user.Id))

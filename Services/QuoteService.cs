@@ -1,6 +1,6 @@
 ﻿namespace SammBotNET.Services
 {
-    public class PhraseService
+    public class QuoteService
     {
         public bool IsDisabled = false;
     }

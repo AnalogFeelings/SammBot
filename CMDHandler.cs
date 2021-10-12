@@ -93,8 +93,10 @@ namespace SammBotNET
             {
                 try
                 {
-                    if (message.Content.Length < 15 || message.Content.Length > 64) return;
+                    if (message.Content.Length < 20 || message.Content.Length > 64) return;
                     if (message.Attachments.Count > 0 && message.Content.Length == 0) return;
+                    if (GlobalConfig.Instance.UrlRegex.IsMatch(message.Content)) return;
+                    if (GlobalConfig.Instance.LoadedConfig.BannedPrefixes.Any(x => message.Content.StartsWith(x))) return;
 
                     List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
 
