@@ -20,6 +20,8 @@ namespace SammBotNET
 
         public async Task MainAsync()
         {
+            GlobalConfig.Instance.StartupStopwatch.Start();
+
             Console.Title = "Samm-Bot";
             Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));
             SocketClient = new DiscordSocketClient();

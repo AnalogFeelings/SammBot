@@ -23,12 +23,11 @@ namespace SammBotNET.Modules
                 Description = "This is all the information about the bot."
             };
 
-            embed.AddField("Bot Version:", $"`{GlobalConfig.Instance.LoadedConfig.BotVersion}`", true);
-            embed.AddField(".NET Version:", $"`{RuntimeInformation.FrameworkDescription}`", true);
-            embed.AddField("Running on:", $"`{FriendlyOSName()}`", true);
-            embed.AddField("Ping:", $"`{Context.Client.Latency}ms.`", true);
-            embed.AddField("Im in:", $"`{Context.Client.Guilds.Count} server/s.`", true);
-            embed.AddField("Hotel?", $"`Trivago.`", true);
+            embed.AddField("Bot Version", $"`{GlobalConfig.Instance.LoadedConfig.BotVersion}`", true);
+            embed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
+            embed.AddField("Running On", $"`{FriendlyOSName()}`", true);
+            embed.AddField("Ping", $"`{Context.Client.Latency}ms.`", true);
+            embed.AddField("Im In", $"`{Context.Client.Guilds.Count} server/s.`", true);
 
             embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
             embed.WithFooter(footer => footer.Text = "Samm-Bot");
@@ -90,7 +89,6 @@ namespace SammBotNET.Modules
                     os = "Unknown System";
                     break;
             }
-            os += $" (NT {version.Major}.{version.Minor})";
             return os;
         }
     }

@@ -89,9 +89,14 @@ namespace SammBotNET.Services
             Console.Clear();
 
             await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
+            GlobalConfig.Instance.StartupStopwatch.Stop();
+
             Console.Write(FiggleFonts.Slant.Render(GlobalConfig.Instance.LoadedConfig.BotName).Pastel("#77b6a9"));
             Console.WriteLine($"----------Source code {GlobalConfig.Instance.LoadedConfig.BotVersion}, Discord.NET 2.4.0----------".Pastel(Color.CornflowerBlue));
             Console.WriteLine();
+
+            BotLogger.Log(LogLevel.Message, $"{GlobalConfig.Instance.LoadedConfig.BotName} took" +
+                $" {GlobalConfig.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.");
         }
     }
 }
