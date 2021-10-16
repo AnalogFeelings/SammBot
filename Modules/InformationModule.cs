@@ -25,7 +25,6 @@ namespace SammBotNET.Modules
 
             embed.AddField("Bot Version", $"`{GlobalConfig.Instance.LoadedConfig.BotVersion}`", true);
             embed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
-            embed.AddField("Running On", $"`{FriendlyOSName()}`", true);
             embed.AddField("Ping", $"`{Context.Client.Latency}ms.`", true);
             embed.AddField("Im In", $"`{Context.Client.Guilds.Count} server/s.`", true);
 
