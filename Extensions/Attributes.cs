@@ -1,9 +1,6 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Extensions
@@ -20,5 +17,11 @@ namespace SammBotNET.Extensions
 
             return Task.FromResult(PreconditionResult.FromError("You must execute this command in a server!"));
         }
+    }
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class HideInHelp : Attribute
+    {
+        public HideInHelp() { }
     }
 }

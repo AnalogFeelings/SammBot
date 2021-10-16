@@ -13,6 +13,7 @@ namespace SammBotNET.Modules
         public AdminService AdminService { get; set; }
 
         [Command("say", RunMode = RunMode.Async)]
+        [HideInHelp]
         public async Task<RuntimeResult> SayMessageAsync([Remainder] string message)
         {
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
@@ -26,6 +27,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("setsay", RunMode = RunMode.Async)]
+        [HideInHelp]
         public async Task<RuntimeResult> SetSayAsync(ulong channel, ulong guild)
         {
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)

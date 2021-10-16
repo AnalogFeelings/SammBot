@@ -38,7 +38,10 @@ namespace SammBotNET.Modules
                     string description = null;
                     foreach (CommandInfo cmd in module.Commands)
                     {
-                        var result = await cmd.CheckPreconditionsAsync(Context);
+                        PreconditionResult result = await cmd.CheckPreconditionsAsync(Context);
+
+                        if (cmd.Attributes.Any(x => x is HideInHelp)) continue;
+
                         if (result.IsSuccess)
                             description += $"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.Aliases[0]}\n";
                     }
