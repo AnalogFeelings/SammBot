@@ -42,6 +42,7 @@ namespace SammBotNET
             provider.GetRequiredService<RandomService>();
             provider.GetRequiredService<FlagService>();
             provider.GetRequiredService<AdminService>();
+            provider.GetRequiredService<NsfwService>();
 
             Console.WriteLine("Starting Startup Service...".Pastel("#3d9785"));
             await provider.GetRequiredService<StartupService>().StartAsync();
@@ -74,6 +75,7 @@ namespace SammBotNET
             .AddSingleton<RandomService>()
             .AddSingleton<FlagService>()
             .AddSingleton<AdminService>()
+            .AddSingleton<NsfwService>()
             .AddDbContext<PhrasesDB>()
             .AddDbContext<CommandDB>()
             .AddDbContext<PeoneImagesDB>()
