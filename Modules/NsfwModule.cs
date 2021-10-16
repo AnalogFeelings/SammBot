@@ -63,7 +63,7 @@ namespace SammBotNET.Modules
             string queryString = searchParams.ToQueryString();
             string jsonReply = string.Empty;
 
-            using(HttpResponseMessage response = await NsfwService.NsfwClient.GetAsync(queryString))
+            using(HttpResponseMessage response = await NsfwService.NsfwClient.GetAsync($"?page=dapi&s=post&q=index?{queryString}"))
             {
                 jsonReply = await response.Content.ReadAsStringAsync();
             }
