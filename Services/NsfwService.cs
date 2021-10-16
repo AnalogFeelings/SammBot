@@ -7,7 +7,7 @@ namespace SammBotNET.Services
     {
         public readonly HttpClient NsfwClient = new()
         { 
-            BaseAddress = new Uri("rule34.xxx")
+            BaseAddress = new Uri("https://rule34.xxx/")
         };
     }
 }
