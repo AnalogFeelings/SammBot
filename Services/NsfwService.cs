@@ -7,7 +7,7 @@ namespace SammBotNET.Services
     {
         public readonly HttpClient NsfwClient = new()
         { 
-            BaseAddress = new Uri("rule34.xxx/index.php")
+            BaseAddress = new Uri("rule34.xxx")
         };
     }
 }
