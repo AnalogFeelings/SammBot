@@ -42,7 +42,7 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("Rule34 returned no posts! Maybe one of your tags doesn't exist!");
 
             List<Rule34Post> chosenPosts = nsfwPosts.Where(x => x.Score >= GlobalConfig.Instance.LoadedConfig.Rule34Threshold
-                                                   && !x.Tags.Contains("animated") && !string.IsNullOrEmpty(x.FileUrl)).ToList();
+                                                            && !x.FileUrl.EndsWith(".mp4")).ToList();
 
             EmbedBuilder embed = new()
             {
