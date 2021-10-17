@@ -12,8 +12,7 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Group("nsfw")]
-    [Summary("Rule34 commands.")]
-    [Summary("NSFW commands. Require a channel to be marked as NSFW.")]
+    [Summary("NSFW commands. Only visible in NSFW channels.")]
     public class NsfwModule : ModuleBase<SocketCommandContext>
     {
         public NsfwService NsfwService { get; set; }
