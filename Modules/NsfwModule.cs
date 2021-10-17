@@ -123,6 +123,8 @@ namespace SammBotNET.Modules
 
                             await message.ModifyAsync(y => y.Embed = embed.Build());
                             await message.RemoveReactionAsync(emoji, Context.Message.Author);
+
+                            timer.Restart();
                         }
                     }
                 }
