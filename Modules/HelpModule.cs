@@ -2,6 +2,7 @@
 using Discord.Commands;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -118,8 +119,17 @@ namespace SammBotNET.Modules
 
                 CommandInfo command = match.Command;
 
+                List<string> processedAliases = command.Aliases.ToList();
+                processedAliases.RemoveAt(0); //Remove the command name itself from the aliases list.
+
+                //Remove group name from aliases list.
+                for (int i = 0; i < processedAliases.Count; i++)
+                {
+                    processedAliases[i] = processedAliases[i].Split(' ').Last();
+                }
+
                 embed.AddField("Command Name", command.Name);
-                embed.AddField("Command Aliases", command.Aliases.Count == 0 ? "No aliases." : string.Join(", ", command.Aliases.ToArray()));
+                embed.AddField("Command Aliases", processedAliases.Count == 0 ? "No aliases." : string.Join(", ", command.Aliases.ToArray()));
                 embed.AddField("Command Summary", string.IsNullOrWhiteSpace(command.Summary) ? "No summary." : command.Summary);
 
                 string commandParameters = string.Empty;
