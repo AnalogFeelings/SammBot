@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-    [Name("Random Madness")]
+    [Name("Random")]
+    [Summary("Just, random crazyness.")]
     [Group("random")]
     public class RandomModule : ModuleBase<SocketCommandContext>
     {

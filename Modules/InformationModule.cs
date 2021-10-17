@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-    [Name("Bot Information")]
+    [Name("Information")]
+    [Summary("Bot information and statistics.")]
     [Group("info")]
     public class InformationModule : ModuleBase<SocketCommandContext>
     {

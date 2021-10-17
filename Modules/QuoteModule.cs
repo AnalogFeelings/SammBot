@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-    [Name("User Quotes")]
+    [Name("Quotes")]
+    [Summary("Random quotes by users.")]
     [Group("quotes")]
     public class QuoteModule : ModuleBase<SocketCommandContext>
     {

@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-    [Name("Cleaning & Purging")]
+    [Name("Janitoring")]
+    [Summary("Clearing and Purging.")]
     [Group("clean")]
     public class CleaningModule : ModuleBase<SocketCommandContext>
     {

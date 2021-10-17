@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("Custom Commands")]
+    [Summary("Commands with a custom reply.")]
     [Group("customcmds")]
     public class CustomCommands : ModuleBase<SocketCommandContext>
     {

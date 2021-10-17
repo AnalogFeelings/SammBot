@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("Math")]
+    [Summary("Simple calculator.")]
     [Group("math")]
     public class MathModule : InteractiveBase<SocketCommandContext>
     {

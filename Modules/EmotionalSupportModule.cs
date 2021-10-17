@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("Neveah <3")]
+    [Summary("For my cute angel <3")]
     [Group("support")]
     public class EmotionalSupportModule : ModuleBase<SocketCommandContext>
     {

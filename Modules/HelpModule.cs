@@ -20,6 +20,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("help")]
+        [HideInHelp]
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync([Remainder] string CommandName = null)
         {
@@ -47,7 +48,7 @@ namespace SammBotNET.Modules
                     }
 
                     if(foundCommand)
-                        embed.AddField(module.Name, string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
+                        embed.AddField(module.Name, string.IsNullOrEmpty(module.Summary) ? "No description." : $"`{module.Summary}`", true);
                 }
                 embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
                 embed.WithFooter(footer => footer.Text = "Samm-Bot");

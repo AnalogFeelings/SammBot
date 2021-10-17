@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Group("nsfw")]
+    [Summary("Rule34 commands.")]
     [Summary("NSFW commands. Require a channel to be marked as NSFW.")]
     public class NsfwModule : ModuleBase<SocketCommandContext>
     {
