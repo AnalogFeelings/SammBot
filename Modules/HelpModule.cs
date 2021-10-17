@@ -29,7 +29,7 @@ namespace SammBotNET.Modules
                 Color = Color.DarkPurple,
                 Title = "SAMM-BOT HELP",
                 Description = $"These are all of the modules available." +
-                $"\n Use `s.help <Module Name>` to see its commands."
+                $"\n Use `s.help <Module/Group Name>` to see its commands."
             };
 
             foreach (ModuleInfo module in CommandService.Modules)
