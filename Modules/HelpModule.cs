@@ -53,6 +53,8 @@ namespace SammBotNET.Modules
             embed.WithCurrentTimestamp();
 
             await ReplyAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
         }
 
         [Command("help")]
