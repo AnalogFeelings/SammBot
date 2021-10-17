@@ -62,7 +62,7 @@ namespace SammBotNET.Modules
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync([Remainder] string moduleName)
         {
-            ModuleInfo moduleInfo = CommandService.Modules.Single(x => x.Name == moduleName);
+            ModuleInfo moduleInfo = CommandService.Modules.Single(x => x.Name == moduleName || x.Group == moduleName);
 
             if (moduleInfo == null)
                 return ExecutionResult.FromError($"The module \"{moduleName}\" doesn't exist.");
