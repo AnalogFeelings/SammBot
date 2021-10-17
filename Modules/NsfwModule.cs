@@ -42,7 +42,7 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("Rule34 returned no posts! Maybe one of your tags doesn't exist!");
 
             List<Rule34Post> chosenPosts = nsfwPosts.Where(x => x.Score >= GlobalConfig.Instance.LoadedConfig.Rule34Threshold
-                                                   && !x.Tags.Contains("animated")).ToList();
+                                                   && !x.Tags.Contains("animated") && !string.IsNullOrEmpty(x.FileUrl)).ToList();
 
             EmbedBuilder embed = new()
             {
@@ -96,59 +96,15 @@ namespace SammBotNET.Modules
                             {
                                 case "⏮":
                                     page = 0;
-                                    embedDescription = $"**Tags** : `{chosenPosts[0].Tags.Truncate(512)}`\n";
-                                    embedDescription += $"**Author** : `{chosenPosts[0].Owner}`\n";
-                                    embedDescription += $"**Score** : `{chosenPosts[0].Score}`";
-
-                                    embed.WithDescription(embedDescription);
-                                    embed.WithImageUrl(chosenPosts[0].FileUrl);
-
-                                    embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
-
-                                    await message.ModifyAsync(y => y.Embed = embed.Build());
-                                    await message.RemoveReactionAsync(emoji, Context.Message.Author);
                                     break;
                                 case "◀":
                                     if (page != 0) page--;
-                                    embedDescription = $"**Tags** : `{chosenPosts[page].Tags.Truncate(512)}`\n";
-                                    embedDescription += $"**Author** : `{chosenPosts[page].Owner}`\n";
-                                    embedDescription += $"**Score** : `{chosenPosts[page].Score}`";
-
-                                    embed.WithDescription(embedDescription);
-                                    embed.WithImageUrl(chosenPosts[page].FileUrl);
-
-                                    embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
-
-                                    await message.ModifyAsync(y => y.Embed = embed.Build());
-                                    await message.RemoveReactionAsync(emoji, Context.Message.Author);
                                     break;
                                 case "▶":
                                     if (page < pageMax) page++;
-                                    embedDescription = $"**Tags** : `{chosenPosts[page].Tags.Truncate(512)}`\n";
-                                    embedDescription += $"**Author** : `{chosenPosts[page].Owner}`\n";
-                                    embedDescription += $"**Score** : `{chosenPosts[page].Score}`";
-
-                                    embed.WithDescription(embedDescription);
-                                    embed.WithImageUrl(chosenPosts[page].FileUrl);
-
-                                    embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
-
-                                    await message.ModifyAsync(y => y.Embed = embed.Build());
-                                    await message.RemoveReactionAsync(emoji, Context.Message.Author);
                                     break;
                                 case "⏭":
                                     page = pageMax;
-                                    embedDescription = $"**Tags** : `{chosenPosts[pageMax - 1].Tags.Truncate(512)}`\n";
-                                    embedDescription += $"**Author** : `{chosenPosts[pageMax - 1].Owner}`\n";
-                                    embedDescription += $"**Score** : `{chosenPosts[pageMax - 1].Score}`";
-
-                                    embed.WithDescription(embedDescription);
-                                    embed.WithImageUrl(chosenPosts[pageMax - 1].FileUrl);
-
-                                    embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
-
-                                    await message.ModifyAsync(y => y.Embed = embed.Build());
-                                    await message.RemoveReactionAsync(emoji, Context.Message.Author);
                                     break;
                                 case "❌":
                                     await message.RemoveAllReactionsAsync();
@@ -156,6 +112,17 @@ namespace SammBotNET.Modules
                                 default:
                                     break;
                             }
+                            embedDescription = $"**Tags** : `{chosenPosts[page].Tags.Truncate(512)}`\n";
+                            embedDescription += $"**Author** : `{chosenPosts[page].Owner}`\n";
+                            embedDescription += $"**Score** : `{chosenPosts[page].Score}`";
+
+                            embed.WithDescription(embedDescription);
+                            embed.WithImageUrl(chosenPosts[page].FileUrl);
+
+                            embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
+
+                            await message.ModifyAsync(y => y.Embed = embed.Build());
+                            await message.RemoveReactionAsync(emoji, Context.Message.Author);
                         }
                     }
                 }
@@ -166,6 +133,7 @@ namespace SammBotNET.Modules
                 }
             }
             timer.Stop();
+            await message.RemoveAllReactionsAsync();
 
             return ExecutionResult.Succesful();
         }
