@@ -1,10 +1,13 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Rest;
 using Newtonsoft.Json;
 using SammBotNET.Extensions;
 using SammBotNET.RestDefinitions;
 using SammBotNET.Services;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,6 +19,9 @@ namespace SammBotNET.Modules
     public class NsfwModule : ModuleBase<SocketCommandContext>
     {
         public NsfwService NsfwService { get; set; }
+        public readonly Logger BotLogger;
+
+        public NsfwModule(Logger logger) => BotLogger = logger;
 
         [Command("r34")]
         [RequireNsfw]
@@ -24,7 +30,7 @@ namespace SammBotNET.Modules
         {
             Rule34SearchParams searchParams = new()
             {
-                limit = 750,
+                limit = 1000,
                 tags = tags,
                 json = 1
             };
@@ -35,7 +41,8 @@ namespace SammBotNET.Modules
             if (nsfwPosts == null || nsfwPosts.Count == 0)
                 return ExecutionResult.FromError("Rule34 returned no posts! Maybe one of your tags doesn't exist!");
 
-            Rule34Post chosenPost = nsfwPosts.Where(x => x.Score >= GlobalConfig.Instance.LoadedConfig.Rule34Threshold).ToList().PickRandom();
+            List<Rule34Post> chosenPosts = nsfwPosts.Where(x => x.Score >= GlobalConfig.Instance.LoadedConfig.Rule34Threshold
+                                                   && !x.Tags.Contains("animated")).ToList();
 
             EmbedBuilder embed = new()
             {
@@ -43,17 +50,122 @@ namespace SammBotNET.Modules
                 Title = "RULE34 SEARCH"
             };
 
-            string embedDescription = $"**Tags** : `{chosenPost.Tags.Truncate(512)}`\n";
-            embedDescription += $"**Author** : `{chosenPost.Owner}`\n";
-            embedDescription += $"**Score** : `{chosenPost.Score}`";
+            string embedDescription = $"**Tags** : `{chosenPosts[0].Tags.Truncate(512)}`\n";
+            embedDescription += $"**Author** : `{chosenPosts[0].Owner}`\n";
+            embedDescription += $"**Score** : `{chosenPosts[0].Score}`";
 
             embed.WithDescription(embedDescription);
-            embed.WithImageUrl(chosenPost.FileUrl);
+            embed.WithImageUrl(chosenPosts[0].FileUrl);
             embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = "Samm-Bot");
+            embed.WithFooter(footer => footer.Text = $"Post 1/{nsfwPosts.Count}");
             embed.WithCurrentTimestamp();
 
-            await Context.Channel.SendMessageAsync("", false, embed.Build());
+            //My wish is that this code is so fucking horrendous that I dont have to touch paginated
+            //embeds ever fucking again.
+            IUserMessage message = await Context.Channel.SendMessageAsync("", false, embed.Build());
+            List<Emoji> emojiList = new() { new Emoji("⏮"), new Emoji("◀"), new Emoji("▶"), new Emoji("⏭"), new Emoji("❌") };
+
+            await message.AddReactionsAsync(emojiList.ToArray());
+            
+            int page = 0;
+            int pageMax = chosenPosts.Count;
+            Stopwatch timer = new();
+
+            timer.Start();
+            while(timer.ElapsedMilliseconds <= 15000)
+            {
+                try
+                {
+                    foreach(Emoji emoji in emojiList)
+                    {
+                        IEnumerable<IUser> userEnumerable = await message.GetReactionUsersAsync(emoji, 4).FlattenAsync();
+                        List<IUser> userList = userEnumerable.ToList();
+                        if (userList.Count < 2) continue;
+
+                        if (!userList.Any(x => x.Id == Context.Message.Author.Id))
+                        {
+                            foreach(IUser user in userList)
+                            {
+                                await message.RemoveReactionAsync(emoji, user);
+                            }
+                            continue;
+                        }
+                        else
+                        {
+                            switch(emoji.Name)
+                            {
+                                case "⏮":
+                                    page = 0;
+                                    embedDescription = $"**Tags** : `{chosenPosts[0].Tags.Truncate(512)}`\n";
+                                    embedDescription += $"**Author** : `{chosenPosts[0].Owner}`\n";
+                                    embedDescription += $"**Score** : `{chosenPosts[0].Score}`";
+
+                                    embed.WithDescription(embedDescription);
+                                    embed.WithImageUrl(chosenPosts[0].FileUrl);
+
+                                    embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
+
+                                    await message.ModifyAsync(y => y.Embed = embed.Build());
+                                    await message.RemoveReactionAsync(emoji, Context.Message.Author);
+                                    break;
+                                case "◀":
+                                    if (page != 0) page--;
+                                    embedDescription = $"**Tags** : `{chosenPosts[page].Tags.Truncate(512)}`\n";
+                                    embedDescription += $"**Author** : `{chosenPosts[page].Owner}`\n";
+                                    embedDescription += $"**Score** : `{chosenPosts[page].Score}`";
+
+                                    embed.WithDescription(embedDescription);
+                                    embed.WithImageUrl(chosenPosts[page].FileUrl);
+
+                                    embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
+
+                                    await message.ModifyAsync(y => y.Embed = embed.Build());
+                                    await message.RemoveReactionAsync(emoji, Context.Message.Author);
+                                    break;
+                                case "▶":
+                                    if (page < pageMax) page++;
+                                    embedDescription = $"**Tags** : `{chosenPosts[page].Tags.Truncate(512)}`\n";
+                                    embedDescription += $"**Author** : `{chosenPosts[page].Owner}`\n";
+                                    embedDescription += $"**Score** : `{chosenPosts[page].Score}`";
+
+                                    embed.WithDescription(embedDescription);
+                                    embed.WithImageUrl(chosenPosts[page].FileUrl);
+
+                                    embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
+
+                                    await message.ModifyAsync(y => y.Embed = embed.Build());
+                                    await message.RemoveReactionAsync(emoji, Context.Message.Author);
+                                    break;
+                                case "⏭":
+                                    page = pageMax;
+                                    embedDescription = $"**Tags** : `{chosenPosts[pageMax - 1].Tags.Truncate(512)}`\n";
+                                    embedDescription += $"**Author** : `{chosenPosts[pageMax - 1].Owner}`\n";
+                                    embedDescription += $"**Score** : `{chosenPosts[pageMax - 1].Score}`";
+
+                                    embed.WithDescription(embedDescription);
+                                    embed.WithImageUrl(chosenPosts[pageMax - 1].FileUrl);
+
+                                    embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
+
+                                    await message.ModifyAsync(y => y.Embed = embed.Build());
+                                    await message.RemoveReactionAsync(emoji, Context.Message.Author);
+                                    break;
+                                case "❌":
+                                    await message.RemoveAllReactionsAsync();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    BotLogger.LogException(ex);
+                    return ExecutionResult.FromError(ex.Message);
+                }
+            }
+            timer.Stop();
 
             return ExecutionResult.Succesful();
         }

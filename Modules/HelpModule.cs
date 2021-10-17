@@ -3,7 +3,6 @@ using Discord.Commands;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -102,13 +101,13 @@ namespace SammBotNET.Modules
                 string actualName = splittedModuleName.Last();
 
                 SearchResult result = CommandService.Search(Context, moduleName);
-                
+
                 if (!result.IsSuccess)
                     return ExecutionResult.FromError($"There is no command named \"{moduleName}\". Check your spelling.");
 
                 CommandMatch match = result.Commands.SingleOrDefault(x => x.Command.Name == actualName);
 
-                if(match.Command == null)
+                if (match.Command == null)
                     return ExecutionResult.FromError($"There is no command named \"{moduleName}\". Check your spelling.");
 
                 EmbedBuilder embed = new()
@@ -133,7 +132,7 @@ namespace SammBotNET.Modules
                 embed.AddField("Command Summary", string.IsNullOrWhiteSpace(command.Summary) ? "No summary." : command.Summary);
 
                 string commandParameters = string.Empty;
-                foreach(ParameterInfo parameterInfo in command.Parameters)
+                foreach (ParameterInfo parameterInfo in command.Parameters)
                 {
                     commandParameters += $"[**{parameterInfo.Type.Name}**] `{parameterInfo.Name}`\n";
                 }
