@@ -70,7 +70,7 @@ namespace SammBotNET.Modules
             EmbedBuilder embed = new()
             {
                 Title = "SAMM-BOT HELP",
-                Description = $"Syntax: `{GlobalConfig.Instance.LoadedConfig.BotPrefix}{moduleInfo.Name} <Command Name>`",
+                Description = $"Syntax: `{GlobalConfig.Instance.LoadedConfig.BotPrefix}{moduleInfo.Group} <Command Name>`",
                 Color = Color.DarkPurple
             };
 
