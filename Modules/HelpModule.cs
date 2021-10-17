@@ -63,34 +63,73 @@ namespace SammBotNET.Modules
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync([Remainder] string moduleName)
         {
-            ModuleInfo moduleInfo = CommandService.Modules.Single(x => x.Name == moduleName || x.Group == moduleName);
+            string[] splittedModuleName = moduleName.Split(' ');
 
-            if (moduleInfo == null)
-                return ExecutionResult.FromError($"The module \"{moduleName}\" doesn't exist.");
-
-            EmbedBuilder embed = new()
+            if (splittedModuleName.Length == 1)
             {
-                Title = "SAMM-BOT HELP",
-                Description = $"Syntax: `{GlobalConfig.Instance.LoadedConfig.BotPrefix}{moduleInfo.Group} <Command Name>`",
-                Color = Color.DarkPurple
-            };
+                ModuleInfo moduleInfo = CommandService.Modules.Single(x => x.Name == moduleName || x.Group == moduleName);
 
-            string description = string.Empty;
-            foreach (CommandInfo match in moduleInfo.Commands)
-            {
-                if (match.Attributes.Any(x => x is HideInHelp)) continue;
+                if (moduleInfo == null)
+                    return ExecutionResult.FromError($"The module \"{moduleName}\" doesn't exist.");
 
-                PreconditionResult result = await match.CheckPreconditionsAsync(Context);
+                EmbedBuilder embed = new()
+                {
+                    Title = "SAMM-BOT HELP",
+                    Description = $"Syntax: `{GlobalConfig.Instance.LoadedConfig.BotPrefix}{moduleInfo.Group} <Command Name>`",
+                    Color = Color.DarkPurple
+                };
 
-                if (result.IsSuccess)
-                    embed.AddField(match.Name, $"{(string.IsNullOrWhiteSpace(match.Summary) ? "No description." : match.Summary)}", true);
+                string description = string.Empty;
+                foreach (CommandInfo match in moduleInfo.Commands)
+                {
+                    if (match.Attributes.Any(x => x is HideInHelp)) continue;
+
+                    PreconditionResult result = await match.CheckPreconditionsAsync(Context);
+
+                    if (result.IsSuccess)
+                        embed.AddField(match.Name, $"{(string.IsNullOrWhiteSpace(match.Summary) ? "No description." : match.Summary)}", true);
+                }
+
+                embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
+                embed.WithFooter(footer => footer.Text = "Samm-Bot");
+                embed.WithCurrentTimestamp();
+
+                await ReplyAsync("", false, embed.Build());
             }
+            else
+            {
+                string actualName = splittedModuleName.Last();
 
-            embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = "Samm-Bot");
-            embed.WithCurrentTimestamp();
+                SearchResult result = CommandService.Search(Context, moduleName);
+                
+                if (!result.IsSuccess)
+                    return ExecutionResult.FromError($"There is no command named \"{moduleName}\". Check your spelling.");
 
-            await ReplyAsync("", false, embed.Build());
+                CommandMatch match = result.Commands.SingleOrDefault(x => x.Command.Name == actualName || x.Command.Aliases.Any(y => y == actualName));
+
+                if(match.Command == null)
+                    return ExecutionResult.FromError($"There is no command named \"{moduleName}\". Check your spelling.");
+
+                EmbedBuilder embed = new()
+                {
+                    Color = Color.DarkPurple,
+                    Title = "SAMM-BOT HELP"
+                };
+
+                CommandInfo command = match.Command;
+
+                embed.AddField("Command Name", command.Name);
+                embed.AddField("Command Aliases", command.Aliases.Count == 0 ? "No aliases." : string.Join(',', command.Aliases.ToArray()));
+                embed.AddField("Command Summary", string.IsNullOrWhiteSpace(command.Summary) ? "No summary." : command.Summary);
+
+                string commandParameters = string.Empty;
+                foreach(ParameterInfo parameterInfo in command.Parameters)
+                {
+                    commandParameters += $"[**{parameterInfo.Type.Name}**] `{parameterInfo.Name}`\n";
+                }
+
+                embed.AddField("Command Parameters", string.IsNullOrEmpty(commandParameters) ? "No parameters." : commandParameters);
+            }
 
             return ExecutionResult.Succesful();
         }

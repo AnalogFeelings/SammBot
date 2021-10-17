@@ -51,7 +51,7 @@ namespace SammBotNET.Modules
 
         [Command("messages")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
-        [Summary("Deletes (num) amount of messages.")]
+        [Summary("Deletes an amount of messages.")]
         public async Task<RuntimeResult> FlushMessagesAsync(int num)
         {
             IEnumerable<IMessage> messages = await Context.Message.Channel.GetMessagesAsync(num + 1).FlattenAsync();
