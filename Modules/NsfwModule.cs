@@ -132,6 +132,7 @@ namespace SammBotNET.Modules
                 catch(Exception ex)
                 {
                     BotLogger.LogException(ex);
+                    await message.RemoveAllReactionsAsync();
                     return ExecutionResult.FromError(ex.Message);
                 }
             }
