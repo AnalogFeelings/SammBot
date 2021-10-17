@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Rest;
 using Newtonsoft.Json;
 using SammBotNET.Extensions;
 using SammBotNET.RestDefinitions;
@@ -66,17 +65,17 @@ namespace SammBotNET.Modules
             List<Emoji> emojiList = new() { new Emoji("⏮"), new Emoji("◀"), new Emoji("▶"), new Emoji("⏭"), new Emoji("❌") };
 
             await message.AddReactionsAsync(emojiList.ToArray());
-            
+
             int page = 0;
             int pageMax = chosenPosts.Count;
             Stopwatch timer = new();
 
             timer.Start();
-            while(timer.ElapsedMilliseconds <= 20000)
+            while (timer.ElapsedMilliseconds <= 20000)
             {
                 try
                 {
-                    foreach(Emoji emoji in emojiList)
+                    foreach (Emoji emoji in emojiList)
                     {
                         IEnumerable<IUser> userEnumerable = await message.GetReactionUsersAsync(emoji, 4).FlattenAsync();
                         List<IUser> userList = userEnumerable.ToList();
@@ -84,7 +83,7 @@ namespace SammBotNET.Modules
 
                         if (!userList.Any(x => x.Id == Context.Message.Author.Id))
                         {
-                            foreach(IUser user in userList)
+                            foreach (IUser user in userList)
                             {
                                 await message.RemoveReactionAsync(emoji, user);
                             }
@@ -92,7 +91,7 @@ namespace SammBotNET.Modules
                         }
                         else
                         {
-                            switch(emoji.Name)
+                            switch (emoji.Name)
                             {
                                 case "⏮":
                                     page = 0;
@@ -129,7 +128,7 @@ namespace SammBotNET.Modules
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     BotLogger.LogException(ex);
                     await message.RemoveAllReactionsAsync();

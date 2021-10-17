@@ -1,5 +1,4 @@
-﻿using Discord.Addons.Interactive;
-using Discord.Commands;
+﻿using Discord.Commands;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
 using System;
@@ -11,7 +10,7 @@ namespace SammBotNET.Modules
     [Name("Math")]
     [Summary("Simple calculator.")]
     [Group("math")]
-    public class MathModule : InteractiveBase<SocketCommandContext>
+    public class MathModule : ModuleBase<SocketCommandContext>
     {
         public MathService MathService { get; set; }
 

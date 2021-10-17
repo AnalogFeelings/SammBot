@@ -1,5 +1,4 @@
 ﻿using Discord;
-using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +36,6 @@ namespace SammBotNET
             provider.GetRequiredService<CustomCommandService>();
             provider.GetRequiredService<HelpService>();
             provider.GetRequiredService<QuoteService>();
-            provider.GetRequiredService<InteractiveService>();
             provider.GetRequiredService<MathService>();
             provider.GetRequiredService<RandomService>();
             provider.GetRequiredService<FlagService>();
@@ -70,7 +68,6 @@ namespace SammBotNET
             .AddSingleton<HelpService>()
             .AddSingleton<Random>()
             .AddSingleton<QuoteService>()
-            .AddSingleton<InteractiveService>()
             .AddSingleton<MathService>()
             .AddSingleton<RandomService>()
             .AddSingleton<FlagService>()
