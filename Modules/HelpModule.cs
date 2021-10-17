@@ -47,7 +47,7 @@ namespace SammBotNET.Modules
                     }
 
                     if(foundCommand)
-                        embed.AddField(module.Name, string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, false);
+                        embed.AddField(module.Name, string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
                 }
                 embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
                 embed.WithFooter(footer => footer.Text = "Samm-Bot");
