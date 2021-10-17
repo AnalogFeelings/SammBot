@@ -105,7 +105,7 @@ namespace SammBotNET.Modules
                 if (!result.IsSuccess)
                     return ExecutionResult.FromError($"There is no command named \"{moduleName}\". Check your spelling.");
 
-                CommandMatch match = result.Commands.SingleOrDefault(x => x.Command.Name == actualName || x.Command.Aliases.Any(y => y == actualName));
+                CommandMatch match = result.Commands.SingleOrDefault(x => x.Command.Name == actualName);
 
                 if(match.Command == null)
                     return ExecutionResult.FromError($"There is no command named \"{moduleName}\". Check your spelling.");
