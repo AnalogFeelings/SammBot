@@ -104,7 +104,7 @@ namespace SammBotNET.Modules
                                     if (page < pageMax) page++;
                                     break;
                                 case "⏭":
-                                    page = pageMax;
+                                    page = pageMax - 1;
                                     break;
                                 case "❌":
                                     timer.Stop();
