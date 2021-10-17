@@ -47,7 +47,7 @@ namespace SammBotNET.Modules
 
                 if (foundCommand)
                     embed.AddField($"{module.Name} (Group: `{module.Group}`)",
-                        string.IsNullOrEmpty(module.Summary) ? "No description." : $"`{module.Summary}`", true);
+                        string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
             }
             embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
             embed.WithFooter(footer => footer.Text = "Samm-Bot");
@@ -83,7 +83,7 @@ namespace SammBotNET.Modules
                 PreconditionResult result = await match.CheckPreconditionsAsync(Context);
 
                 if (result.IsSuccess)
-                    embed.AddField(match.Name, $"`{(string.IsNullOrWhiteSpace(match.Summary) ? "No description." : match.Summary)}`", true);
+                    embed.AddField(match.Name, $"{(string.IsNullOrWhiteSpace(match.Summary) ? "No description." : match.Summary)}", true);
             }
 
             embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
