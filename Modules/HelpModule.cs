@@ -82,7 +82,7 @@ namespace SammBotNET.Modules
                 PreconditionResult result = await match.CheckPreconditionsAsync(Context);
 
                 if (result.IsSuccess)
-                    embed.AddField(match.Name, $"`{(string.IsNullOrWhiteSpace(match.Name) ? "No description." : match.Name)}`", true);
+                    embed.AddField(match.Name, $"`{(string.IsNullOrWhiteSpace(match.Summary) ? "No description." : match.Summary)}`", true);
             }
 
             embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
