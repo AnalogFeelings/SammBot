@@ -57,7 +57,7 @@ namespace SammBotNET.Modules
             embed.WithDescription(embedDescription);
             embed.WithImageUrl(chosenPosts[0].FileUrl);
             embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = $"Post 1/{nsfwPosts.Count}");
+            embed.WithFooter(footer => footer.Text = $"Post 1/{chosenPosts.Count}");
             embed.WithCurrentTimestamp();
 
             //My wish is that this code is so fucking horrendous that I dont have to touch paginated
@@ -119,7 +119,7 @@ namespace SammBotNET.Modules
                             embed.WithDescription(embedDescription);
                             embed.WithImageUrl(chosenPosts[page].FileUrl);
 
-                            embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{nsfwPosts.Count}");
+                            embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{pageMax}");
 
                             await message.ModifyAsync(y => y.Embed = embed.Build());
                             await message.RemoveReactionAsync(emoji, Context.Message.Author);
