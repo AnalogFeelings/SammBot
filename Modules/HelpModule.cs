@@ -11,7 +11,7 @@ namespace SammBotNET.Modules
     [Name("Help")]
     public class HelpModule : ModuleBase<SocketCommandContext>
     {
-        private readonly CommandService CommandService;
+        public readonly CommandService CommandService;
         public HelpService HelpService { get; set; }
 
         public HelpModule(CommandService service)
@@ -20,7 +20,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("help")]
-        [Summary("Provides all commands available.")]
+        [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync([Remainder] string CommandName = null)
         {
             if (CommandName == null)
@@ -29,27 +29,25 @@ namespace SammBotNET.Modules
                 {
                     Color = Color.DarkPurple,
                     Title = "SAMM-BOT HELP",
-                    Description = $"These are all the commands available." +
-                    $"\n Syntax: {GlobalConfig.Instance.LoadedConfig.BotPrefix}<module (sometimes)> <cmdname>"
+                    Description = $"These are all of the modules available." +
+                    $"\n Use `s.help <Module Name>` to see its commands."
                 };
 
                 foreach (ModuleInfo module in CommandService.Modules)
                 {
-                    string description = null;
+                    bool foundCommand = false;
+
                     foreach (CommandInfo cmd in module.Commands)
                     {
                         PreconditionResult result = await cmd.CheckPreconditionsAsync(Context);
 
                         if (cmd.Attributes.Any(x => x is HideInHelp)) continue;
 
-                        if (result.IsSuccess)
-                            description += $"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.Aliases[0]}\n";
+                        if (result.IsSuccess) foundCommand = true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(description))
-                    {
-                        embed.AddField(module.Name, description, false);
-                    }
+                    if(foundCommand)
+                        embed.AddField(module.Name, module.Summary, false);
                 }
                 embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
                 embed.WithFooter(footer => footer.Text = "Samm-Bot");
