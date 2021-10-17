@@ -62,29 +62,29 @@ namespace SammBotNET.Modules
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync([Remainder] string moduleName)
         {
-            SearchResult result = CommandService.Search(Context, moduleName);
+            ModuleInfo moduleInfo = CommandService.Modules.Single(x => x.Name == moduleName);
 
-            if (!result.IsSuccess)
-                return ExecutionResult.FromError($"The command \"{moduleName}\" doesn't exist.");
+            if (moduleInfo == null)
+                return ExecutionResult.FromError($"The module \"{moduleName}\" doesn't exist.");
 
             EmbedBuilder embed = new()
             {
                 Title = "SAMM-BOT HELP",
-                Description = $"All commands that are called \"{moduleName}\":",
-                Color = Color.DarkPurple,
+                Description = $"Syntax: `{GlobalConfig.Instance.LoadedConfig.BotPrefix}{moduleInfo.Name} <Command Name>`",
+                Color = Color.DarkPurple
             };
 
-            foreach (CommandMatch match in result.Commands)
+            string description = string.Empty;
+            foreach (CommandInfo match in moduleInfo.Commands)
             {
-                CommandInfo cmd = match.Command;
+                if (match.Attributes.Any(x => x is HideInHelp)) continue;
 
-                string parameters = string.Join(", ", cmd.Parameters.Select(p => p.Name));
-                if (parameters == string.Empty) parameters = "no parameters.";
+                PreconditionResult result = await match.CheckPreconditionsAsync(Context);
 
-                string description = cmd.Summary ?? (description = "No description provided.");
-
-                embed.AddField(string.Join(", ", cmd.Aliases), $"Parameters: {parameters}\nDescription: {cmd.Summary}", false);
+                if (result.IsSuccess)
+                    embed.AddField(match.Name, $"`{(string.IsNullOrWhiteSpace(match.Name) ? "No description." : match.Name)}`", true);
             }
+
             embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
             embed.WithFooter(footer => footer.Text = "Samm-Bot");
             embed.WithCurrentTimestamp();
