@@ -129,6 +129,12 @@ namespace SammBotNET.Modules
                 }
 
                 embed.AddField("Command Parameters", string.IsNullOrEmpty(commandParameters) ? "No parameters." : commandParameters);
+
+                embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
+                embed.WithFooter(footer => footer.Text = "Samm-Bot");
+                embed.WithCurrentTimestamp();
+
+                await ReplyAsync("", false, embed.Build());
             }
 
             return ExecutionResult.Succesful();
