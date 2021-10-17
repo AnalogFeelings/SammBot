@@ -38,7 +38,7 @@ namespace SammBotNET
             provider.GetRequiredService<QuoteService>();
             provider.GetRequiredService<MathService>();
             provider.GetRequiredService<RandomService>();
-            provider.GetRequiredService<FlagService>();
+            //provider.GetRequiredService<FlagService>();
             provider.GetRequiredService<AdminService>();
             provider.GetRequiredService<NsfwService>();
 
@@ -70,7 +70,7 @@ namespace SammBotNET
             .AddSingleton<QuoteService>()
             .AddSingleton<MathService>()
             .AddSingleton<RandomService>()
-            .AddSingleton<FlagService>()
+            //.AddSingleton<FlagService>()
             .AddSingleton<AdminService>()
             .AddSingleton<NsfwService>()
             .AddDbContext<PhrasesDB>()
