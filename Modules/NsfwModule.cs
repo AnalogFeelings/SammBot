@@ -68,7 +68,7 @@ namespace SammBotNET.Modules
             await message.AddReactionsAsync(emojiList.ToArray());
             
             int page = 0;
-            int pageMax = chosenPosts.Count - 1;
+            int pageMax = chosenPosts.Count;
             Stopwatch timer = new();
 
             timer.Start();
