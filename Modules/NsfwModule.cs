@@ -107,8 +107,9 @@ namespace SammBotNET.Modules
                                     page = pageMax;
                                     break;
                                 case "❌":
+                                    timer.Stop();
                                     await message.RemoveAllReactionsAsync();
-                                    break;
+                                    return ExecutionResult.Succesful();
                                 default:
                                     break;
                             }
