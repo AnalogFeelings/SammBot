@@ -22,12 +22,9 @@ namespace SammBotNET.Modules
 
             IUserMessage message = await ReplyAsync(":8ball: Asking the magic 8-ball...");
 
-            using(Context.Channel.EnterTypingState())
-            {
-                await Task.Delay(2000);
+            using(Context.Channel.EnterTypingState()) await Task.Delay(2000);
 
-                await message.ModifyAsync(x => x.Content = $"<@{Context.Message.Author.Id}> **The magic 8-ball answered**:\n`{chosenAnswer}`");
-            }
+            await message.ModifyAsync(x => x.Content = $"<@{Context.Message.Author.Id}> **The magic 8-ball answered**:\n`{chosenAnswer}`");
 
             return ExecutionResult.Succesful();
         }
