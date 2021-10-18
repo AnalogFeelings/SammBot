@@ -24,7 +24,7 @@ namespace SammBotNET.Modules
                 Description = "This is all the information about the bot."
             };
 
-            string elapsedTime = string.Format("{0:00}d {1:00}h {2:00}m",
+            string elapsedTime = string.Format("{0:00}d{1:00}h{2:00}m",
                 GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Days,
                 GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Hours,
                 GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Minutes);
