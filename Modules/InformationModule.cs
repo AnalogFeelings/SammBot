@@ -34,6 +34,7 @@ namespace SammBotNET.Modules
             embed.AddField("Ping", $"`{Context.Client.Latency}ms.`", true);
             embed.AddField("Im In", $"`{Context.Client.Guilds.Count} server/s.`", true);
             embed.AddField("Uptime", $"`{elapsedTime}`", true);
+            embed.AddField("Hotel?", "`Trivago.`", true);
 
             embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
             embed.WithFooter(footer => footer.Text = "Samm-Bot");
