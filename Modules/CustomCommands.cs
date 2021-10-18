@@ -37,24 +37,16 @@ namespace SammBotNET.Modules
 
             List<CustomCommand> commands = await CommandDatabase.CustomCommand.ToListAsync();
 
-            EmbedBuilder embed = new()
-            {
-                Title = "SAMM-BOT CUSTOM COMMANDS",
-                Description = "All custom commands that have been created.",
-                Color = Color.DarkPurple
-            };
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Custom Commands", "All of the custom commands that have been created.");
 
-            foreach (CustomCommand cmd in commands)
+            if (commands.Count > 0)
             {
-                embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.name}", $"By <@{cmd.authorID}>");
+                foreach (CustomCommand cmd in commands)
+                {
+                    embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.name}", $"By <@{cmd.authorID}>");
+                }
             }
-            if (commands.Count == 0)
-            {
-                embed.AddField("Wow...", "There are no custom commands yet.");
-            }
-            embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = "Samm-Bot");
-            embed.WithCurrentTimestamp();
+            else embed.AddField("Wow...", "There are no custom commands yet.");
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 

@@ -17,7 +17,7 @@ namespace SammBotNET.Modules
         [Summary("Shows the FULL information of the bot.")]
         public async Task<RuntimeResult> InformationFullAsync()
         {
-            EmbedBuilder embed = new EmbedBuilder().BuildDefaultSamm("Information", "All public information about the bot.");
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All public information about the bot.");
 
             string elapsedTime = string.Format("{0:00}d{1:00}h{2:00}m",
                 GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Days,

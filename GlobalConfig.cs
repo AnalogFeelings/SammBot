@@ -83,6 +83,7 @@ namespace SammBotNET
         public int RngResetTime { get; set; } = 25;
         public List<string> BannedPrefixes { get; set; } = null;
         public int Rule34Threshold { get; set; } = 30;
+        public List<string> MagicBallAnswers { get; set; } = null;
     }
 
     public class BotStatus
