@@ -17,12 +17,7 @@ namespace SammBotNET.Modules
         [Summary("Shows the FULL information of the bot.")]
         public async Task<RuntimeResult> InformationFullAsync()
         {
-            EmbedBuilder embed = new()
-            {
-                Color = Color.DarkPurple,
-                Title = "SAMM-BOT INFORMATION",
-                Description = "This is all the information about the bot."
-            };
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultSamm("Information", "All public information about the bot.");
 
             string elapsedTime = string.Format("{0:00}d{1:00}h{2:00}m",
                 GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Days,
@@ -35,10 +30,6 @@ namespace SammBotNET.Modules
             embed.AddField("Im In", $"`{Context.Client.Guilds.Count} server/s.`", true);
             embed.AddField("Uptime", $"`{elapsedTime}`", true);
             embed.AddField("Hotel?", "`Trivago.`", true);
-
-            embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = "Samm-Bot");
-            embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 
