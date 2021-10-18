@@ -24,10 +24,16 @@ namespace SammBotNET.Modules
                 Description = "This is all the information about the bot."
             };
 
+            string elapsedTime = string.Format("{0:00}d {1:00}h {2:00}m",
+                GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Days,
+                GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Hours,
+                GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Minutes);
+
             embed.AddField("Bot Version", $"`{GlobalConfig.Instance.LoadedConfig.BotVersion}`", true);
             embed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
             embed.AddField("Ping", $"`{Context.Client.Latency}ms.`", true);
             embed.AddField("Im In", $"`{Context.Client.Guilds.Count} server/s.`", true);
+            embed.AddField("Uptime", $"`{elapsedTime}`", true);
 
             embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
             embed.WithFooter(footer => footer.Text = "Samm-Bot");
