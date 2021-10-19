@@ -40,7 +40,9 @@ namespace SammBotNET.Modules
             AdminService.ChannelId = channel;
             AdminService.GuildId = guild;
 
-            await ReplyAsync($"Success. Set guild to `{guild}` and channel to `{channel}`.");
+            SocketGuild socketGuild = Context.Client.GetGuild(guild);
+
+            await ReplyAsync($"Success. Set guild to `{socketGuild.Name}` and channel to `{socketGuild.GetTextChannel(channel).Name}`.");
 
             return ExecutionResult.Succesful();
         }

@@ -24,13 +24,10 @@ namespace SammBotNET.Modules
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync()
         {
-            EmbedBuilder embed = new()
-            {
-                Color = Color.DarkPurple,
-                Title = "SAMM-BOT HELP",
-                Description = $"These are all of the modules available." +
-                $"\n Use `s.help <Module/Group Name>` to see its commands."
-            };
+            string prefix = GlobalConfig.Instance.LoadedConfig.BotPrefix;
+
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help", $"These are all of the modules available." +
+                                                                    $"\n Use `{prefix}.help <Module/Group Name>` to see its commands.");
 
             foreach (ModuleInfo module in CommandService.Modules)
             {
@@ -49,9 +46,6 @@ namespace SammBotNET.Modules
                     embed.AddField($"{module.Name} (Group: `{module.Group}`)",
                         string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
             }
-            embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = "Samm-Bot");
-            embed.WithCurrentTimestamp();
 
             await ReplyAsync("", false, embed.Build());
 
@@ -63,6 +57,7 @@ namespace SammBotNET.Modules
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync([Remainder] string moduleName)
         {
+            string prefix = GlobalConfig.Instance.LoadedConfig.BotPrefix;
             string[] splittedModuleName = moduleName.Split(' ');
 
             if (splittedModuleName.Length == 1)
@@ -72,12 +67,8 @@ namespace SammBotNET.Modules
                 if (moduleInfo == null)
                     return ExecutionResult.FromError($"The module \"{moduleName}\" doesn't exist.");
 
-                EmbedBuilder embed = new()
-                {
-                    Title = "SAMM-BOT HELP",
-                    Description = $"Syntax: `{GlobalConfig.Instance.LoadedConfig.BotPrefix}{moduleInfo.Group} <Command Name>`",
-                    Color = Color.DarkPurple
-                };
+                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context,
+                    "Help", $"Syntax: `{prefix}{moduleInfo.Group} <Command Name>`");
 
                 string description = string.Empty;
                 foreach (CommandInfo match in moduleInfo.Commands)
@@ -89,10 +80,6 @@ namespace SammBotNET.Modules
                     if (result.IsSuccess)
                         embed.AddField(match.Name, $"{(string.IsNullOrWhiteSpace(match.Summary) ? "No description." : match.Summary)}", true);
                 }
-
-                embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-                embed.WithFooter(footer => footer.Text = "Samm-Bot");
-                embed.WithCurrentTimestamp();
 
                 await ReplyAsync("", false, embed.Build());
             }
@@ -110,11 +97,7 @@ namespace SammBotNET.Modules
                 if (match.Command == null)
                     return ExecutionResult.FromError($"There is no command named \"{moduleName}\". Check your spelling.");
 
-                EmbedBuilder embed = new()
-                {
-                    Color = Color.DarkPurple,
-                    Title = "SAMM-BOT HELP"
-                };
+                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help");
 
                 CommandInfo command = match.Command;
 
@@ -138,10 +121,6 @@ namespace SammBotNET.Modules
                 }
 
                 embed.AddField("Command Parameters", string.IsNullOrEmpty(commandParameters) ? "No parameters." : commandParameters);
-
-                embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-                embed.WithFooter(footer => footer.Text = "Samm-Bot");
-                embed.WithCurrentTimestamp();
 
                 await ReplyAsync("", false, embed.Build());
             }

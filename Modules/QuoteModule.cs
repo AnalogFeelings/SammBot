@@ -34,12 +34,9 @@ namespace SammBotNET.Modules
             List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
             Phrase finalPhrase = phrases.Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
 
-            EmbedBuilder embed = new()
-            {
-                Color = Color.DarkPurple
-            };
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-            embed.AddField($"**\"{finalPhrase.content}\"**", $"By <@{finalPhrase.authorID}>");
+            embed.AddField($"*\"{finalPhrase.content}\"*", $"By <@{finalPhrase.authorID}>");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 
             return ExecutionResult.Succesful();
@@ -56,15 +53,11 @@ namespace SammBotNET.Modules
             if (!phrases.Any(x => x.authorID == user.Id))
                 return ExecutionResult.FromError($"This user doesn't have any phrases!");
 
-            Phrase finalPhrase = phrases.Where(x => x.authorID == user.Id)
-                .Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
+            Phrase finalPhrase = phrases.Where(x => x.authorID == user.Id && x.serverID == Context.Guild.Id).ToList().PickRandom();
 
-            EmbedBuilder embed = new()
-            {
-                Color = Color.DarkPurple
-            };
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-            embed.AddField($"**\"{finalPhrase.content}\"**", $"By <@{finalPhrase.authorID}>");
+            embed.AddField($"*\"{finalPhrase.content}\"*", $"By <@{finalPhrase.authorID}>");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 
             return ExecutionResult.Succesful();

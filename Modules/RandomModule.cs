@@ -43,18 +43,10 @@ namespace SammBotNET.Modules
 
             List<CatImage> images = await RandomModuleService.requesterCat.GetImageAsync(searchParams);
 
-            EmbedBuilder embed = new()
-            {
-                Color = Color.DarkPurple,
-                Title = "RANDOM CAT"
-            };
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"__Breed__: **{images[0].Breeds[0].Name}**" +
+                $"\n__Temperament__: *{images[0].Breeds[0].Temperament}*").ChangeTitle("Random Cat");
 
             embed.ImageUrl = images[0].Url;
-            embed.Description = $"__Breed__: ***{images[0].Breeds[0].Name}***" +
-                $"\n__Temperament__: ***{images[0].Breeds[0].Temperament}***";
-            embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = "Samm-Bot");
-            embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 
@@ -77,18 +69,10 @@ namespace SammBotNET.Modules
 
             List<DogImage> images = await RandomModuleService.requesterDog.GetImageAsync(searchParams);
 
-            EmbedBuilder embed = new()
-            {
-                Color = Color.DarkPurple,
-                Title = "RANDOM DOG"
-            };
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"__Breed__: **{images[0].Breeds[0].Name}**" +
+                $"\n__Temperament__: *{images[0].Breeds[0].Temperament}*").ChangeTitle("Random Dog");
 
             embed.ImageUrl = images[0].Url;
-            embed.Description = $"__Breed__: ***{images[0].Breeds[0].Name}***" +
-                $"\n__Temperament__: ***{images[0].Breeds[0].Temperament}***";
-            embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = "Samm-Bot");
-            embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 
@@ -102,21 +86,10 @@ namespace SammBotNET.Modules
             List<PeoneImage> peoneImages = await PeoneDatabase.PeoneImage.ToListAsync();
             PeoneImage selectedPeoneImage = peoneImages.PickRandom();
 
-            EmbedBuilder embed = new()
-            {
-                Color = new Color(105, 219, 221),
-                Title = "RANDOM PEONE"
-            };
-
-            if (selectedPeoneImage.TwitterUrl == "https://pbs.twimg.com/media/EH2vwfvU4AELAMg?format=jpg&name=small")
-            {
-                embed.Description = "*Neveah's Favourite!*";
-            }
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Peone");
+            embed.Color = new Color(105, 219, 221);
 
             embed.ImageUrl = selectedPeoneImage.TwitterUrl;
-            embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = "Samm-Bot");
-            embed.WithCurrentTimestamp();
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 
@@ -130,16 +103,8 @@ namespace SammBotNET.Modules
             int maxSCP = 5999;
             int result = GlobalConfig.Instance.GlobalRng.Next(maxSCP + 1);
 
-            EmbedBuilder embed = new()
-            {
-                Color = Color.DarkPurple,
-                Title = "RANDOM SCP"
-            };
-
-            embed.Description = "http://www.scp-wiki.net/scp-" + result.ToString("D3");
-            embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = "Samm-Bot");
-            embed.WithCurrentTimestamp();
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: "http://www.scp-wiki.net/scp-" + result.ToString("D3"))
+                                                    .ChangeTitle("Random SCP");
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 

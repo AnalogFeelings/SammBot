@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using SammBotNET.Extensions;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace SammBotNET.Modules
             embed.AddField("Ping", $"`{Context.Client.Latency}ms.`", true);
             embed.AddField("Im In", $"`{Context.Client.Guilds.Count} server/s.`", true);
             embed.AddField("Uptime", $"`{elapsedTime}`", true);
-            embed.AddField("Hotel?", "`Trivago.`", true);
+            embed.AddField("Host", $"`{FriendlyOSName()}`", true);
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 
@@ -41,13 +42,13 @@ namespace SammBotNET.Modules
         [Summary("Shows a list of all the servers the bot is in.")]
         public async Task<RuntimeResult> ServersAsync()
         {
-            string builtMsg = "I am invited in the following servers:\n```md\n";
+            string builtMsg = "I am invited in the following servers:\n```\n";
             string inside = string.Empty;
 
             int i = 1;
             foreach (SocketGuild guild in Context.Client.Guilds)
             {
-                inside += $"{i}. [{guild.Name}] with <{guild.MemberCount}> members.\n";
+                inside += $"{i}. {guild.Name} with {guild.MemberCount} members.\n";
                 i++;
             }
             inside += "```";
@@ -59,35 +60,48 @@ namespace SammBotNET.Modules
 
         public string FriendlyOSName()
         {
-            Version version = Environment.OSVersion.Version;
-            string os;
-            switch (version.Major)
-            {
-                case 6:
-                    os = version.Minor switch
-                    {
-                        1 => "Windows 7",
-                        2 => "Windows 8",
-                        3 => "Windows 8.1",
-                        _ => "Unknown System",
-                    };
-                    break;
-                case 10:
-                    switch (version.Minor)
-                    {
-                        case 0:
-                            if (version.Build >= 22000) os = "Windows 11";
-                            else os = "Windows 10";
+            string osName = string.Empty;
 
-                            break;
-                        default: os = "Unknown System"; break;
-                    }
-                    break;
-                default:
-                    os = "Unknown System";
-                    break;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Version version = Environment.OSVersion.Version;
+
+                switch (version.Major)
+                {
+                    case 6:
+                        osName = version.Minor switch
+                        {
+                            1 => "Windows 7",
+                            2 => "Windows 8",
+                            3 => "Windows 8.1",
+                            _ => "Unknown Windows",
+                        };
+                        break;
+                    case 10:
+                        switch (version.Minor)
+                        {
+                            case 0:
+                                if (version.Build >= 22000) osName = "Windows 11";
+                                else osName = "Windows 10";
+
+                                break;
+                            default: osName = "Unknown Windows"; break;
+                        }
+                        break;
+                    default:
+                        osName = "Unknown Windows";
+                        break;
+                }
             }
-            return os;
+            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                if (File.Exists("/etc/issue.net"))
+                    osName = File.ReadAllText("/etc/issue.net");
+                else
+                    osName = "Linux";
+            }
+            
+            return osName;
         }
     }
 }

@@ -43,21 +43,14 @@ namespace SammBotNET.Modules
             List<Rule34Post> chosenPosts = nsfwPosts.Where(x => x.Score >= GlobalConfig.Instance.LoadedConfig.Rule34Threshold
                                                             && !x.FileUrl.EndsWith(".mp4")).ToList();
 
-            EmbedBuilder embed = new()
-            {
-                Color = new Color(36, 119, 0),
-                Title = "RULE34 SEARCH"
-            };
-
             string embedDescription = $"**Tags** : `{chosenPosts[0].Tags.Truncate(512)}`\n";
             embedDescription += $"**Author** : `{chosenPosts[0].Owner}`\n";
             embedDescription += $"**Score** : `{chosenPosts[0].Score}`";
 
-            embed.WithDescription(embedDescription);
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: embedDescription);
+            embed.ChangeTitle("Rule34 Search");
+            embed.ChangeFooter(Context, $"Post 1/{chosenPosts.Count}");
             embed.WithImageUrl(chosenPosts[0].FileUrl);
-            embed.WithAuthor(author => author.Name = "SAMM-BOT COMMANDS");
-            embed.WithFooter(footer => footer.Text = $"Post 1/{chosenPosts.Count}");
-            embed.WithCurrentTimestamp();
 
             //My wish is that this code is so fucking horrendous that I dont have to touch paginated
             //embeds ever fucking again.
@@ -119,7 +112,7 @@ namespace SammBotNET.Modules
                             embed.WithDescription(embedDescription);
                             embed.WithImageUrl(chosenPosts[page].FileUrl);
 
-                            embed.WithFooter(footer => footer.Text = $"Post {page + 1}/{pageMax}");
+                            embed.ChangeFooter(Context, $"Post {page + 1}/{pageMax}");
 
                             await message.ModifyAsync(y => y.Embed = embed.Build());
                             await message.RemoveReactionAsync(emoji, Context.Message.Author);

@@ -55,7 +55,7 @@ namespace SammBotNET.Modules
 
         [Command("create", RunMode = RunMode.Async)]
         [Summary("Creates a custom command.")]
-        public async Task<RuntimeResult> CreateCMDAsync(string Name, string Response)
+        public async Task<RuntimeResult> CreateCMDAsync(string name, string reply)
         {
             if (CustomCommandService.IsDisabled)
                 return ExecutionResult.FromError($"The module \"{nameof(CustomCommands)}\" is disabled.");
@@ -65,36 +65,36 @@ namespace SammBotNET.Modules
 
             #region Validity Checks
 
-            if (Name.Length > 15)
+            if (name.Length > 15)
                 return ExecutionResult.FromError("Please make the command name shorter than 15 characters!");
-            else if (Name.StartsWith(GlobalConfig.Instance.LoadedConfig.BotPrefix))
+            else if (name.StartsWith(GlobalConfig.Instance.LoadedConfig.BotPrefix))
                 return ExecutionResult.FromError("Custom command names can't begin with my prefix!");
             else if (Context.Message.MentionedUsers.Count > 0)
                 return ExecutionResult.FromError("Custom command names or replies cannot contain pings!");
-            else if (Name.Contains(" "))
+            else if (name.Contains(" "))
                 return ExecutionResult.FromError("Custom command names cannot contain spaces!");
 
             foreach (CommandInfo cmdInf in CommandService.Commands)
             {
-                if (Name == cmdInf.Name) return ExecutionResult.FromError("That command name already exists!");
+                if (name == cmdInf.Name) return ExecutionResult.FromError("That command name already exists!");
             }
 
             List<CustomCommand> dbCommands = await CommandDatabase.CustomCommand.ToListAsync();
             foreach (CustomCommand ccmd in dbCommands)
             {
-                if (Name == ccmd.name) return ExecutionResult.FromError("That command name already exists!");
+                if (name == ccmd.name) return ExecutionResult.FromError("That command name already exists!");
             }
 
             #endregion
 
             CustomCommandService.IsCreatingCommand = true;
-            await ReplyAsync($"Creating command \"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{Name}\"...");
+            await ReplyAsync($"Creating command \"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{name}\"...");
 
             await CommandDatabase.AddAsync(new CustomCommand
             {
-                name = Name,
+                name = name,
                 authorID = Context.Message.Author.Id,
-                reply = Response
+                reply = reply
             });
             await CommandDatabase.SaveChangesAsync();
 
