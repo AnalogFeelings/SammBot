@@ -43,6 +43,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("by", RunMode = RunMode.Async)]
+        [Alias("from")]
         [Summary("Sends a quote from a user in the server!")]
         public async Task<RuntimeResult> PhraseAsync(IUser user)
         {

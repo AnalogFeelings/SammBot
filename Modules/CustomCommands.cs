@@ -29,6 +29,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("list", RunMode = RunMode.Async)]
+        [Alias("all")]
         [Summary("Lists all the custom commands that have been created.")]
         public async Task<RuntimeResult> CustomsAsync()
         {
@@ -54,6 +55,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("create", RunMode = RunMode.Async)]
+        [Alias("new")]
         [Summary("Creates a custom command.")]
         public async Task<RuntimeResult> CreateCMDAsync(string name, string reply)
         {

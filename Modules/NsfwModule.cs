@@ -23,6 +23,7 @@ namespace SammBotNET.Modules
         public NsfwModule(Logger logger) => BotLogger = logger;
 
         [Command("r34")]
+        [Alias("rule34")]
         [RequireNsfw]
         [Summary("Searches for posts in rule34.xxx")]
         public async Task<RuntimeResult> SearchR34Async([Remainder] string tags)

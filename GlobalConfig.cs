@@ -14,6 +14,7 @@ namespace SammBotNET
 
         public string ConfigFile = "config.json";
         public string StatusFile = "status.xml";
+
         public Random GlobalRng = new(Guid.NewGuid().GetHashCode());
         public Stopwatch StartupStopwatch = new();
         public Stopwatch RuntimeStopwatch = new();

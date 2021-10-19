@@ -38,6 +38,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("servers", RunMode = RunMode.Async)]
+        [Alias("guilds")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Shows a list of all the servers the bot is in.")]
         public async Task<RuntimeResult> ServersAsync()
@@ -93,14 +94,14 @@ namespace SammBotNET.Modules
                         break;
                 }
             }
-            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 if (File.Exists("/etc/issue.net"))
                     osName = File.ReadAllText("/etc/issue.net");
                 else
                     osName = "Linux";
             }
-            
+
             return osName;
         }
     }

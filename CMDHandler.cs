@@ -57,7 +57,7 @@ namespace SammBotNET
                     }
                     if (result.ErrorReason != "Execution succesful.")
                     {
-                        await context.Channel.SendMessageAsync("**__Woops! There has been an error!__**\n"
+                        await context.Channel.SendMessageAsync("**__Error executing command!__**\n"
                                                                 + result.ErrorReason);
                     }
                 }
@@ -72,11 +72,12 @@ namespace SammBotNET
         {
             SocketUserMessage message = messageParam as SocketUserMessage;
             if (message == null) return;
+            if (message.Author.IsBot) return;
 
             SocketCommandContext context = new(DiscordClient, message);
 
             int argPos = 0;
-            if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos) && !message.Author.IsBot)
+            if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos))
             {
                 CommandName = message.Content.Remove(0, GlobalConfig.Instance.LoadedConfig.BotPrefix.Length);
                 CommandName = CommandName.Split()[0];
@@ -89,7 +90,7 @@ namespace SammBotNET
                     argPos: argPos,
                     services: ServiceProvider);
             }
-            else if (!message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos) && !message.Author.IsBot)
+            else
             {
                 try
                 {

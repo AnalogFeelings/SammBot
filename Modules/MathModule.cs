@@ -15,6 +15,7 @@ namespace SammBotNET.Modules
         public MathService MathService { get; set; }
 
         [Command("calculate", RunMode = RunMode.Async)]
+        [Alias("calc", "do")]
         [Summary("Calculates the math expression from the parameter Expression.")]
         public async Task<RuntimeResult> CalculateAsync([Remainder] string Expression)
         {

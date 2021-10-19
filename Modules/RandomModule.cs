@@ -28,7 +28,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("cat")]
-        [Alias(new string[] { "kit", "kitto", "cogga" })]
+        [Alias("kit", "kitto", "cogga")]
         [Summary("Returns a random cat!")]
         public async Task<RuntimeResult> GetCatAsync()
         {
@@ -54,7 +54,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("dog")]
-        [Alias(new string[] { "doggo", "dogger" })]
+        [Alias("doggo", "dogger")]
         [Summary("Returns a random cat!")]
         public async Task<RuntimeResult> GetDogAsync()
         {

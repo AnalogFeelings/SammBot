@@ -26,6 +26,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("customcmds")]
+        [Alias("customs", "commands")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Deletes all custom commands.")]
         public async Task<RuntimeResult> FlushCMDsAsync()
@@ -38,6 +39,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("quotes")]
+        [Alias("phrases")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Deletes all quotes.")]
         public async Task<RuntimeResult> FlushQuotesAsync()
@@ -50,6 +52,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("messages")]
+        [RequireBotPermission(GuildPermission.ManageMessages)]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Deletes an amount of messages.")]
         public async Task<RuntimeResult> FlushMessagesAsync(int num)

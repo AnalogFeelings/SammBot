@@ -61,6 +61,7 @@ namespace SammBotNET.Modules
         }
 
         [Command("list", RunMode = RunMode.Async)]
+        [Alias("all")]
         [Summary("Lists all of the support messages!")]
         public async Task<RuntimeResult> ListSupportAsync()
         {

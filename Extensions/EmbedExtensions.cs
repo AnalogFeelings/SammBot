@@ -8,7 +8,7 @@ namespace SammBotNET.Extensions
     {
         public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder builder, SocketCommandContext context, string title = "", string description = "")
         {
-            if(context == null)
+            if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
             string botName = GlobalConfig.Instance.LoadedConfig.BotName;
