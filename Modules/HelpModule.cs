@@ -27,7 +27,7 @@ namespace SammBotNET.Modules
             string prefix = GlobalConfig.Instance.LoadedConfig.BotPrefix;
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help", $"These are all of the modules available." +
-                                                                    $"\n Use `{prefix}.help <Module/Group Name>` to see its commands.");
+                                                                    $"\n Use `{prefix}help <Module/Group Name>` to see its commands.");
 
             foreach (ModuleInfo module in CommandService.Modules)
             {
