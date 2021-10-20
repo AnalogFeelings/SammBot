@@ -83,7 +83,7 @@ namespace SammBotNET.Modules
             string restartFileCmd = "cmd.exe";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                restartTimeoutCmd = $"-c \"sleep 3s && .{Process.GetCurrentProcess().MainModule.FileName}\"";
+                restartTimeoutCmd = $"-c \"sleep 3s && {Process.GetCurrentProcess().MainModule.FileName}\"";
                 restartFileCmd = "bash";
             }
 
