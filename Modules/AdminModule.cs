@@ -98,7 +98,7 @@ namespace SammBotNET.Modules
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
 
             List<PropertyInfo> properties = typeof(JsonConfig).GetProperties()
-                .Where(x => x.PropertyType.GetGenericTypeDefinition() != typeof(List<>)).ToList();
+                .Where(x => !x.PropertyType.IsGenericType).ToList();
 
             foreach(PropertyInfo property in properties)
             {
