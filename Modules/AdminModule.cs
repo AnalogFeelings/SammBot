@@ -7,11 +7,9 @@ using SammBotNET.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
@@ -100,7 +98,7 @@ namespace SammBotNET.Modules
             List<PropertyInfo> properties = typeof(JsonConfig).GetProperties()
                 .Where(x => !x.PropertyType.IsGenericType).ToList();
 
-            foreach(PropertyInfo property in properties)
+            foreach (PropertyInfo property in properties)
             {
                 embed.AddField(property.Name, property.GetValue(GlobalConfig.Instance.LoadedConfig, null));
             }
