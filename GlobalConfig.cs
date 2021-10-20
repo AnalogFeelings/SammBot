@@ -49,8 +49,12 @@ namespace SammBotNET
             ProcessStartInfo startInfo = new()
             {
                 Arguments = restartTimeoutCmd,
-                CreateNoWindow = true,
-                FileName = restartFileCmd
+                FileName = restartFileCmd,
+                CreateNoWindow = false,
+                UseShellExecute = true,
+                RedirectStandardError = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true
             };
             Process.Start(startInfo);
             Environment.Exit(0);
