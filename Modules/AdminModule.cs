@@ -76,7 +76,8 @@ namespace SammBotNET.Modules
             await ReplyAsync($"Set variable \"{varName}\" to `{newValue.ToString().Truncate(128)}` succesfully.");
             await ReplyAsync($"{GlobalConfig.Instance.LoadedConfig.BotName} will restart.");
 
-            await File.WriteAllTextAsync(GlobalConfig.Instance.ConfigFile, JsonConvert.SerializeObject(GlobalConfig.Instance.LoadedConfig));
+            await File.WriteAllTextAsync(GlobalConfig.Instance.ConfigFile,
+                JsonConvert.SerializeObject(GlobalConfig.Instance.LoadedConfig, Formatting.Indented));
 
             string restartTimeoutCmd = $"/C timeout 3 && {Process.GetCurrentProcess().MainModule.FileName}";
             string restartFileCmd = "cmd.exe";
