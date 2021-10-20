@@ -4,5 +4,6 @@
     {
         public ulong ChannelId;
         public ulong GuildId;
+        public bool ChangingConfig;
     }
 }

@@ -56,81 +56,85 @@ namespace SammBotNET.Modules
             //My wish is that this code is so fucking horrendous that I dont have to touch paginated
             //embeds ever fucking again.
             IUserMessage message = await Context.Channel.SendMessageAsync("", false, embed.Build());
-            List<Emoji> emojiList = new() { new Emoji("⏮"), new Emoji("◀"), new Emoji("▶"), new Emoji("⏭"), new Emoji("❌") };
 
-            await message.AddReactionsAsync(emojiList.ToArray());
-
-            int page = 0;
-            int pageMax = chosenPosts.Count;
-            Stopwatch timer = new();
-
-            timer.Start();
-            while (timer.ElapsedMilliseconds <= 20000)
+            if (chosenPosts.Count > 1)
             {
-                try
+                List<Emoji> emojiList = new() { new Emoji("⏮"), new Emoji("◀"), new Emoji("▶"), new Emoji("⏭"), new Emoji("❌") };
+
+                await message.AddReactionsAsync(emojiList.ToArray());
+
+                int page = 0;
+                int pageMax = chosenPosts.Count;
+                Stopwatch timer = new();
+
+                timer.Start();
+                while (timer.ElapsedMilliseconds <= 20000)
                 {
-                    foreach (Emoji emoji in emojiList)
+                    try
                     {
-                        IEnumerable<IUser> userEnumerable = await message.GetReactionUsersAsync(emoji, 4).FlattenAsync();
-                        List<IUser> userList = userEnumerable.ToList();
-                        if (userList.Count < 2) continue;
-
-                        if (!userList.Any(x => x.Id == Context.Message.Author.Id))
+                        foreach (Emoji emoji in emojiList)
                         {
-                            foreach (IUser user in userList)
+                            IEnumerable<IUser> userEnumerable = await message.GetReactionUsersAsync(emoji, 4).FlattenAsync();
+                            List<IUser> userList = userEnumerable.ToList();
+                            if (userList.Count < 2) continue;
+
+                            if (!userList.Any(x => x.Id == Context.Message.Author.Id))
                             {
-                                await message.RemoveReactionAsync(emoji, user);
+                                foreach (IUser user in userList)
+                                {
+                                    await message.RemoveReactionAsync(emoji, user);
+                                }
+                                continue;
                             }
-                            continue;
-                        }
-                        else
-                        {
-                            switch (emoji.Name)
+                            else
                             {
-                                case "⏮":
-                                    page = 0;
-                                    break;
-                                case "◀":
-                                    if (page != 0) page--;
-                                    break;
-                                case "▶":
-                                    if (page < pageMax) page++;
-                                    break;
-                                case "⏭":
-                                    page = pageMax - 1;
-                                    break;
-                                case "❌":
-                                    timer.Stop();
-                                    await message.RemoveAllReactionsAsync();
-                                    return ExecutionResult.Succesful();
-                                default:
-                                    break;
+                                switch (emoji.Name)
+                                {
+                                    case "⏮":
+                                        page = 0;
+                                        break;
+                                    case "◀":
+                                        if (page != 0) page--;
+                                        break;
+                                    case "▶":
+                                        if (page < pageMax) page++;
+                                        break;
+                                    case "⏭":
+                                        page = pageMax - 1;
+                                        break;
+                                    case "❌":
+                                        timer.Stop();
+                                        await message.RemoveAllReactionsAsync();
+                                        return ExecutionResult.Succesful();
+                                    default:
+                                        break;
+                                }
+                                embedDescription = $"**Tags** : `{chosenPosts[page].Tags.Truncate(512)}`\n";
+                                embedDescription += $"**Author** : `{chosenPosts[page].Owner}`\n";
+                                embedDescription += $"**Score** : `{chosenPosts[page].Score}`";
+
+                                embed.WithDescription(embedDescription);
+                                embed.WithImageUrl(chosenPosts[page].FileUrl);
+
+                                embed.ChangeFooter(Context, $"Post {page + 1}/{pageMax}");
+
+                                await message.ModifyAsync(y => y.Embed = embed.Build());
+                                await message.RemoveReactionAsync(emoji, Context.Message.Author);
+
+                                timer.Restart();
                             }
-                            embedDescription = $"**Tags** : `{chosenPosts[page].Tags.Truncate(512)}`\n";
-                            embedDescription += $"**Author** : `{chosenPosts[page].Owner}`\n";
-                            embedDescription += $"**Score** : `{chosenPosts[page].Score}`";
-
-                            embed.WithDescription(embedDescription);
-                            embed.WithImageUrl(chosenPosts[page].FileUrl);
-
-                            embed.ChangeFooter(Context, $"Post {page + 1}/{pageMax}");
-
-                            await message.ModifyAsync(y => y.Embed = embed.Build());
-                            await message.RemoveReactionAsync(emoji, Context.Message.Author);
-
-                            timer.Restart();
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        BotLogger.LogException(ex);
+                        await message.RemoveAllReactionsAsync();
+                        return ExecutionResult.FromError(ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    BotLogger.LogException(ex);
-                    await message.RemoveAllReactionsAsync();
-                    return ExecutionResult.FromError(ex.Message);
-                }
+                timer.Stop();
+                await message.RemoveAllReactionsAsync();
             }
-            timer.Stop();
-            await message.RemoveAllReactionsAsync();
 
             return ExecutionResult.Succesful();
         }

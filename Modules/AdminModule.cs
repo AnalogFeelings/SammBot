@@ -54,6 +54,36 @@ namespace SammBotNET.Modules
             return ExecutionResult.Succesful();
         }
 
+        [Command("shutdown")]
+        [Alias("kill")]
+        [HideInHelp]
+        public async Task<RuntimeResult> ShutdownAsync()
+        {
+            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+                return ExecutionResult.FromError("You are not allowed to execute this command.");
+
+            await ReplyAsync($"{GlobalConfig.Instance.LoadedConfig.BotName} will shut down.");
+
+            Environment.Exit(0);
+
+            return ExecutionResult.Succesful();
+        }
+
+        [Command("restart")]
+        [Alias("reboot", "reset")]
+        [HideInHelp]
+        public async Task<RuntimeResult> RestartAsync()
+        {
+            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+                return ExecutionResult.FromError("You are not allowed to execute this command.");
+
+            await ReplyAsync($"{GlobalConfig.Instance.LoadedConfig.BotName} will restart.");
+
+            GlobalConfig.Instance.RestartBot();
+
+            return ExecutionResult.Succesful();
+        }
+
         [Command("setcfg")]
         [Alias("config")]
         [HideInHelp]
@@ -61,6 +91,10 @@ namespace SammBotNET.Modules
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
+            if(AdminService.ChangingConfig)
+                return ExecutionResult.FromError("Configuration is being modified, wait for a while.");
+
+            AdminService.ChangingConfig = true;
 
             PropertyInfo retrievedVariable = typeof(JsonConfig).GetProperty(varName);
 
@@ -79,22 +113,7 @@ namespace SammBotNET.Modules
             await File.WriteAllTextAsync(GlobalConfig.Instance.ConfigFile,
                 JsonConvert.SerializeObject(GlobalConfig.Instance.LoadedConfig, Formatting.Indented));
 
-            string restartTimeoutCmd = $"/C timeout 3 && {Process.GetCurrentProcess().MainModule.FileName}";
-            string restartFileCmd = "cmd.exe";
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                restartTimeoutCmd = $"-c \"sleep 3s && {Process.GetCurrentProcess().MainModule.FileName}\"";
-                restartFileCmd = "bash";
-            }
-
-            ProcessStartInfo startInfo = new()
-            {
-                Arguments = restartTimeoutCmd,
-                CreateNoWindow = true,
-                FileName = restartFileCmd
-            };
-            Process.Start(startInfo);
-            Environment.Exit(0);
+            GlobalConfig.Instance.RestartBot();
 
             return ExecutionResult.Succesful();
         }

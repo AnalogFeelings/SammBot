@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -33,6 +34,26 @@ namespace SammBotNET
             UrlRegex = new(LoadedConfig.UrlRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             return true;
+        }
+
+        public void RestartBot()
+        {
+            string restartTimeoutCmd = $"/C timeout 3 && {Process.GetCurrentProcess().MainModule.FileName}";
+            string restartFileCmd = "cmd.exe";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                restartTimeoutCmd = $"-c \"sleep 3s && {Process.GetCurrentProcess().MainModule.FileName}\"";
+                restartFileCmd = "bash";
+            }
+
+            ProcessStartInfo startInfo = new()
+            {
+                Arguments = restartTimeoutCmd,
+                CreateNoWindow = true,
+                FileName = restartFileCmd
+            };
+            Process.Start(startInfo);
+            Environment.Exit(0);
         }
 
         public bool LoadStatuses()

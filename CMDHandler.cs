@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
+using SammBotNET.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace SammBotNET
         private string CommandName;
         private readonly PhrasesDB PhrasesDatabase;
         private readonly CommandDB CommandDatabase;
+        private readonly AdminService AdminService;
 
         public CMDHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services, Logger logger)
         {
@@ -33,6 +35,7 @@ namespace SammBotNET
 
             PhrasesDatabase = services.GetRequiredService<PhrasesDB>();
             CommandDatabase = services.GetRequiredService<CommandDB>();
+            AdminService = services.GetRequiredService<AdminService>();
         }
 
         public async Task OnCommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
@@ -70,6 +73,8 @@ namespace SammBotNET
 
         private async Task HandleCommandAsync(SocketMessage messageParam)
         {
+            if (AdminService.ChangingConfig) return;
+
             SocketUserMessage message = messageParam as SocketUserMessage;
             if (message == null) return;
             if (message.Author.IsBot) return;
