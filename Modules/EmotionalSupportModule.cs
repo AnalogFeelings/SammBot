@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-    [Name("Neveah")]
+    [Name("Skyler")]
     [Summary("For my cute angel <3")]
     [Group("support")]
     public class EmotionalSupportModule : ModuleBase<SocketCommandContext>
@@ -22,10 +22,10 @@ namespace SammBotNET.Modules
         }
 
         [Command("random", RunMode = RunMode.Async)]
-        [Summary("I love you, Neveah <3")]
+        [Summary("I love you, Skyler <3")]
         public async Task<RuntimeResult> RandomSupportAsync()
         {
-            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.NeveahUid &&
+            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.SkylerUid &&
                 Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 

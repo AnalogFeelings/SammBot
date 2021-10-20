@@ -77,7 +77,7 @@ namespace SammBotNET
         public string BotToken { get; set; } = "";
         public string TwitchUrl { get; set; } = "https://www.twitch.tv/vanebrain";
         public ulong AestheticalUid { get; set; } = 337950448130719754;
-        public ulong NeveahUid { get; set; } = 850874605434175500;
+        public ulong SkylerUid { get; set; } = 850874605434175500;
         public string CommandLogFormat { get; set; } = "Executing command {0}!";
         public string LogFolder { get; set; } = "Logs";
         public string UrlRegex { get; set; } = "";
