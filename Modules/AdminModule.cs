@@ -101,7 +101,7 @@ namespace SammBotNET.Modules
 
             foreach(PropertyInfo property in properties)
             {
-                embed.AddField(property.Name, $"`{property.GetValue(GlobalConfig.Instance.LoadedConfig, null)}`");
+                embed.AddField(property.Name, property.GetValue(GlobalConfig.Instance.LoadedConfig, null));
             }
 
             await Context.Message.Author.SendMessageAsync("", false, embed.Build());
