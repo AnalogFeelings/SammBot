@@ -50,8 +50,7 @@ namespace SammBotNET
             {
                 Arguments = restartTimeoutCmd,
                 FileName = restartFileCmd,
-                CreateNoWindow = false,
-                UseShellExecute = true,
+                CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true
