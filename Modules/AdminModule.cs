@@ -1,12 +1,15 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -84,6 +87,28 @@ namespace SammBotNET.Modules
             return ExecutionResult.Succesful();
         }
 
+        [Command("listcfg")]
+        [Alias("lc")]
+        [HideInHelp]
+        public async Task<RuntimeResult> ListConfigAsync()
+        {
+            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+                return ExecutionResult.FromError("You are not allowed to execute this command.");
+
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
+
+            List<PropertyInfo> properties = typeof(JsonConfig).GetProperties().Where(x => x.PropertyType != typeof(IList)).ToList();
+
+            foreach(PropertyInfo property in properties)
+            {
+                embed.AddField(property.Name, $"`{property.GetValue(GlobalConfig.Instance.LoadedConfig, null)}`");
+            }
+
+            await Context.Message.Author.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
+        }
+
         [Command("setcfg")]
         [Alias("config")]
         [HideInHelp]
@@ -91,8 +116,6 @@ namespace SammBotNET.Modules
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
-            if(AdminService.ChangingConfig)
-                return ExecutionResult.FromError("Configuration is being modified, wait for a while.");
 
             AdminService.ChangingConfig = true;
 
