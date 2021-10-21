@@ -85,6 +85,23 @@ namespace SammBotNET.Modules
             return ExecutionResult.Succesful();
         }
 
+        [Command("leaveserver")]
+        [Alias("leave")]
+        [HideInHelp]
+        public async Task<RuntimeResult> LeaveAsync(ulong serverId)
+        {
+            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+                return ExecutionResult.FromError("You are not allowed to execute this command.");
+
+            SocketGuild guild = Context.Client.GetGuild(serverId);
+            string guildName = guild.Name;
+            await guild.LeaveAsync();
+
+            await ReplyAsync($"Left the server \"{guildName}\"");
+
+            return ExecutionResult.Succesful();
+        }
+
         [Command("listcfg")]
         [Alias("lc")]
         [HideInHelp]
