@@ -49,7 +49,7 @@ namespace SammBotNET.Modules
             int i = 1;
             foreach (SocketGuild guild in Context.Client.Guilds)
             {
-                inside += $"{i}. {guild.Name} with {guild.MemberCount} members.\n";
+                inside += $"{i}. {guild.Name} ({guild.Id}) with {guild.MemberCount} members.\n";
                 i++;
             }
             inside += "```";
