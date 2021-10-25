@@ -21,8 +21,8 @@ namespace SammBotNET.Modules
 
         public CleaningModule(IServiceProvider services)
         {
-            CommandDatabase = services.GetRequiredService<CommandDB>();
-            PhrasesDatabase = services.GetRequiredService<PhrasesDB>();
+            /*CommandDatabase = services.GetRequiredService<CommandDB>();
+            PhrasesDatabase = services.GetRequiredService<PhrasesDB>();*/
         }
 
         [Command("customcmds")]
