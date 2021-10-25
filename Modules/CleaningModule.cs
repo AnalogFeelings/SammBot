@@ -16,24 +16,18 @@ namespace SammBotNET.Modules
     [Group("clean")]
     public class CleaningModule : ModuleBase<SocketCommandContext>
     {
-        private readonly CommandDB CommandDatabase;
-        private readonly PhrasesDB PhrasesDatabase;
-
-        public CleaningModule(IServiceProvider services)
-        {
-            /*CommandDatabase = services.GetRequiredService<CommandDB>();
-            PhrasesDatabase = services.GetRequiredService<PhrasesDB>();*/
-        }
-
         [Command("customcmds")]
         [Alias("customs", "commands")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Deletes all custom commands.")]
         public async Task<RuntimeResult> FlushCMDsAsync()
         {
-            await ReplyAsync("Flushing database...");
-            int rows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from CustomCommand");
-            await ReplyAsync($"Success! `{rows}` rows affected.");
+            using (CommandDB CommandDatabase = new())
+            {
+                await ReplyAsync("Flushing database...");
+                int rows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from CustomCommand");
+                await ReplyAsync($"Success! `{rows}` rows affected.");
+            }
 
             return ExecutionResult.Succesful();
         }
@@ -44,9 +38,12 @@ namespace SammBotNET.Modules
         [Summary("Deletes all quotes.")]
         public async Task<RuntimeResult> FlushQuotesAsync()
         {
-            await ReplyAsync("Flushing database...");
-            int rows = await PhrasesDatabase.Database.ExecuteSqlRawAsync("delete from Phrase");
-            await ReplyAsync($"Success! `{rows}` rows affected.");
+            using (PhrasesDB PhrasesDatabase = new())
+            {
+                await ReplyAsync("Flushing database...");
+                int rows = await PhrasesDatabase.Database.ExecuteSqlRawAsync("delete from Phrase");
+                await ReplyAsync($"Success! `{rows}` rows affected.");
+            }
 
             return ExecutionResult.Succesful();
         }

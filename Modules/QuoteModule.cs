@@ -17,12 +17,6 @@ namespace SammBotNET.Modules
     public class QuoteModule : ModuleBase<SocketCommandContext>
     {
         public QuoteService PhrasesService { get; set; }
-        private readonly PhrasesDB PhrasesDatabase;
-
-        public QuoteModule(IServiceProvider services)
-        {
-           // PhrasesDatabase = services.GetRequiredService<PhrasesDB>();
-        }
 
         [Command("random", RunMode = RunMode.Async)]
         [Summary("Sends a random quote from a user in the server!")]
@@ -31,13 +25,16 @@ namespace SammBotNET.Modules
             if (PhrasesService.IsDisabled)
                 return ExecutionResult.FromError($"The module \"{nameof(QuoteModule)}\" is disabled.");
 
-            List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-            Phrase finalPhrase = phrases.Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
+            using (PhrasesDB PhrasesDatabase = new())
+            {
+                List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
+                Phrase finalPhrase = phrases.Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
 
-            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
+                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-            embed.AddField($"*\"{finalPhrase.content}\"*", $"By <@{finalPhrase.authorID}>");
-            await Context.Channel.SendMessageAsync("", false, embed.Build());
+                embed.AddField($"*\"{finalPhrase.content}\"*", $"By <@{finalPhrase.authorID}>");
+                await Context.Channel.SendMessageAsync("", false, embed.Build());
+            }
 
             return ExecutionResult.Succesful();
         }
@@ -50,16 +47,19 @@ namespace SammBotNET.Modules
             if (PhrasesService.IsDisabled)
                 return ExecutionResult.FromError($"The module \"{nameof(QuoteModule)}\" is disabled.");
 
-            List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-            if (!phrases.Any(x => x.authorID == user.Id))
-                return ExecutionResult.FromError($"This user doesn't have any phrases!");
+            using (PhrasesDB PhrasesDatabase = new())
+            {
+                List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
+                if (!phrases.Any(x => x.authorID == user.Id))
+                    return ExecutionResult.FromError($"This user doesn't have any phrases!");
 
-            Phrase finalPhrase = phrases.Where(x => x.authorID == user.Id && x.serverID == Context.Guild.Id).ToList().PickRandom();
+                Phrase finalPhrase = phrases.Where(x => x.authorID == user.Id && x.serverID == Context.Guild.Id).ToList().PickRandom();
 
-            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
+                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-            embed.AddField($"*\"{finalPhrase.content}\"*", $"By <@{finalPhrase.authorID}>");
-            await Context.Channel.SendMessageAsync("", false, embed.Build());
+                embed.AddField($"*\"{finalPhrase.content}\"*", $"By <@{finalPhrase.authorID}>");
+                await Context.Channel.SendMessageAsync("", false, embed.Build());
+            }
 
             return ExecutionResult.Succesful();
         }

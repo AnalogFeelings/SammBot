@@ -14,13 +14,6 @@ namespace SammBotNET.Modules
     [Group("support")]
     public class EmotionalSupportModule : ModuleBase<SocketCommandContext>
     {
-        private readonly EmotionalSupportDB SupportDatabase;
-
-        public EmotionalSupportModule(IServiceProvider service)
-        {
-            //SupportDatabase = service.GetRequiredService<EmotionalSupportDB>();
-        }
-
         [Command("random", RunMode = RunMode.Async)]
         [Summary("I love you, Skyler <3")]
         public async Task<RuntimeResult> RandomSupportAsync()
@@ -29,10 +22,13 @@ namespace SammBotNET.Modules
                 Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            List<EmotionalSupport> emotionalSupports = await SupportDatabase.EmotionalSupport.ToListAsync();
-            EmotionalSupport finalEmotionalSupport = emotionalSupports.PickRandom();
+            using (EmotionalSupportDB SupportDatabase = new())
+            {
+                List<EmotionalSupport> emotionalSupports = await SupportDatabase.EmotionalSupport.ToListAsync();
+                EmotionalSupport finalEmotionalSupport = emotionalSupports.PickRandom();
 
-            await ReplyAsync(finalEmotionalSupport.SupportMessage);
+                await ReplyAsync(finalEmotionalSupport.SupportMessage);
+            }
 
             return ExecutionResult.Succesful();
         }
@@ -44,18 +40,21 @@ namespace SammBotNET.Modules
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            List<EmotionalSupport> supportObjects = await SupportDatabase.EmotionalSupport.ToListAsync();
-            EmotionalSupport supportObject = supportObjects.FirstOrDefault(x => x.SupportId == supportId);
+            using (EmotionalSupportDB SupportDatabase = new())
+            {
+                List<EmotionalSupport> supportObjects = await SupportDatabase.EmotionalSupport.ToListAsync();
+                EmotionalSupport supportObject = supportObjects.FirstOrDefault(x => x.SupportId == supportId);
 
-            if (supportObject == null)
-                return ExecutionResult.FromError($"A support message with the ID {supportId} does not exist!");
+                if (supportObject == null)
+                    return ExecutionResult.FromError($"A support message with the ID {supportId} does not exist!");
 
-            string previousValue = supportObject.SupportMessage;
+                string previousValue = supportObject.SupportMessage;
 
-            supportObject.SupportMessage = supportMessage;
-            await SupportDatabase.SaveChangesAsync();
+                supportObject.SupportMessage = supportMessage;
+                await SupportDatabase.SaveChangesAsync();
 
-            await ReplyAsync($"Done!\n**Previous value**: `{previousValue}`\n**New value**: `{supportMessage}`");
+                await ReplyAsync($"Done!\n**Previous value**: `{previousValue}`\n**New value**: `{supportMessage}`");
+            }
 
             return ExecutionResult.Succesful();
         }
@@ -68,18 +67,21 @@ namespace SammBotNET.Modules
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            List<EmotionalSupport> supportObjects = await SupportDatabase.EmotionalSupport.ToListAsync();
-
-            string builtMsg = "```\n";
-            string inside = string.Empty;
-
-            foreach (EmotionalSupport supportObject in supportObjects)
+            using (EmotionalSupportDB SupportDatabase = new())
             {
-                inside += $"ID {supportObject.SupportId} :: \"{supportObject.SupportMessage}\"\n";
+                List<EmotionalSupport> supportObjects = await SupportDatabase.EmotionalSupport.ToListAsync();
+
+                string builtMsg = "```\n";
+                string inside = string.Empty;
+
+                foreach (EmotionalSupport supportObject in supportObjects)
+                {
+                    inside += $"ID {supportObject.SupportId} :: \"{supportObject.SupportMessage}\"\n";
+                }
+                inside += "```";
+                builtMsg += inside;
+                await ReplyAsync(builtMsg);
             }
-            inside += "```";
-            builtMsg += inside;
-            await ReplyAsync(builtMsg);
 
             return ExecutionResult.Succesful();
         }
@@ -91,21 +93,24 @@ namespace SammBotNET.Modules
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            List<EmotionalSupport> supportList = await SupportDatabase.EmotionalSupport.ToListAsync();
-            int nextId = 0;
-            if (supportList.Count > 0)
+            using (EmotionalSupportDB SupportDatabase = new())
             {
-                nextId = supportList.Max(x => x.SupportId) + 1;
+                List<EmotionalSupport> supportList = await SupportDatabase.EmotionalSupport.ToListAsync();
+                int nextId = 0;
+                if (supportList.Count > 0)
+                {
+                    nextId = supportList.Max(x => x.SupportId) + 1;
+                }
+
+                await SupportDatabase.AddAsync(new EmotionalSupport
+                {
+                    SupportId = nextId,
+                    SupportMessage = supportMessage
+                });
+                await SupportDatabase.SaveChangesAsync();
+
+                await ReplyAsync($"Done! Added new support object with ID {nextId}.");
             }
-
-            await SupportDatabase.AddAsync(new EmotionalSupport
-            {
-                SupportId = nextId,
-                SupportMessage = supportMessage
-            });
-            await SupportDatabase.SaveChangesAsync();
-
-            await ReplyAsync($"Done! Added new support object with ID {nextId}.");
 
             return ExecutionResult.Succesful();
         }

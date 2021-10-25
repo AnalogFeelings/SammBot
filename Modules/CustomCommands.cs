@@ -19,14 +19,9 @@ namespace SammBotNET.Modules
         public CustomCommandService CustomCommandService { get; set; }
         public StartupService StartupService { get; set; }
 
-        private readonly CommandDB CommandDatabase;
         private readonly CommandService CommandService;
 
-        public CustomCommands(IServiceProvider services, CommandService cmds)
-        {
-            //CommandDatabase = services.GetRequiredService<CommandDB>();
-            CommandService = cmds;
-        }
+        public CustomCommands(IServiceProvider services, CommandService cmds) => CommandService = cmds;
 
         [Command("list", RunMode = RunMode.Async)]
         [Alias("all")]
@@ -36,20 +31,23 @@ namespace SammBotNET.Modules
             if (CustomCommandService.IsDisabled)
                 return ExecutionResult.FromError($"The module \"{nameof(CustomCommands)}\" is disabled.");
 
-            List<CustomCommand> commands = await CommandDatabase.CustomCommand.ToListAsync();
-
-            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Custom Commands", "All of the custom commands that have been created.");
-
-            if (commands.Count > 0)
+            using (CommandDB CommandDatabase = new())
             {
-                foreach (CustomCommand cmd in commands)
-                {
-                    embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.name}", $"By <@{cmd.authorID}>");
-                }
-            }
-            else embed.AddField("Wow...", "There are no custom commands yet.");
+                List<CustomCommand> commands = await CommandDatabase.CustomCommand.ToListAsync();
 
-            await Context.Channel.SendMessageAsync("", false, embed.Build());
+                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Custom Commands", "All of the custom commands that have been created.");
+
+                if (commands.Count > 0)
+                {
+                    foreach (CustomCommand cmd in commands)
+                    {
+                        embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.name}", $"By <@{cmd.authorID}>");
+                    }
+                }
+                else embed.AddField("Wow...", "There are no custom commands yet.");
+
+                await Context.Channel.SendMessageAsync("", false, embed.Build());
+            }
 
             return ExecutionResult.Succesful();
         }
@@ -81,24 +79,27 @@ namespace SammBotNET.Modules
                 if (name == cmdInf.Name) return ExecutionResult.FromError("That command name already exists!");
             }
 
-            List<CustomCommand> dbCommands = await CommandDatabase.CustomCommand.ToListAsync();
-            foreach (CustomCommand ccmd in dbCommands)
+            using (CommandDB CommandDatabase = new())
             {
-                if (name == ccmd.name) return ExecutionResult.FromError("That command name already exists!");
+                List<CustomCommand> dbCommands = await CommandDatabase.CustomCommand.ToListAsync();
+                foreach (CustomCommand ccmd in dbCommands)
+                {
+                    if (name == ccmd.name) return ExecutionResult.FromError("That command name already exists!");
+                }
+
+                #endregion
+
+                CustomCommandService.IsCreatingCommand = true;
+                await ReplyAsync($"Creating command \"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{name}\"...");
+
+                await CommandDatabase.AddAsync(new CustomCommand
+                {
+                    name = name,
+                    authorID = Context.Message.Author.Id,
+                    reply = reply
+                });
+                await CommandDatabase.SaveChangesAsync();
             }
-
-            #endregion
-
-            CustomCommandService.IsCreatingCommand = true;
-            await ReplyAsync($"Creating command \"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{name}\"...");
-
-            await CommandDatabase.AddAsync(new CustomCommand
-            {
-                name = name,
-                authorID = Context.Message.Author.Id,
-                reply = reply
-            });
-            await CommandDatabase.SaveChangesAsync();
 
             await ReplyAsync("Command created succesfully!");
             CustomCommandService.IsCreatingCommand = false;

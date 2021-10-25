@@ -20,8 +20,6 @@ namespace SammBotNET
 
         //Jesus christ this is the ugliest solution i've ever made for custom commands.
         private string CommandName;
-        private readonly PhrasesDB PhrasesDatabase;
-        private readonly CommandDB CommandDatabase;
         private readonly AdminService AdminService;
 
         public CMDHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services, Logger logger)
@@ -32,9 +30,7 @@ namespace SammBotNET
             BotLogger = logger;
             DiscordClient.MessageReceived += HandleCommandAsync;
             CommandsService.CommandExecuted += OnCommandExecutedAsync;
-            /*
-            PhrasesDatabase = services.GetRequiredService<PhrasesDB>();
-            CommandDatabase = services.GetRequiredService<CommandDB>();*/
+
             AdminService = services.GetRequiredService<AdminService>();
         }
 
@@ -46,16 +42,19 @@ namespace SammBotNET
                 {
                     if (result.ErrorReason == "Unknown command.")
                     {
-                        List<CustomCommand> cmds = await CommandDatabase.CustomCommand.ToListAsync();
-                        foreach (CustomCommand cmd in cmds)
+                        using (CommandDB CommandDatabase = new())
                         {
-                            if (cmd.name == CommandName)
+                            List<CustomCommand> cmds = await CommandDatabase.CustomCommand.ToListAsync();
+                            foreach (CustomCommand cmd in cmds)
                             {
-                                await context.Channel.SendMessageAsync(cmd.reply);
-                                return;
+                                if (cmd.name == CommandName)
+                                {
+                                    await context.Channel.SendMessageAsync(cmd.reply);
+                                    return;
+                                }
                             }
+                            await context.Channel.SendMessageAsync($"Unknown command! Use the {GlobalConfig.Instance.LoadedConfig.BotPrefix}help command.");
                         }
-                        await context.Channel.SendMessageAsync("Unknown command! Use the s.help command.");
                         return;
                     }
                     if (result.ErrorReason != "Execution succesful.")
@@ -104,23 +103,26 @@ namespace SammBotNET
                     if (GlobalConfig.Instance.UrlRegex.IsMatch(message.Content)) return;
                     if (GlobalConfig.Instance.LoadedConfig.BannedPrefixes.Any(x => message.Content.StartsWith(x))) return;
 
-                    List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-
-                    foreach (Phrase phrase in phrases)
+                    using (PhrasesDB PhrasesDatabase = new())
                     {
-                        if (message.Content == phrase.content)
+                        List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
+
+                        foreach (Phrase phrase in phrases)
                         {
-                            return;
+                            if (message.Content == phrase.content)
+                            {
+                                return;
+                            }
                         }
-                    }
 
-                    await PhrasesDatabase.AddAsync(new Phrase
-                    {
-                        content = message.Content,
-                        authorID = message.Author.Id,
-                        serverID = context.Guild.Id
-                    });
-                    await PhrasesDatabase.SaveChangesAsync();
+                        await PhrasesDatabase.AddAsync(new Phrase
+                        {
+                            content = message.Content,
+                            authorID = message.Author.Id,
+                            serverID = context.Guild.Id
+                        });
+                        await PhrasesDatabase.SaveChangesAsync();
+                    }
                 }
                 catch (Exception ex)
                 {
