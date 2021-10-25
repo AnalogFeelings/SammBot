@@ -21,7 +21,6 @@ namespace SammBotNET
         {
             GlobalConfig.Instance.StartupStopwatch.Start();
 
-            Console.Title = "Samm-Bot";
             Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));
             SocketClient = new DiscordSocketClient();
 
@@ -38,7 +37,6 @@ namespace SammBotNET
             provider.GetRequiredService<QuoteService>();
             provider.GetRequiredService<MathService>();
             provider.GetRequiredService<RandomService>();
-            //provider.GetRequiredService<FlagService>();
             provider.GetRequiredService<AdminService>();
             provider.GetRequiredService<NsfwService>();
 
@@ -70,13 +68,12 @@ namespace SammBotNET
             .AddSingleton<QuoteService>()
             .AddSingleton<MathService>()
             .AddSingleton<RandomService>()
-            //.AddSingleton<FlagService>()
             .AddSingleton<AdminService>()
             .AddSingleton<NsfwService>()
-            .AddDbContext<PhrasesDB>()
+            /*.AddDbContext<PhrasesDB>()
             .AddDbContext<CommandDB>()
             .AddDbContext<PeoneImagesDB>()
-            .AddDbContext<EmotionalSupportDB>();
+            .AddDbContext<EmotionalSupportDB>()*/;
         }
     }
 }

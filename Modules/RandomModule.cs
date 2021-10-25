@@ -20,13 +20,6 @@ namespace SammBotNET.Modules
     {
         public RandomService RandomModuleService { get; set; }
 
-        private readonly PeoneImagesDB PeoneDatabase;
-
-        public RandomModule(IServiceProvider services)
-        {
-            PeoneDatabase = services.GetRequiredService<PeoneImagesDB>();
-        }
-
         [Command("cat")]
         [Alias("kit", "kitto", "cogga")]
         [Summary("Returns a random cat!")]
@@ -83,15 +76,18 @@ namespace SammBotNET.Modules
         [Summary("Returns a random image of Peone.")]
         public async Task<RuntimeResult> GetPeoneAsync()
         {
-            List<PeoneImage> peoneImages = await PeoneDatabase.PeoneImage.ToListAsync();
-            PeoneImage selectedPeoneImage = peoneImages.PickRandom();
+            using (PeoneImagesDB PeoneDatabase = new())
+            {
+                List<PeoneImage> peoneImages = await PeoneDatabase.PeoneImage.ToListAsync();
+                PeoneImage selectedPeoneImage = peoneImages.PickRandom();
 
-            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Peone");
-            embed.Color = new Color(105, 219, 221);
+                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Peone");
+                embed.Color = new Color(105, 219, 221);
 
-            embed.ImageUrl = selectedPeoneImage.TwitterUrl;
+                embed.ImageUrl = selectedPeoneImage.TwitterUrl;
 
-            await Context.Channel.SendMessageAsync("", false, embed.Build());
+                await Context.Channel.SendMessageAsync("", false, embed.Build());
+            }
 
             return ExecutionResult.Succesful();
         }
