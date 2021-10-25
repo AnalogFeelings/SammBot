@@ -24,7 +24,7 @@ namespace SammBotNET.Modules
 
         public CustomCommands(IServiceProvider services, CommandService cmds)
         {
-            CommandDatabase = services.GetRequiredService<CommandDB>();
+            //CommandDatabase = services.GetRequiredService<CommandDB>();
             CommandService = cmds;
         }
 

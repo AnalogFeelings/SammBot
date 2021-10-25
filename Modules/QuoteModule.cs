@@ -21,7 +21,7 @@ namespace SammBotNET.Modules
 
         public QuoteModule(IServiceProvider services)
         {
-            PhrasesDatabase = services.GetRequiredService<PhrasesDB>();
+           // PhrasesDatabase = services.GetRequiredService<PhrasesDB>();
         }
 
         [Command("random", RunMode = RunMode.Async)]

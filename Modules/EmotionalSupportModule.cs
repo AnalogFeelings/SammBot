@@ -18,7 +18,7 @@ namespace SammBotNET.Modules
 
         public EmotionalSupportModule(IServiceProvider service)
         {
-            SupportDatabase = service.GetRequiredService<EmotionalSupportDB>();
+            //SupportDatabase = service.GetRequiredService<EmotionalSupportDB>();
         }
 
         [Command("random", RunMode = RunMode.Async)]
