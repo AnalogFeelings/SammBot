@@ -32,9 +32,9 @@ namespace SammBotNET
             BotLogger = logger;
             DiscordClient.MessageReceived += HandleCommandAsync;
             CommandsService.CommandExecuted += OnCommandExecutedAsync;
-
+            /*
             PhrasesDatabase = services.GetRequiredService<PhrasesDB>();
-            CommandDatabase = services.GetRequiredService<CommandDB>();
+            CommandDatabase = services.GetRequiredService<CommandDB>();*/
             AdminService = services.GetRequiredService<AdminService>();
         }
 
