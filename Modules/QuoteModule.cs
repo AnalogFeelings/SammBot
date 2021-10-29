@@ -1,5 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Rest;
+using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
@@ -17,6 +19,7 @@ namespace SammBotNET.Modules
     public class QuoteModule : ModuleBase<SocketCommandContext>
     {
         public QuoteService PhrasesService { get; set; }
+        public DiscordSocketClient Client { get; set; }
 
         [Command("random", RunMode = RunMode.Async)]
         [Summary("Sends a random quote from a user in the server!")]
@@ -30,9 +33,12 @@ namespace SammBotNET.Modules
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
                 Phrase finalPhrase = phrases.Where(x => x.ServerId == Context.Guild.Id).ToList().PickRandom();
 
+                RestUser globalUser = await Client.Rest.GetUserAsync(finalPhrase.AuthorId);
+                string assembledAuthor = $"{globalUser.Username}#{globalUser.Discriminator}";
+
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-                embed.AddField($"*\"{finalPhrase.Content}\"*", $"By <@{finalPhrase.AuthorId}>");
+                embed.AddField($"*\"{finalPhrase.Content}\"*", $"By {assembledAuthor}, <t:{finalPhrase.CreatedAt}>");
                 await Context.Channel.SendMessageAsync("", false, embed.Build());
             }
 
@@ -55,9 +61,12 @@ namespace SammBotNET.Modules
 
                 Phrase finalPhrase = phrases.Where(x => x.AuthorId == user.Id && x.ServerId == Context.Guild.Id).ToList().PickRandom();
 
+                RestUser globalUser = await Client.Rest.GetUserAsync(finalPhrase.AuthorId);
+                string assembledAuthor = $"{globalUser.Username}#{globalUser.Discriminator}";
+
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-                embed.AddField($"*\"{finalPhrase.Content}\"*", $"By <@{finalPhrase.AuthorId}>");
+                embed.AddField($"\"{finalPhrase.Content}\"", $"-{assembledAuthor}, <t:{finalPhrase.CreatedAt}:D>");
                 await Context.Channel.SendMessageAsync("", false, embed.Build());
             }
 

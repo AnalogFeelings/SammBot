@@ -1,7 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Rest;
-using Discord.WebSocket;
 using SammBotNET.Extensions;
 using System.Threading.Tasks;
 
@@ -13,13 +11,8 @@ namespace SammBotNET.Modules
     public class GameModule : ModuleBase<SocketCommandContext>
     {
         public readonly Logger Logger;
-        public readonly DiscordSocketClient Client;
 
-        public GameModule(Logger logger, DiscordSocketClient client)
-        {
-            Logger = logger;
-            Client = client;
-        }
+        public GameModule(Logger logger) => Logger = logger;
 
         [Command("8ball")]
         [Alias("ask", "8")]
@@ -33,19 +26,6 @@ namespace SammBotNET.Modules
             using (Context.Channel.EnterTypingState()) await Task.Delay(2000);
 
             await message.ModifyAsync(x => x.Content = $"<@{Context.Message.Author.Id}> **The magic 8-ball answered**:\n`{chosenAnswer}`");
-
-            return ExecutionResult.Succesful();
-        }
-
-        [Command("resttest")]
-        public async Task<RuntimeResult> TestAsync(ulong id)
-        {
-            string assembledUsername = "No User Found";
-            RestUser user = await Client.Rest.GetUserAsync(id);
-
-            assembledUsername = $"USER: {user.Username}#{user.Discriminator}\nPROFILE PICTURE:\n{user.GetAvatarUrl(size: 2048)}";
-
-            await ReplyAsync(assembledUsername);
 
             return ExecutionResult.Succesful();
         }
