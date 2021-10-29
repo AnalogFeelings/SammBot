@@ -6,7 +6,7 @@
   "BotToken": null,
   "TwitchUrl": null,
   "AestheticalUid": null,
-  "NeveahUid": null,
+  "SkylerUid": null,
   "CommandLogFormat": "Executing command \"{0}\". Channel: #{1}. User: @{2}.",
   "LogFolder": "Logs",
   "RngResetTime": 30,
