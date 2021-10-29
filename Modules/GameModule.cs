@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-    [Name("Fun")]
-    [Group("fun")]
+    [Name("Games")]
+    [Group("games")]
     [Summary("Games and fun!")]
     public class GameModule : ModuleBase<SocketCommandContext>
     {
@@ -28,18 +28,6 @@ namespace SammBotNET.Modules
             await message.ModifyAsync(x => x.Content = $"<@{Context.Message.Author.Id}> **The magic 8-ball answered**:\n`{chosenAnswer}`");
 
             return ExecutionResult.Succesful();
-        }
-
-        [Name("Greentext")]
-        [Group("greentext")]
-        [Summary("Greentext, 4chan style.")]
-        public class GreentextSubmodule : ModuleBase<SocketCommandContext>
-        {
-            [Command("test")]
-            public async Task<RuntimeResult> TestAsync()
-            {
-                return ExecutionResult.Succesful();
-            }
         }
     }
 }
