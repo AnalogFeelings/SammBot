@@ -28,11 +28,11 @@ namespace SammBotNET.Modules
             using (PhrasesDB PhrasesDatabase = new())
             {
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-                Phrase finalPhrase = phrases.Where(x => x.serverID == Context.Guild.Id).ToList().PickRandom();
+                Phrase finalPhrase = phrases.Where(x => x.ServerId == Context.Guild.Id).ToList().PickRandom();
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-                embed.AddField($"*\"{finalPhrase.content}\"*", $"By <@{finalPhrase.authorID}>");
+                embed.AddField($"*\"{finalPhrase.Content}\"*", $"By <@{finalPhrase.AuthorId}>");
                 await Context.Channel.SendMessageAsync("", false, embed.Build());
             }
 
@@ -50,14 +50,14 @@ namespace SammBotNET.Modules
             using (PhrasesDB PhrasesDatabase = new())
             {
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-                if (!phrases.Any(x => x.authorID == user.Id))
+                if (!phrases.Any(x => x.AuthorId == user.Id))
                     return ExecutionResult.FromError($"This user doesn't have any phrases!");
 
-                Phrase finalPhrase = phrases.Where(x => x.authorID == user.Id && x.serverID == Context.Guild.Id).ToList().PickRandom();
+                Phrase finalPhrase = phrases.Where(x => x.AuthorId == user.Id && x.ServerId == Context.Guild.Id).ToList().PickRandom();
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-                embed.AddField($"*\"{finalPhrase.content}\"*", $"By <@{finalPhrase.authorID}>");
+                embed.AddField($"*\"{finalPhrase.Content}\"*", $"By <@{finalPhrase.AuthorId}>");
                 await Context.Channel.SendMessageAsync("", false, embed.Build());
             }
 

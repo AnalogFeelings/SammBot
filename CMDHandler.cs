@@ -50,9 +50,9 @@ namespace SammBotNET
                                 List<CustomCommand> cmds = await CommandDatabase.CustomCommand.ToListAsync();
                                 foreach (CustomCommand cmd in cmds)
                                 {
-                                    if (cmd.name == CommandName)
+                                    if (cmd.Name == CommandName)
                                     {
-                                        await context.Channel.SendMessageAsync(cmd.reply);
+                                        await context.Channel.SendMessageAsync(cmd.Reply);
                                         return;
                                     }
                                 }
@@ -106,7 +106,7 @@ namespace SammBotNET
 
                         foreach (Phrase phrase in phrases)
                         {
-                            if (message.Content == phrase.content)
+                            if (message.Content == phrase.Content)
                             {
                                 return;
                             }
@@ -114,9 +114,10 @@ namespace SammBotNET
 
                         await PhrasesDatabase.AddAsync(new Phrase
                         {
-                            content = message.Content,
-                            authorID = message.Author.Id,
-                            serverID = context.Guild.Id
+                            Content = message.Content,
+                            AuthorId = message.Author.Id,
+                            ServerId = context.Guild.Id,
+                            CreatedAt = message.Timestamp.ToUnixTimeSeconds()
                         });
                         await PhrasesDatabase.SaveChangesAsync();
                     }

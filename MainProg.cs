@@ -13,6 +13,7 @@ namespace SammBotNET
     public partial class MainProg
     {
         public DiscordSocketClient SocketClient;
+        public CommandService CommandService;
 
         public static void Main()
             => new MainProg().MainAsync().GetAwaiter().GetResult();
@@ -22,7 +23,19 @@ namespace SammBotNET
             GlobalConfig.Instance.StartupStopwatch.Start();
 
             Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));
-            SocketClient = new DiscordSocketClient();
+
+            SocketClient = new(new DiscordSocketConfig
+            {
+                LogLevel = LogSeverity.Warning,
+                MessageCacheSize = 1000,
+                AlwaysDownloadUsers = true,
+                GatewayIntents = GatewayIntents.All
+            });
+            CommandService = new(new CommandServiceConfig
+            {
+                LogLevel = LogSeverity.Info,
+                DefaultRunMode = RunMode.Async,
+            });
 
             Console.WriteLine("Configuring Services...".Pastel("#3d9785"));
 
@@ -48,17 +61,8 @@ namespace SammBotNET
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
-            {
-                LogLevel = LogSeverity.Warning,
-                MessageCacheSize = 1000,
-                AlwaysDownloadUsers = true
-            }))
-            .AddSingleton(new CommandService(new CommandServiceConfig
-            {
-                LogLevel = LogSeverity.Info,
-                DefaultRunMode = RunMode.Async,
-            }))
+            services.AddSingleton(SocketClient)
+            .AddSingleton(CommandService)
             .AddSingleton<CMDHandler>()
             .AddSingleton<StartupService>()
             .AddSingleton<Logger>()
@@ -69,11 +73,7 @@ namespace SammBotNET
             .AddSingleton<MathService>()
             .AddSingleton<RandomService>()
             .AddSingleton<AdminService>()
-            .AddSingleton<NsfwService>()
-            /*.AddDbContext<PhrasesDB>()
-            .AddDbContext<CommandDB>()
-            .AddDbContext<PeoneImagesDB>()
-            .AddDbContext<EmotionalSupportDB>()*/;
+            .AddSingleton<NsfwService>();
         }
     }
 }

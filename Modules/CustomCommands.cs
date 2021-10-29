@@ -41,7 +41,7 @@ namespace SammBotNET.Modules
                 {
                     foreach (CustomCommand cmd in commands)
                     {
-                        embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.name}", $"By <@{cmd.authorID}>");
+                        embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.Name}", $"By <@{cmd.AuthorId}>");
                     }
                 }
                 else embed.AddField("Wow...", "There are no custom commands yet.");
@@ -84,7 +84,7 @@ namespace SammBotNET.Modules
                 List<CustomCommand> dbCommands = await CommandDatabase.CustomCommand.ToListAsync();
                 foreach (CustomCommand ccmd in dbCommands)
                 {
-                    if (name == ccmd.name) return ExecutionResult.FromError("That command name already exists!");
+                    if (name == ccmd.Name) return ExecutionResult.FromError("That command name already exists!");
                 }
 
                 #endregion
@@ -94,9 +94,10 @@ namespace SammBotNET.Modules
 
                 await CommandDatabase.AddAsync(new CustomCommand
                 {
-                    name = name,
-                    authorID = Context.Message.Author.Id,
-                    reply = reply
+                    Name = name,
+                    AuthorId = Context.Message.Author.Id,
+                    Reply = reply,
+                    CreatedAt = Context.Message.Timestamp.ToUnixTimeSeconds()
                 });
                 await CommandDatabase.SaveChangesAsync();
             }

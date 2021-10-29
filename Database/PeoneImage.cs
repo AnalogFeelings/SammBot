@@ -4,6 +4,7 @@ namespace SammBotNET.Database
 {
     public partial class PeoneImage
     {
-        [Key] public string TwitterUrl { get; set; }
+        [Key] 
+        public string TwitterUrl { get; set; }
     }
 }

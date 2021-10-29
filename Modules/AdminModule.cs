@@ -128,7 +128,7 @@ namespace SammBotNET.Modules
         [Command("setcfg")]
         [Alias("config")]
         [HideInHelp]
-        public async Task<RuntimeResult> SetConfigAsync(string varName, string varValue)
+        public async Task<RuntimeResult> SetConfigAsync(string varName, string varValue, bool restartBot)
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
@@ -147,12 +147,14 @@ namespace SammBotNET.Modules
             object newValue = retrievedVariable.GetValue(GlobalConfig.Instance.LoadedConfig);
 
             await ReplyAsync($"Set variable \"{varName}\" to `{newValue.ToString().Truncate(128)}` succesfully.");
-            await ReplyAsync($"{GlobalConfig.Instance.LoadedConfig.BotName} will restart.");
-
             await File.WriteAllTextAsync(GlobalConfig.Instance.ConfigFile,
                 JsonConvert.SerializeObject(GlobalConfig.Instance.LoadedConfig, Formatting.Indented));
 
-            GlobalConfig.Instance.RestartBot();
+            if (restartBot)
+            {
+                await ReplyAsync($"{GlobalConfig.Instance.LoadedConfig.BotName} will restart.");
+                GlobalConfig.Instance.RestartBot();
+            }
 
             return ExecutionResult.Succesful();
         }
