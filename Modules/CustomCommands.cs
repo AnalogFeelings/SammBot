@@ -1,5 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Rest;
+using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
@@ -18,6 +20,7 @@ namespace SammBotNET.Modules
     {
         public CustomCommandService CustomCommandService { get; set; }
         public StartupService StartupService { get; set; }
+        public DiscordSocketClient Client { get; set; }
 
         private readonly CommandService CommandService;
 
@@ -41,7 +44,10 @@ namespace SammBotNET.Modules
                 {
                     foreach (CustomCommand cmd in commands)
                     {
-                        embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.Name}", $"By <@{cmd.AuthorId}>");
+                        RestUser globalUser = await Client.Rest.GetUserAsync(cmd.AuthorId);
+                        string assembledAuthor = $"{globalUser.Username}#{globalUser.Discriminator}";
+
+                        embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.Name}", $"By **{assembledAuthor}**, <t:{cmd.CreatedAt}>");
                     }
                 }
                 else embed.AddField("Wow...", "There are no custom commands yet.");
