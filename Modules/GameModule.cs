@@ -43,7 +43,7 @@ namespace SammBotNET.Modules
             string assembledUsername = "No User Found";
             RestUser user = await Client.Rest.GetUserAsync(id);
 
-            assembledUsername = $"{user.Username}#{user.Discriminator}";
+            assembledUsername = $"USER: {user.Username}#{user.Discriminator}\nPROFILE PICTURE:\n{user.GetAvatarUrl(size: 2048)}";
 
             await ReplyAsync(assembledUsername);
 
