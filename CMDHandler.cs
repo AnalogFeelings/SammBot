@@ -36,37 +36,38 @@ namespace SammBotNET
 
         public async Task OnCommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
         {
-            try
+            if (!string.IsNullOrEmpty(result?.ErrorReason))
             {
-                if (!string.IsNullOrEmpty(result?.ErrorReason))
+                try
                 {
-                    if (result.ErrorReason == "Unknown command.")
-                    {
-                        using (CommandDB CommandDatabase = new())
-                        {
-                            List<CustomCommand> cmds = await CommandDatabase.CustomCommand.ToListAsync();
-                            foreach (CustomCommand cmd in cmds)
-                            {
-                                if (cmd.name == CommandName)
-                                {
-                                    await context.Channel.SendMessageAsync(cmd.reply);
-                                    return;
-                                }
-                            }
-                            await context.Channel.SendMessageAsync($"Unknown command! Use the {GlobalConfig.Instance.LoadedConfig.BotPrefix}help command.");
-                        }
-                        return;
-                    }
+
                     if (result.ErrorReason != "Execution succesful.")
                     {
-                        await context.Channel.SendMessageAsync("**__Error executing command!__**\n"
-                                                                + result.ErrorReason);
+                        if (result.ErrorReason == "Unknown command.")
+                        {
+                            using (CommandDB CommandDatabase = new())
+                            {
+                                List<CustomCommand> cmds = await CommandDatabase.CustomCommand.ToListAsync();
+                                foreach (CustomCommand cmd in cmds)
+                                {
+                                    if (cmd.name == CommandName)
+                                    {
+                                        await context.Channel.SendMessageAsync(cmd.reply);
+                                        return;
+                                    }
+                                }
+                                await context.Channel.SendMessageAsync($"Unknown command! Use the {GlobalConfig.Instance.LoadedConfig.BotPrefix}help command.");
+                            }
+                            return;
+                        }
+                        else
+                            await context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + result.ErrorReason);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                BotLogger.LogException(ex);
+                catch (Exception ex)
+                {
+                    BotLogger.LogException(ex);
+                }
             }
         }
 
@@ -83,16 +84,12 @@ namespace SammBotNET
             int argPos = 0;
             if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos))
             {
-                CommandName = message.Content.Remove(0, GlobalConfig.Instance.LoadedConfig.BotPrefix.Length);
-                CommandName = CommandName.Split()[0];
+                CommandName = message.Content.Remove(0, GlobalConfig.Instance.LoadedConfig.BotPrefix.Length).Split()[0];
 
                 BotLogger.Log(LogLevel.Message, string.Format(GlobalConfig.Instance.LoadedConfig.CommandLogFormat,
                                                 message.Content, message.Channel.Name, message.Author.Username));
 
-                await CommandsService.ExecuteAsync(
-                    context: context,
-                    argPos: argPos,
-                    services: ServiceProvider);
+                await CommandsService.ExecuteAsync(context, argPos, ServiceProvider);
             }
             else
             {
