@@ -38,7 +38,7 @@ namespace SammBotNET.Modules
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-                embed.AddField($"*\"{finalPhrase.Content}\"*", $"By {assembledAuthor}, <t:{finalPhrase.CreatedAt}>");
+                embed.AddField($"*\"{finalPhrase.Content}\"*", $"-**{assembledAuthor}**, <t:{finalPhrase.CreatedAt}:D>");
                 await Context.Channel.SendMessageAsync("", false, embed.Build());
             }
 
@@ -66,7 +66,7 @@ namespace SammBotNET.Modules
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-                embed.AddField($"\"{finalPhrase.Content}\"", $"-{assembledAuthor}, <t:{finalPhrase.CreatedAt}:D>");
+                embed.AddField($"\"{finalPhrase.Content}\"", $"-**{assembledAuthor}**, <t:{finalPhrase.CreatedAt}:D>");
                 await Context.Channel.SendMessageAsync("", false, embed.Build());
             }
 
