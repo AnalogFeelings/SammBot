@@ -1,7 +1,7 @@
 # SammBot.NET
 SammBot rewritten for the fourth time, but in C#.
 
-It has some hardcoded bits, like the AestheticalUid and NeveahUid config entries. Should be easy to replace them by your own UID or remake the system entirely.
+It has some hardcoded bits, like the AestheticalUid and SkylerUid config entries. Should be easy to replace them by your own UID or remake the system entirely.
 
 # Features
 * Administration Module: Allows the bot's owner to make the bot say a message to a specific channel and guild.
