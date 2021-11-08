@@ -97,6 +97,9 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             SocketGuild guild = Context.Client.GetGuild(serverId);
+            if (guild == null)
+                return ExecutionResult.FromError("I am not currently in this guild!");
+
             string guildName = guild.Name;
             await guild.LeaveAsync();
 
