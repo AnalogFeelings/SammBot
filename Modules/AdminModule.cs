@@ -116,7 +116,7 @@ namespace SammBotNET.Modules
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
 
             List<PropertyInfo> properties = typeof(JsonConfig).GetProperties()
-                .Where(x => !x.PropertyType.IsGenericType).ToList();
+                .Where(x => !x.PropertyType.IsGenericType && x.Name != "UrlRegex" && x.Name != "BotToken").ToList();
 
             foreach (PropertyInfo property in properties)
             {
@@ -158,6 +158,8 @@ namespace SammBotNET.Modules
                 await ReplyAsync($"{GlobalConfig.Instance.LoadedConfig.BotName} will restart.");
                 GlobalConfig.Instance.RestartBot();
             }
+
+            AdminService.ChangingConfig = false;
 
             return ExecutionResult.Succesful();
         }
