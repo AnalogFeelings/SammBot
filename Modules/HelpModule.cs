@@ -43,7 +43,7 @@ namespace SammBotNET.Modules
                 }
 
                 if (foundCommand)
-                    embed.AddField($"{module.Name} (Group: `{module.Group}`)",
+                    embed.AddField($"{module.Name}\n(Group: `{module.Group}`)",
                         string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
             }
 
