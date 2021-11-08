@@ -8,7 +8,7 @@ using SammBotNET.Database;
 namespace SammBotNET.Migrations
 {
     [DbContext(typeof(CommandDB))]
-    [Migration("20211029183018_InitialCreate")]
+    [Migration("20211108194227_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,8 +19,9 @@ namespace SammBotNET.Migrations
 
             modelBuilder.Entity("SammBotNET.Database.CustomCommand", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<ulong>("AuthorId")
                         .HasColumnType("INTEGER");
@@ -28,10 +29,16 @@ namespace SammBotNET.Migrations
                     b.Property<long>("CreatedAt")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Reply")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Name");
+                    b.Property<ulong>("ServerId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
 
                     b.ToTable("CustomCommand");
                 });

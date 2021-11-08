@@ -8,7 +8,7 @@ using SammBotNET.Database;
 namespace SammBotNET.Migrations.EmotionalSupportDBMigrations
 {
     [DbContext(typeof(EmotionalSupportDB))]
-    [Migration("20211029183036_InitialCreate")]
+    [Migration("20211108194245_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

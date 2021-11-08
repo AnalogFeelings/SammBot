@@ -10,14 +10,17 @@ namespace SammBotNET.Migrations
                 name: "CustomCommand",
                 columns: table => new
                 {
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
                     Reply = table.Column<string>(type: "TEXT", nullable: true),
                     AuthorId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    ServerId = table.Column<ulong>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomCommand", x => x.Name);
+                    table.PrimaryKey("PK_CustomCommand", x => x.Id);
                 });
         }
 

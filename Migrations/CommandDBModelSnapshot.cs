@@ -17,8 +17,9 @@ namespace SammBotNET.Migrations
 
             modelBuilder.Entity("SammBotNET.Database.CustomCommand", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<ulong>("AuthorId")
                         .HasColumnType("INTEGER");
@@ -26,10 +27,16 @@ namespace SammBotNET.Migrations
                     b.Property<long>("CreatedAt")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Reply")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Name");
+                    b.Property<ulong>("ServerId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
 
                     b.ToTable("CustomCommand");
                 });

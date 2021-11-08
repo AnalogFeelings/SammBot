@@ -8,7 +8,7 @@ using SammBotNET.Database;
 namespace SammBotNET.Migrations.PhrasesDBMigrations
 {
     [DbContext(typeof(PhrasesDB))]
-    [Migration("20211029183256_InitialCreate")]
+    [Migration("20211108194255_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
