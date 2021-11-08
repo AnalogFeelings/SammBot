@@ -123,7 +123,7 @@ namespace SammBotNET.Modules
                 embed.AddField(property.Name, property.GetValue(GlobalConfig.Instance.LoadedConfig, null));
             }
 
-            await Context.Message.Author.SendMessageAsync("", false, embed.Build());
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
 
             return ExecutionResult.Succesful();
         }
