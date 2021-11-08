@@ -28,6 +28,7 @@ namespace SammBotNET.Modules
 
         [Command("list", RunMode = RunMode.Async)]
         [Alias("all")]
+        [MustRunInGuild]
         [Summary("Lists all the custom commands that have been created.")]
         public async Task<RuntimeResult> CustomsAsync()
         {
@@ -36,18 +37,20 @@ namespace SammBotNET.Modules
 
             using (CommandDB CommandDatabase = new())
             {
-                List<CustomCommand> commands = await CommandDatabase.CustomCommand.ToListAsync();
+                List<CustomCommand> customCommands = await CommandDatabase.CustomCommand.ToListAsync();
+                customCommands = customCommands.Where(x => x.ServerId == Context.Guild.Id).ToList();
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Custom Commands", "All of the custom commands that have been created.");
 
-                if (commands.Count > 0)
+                if (customCommands.Count > 0)
                 {
-                    foreach (CustomCommand cmd in commands)
+                    foreach (CustomCommand customCommand in customCommands)
                     {
-                        RestUser globalUser = await Client.Rest.GetUserAsync(cmd.AuthorId);
+                        RestUser globalUser = await Client.Rest.GetUserAsync(customCommand.AuthorId);
                         string assembledAuthor = $"{globalUser.Username}#{globalUser.Discriminator}";
 
-                        embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{cmd.Name}", $"By **{assembledAuthor}**, <t:{cmd.CreatedAt}>");
+                        embed.AddField($"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{customCommand.Name}",
+                            $"By **{assembledAuthor}**, <t:{customCommand.CreatedAt}>");
                     }
                 }
                 else embed.AddField("Wow...", "There are no custom commands yet.");
@@ -58,18 +61,38 @@ namespace SammBotNET.Modules
             return ExecutionResult.Succesful();
         }
 
+        [Command("delete")]
+        [Alias("remove", "destroy")]
+        [MustRunInGuild]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
+        [Summary("Deletes a custom command.")]
+        public async Task<RuntimeResult> DeleteCMDAsync(string name)
+        {
+            using(CommandDB CommandDatabase = new())
+            {
+                List<CustomCommand> customCommands = await CommandDatabase.CustomCommand.ToListAsync();
+                CustomCommand customCommand = customCommands.SingleOrDefault(x => x.Name == name && x.AuthorId == Context.User.Id
+                    || x.AuthorId == GlobalConfig.Instance.LoadedConfig.AestheticalUid);
+
+                if (customCommand == null)
+                    return ExecutionResult.FromError("That custom command does not exist!");
+
+                CommandDatabase.Remove(customCommand);
+                await CommandDatabase.SaveChangesAsync();
+            }
+            await ReplyAsync("Success!");
+
+            return ExecutionResult.Succesful();
+        }
+
         [Command("create", RunMode = RunMode.Async)]
         [Alias("new")]
+        [MustRunInGuild]
         [Summary("Creates a custom command.")]
         public async Task<RuntimeResult> CreateCMDAsync(string name, string reply)
         {
             if (CustomCommandService.IsDisabled)
                 return ExecutionResult.FromError($"The module \"{nameof(CustomCommands)}\" is disabled.");
-
-            if (CustomCommandService.IsCreatingCommand == true)
-                return ExecutionResult.FromError("A command is already being created! Please wait for a bit.");
-
-            #region Validity Checks
 
             if (name.Length > 15)
                 return ExecutionResult.FromError("Please make the command name shorter than 15 characters!");
@@ -80,28 +103,35 @@ namespace SammBotNET.Modules
             else if (name.Contains(" "))
                 return ExecutionResult.FromError("Custom command names cannot contain spaces!");
 
-            foreach (CommandInfo cmdInf in CommandService.Commands)
+            foreach (CommandInfo commandInfo in CommandService.Commands)
             {
-                if (name == cmdInf.Name) return ExecutionResult.FromError("That command name already exists!");
+                if (name == commandInfo.Name) return ExecutionResult.FromError("That command name already exists!");
             }
 
             using (CommandDB CommandDatabase = new())
             {
                 List<CustomCommand> dbCommands = await CommandDatabase.CustomCommand.ToListAsync();
-                foreach (CustomCommand ccmd in dbCommands)
+                dbCommands = dbCommands.Where(x => x.ServerId == Context.Guild.Id).ToList();
+
+                foreach (CustomCommand customCommand in dbCommands)
                 {
-                    if (name == ccmd.Name) return ExecutionResult.FromError("That command name already exists!");
+                    if (name == customCommand.Name) return ExecutionResult.FromError("That command name already exists!");
                 }
 
-                #endregion
-
-                CustomCommandService.IsCreatingCommand = true;
                 await ReplyAsync($"Creating command \"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{name}\"...");
+
+                int nextId = 0;
+                if(dbCommands.Count > 0)
+                {
+                    nextId = dbCommands.Max(x => x.Id) + 1;
+                }
 
                 await CommandDatabase.AddAsync(new CustomCommand
                 {
+                    Id = nextId,
                     Name = name,
                     AuthorId = Context.Message.Author.Id,
+                    ServerId = Context.Guild.Id,
                     Reply = reply,
                     CreatedAt = Context.Message.Timestamp.ToUnixTimeSeconds()
                 });
@@ -109,7 +139,6 @@ namespace SammBotNET.Modules
             }
 
             await ReplyAsync("Command created succesfully!");
-            CustomCommandService.IsCreatingCommand = false;
 
             return ExecutionResult.Succesful();
         }
