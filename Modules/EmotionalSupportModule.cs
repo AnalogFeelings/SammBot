@@ -1,8 +1,6 @@
 ﻿using Discord.Commands;
-using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

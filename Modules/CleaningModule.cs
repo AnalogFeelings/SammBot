@@ -2,10 +2,8 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

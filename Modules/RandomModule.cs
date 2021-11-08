@@ -1,13 +1,11 @@
 ﻿using Discord;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
 using SharpCat.Types.Cat;
 using SharpCat.Types.Dog;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

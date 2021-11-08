@@ -24,4 +24,12 @@ namespace SammBotNET.Extensions
     {
         public HideInHelp() { }
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class CommandCooldown : Attribute
+    {
+        public int Cooldown;
+
+        public CommandCooldown(int Cooldown) => this.Cooldown = Cooldown;
+    }
 }

@@ -3,7 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Pastel;
-using SammBotNET.Database;
 using SammBotNET.Services;
 using System;
 using System.Threading.Tasks;

@@ -40,7 +40,6 @@ namespace SammBotNET
             {
                 try
                 {
-
                     if (result.ErrorReason != "Execution succesful.")
                     {
                         if (result.ErrorReason == "Unknown command.")

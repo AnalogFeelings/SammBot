@@ -2,7 +2,6 @@
 using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
@@ -68,7 +67,7 @@ namespace SammBotNET.Modules
         [Summary("Deletes a custom command.")]
         public async Task<RuntimeResult> DeleteCMDAsync(string name)
         {
-            using(CommandDB CommandDatabase = new())
+            using (CommandDB CommandDatabase = new())
             {
                 List<CustomCommand> customCommands = await CommandDatabase.CustomCommand.ToListAsync();
                 CustomCommand customCommand = customCommands.SingleOrDefault(x => x.Name == name && x.AuthorId == Context.User.Id
@@ -121,7 +120,7 @@ namespace SammBotNET.Modules
                 await ReplyAsync($"Creating command \"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{name}\"...");
 
                 int nextId = 0;
-                if(dbCommands.Count > 0)
+                if (dbCommands.Count > 0)
                 {
                     nextId = dbCommands.Max(x => x.Id) + 1;
                 }
