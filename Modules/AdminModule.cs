@@ -19,6 +19,7 @@ namespace SammBotNET.Modules
     public class AdminModule : ModuleBase<SocketCommandContext>
     {
         public AdminService AdminService { get; set; }
+        public Logger Logger { get; set; }
 
         [Command("say", RunMode = RunMode.Async)]
         [HideInHelp]
@@ -64,6 +65,7 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             await ReplyAsync($"{GlobalConfig.Instance.LoadedConfig.BotName} will shut down.");
+            Logger.Log(LogLevel.Warning, $"{GlobalConfig.Instance.LoadedConfig.BotName} will shut down.\n\n");
 
             Environment.Exit(0);
 
@@ -79,6 +81,7 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             await ReplyAsync($"{GlobalConfig.Instance.LoadedConfig.BotName} will restart.");
+            Logger.Log(LogLevel.Warning, $"{GlobalConfig.Instance.LoadedConfig.BotName} will restart.\n\n");
 
             GlobalConfig.Instance.RestartBot();
 
@@ -97,7 +100,7 @@ namespace SammBotNET.Modules
             string guildName = guild.Name;
             await guild.LeaveAsync();
 
-            await ReplyAsync($"Left the server \"{guildName}\"");
+            await ReplyAsync($"Left the server \"{guildName}\".");
 
             return ExecutionResult.Succesful();
         }
