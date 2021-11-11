@@ -119,7 +119,10 @@ namespace SammBotNET.Modules
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
 
             List<PropertyInfo> properties = typeof(JsonConfig).GetProperties()
-                .Where(x => !x.PropertyType.IsGenericType && x.Name != "UrlRegex" && x.Name != "BotToken").ToList();
+                .Where(x => !x.PropertyType.IsGenericType &&
+                        x.Name != "UrlRegex" &&
+                        x.Name != "BotToken" &&
+                        x.GetCustomAttribute<NotModifiable>() == null).ToList();
 
             foreach (PropertyInfo property in properties)
             {
@@ -147,6 +150,8 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError($"{varName} does not exist!");
             if (retrievedVariable.PropertyType is IList)
                 return ExecutionResult.FromError($"{varName} is a list variable!");
+            if(retrievedVariable.GetCustomAttribute<NotModifiable>() != null)
+                return ExecutionResult.FromError($"{varName} cannot be modified at runtime!");
 
             retrievedVariable.SetValue(GlobalConfig.Instance.LoadedConfig, Convert.ChangeType(varValue, retrievedVariable.PropertyType));
 

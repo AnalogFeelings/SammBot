@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
+using SammBotNET.Extensions;
 
 namespace SammBotNET
 {
@@ -94,19 +95,19 @@ namespace SammBotNET
         public string BotName { get; set; } = "Samm-Bot";
         public string BotVersion { get; set; } = "v0.1";
         public string BotPrefix { get; set; } = "s.";
-        public bool RotatingStatus { get; set; } = true;
-        public string BotToken { get; set; } = "";
-        public string TwitchUrl { get; set; } = "https://www.twitch.tv/vanebrain";
+        [NotModifiable] public bool RotatingStatus { get; set; } = true;
+        [NotModifiable] public string BotToken { get; set; } = "";
+        [NotModifiable] public string TwitchUrl { get; set; } = "https://www.twitch.tv/vanebrain";
         public ulong AestheticalUid { get; set; } = 337950448130719754;
         public ulong SkylerUid { get; set; } = 850874605434175500;
-        public string CommandLogFormat { get; set; } = "Executing command {0}!";
-        public string LogFolder { get; set; } = "Logs";
+        [NotModifiable] public string CommandLogFormat { get; set; } = "Executing command {0}!";
+        [NotModifiable] public string LogFolder { get; set; } = "Logs";
         public string UrlRegex { get; set; } = "";
-        public int RngResetTime { get; set; } = 25;
+        [NotModifiable] public int RngResetTime { get; set; } = 25;
         public List<string> BannedPrefixes { get; set; } = null;
         public int Rule34Threshold { get; set; } = 30;
         public List<string> MagicBallAnswers { get; set; } = null;
-        public int PeoneRecentQueueSize { get; set; } = 15;
+        [NotModifiable] public int PeoneRecentQueueSize { get; set; } = 15;
     }
 
     public class BotStatus

@@ -32,4 +32,10 @@ namespace SammBotNET.Extensions
 
         public CommandCooldown(int Cooldown) => this.Cooldown = Cooldown;
     }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class NotModifiable : Attribute
+    {
+        public NotModifiable() { }
+    }
 }
