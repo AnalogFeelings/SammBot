@@ -82,9 +82,9 @@ namespace SammBotNET
             SocketCommandContext context = new(DiscordClient, message);
 
             int argPos = 0;
-            if (message.HasMentionPrefix(DiscordClient.CurrentUser, ref argPos))
+            if (message.HasMentionPrefix(context.Client.CurrentUser, ref argPos))
             {
-                await context.Message.Channel.SendMessageAsync($"Hi!\nI'm {GlobalConfig.Instance.LoadedConfig.BotName}!\n" +
+                await context.Channel.SendMessageAsync($"Hi!\nI'm {GlobalConfig.Instance.LoadedConfig.BotName}!\n" +
                     $"My prefix is `{GlobalConfig.Instance.LoadedConfig.BotPrefix}`! " +
                     $"You can use {GlobalConfig.Instance.LoadedConfig.BotPrefix}help to see a list of my available commands!");
                 return;
