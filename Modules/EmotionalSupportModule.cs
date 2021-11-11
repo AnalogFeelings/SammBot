@@ -1,4 +1,5 @@
 ﻿using Discord.Commands;
+using Microsoft.EntityFrameworkCore;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
 using System.Collections.Generic;

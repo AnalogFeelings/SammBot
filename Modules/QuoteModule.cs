@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
