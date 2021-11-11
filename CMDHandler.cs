@@ -84,9 +84,9 @@ namespace SammBotNET
             int argPos = 0;
             if (message.Content.StartsWith($"<@!{DiscordClient.CurrentUser.Id}>"))
             {
-                await context.Channel.SendMessageAsync($"Hi! I'm {GlobalConfig.Instance.LoadedConfig.BotName}!\n" +
+                await context.Channel.SendMessageAsync($"Hi! I'm **{GlobalConfig.Instance.LoadedConfig.BotName}**!\n" +
                     $"My prefix is `{GlobalConfig.Instance.LoadedConfig.BotPrefix}`! " +
-                    $"You can use {GlobalConfig.Instance.LoadedConfig.BotPrefix}help to see a list of my available commands!");
+                    $"You can use `{GlobalConfig.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!");
             }
             else if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos))
             {
