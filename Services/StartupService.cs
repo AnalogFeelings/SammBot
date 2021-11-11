@@ -2,10 +2,8 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Figgle;
-using Newtonsoft.Json;
 using Pastel;
 using System;
-using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,15 +59,6 @@ namespace SammBotNET.Services
 
         public async Task StartAsync()
         {
-            Console.WriteLine($"Loading {GlobalConfig.Instance.ConfigFile}...".Pastel("#3d9785"));
-            if (!GlobalConfig.Instance.LoadConfiguration())
-            {
-                Console.WriteLine($"FATAL! Could not load {GlobalConfig.Instance.ConfigFile} correctly!".Pastel(Color.Red));
-                File.WriteAllText(GlobalConfig.Instance.ConfigFile,
-                    JsonConvert.SerializeObject(GlobalConfig.Instance.LoadedConfig, Formatting.Indented));
-                Environment.Exit(1);
-            }
-
             Console.WriteLine("Logging in as bot...".Pastel("#3d9785"));
             await SocketClient.LoginAsync(TokenType.Bot, GlobalConfig.Instance.LoadedConfig.BotToken);
             await SocketClient.StartAsync();

@@ -2,9 +2,11 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Pastel;
 using SammBotNET.Services;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SammBotNET
@@ -20,6 +22,21 @@ namespace SammBotNET
         public async Task MainAsync()
         {
             GlobalConfig.Instance.StartupStopwatch.Start();
+
+            Console.WriteLine($"Loading {GlobalConfig.Instance.ConfigFile}...".Pastel("#3d9785"));
+            if (!GlobalConfig.Instance.LoadConfiguration())
+            {
+                Console.WriteLine($"FATAL! Could not load {GlobalConfig.Instance.ConfigFile} correctly!".Pastel(Color.Red));
+                File.WriteAllText(GlobalConfig.Instance.ConfigFile,
+                    JsonConvert.SerializeObject(GlobalConfig.Instance.LoadedConfig, Formatting.Indented));
+                Environment.Exit(1);
+            }
+
+            if(!Directory.Exists(GlobalConfig.Instance.LoadedConfig.LogFolder))
+            {
+                Console.WriteLine($"{GlobalConfig.Instance.LoadedConfig.LogFolder} did not exist. Creating...".Pastel("#3d9785"));
+                Directory.CreateDirectory(GlobalConfig.Instance.LoadedConfig.LogFolder);
+            }
 
             Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));
 
