@@ -62,7 +62,7 @@ namespace SammBotNET.Modules
 
             if (splittedModuleName.Length == 1)
             {
-                ModuleInfo moduleInfo = CommandService.Modules.Single(x => x.Name == moduleName || x.Group == moduleName);
+                ModuleInfo moduleInfo = CommandService.Modules.SingleOrDefault(x => x.Name == moduleName || x.Group == moduleName);
 
                 if (moduleInfo == null || moduleInfo == default(ModuleInfo))
                     return ExecutionResult.FromError($"The module \"{moduleName}\" doesn't exist.");
