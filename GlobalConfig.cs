@@ -106,6 +106,7 @@ namespace SammBotNET
         public List<string> BannedPrefixes { get; set; } = null;
         public int Rule34Threshold { get; set; } = 30;
         public List<string> MagicBallAnswers { get; set; } = null;
+        public int PeoneRecentQueueSize { get; set; } = 15;
     }
 
     public class BotStatus
