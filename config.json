@@ -13,6 +13,7 @@
   "BannedPrefixes": [ "!", "--", ".", "pls", "-", "?" ],
   "UrlRegex": "(?:(?:https?|ftp):\\\/\\\/|\\b(?:[a-z\\d]+\\.))(?:(?:[^\\s()<>]+|\\((?:[^\\s()<>]+|(?:\\([^\\s()<>]+\\)))?\\))+(?:\\((?:[^\\s()<>]+|(?:\\(?:[^\\s()<>]+\\)))?\\)|[^\\s`!()\\[\\]{};:'>,",
   "Rule34Threshold": 35,
+  "PeoneRecentQueueSize": 20,
   "MagicBallAnswers": [
     "It is certain.",
     "As I see it, yes.",
