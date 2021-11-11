@@ -87,7 +87,6 @@ namespace SammBotNET
                 await message.Channel.SendMessageAsync($"Hi!\nI'm {GlobalConfig.Instance.LoadedConfig.BotName}!\n" +
                     $"My prefix is `{GlobalConfig.Instance.LoadedConfig.BotPrefix}`! " +
                     $"You can use {GlobalConfig.Instance.LoadedConfig.BotPrefix}help to see a list of my available commands!");
-                return;
             }
             else if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos))
             {
