@@ -64,7 +64,7 @@ namespace SammBotNET.Modules
             {
                 ModuleInfo moduleInfo = CommandService.Modules.Single(x => x.Name == moduleName || x.Group == moduleName);
 
-                if (moduleInfo is null)
+                if (moduleInfo == null || moduleInfo == default(ModuleInfo))
                     return ExecutionResult.FromError($"The module \"{moduleName}\" doesn't exist.");
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context,

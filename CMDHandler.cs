@@ -81,8 +81,17 @@ namespace SammBotNET
             SocketCommandContext context = new(DiscordClient, message);
 
             int argPos = 0;
-            if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos))
+            if(message.HasMentionPrefix(DiscordClient.CurrentUser, ref argPos))
             {
+                await context.Message.Channel.SendMessageAsync($"Hi!\nI'm {GlobalConfig.Instance.LoadedConfig.BotName}!\n" +
+                    $"My prefix is `{GlobalConfig.Instance.LoadedConfig.BotPrefix}`! " +
+                    $"You can use {GlobalConfig.Instance.LoadedConfig.BotPrefix}help to see a list of my available commands!");
+                return;
+            }
+            else if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos))
+            {
+                if (message.Content.Length == GlobalConfig.Instance.LoadedConfig.BotPrefix.Length) return;
+
                 CommandName = message.Content.Remove(0, GlobalConfig.Instance.LoadedConfig.BotPrefix.Length).Split()[0];
 
                 BotLogger.Log(LogLevel.Message, string.Format(GlobalConfig.Instance.LoadedConfig.CommandLogFormat,

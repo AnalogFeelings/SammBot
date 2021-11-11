@@ -16,7 +16,7 @@ namespace SammBotNET.Modules
     [Group("random")]
     public class RandomModule : ModuleBase<SocketCommandContext>
     {
-        public RandomService RandomModuleService { get; set; }
+        public RandomService RandomService { get; set; }
 
         [Command("cat")]
         [Alias("kit", "kitto", "cogga")]
@@ -32,7 +32,7 @@ namespace SammBotNET.Modules
                 limit = 1
             };
 
-            List<CatImage> images = await RandomModuleService.requesterCat.GetImageAsync(searchParams);
+            List<CatImage> images = await RandomService.CatRequester.GetImageAsync(searchParams);
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"__Breed__: **{images[0].Breeds[0].Name}**" +
                 $"\n__Temperament__: *{images[0].Breeds[0].Temperament}*").ChangeTitle("Random Cat");
@@ -58,7 +58,7 @@ namespace SammBotNET.Modules
                 limit = 1
             };
 
-            List<DogImage> images = await RandomModuleService.requesterDog.GetImageAsync(searchParams);
+            List<DogImage> images = await RandomService.DogRequester.GetImageAsync(searchParams);
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"__Breed__: **{images[0].Breeds[0].Name}**" +
                 $"\n__Temperament__: *{images[0].Breeds[0].Temperament}*").ChangeTitle("Random Dog");
@@ -77,7 +77,11 @@ namespace SammBotNET.Modules
             using (PeoneImagesDB PeoneDatabase = new())
             {
                 List<PeoneImage> peoneImages = await PeoneDatabase.PeoneImage.ToListAsync();
+            chooseImage:
                 PeoneImage selectedPeoneImage = peoneImages.PickRandom();
+
+                if (RandomService.RecentPeoneImages.Contains(selectedPeoneImage.TwitterUrl)) goto chooseImage;
+                RandomService.RecentPeoneImages.Push(selectedPeoneImage.TwitterUrl);
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Peone");
                 embed.Color = new Color(105, 219, 221);
