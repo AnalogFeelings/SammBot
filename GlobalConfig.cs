@@ -39,11 +39,11 @@ namespace SammBotNET
 
         public void RestartBot()
         {
-            string restartTimeoutCmd = $"/C timeout 3 && {Process.GetCurrentProcess().MainModule.FileName}";
+            string restartTimeoutCmd = $"/C timeout 3 && {Environment.ProcessPath}";
             string restartFileCmd = "cmd.exe";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                restartTimeoutCmd = $"-c \"sleep 3s && {Process.GetCurrentProcess().MainModule.FileName}\"";
+                restartTimeoutCmd = $"-c \"sleep 3s && {Environment.ProcessPath}\"";
                 restartFileCmd = "bash";
             }
 
