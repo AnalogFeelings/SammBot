@@ -111,7 +111,7 @@ namespace SammBotNET.Modules
         [Command("listcfg")]
         [Alias("lc")]
         [HideInHelp]
-        public async Task<RuntimeResult> ListConfigAsync(bool @override)
+        public async Task<RuntimeResult> ListConfigAsync(bool @override = false)
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
@@ -139,7 +139,7 @@ namespace SammBotNET.Modules
         [Command("setcfg")]
         [Alias("config")]
         [HideInHelp]
-        public async Task<RuntimeResult> SetConfigAsync(string varName, string varValue, bool restartBot)
+        public async Task<RuntimeResult> SetConfigAsync(string varName, string varValue, bool restartBot = false)
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
