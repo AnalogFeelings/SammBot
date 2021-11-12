@@ -111,7 +111,7 @@ namespace SammBotNET.Modules
         [Command("listcfg")]
         [Alias("lc")]
         [HideInHelp]
-        public async Task<RuntimeResult> ListConfigAsync()
+        public async Task<RuntimeResult> ListConfigAsync(bool @override)
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
@@ -121,8 +121,10 @@ namespace SammBotNET.Modules
             List<PropertyInfo> properties = typeof(JsonConfig).GetProperties()
                 .Where(x => !x.PropertyType.IsGenericType &&
                         x.Name != "UrlRegex" &&
-                        x.Name != "BotToken" &&
-                        x.GetCustomAttribute<NotModifiable>() == null).ToList();
+                        x.Name != "BotToken").ToList();
+
+            if (!@override)
+                properties = properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
 
             foreach (PropertyInfo property in properties)
             {
@@ -150,8 +152,9 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError($"{varName} does not exist!");
             if (retrievedVariable.PropertyType is IList)
                 return ExecutionResult.FromError($"{varName} is a list variable!");
-            if(retrievedVariable.GetCustomAttribute<NotModifiable>() != null)
-                return ExecutionResult.FromError($"{varName} cannot be modified at runtime!");
+            if(retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !restartBot)
+                return ExecutionResult.FromError($"{varName} cannot be modified at runtime! " +
+                    $"Please pass `true` to the `restartBot` parameter.");
 
             retrievedVariable.SetValue(GlobalConfig.Instance.LoadedConfig, Convert.ChangeType(varValue, retrievedVariable.PropertyType));
 
