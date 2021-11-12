@@ -144,17 +144,19 @@ namespace SammBotNET.Modules
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            AdminService.ChangingConfig = true;
-
             PropertyInfo retrievedVariable = typeof(JsonConfig).GetProperty(varName);
 
             if (retrievedVariable == null)
                 return ExecutionResult.FromError($"{varName} does not exist!");
+
             if (retrievedVariable.PropertyType is IList)
                 return ExecutionResult.FromError($"{varName} is a list variable!");
+
             if(retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !restartBot)
                 return ExecutionResult.FromError($"{varName} cannot be modified at runtime! " +
                     $"Please pass `true` to the `restartBot` parameter.");
+
+            AdminService.ChangingConfig = true;
 
             retrievedVariable.SetValue(GlobalConfig.Instance.LoadedConfig, Convert.ChangeType(varValue, retrievedVariable.PropertyType));
 
