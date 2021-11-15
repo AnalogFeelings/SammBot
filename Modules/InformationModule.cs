@@ -70,8 +70,8 @@ namespace SammBotNET.Modules
             string userName = $"{User.Username}";
             string userDiscriminator = $"#{User.DiscriminatorValue}";
             string nickName = User.Nickname ?? "None";
-            string isABot = User.IsBot ? "Yes" : "No";
-            string isAWebhook = User.IsWebhook ? "Yes" : "No";
+            string isABot = User.IsBot.ToYesNo();
+            string isAWebhook = User.IsWebhook.ToYesNo();
             string joinDate = $"<t:{User.JoinedAt.Value.ToUnixTimeSeconds()}>";
             string createDate = $"<t:{User.CreatedAt.ToUnixTimeSeconds()}>";
             string boostingSince = User.PremiumSince != null ? $"<t:{User.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
