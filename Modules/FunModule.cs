@@ -101,7 +101,7 @@ namespace SammBotNET.Modules
             string embedDescription = $"**Definition** : `{selectedDefinition.Definition.Truncate(1024)}`\n";
             embedDescription += $"**Author** : `{selectedDefinition.Author}`\n";
             embedDescription += $"**Thumbs Up** : {selectedDefinition.ThumbsUp}\n";
-            embedDescription += $"**Thumbs Down** : {selectedDefinition.ThumbsUp}\n";
+            embedDescription += $"**Thumbs Down** : {selectedDefinition.ThumbsDown}\n";
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: embedDescription);
             embed.ChangeTitle($"DEFINITION FOR \"{selectedDefinition.Word}\"");
