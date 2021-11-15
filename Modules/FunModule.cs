@@ -99,12 +99,13 @@ namespace SammBotNET.Modules
             UrbanDefinition selectedDefinition = urbanDefinitions.List.First();
 
             string embedDescription = $"**Definition** : *{selectedDefinition.Definition.Truncate(1024)}*\n";
-            embedDescription += $"**Author** : `{selectedDefinition.Author}`\n";
+            embedDescription += $"**Author** : {selectedDefinition.Author}\n";
             embedDescription += $"**Thumbs Up** : {selectedDefinition.ThumbsUp}\n";
             embedDescription += $"**Thumbs Down** : {selectedDefinition.ThumbsDown}\n";
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: embedDescription);
-            embed.ChangeTitle($"DEFINITION FOR \"{selectedDefinition.Word}\"");
+            embed.ChangeTitle($"URBAN DEFINITION OF \"{selectedDefinition.Word}\"");
+            embed.WithUrl(selectedDefinition.Permalink);
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
 
