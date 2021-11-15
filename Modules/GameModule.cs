@@ -59,7 +59,7 @@ namespace SammBotNET.Modules
         {
             string chosenKaomoji = GlobalConfig.Instance.LoadedConfig.HugKaomojis.PickRandom();
 
-            SocketGuildUser authorAsGuild = User as SocketGuildUser;
+            SocketGuildUser authorAsGuild = Context.Message.Author as SocketGuildUser;
 
             string authorName = authorAsGuild.Nickname ?? authorAsGuild.Username;
 
