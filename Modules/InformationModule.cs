@@ -70,19 +70,31 @@ namespace SammBotNET.Modules
             string userName = $"{User.Username}#{User.DiscriminatorValue}";
             string nickName = User.Nickname ?? "None";
             string isABot = User.IsBot ? "Yes" : "No";
+            string isAWebhook = User.IsWebhook ? "Yes" : "No";
             string joinDate = $"<t:{User.JoinedAt.Value.ToUnixTimeSeconds()}>";
             string createDate = $"<t:{User.CreatedAt.ToUnixTimeSeconds()}>";
             string boostingSince = User.PremiumSince != null ? $"<t:{User.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
             string userRoles = User.Roles.Count > 1 ? 
                 string.Join(", ", User.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
                 : "None";
+            string userStatus = "Unknown";
+
+            switch(User.Status)
+            {
+                case UserStatus.DoNotDisturb:   userStatus = "Do Not Disturb";  break;
+                case UserStatus.Idle:           userStatus = "Idle";            break;
+                case UserStatus.Offline:        userStatus = "Offline";         break;
+                case UserStatus.Online:         userStatus = "Online";          break;
+            }
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("USER INFORMATION");
 
             embed.WithThumbnailUrl(userAvatarUrl);
             embed.AddField("Username", userName, true);
             embed.AddField("Nickname", nickName, true);
+            embed.AddField("Status", userStatus, true);
             embed.AddField("Is Bot", isABot, true);
+            embed.AddField("Is Webhook", isAWebhook, true);
             embed.AddField("Join Date", joinDate, true);
             embed.AddField("Create Date", createDate, true);
             embed.AddField("Booster Since", boostingSince, true);
