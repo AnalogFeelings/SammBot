@@ -98,7 +98,7 @@ namespace SammBotNET.Modules
             embed.AddField("Join Date", joinDate, true);
             embed.AddField("Create Date", createDate, true);
             embed.AddField("Booster Since", boostingSince, true);
-            embed.AddField("Roles", userRoles);
+            embed.AddField("Roles", userRoles, true);
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
 
