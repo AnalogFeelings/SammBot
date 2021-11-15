@@ -98,8 +98,8 @@ namespace SammBotNET.Modules
 
             UrbanDefinition selectedDefinition = urbanDefinitions.List.First();
 
-            string embedDescription = $"**Definition** : *{selectedDefinition.Definition.Truncate(1024)}*\n";
-            embedDescription += $"**Example** : {selectedDefinition.Example}\n";
+            string embedDescription = $"**Definition** : *{selectedDefinition.Definition.Truncate(1024)}*\n\n";
+            embedDescription += $"**Example** : {selectedDefinition.Example}\n\n";
             embedDescription += $"**Author** : {selectedDefinition.Author}\n";
             embedDescription += $"**Thumbs Up** : {selectedDefinition.ThumbsUp}\n";
             embedDescription += $"**Thumbs Down** : {selectedDefinition.ThumbsDown}\n";
