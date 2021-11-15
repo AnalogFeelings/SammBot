@@ -152,7 +152,7 @@ namespace SammBotNET.Modules
             if (retrievedVariable.PropertyType is IList)
                 return ExecutionResult.FromError($"{VarName} is a list variable!");
 
-            if(retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
+            if (retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
                 return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
                     $"Please pass `true` to the `restartBot` parameter.");
 

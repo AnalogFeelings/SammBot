@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SammBotNET.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +7,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
-using SammBotNET.Extensions;
 
 namespace SammBotNET
 {

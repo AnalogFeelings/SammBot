@@ -18,7 +18,7 @@ namespace SammBotNET
 
     public class Logger
     {
-        private StreamWriter LogFileWriter;
+        private readonly StreamWriter LogFileWriter;
 
         public Logger(DiscordSocketClient client, CommandService command)
         {

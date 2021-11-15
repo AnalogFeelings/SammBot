@@ -2,7 +2,6 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using SammBotNET.Extensions;
-using System;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
@@ -12,9 +11,7 @@ namespace SammBotNET.Modules
     [Summary("Games and fun!")]
     public class GameModule : ModuleBase<SocketCommandContext>
     {
-        public readonly Logger Logger;
-
-        public GameModule(Logger logger) => Logger = logger;
+        public Logger Logger { get; set; }
 
         [Command("8ball")]
         [Alias("ask", "8")]

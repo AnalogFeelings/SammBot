@@ -32,7 +32,7 @@ namespace SammBotNET
                 Environment.Exit(1);
             }
 
-            if(!Directory.Exists(GlobalConfig.Instance.LoadedConfig.LogFolder))
+            if (!Directory.Exists(GlobalConfig.Instance.LoadedConfig.LogFolder))
             {
                 Console.WriteLine($"{GlobalConfig.Instance.LoadedConfig.LogFolder} did not exist. Creating...".Pastel("#3d9785"));
                 Directory.CreateDirectory(GlobalConfig.Instance.LoadedConfig.LogFolder);

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,15 +15,12 @@ namespace SammBotNET.Modules
     [Name("Custom Commands")]
     [Summary("Commands with a custom reply.")]
     [Group("customcmds")]
-    public class CustomCommands : ModuleBase<SocketCommandContext>
+    public class CustomCommandModule : ModuleBase<SocketCommandContext>
     {
         public CustomCommandService CustomCommandService { get; set; }
         public StartupService StartupService { get; set; }
         public DiscordSocketClient Client { get; set; }
-
-        private readonly CommandService CommandService;
-
-        public CustomCommands(IServiceProvider services, CommandService cmds) => CommandService = cmds;
+        public CommandService CommandService { get; set; }
 
         [Command("list", RunMode = RunMode.Async)]
         [Alias("all")]
@@ -33,7 +29,7 @@ namespace SammBotNET.Modules
         public async Task<RuntimeResult> CustomsAsync()
         {
             if (CustomCommandService.IsDisabled)
-                return ExecutionResult.FromError($"The module \"{nameof(CustomCommands)}\" is disabled.");
+                return ExecutionResult.FromError($"The module \"{nameof(CustomCommandModule)}\" is disabled.");
 
             using (CommandDB CommandDatabase = new())
             {
@@ -92,7 +88,7 @@ namespace SammBotNET.Modules
         public async Task<RuntimeResult> CreateCMDAsync(string Name, string Reply)
         {
             if (CustomCommandService.IsDisabled)
-                return ExecutionResult.FromError($"The module \"{nameof(CustomCommands)}\" is disabled.");
+                return ExecutionResult.FromError($"The module \"{nameof(CustomCommandModule)}\" is disabled.");
 
             if (Name.Length > 15)
                 return ExecutionResult.FromError("Please make the command name shorter than 15 characters!");
@@ -100,7 +96,7 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("Custom command names can't begin with my prefix!");
             else if (Context.Message.MentionedUsers.Count > 0)
                 return ExecutionResult.FromError("Custom command names or replies cannot contain pings!");
-            else if (Name.Contains(" "))
+            else if (Name.Contains(' '))
                 return ExecutionResult.FromError("Custom command names cannot contain spaces!");
 
             foreach (CommandInfo commandInfo in CommandService.Commands)

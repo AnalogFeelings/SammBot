@@ -17,7 +17,7 @@ namespace SammBotNET.Modules
         [Summary("Bans a user with a reason.")]
         public async Task<RuntimeResult> BanUserAsync(IUser User, int PruneDays, string Reason = null)
         {
-            string banReason = Reason == null ? "No reason specified." : Reason;
+            string banReason = Reason ?? "No reason specified.";
             using (Context.Channel.EnterTypingState())
             {
                 await Context.Guild.AddBanAsync(User, PruneDays, banReason);
@@ -36,7 +36,7 @@ namespace SammBotNET.Modules
         [Summary("Kicks a user with a reason.")]
         public async Task<RuntimeResult> KickUserAsync(IUser User, string Reason = null)
         {
-            string kickReason = Reason == null ? "No reason specified." : Reason;
+            string kickReason = Reason ?? "No reason specified.";
             IGuildUser guildUser = Context.Guild.GetUser(User.Id);
 
             using (Context.Channel.EnterTypingState())
