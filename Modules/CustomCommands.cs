@@ -66,12 +66,12 @@ namespace SammBotNET.Modules
         [MustRunInGuild]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Deletes a custom command.")]
-        public async Task<RuntimeResult> DeleteCMDAsync(string name)
+        public async Task<RuntimeResult> DeleteCMDAsync(string Name)
         {
             using (CommandDB CommandDatabase = new())
             {
                 List<CustomCommand> customCommands = await CommandDatabase.CustomCommand.ToListAsync();
-                CustomCommand customCommand = customCommands.SingleOrDefault(x => x.Name == name && x.AuthorId == Context.User.Id
+                CustomCommand customCommand = customCommands.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id
                     || x.AuthorId == GlobalConfig.Instance.LoadedConfig.AestheticalUid);
 
                 if (customCommand == null)
@@ -89,23 +89,23 @@ namespace SammBotNET.Modules
         [Alias("new")]
         [MustRunInGuild]
         [Summary("Creates a custom command.")]
-        public async Task<RuntimeResult> CreateCMDAsync(string name, string reply)
+        public async Task<RuntimeResult> CreateCMDAsync(string Name, string Reply)
         {
             if (CustomCommandService.IsDisabled)
                 return ExecutionResult.FromError($"The module \"{nameof(CustomCommands)}\" is disabled.");
 
-            if (name.Length > 15)
+            if (Name.Length > 15)
                 return ExecutionResult.FromError("Please make the command name shorter than 15 characters!");
-            else if (name.StartsWith(GlobalConfig.Instance.LoadedConfig.BotPrefix))
+            else if (Name.StartsWith(GlobalConfig.Instance.LoadedConfig.BotPrefix))
                 return ExecutionResult.FromError("Custom command names can't begin with my prefix!");
             else if (Context.Message.MentionedUsers.Count > 0)
                 return ExecutionResult.FromError("Custom command names or replies cannot contain pings!");
-            else if (name.Contains(" "))
+            else if (Name.Contains(" "))
                 return ExecutionResult.FromError("Custom command names cannot contain spaces!");
 
             foreach (CommandInfo commandInfo in CommandService.Commands)
             {
-                if (name == commandInfo.Name) return ExecutionResult.FromError("That command name already exists!");
+                if (Name == commandInfo.Name) return ExecutionResult.FromError("That command name already exists!");
             }
 
             using (CommandDB CommandDatabase = new())
@@ -115,10 +115,10 @@ namespace SammBotNET.Modules
 
                 foreach (CustomCommand customCommand in dbCommands)
                 {
-                    if (name == customCommand.Name) return ExecutionResult.FromError("That command name already exists!");
+                    if (Name == customCommand.Name) return ExecutionResult.FromError("That command name already exists!");
                 }
 
-                await ReplyAsync($"Creating command \"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{name}\"...");
+                await ReplyAsync($"Creating command \"{GlobalConfig.Instance.LoadedConfig.BotPrefix}{Name}\"...");
 
                 int nextId = 0;
                 if (dbCommands.Count > 0)
@@ -129,10 +129,10 @@ namespace SammBotNET.Modules
                 await CommandDatabase.AddAsync(new CustomCommand
                 {
                     Id = nextId,
-                    Name = name,
+                    Name = Name,
                     AuthorId = Context.Message.Author.Id,
                     ServerId = Context.Guild.Id,
-                    Reply = reply,
+                    Reply = Reply,
                     CreatedAt = Context.Message.Timestamp.ToUnixTimeSeconds()
                 });
                 await CommandDatabase.SaveChangesAsync();

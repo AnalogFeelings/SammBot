@@ -18,20 +18,18 @@ namespace SammBotNET.Modules
     public class NsfwModule : ModuleBase<SocketCommandContext>
     {
         public NsfwService NsfwService { get; set; }
-        public readonly Logger BotLogger;
-
-        public NsfwModule(Logger logger) => BotLogger = logger;
+        public Logger BotLogger { get; set; }
 
         [Command("r34")]
         [Alias("rule34")]
         [RequireNsfw]
         [Summary("Searches for posts in rule34.xxx")]
-        public async Task<RuntimeResult> SearchR34Async([Remainder] string tags)
+        public async Task<RuntimeResult> SearchR34Async([Remainder] string Tags)
         {
             Rule34SearchParams searchParams = new()
             {
                 limit = 1000,
-                tags = tags,
+                tags = Tags,
                 json = 1
             };
 

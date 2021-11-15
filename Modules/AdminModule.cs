@@ -23,35 +23,35 @@ namespace SammBotNET.Modules
 
         [Command("say", RunMode = RunMode.Async)]
         [HideInHelp]
-        public async Task<RuntimeResult> SayMessageAsync([Remainder] string message)
+        public async Task<RuntimeResult> SayMessageAsync([Remainder] string Message)
         {
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             SocketTextChannel channel = Context.Client.GetGuild(AdminService.GuildId).GetTextChannel(AdminService.ChannelId);
 
-            using (channel.EnterTypingState()) await channel.SendMessageAsync(message);
+            using (channel.EnterTypingState()) await channel.SendMessageAsync(Message);
 
             return ExecutionResult.Succesful();
         }
 
         [Command("setsay", RunMode = RunMode.Async)]
         [HideInHelp]
-        public async Task<RuntimeResult> SetSayAsync(ulong channel, ulong guild)
+        public async Task<RuntimeResult> SetSayAsync(ulong Channel, ulong Guild)
         {
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            if (Context.Client.GetGuild(guild) == null) return ExecutionResult.FromError("I am not invited in that guild!");
-            if (Context.Client.GetGuild(guild).GetTextChannel(channel) == null)
-                return ExecutionResult.FromError($"Channel with ID {channel} does not exist in guild with ID {guild}.");
+            if (Context.Client.GetGuild(Guild) == null) return ExecutionResult.FromError("I am not invited in that guild!");
+            if (Context.Client.GetGuild(Guild).GetTextChannel(Channel) == null)
+                return ExecutionResult.FromError($"Channel with ID {Channel} does not exist in guild with ID {Guild}.");
 
-            AdminService.ChannelId = channel;
-            AdminService.GuildId = guild;
+            AdminService.ChannelId = Channel;
+            AdminService.GuildId = Guild;
 
-            SocketGuild socketGuild = Context.Client.GetGuild(guild);
+            SocketGuild socketGuild = Context.Client.GetGuild(Guild);
 
-            await ReplyAsync($"Success. Set guild to `{socketGuild.Name}` and channel to `{socketGuild.GetTextChannel(channel).Name}`.");
+            await ReplyAsync($"Success. Set guild to `{socketGuild.Name}` and channel to `{socketGuild.GetTextChannel(Channel).Name}`.");
 
             return ExecutionResult.Succesful();
         }
@@ -91,12 +91,12 @@ namespace SammBotNET.Modules
         [Command("leaveserver")]
         [Alias("leave")]
         [HideInHelp]
-        public async Task<RuntimeResult> LeaveAsync(ulong serverId)
+        public async Task<RuntimeResult> LeaveAsync(ulong ServerId)
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            SocketGuild guild = Context.Client.GetGuild(serverId);
+            SocketGuild guild = Context.Client.GetGuild(ServerId);
             if (guild == null)
                 return ExecutionResult.FromError("I am not currently in this guild!");
 
@@ -111,7 +111,7 @@ namespace SammBotNET.Modules
         [Command("listcfg")]
         [Alias("lc")]
         [HideInHelp]
-        public async Task<RuntimeResult> ListConfigAsync(bool @override = false)
+        public async Task<RuntimeResult> ListConfigAsync(bool Override = false)
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
@@ -123,7 +123,7 @@ namespace SammBotNET.Modules
                         x.Name != "UrlRegex" &&
                         x.Name != "BotToken").ToList();
 
-            if (!@override)
+            if (!Override)
                 properties = properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
 
             foreach (PropertyInfo property in properties)
@@ -139,34 +139,34 @@ namespace SammBotNET.Modules
         [Command("setcfg")]
         [Alias("config")]
         [HideInHelp]
-        public async Task<RuntimeResult> SetConfigAsync(string varName, string varValue, bool restartBot = false)
+        public async Task<RuntimeResult> SetConfigAsync(string VarName, string VarValue, bool RestartBot = false)
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            PropertyInfo retrievedVariable = typeof(JsonConfig).GetProperty(varName);
+            PropertyInfo retrievedVariable = typeof(JsonConfig).GetProperty(VarName);
 
             if (retrievedVariable == null)
-                return ExecutionResult.FromError($"{varName} does not exist!");
+                return ExecutionResult.FromError($"{VarName} does not exist!");
 
             if (retrievedVariable.PropertyType is IList)
-                return ExecutionResult.FromError($"{varName} is a list variable!");
+                return ExecutionResult.FromError($"{VarName} is a list variable!");
 
-            if(retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !restartBot)
-                return ExecutionResult.FromError($"{varName} cannot be modified at runtime! " +
+            if(retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
+                return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
                     $"Please pass `true` to the `restartBot` parameter.");
 
             AdminService.ChangingConfig = true;
 
-            retrievedVariable.SetValue(GlobalConfig.Instance.LoadedConfig, Convert.ChangeType(varValue, retrievedVariable.PropertyType));
+            retrievedVariable.SetValue(GlobalConfig.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
 
             object newValue = retrievedVariable.GetValue(GlobalConfig.Instance.LoadedConfig);
 
-            await ReplyAsync($"Set variable \"{varName}\" to `{newValue.ToString().Truncate(128)}` succesfully.");
+            await ReplyAsync($"Set variable \"{VarName}\" to `{newValue.ToString().Truncate(128)}` succesfully.");
             await File.WriteAllTextAsync(GlobalConfig.Instance.ConfigFile,
                 JsonConvert.SerializeObject(GlobalConfig.Instance.LoadedConfig, Formatting.Indented));
 
-            if (restartBot)
+            if (RestartBot)
             {
                 await ReplyAsync($"{GlobalConfig.Instance.LoadedConfig.BotName} will restart.");
                 GlobalConfig.Instance.RestartBot();

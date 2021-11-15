@@ -55,17 +55,17 @@ namespace SammBotNET.Modules
         [Command("help")]
         [HideInHelp]
         [Summary("Provides all commands and modules available.")]
-        public async Task<RuntimeResult> HelpAsync([Remainder] string moduleName)
+        public async Task<RuntimeResult> HelpAsync([Remainder] string ModuleName)
         {
             string prefix = GlobalConfig.Instance.LoadedConfig.BotPrefix;
-            string[] splittedModuleName = moduleName.Split(' ');
+            string[] splittedModuleName = ModuleName.Split(' ');
 
             if (splittedModuleName.Length == 1)
             {
-                ModuleInfo moduleInfo = CommandService.Modules.SingleOrDefault(x => x.Name == moduleName || x.Group == moduleName);
+                ModuleInfo moduleInfo = CommandService.Modules.SingleOrDefault(x => x.Name == ModuleName || x.Group == ModuleName);
 
                 if (moduleInfo == null || moduleInfo == default(ModuleInfo))
-                    return ExecutionResult.FromError($"The module \"{moduleName}\" doesn't exist.");
+                    return ExecutionResult.FromError($"The module \"{ModuleName}\" doesn't exist.");
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context,
                     "Help", $"Syntax: `{prefix}{moduleInfo.Group} <Command Name>`");
@@ -87,15 +87,15 @@ namespace SammBotNET.Modules
             {
                 string actualName = splittedModuleName.Last();
 
-                SearchResult result = CommandService.Search(Context, moduleName);
+                SearchResult result = CommandService.Search(Context, ModuleName);
 
                 if (!result.IsSuccess)
-                    return ExecutionResult.FromError($"There is no command named \"{moduleName}\". Check your spelling.");
+                    return ExecutionResult.FromError($"There is no command named \"{ModuleName}\". Check your spelling.");
 
                 CommandMatch match = result.Commands.SingleOrDefault(x => x.Command.Name == actualName);
 
                 if (match.Command == null)
-                    return ExecutionResult.FromError($"There is no command named \"{moduleName}\". Check your spelling.");
+                    return ExecutionResult.FromError($"There is no command named \"{ModuleName}\". Check your spelling.");
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help");
 

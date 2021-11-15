@@ -47,7 +47,7 @@ namespace SammBotNET.Modules
         [Command("by", RunMode = RunMode.Async)]
         [Alias("from")]
         [Summary("Sends a quote from a user in the server!")]
-        public async Task<RuntimeResult> PhraseAsync(IUser user)
+        public async Task<RuntimeResult> PhraseAsync(IUser User)
         {
             if (PhrasesService.IsDisabled)
                 return ExecutionResult.FromError($"The module \"{nameof(QuoteModule)}\" is disabled.");
@@ -55,10 +55,10 @@ namespace SammBotNET.Modules
             using (PhrasesDB PhrasesDatabase = new())
             {
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-                if (!phrases.Any(x => x.AuthorId == user.Id))
+                if (!phrases.Any(x => x.AuthorId == User.Id))
                     return ExecutionResult.FromError($"This user doesn't have any phrases!");
 
-                Phrase finalPhrase = phrases.Where(x => x.AuthorId == user.Id && x.ServerId == Context.Guild.Id).ToList().PickRandom();
+                Phrase finalPhrase = phrases.Where(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id).ToList().PickRandom();
 
                 RestUser globalUser = await Client.Rest.GetUserAsync(finalPhrase.AuthorId);
                 string assembledAuthor = $"{globalUser.Username}#{globalUser.Discriminator}";

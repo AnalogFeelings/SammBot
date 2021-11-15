@@ -34,7 +34,7 @@ namespace SammBotNET.Modules
 
         [Command("edit", RunMode = RunMode.Async)]
         [Summary("Edits a support message!")]
-        public async Task<RuntimeResult> EditSupportAsync(int supportId, [Remainder] string supportMessage)
+        public async Task<RuntimeResult> EditSupportAsync(int SupportId, [Remainder] string SupportMessage)
         {
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
@@ -42,17 +42,17 @@ namespace SammBotNET.Modules
             using (EmotionalSupportDB SupportDatabase = new())
             {
                 List<EmotionalSupport> supportObjects = await SupportDatabase.EmotionalSupport.ToListAsync();
-                EmotionalSupport supportObject = supportObjects.FirstOrDefault(x => x.SupportId == supportId);
+                EmotionalSupport supportObject = supportObjects.FirstOrDefault(x => x.SupportId == SupportId);
 
                 if (supportObject == null)
-                    return ExecutionResult.FromError($"A support message with the ID {supportId} does not exist!");
+                    return ExecutionResult.FromError($"A support message with the ID {SupportId} does not exist!");
 
                 string previousValue = supportObject.SupportMessage;
 
-                supportObject.SupportMessage = supportMessage;
+                supportObject.SupportMessage = SupportMessage;
                 await SupportDatabase.SaveChangesAsync();
 
-                await ReplyAsync($"Done!\n**Previous value**: `{previousValue}`\n**New value**: `{supportMessage}`");
+                await ReplyAsync($"Done!\n**Previous value**: `{previousValue}`\n**New value**: `{SupportMessage}`");
             }
 
             return ExecutionResult.Succesful();
@@ -87,7 +87,7 @@ namespace SammBotNET.Modules
 
         [Command("add", RunMode = RunMode.Async)]
         [Summary("Adds a cute little support message!")]
-        public async Task<RuntimeResult> AddSupportAsync(string supportMessage)
+        public async Task<RuntimeResult> AddSupportAsync(string SupportMessage)
         {
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
@@ -104,7 +104,7 @@ namespace SammBotNET.Modules
                 await SupportDatabase.AddAsync(new EmotionalSupport
                 {
                     SupportId = nextId,
-                    SupportMessage = supportMessage
+                    SupportMessage = SupportMessage
                 });
                 await SupportDatabase.SaveChangesAsync();
 

@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using SammBotNET.Extensions;
 using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -55,6 +56,37 @@ namespace SammBotNET.Modules
             inside += "```";
             builtMsg += inside;
             await ReplyAsync(builtMsg);
+
+            return ExecutionResult.Succesful();
+        }
+
+        [Command("userinfo")]
+        [Alias("user")]
+        [MustRunInGuild]
+        [Summary("Get information about a user!")]
+        public async Task<RuntimeResult> UserInfoAsync(SocketGuildUser User)
+        {
+            string userAvatarUrl = User.GetAvatarUrl() ?? User.GetDefaultAvatarUrl();
+            string userName = $"{User.Username}#{User.DiscriminatorValue}";
+            string nickName = User.Nickname ?? "None";
+            string isABot = User.IsBot ? "Yes" : "No";
+            string joinDate = $"<t:{User.JoinedAt.Value.ToUnixTimeSeconds()}>";
+            string createDate = $"<t:{User.CreatedAt.ToUnixTimeSeconds()}>";
+            string boostingSince = User.PremiumSince != null ? $"<t:{User.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
+            string userRoles = User.Roles.Count > 0 ? string.Join(',', User.Roles.SelectMany(x => x.Name).ToList()).Truncate(512) : "None";
+
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("USER INFORMATION");
+
+            embed.WithThumbnailUrl(userAvatarUrl);
+            embed.AddField("Username", userName, true);
+            embed.AddField("Nickname", nickName, true);
+            embed.AddField("Is Bot", isABot, true);
+            embed.AddField("Join Date", joinDate, true);
+            embed.AddField("Create Date", createDate, true);
+            embed.AddField("Booster Since", boostingSince, true);
+            embed.AddField("Roles", userRoles);
+
+            await Context.Channel.SendMessageAsync(null, false, embed.Build());
 
             return ExecutionResult.Succesful();
         }

@@ -50,11 +50,11 @@ namespace SammBotNET.Modules
         [RequireBotPermission(GuildPermission.ManageMessages)]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Deletes an amount of messages.")]
-        public async Task<RuntimeResult> FlushMessagesAsync(int num)
+        public async Task<RuntimeResult> FlushMessagesAsync(int Count)
         {
-            IEnumerable<IMessage> messages = await Context.Message.Channel.GetMessagesAsync(num + 1).FlattenAsync();
+            IEnumerable<IMessage> messages = await Context.Message.Channel.GetMessagesAsync(Count + 1).FlattenAsync();
             await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(messages);
-            IUserMessage purgeMsg = await ReplyAsync($"Success! Cleared `{num}` message/s.");
+            IUserMessage purgeMsg = await ReplyAsync($"Success! Cleared `{Count}` message/s.");
             await Task.Delay(3000);
             await purgeMsg.DeleteAsync();
 
