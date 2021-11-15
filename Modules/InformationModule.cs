@@ -74,7 +74,7 @@ namespace SammBotNET.Modules
             string createDate = $"<t:{User.CreatedAt.ToUnixTimeSeconds()}>";
             string boostingSince = User.PremiumSince != null ? $"<t:{User.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
             string userRoles = User.Roles.Count > 1 ? 
-                string.Join(", ", User.Roles.Select(x => "@" + x.Name).Where(y => y != "@everyone")).Truncate(512)
+                string.Join(", ", User.Roles.Select(x => $"<@&{x.Id}>")).Truncate(512)
                 : "None";
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("USER INFORMATION");
