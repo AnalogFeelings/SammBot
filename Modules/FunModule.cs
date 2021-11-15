@@ -1,7 +1,12 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Newtonsoft.Json;
 using SammBotNET.Extensions;
+using SammBotNET.RestDefinitions;
+using SammBotNET.Services;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
@@ -9,9 +14,10 @@ namespace SammBotNET.Modules
     [Name("Fun")]
     [Group("fun")]
     [Summary("Games and fun!")]
-    public class GameModule : ModuleBase<SocketCommandContext>
+    public class FunModule : ModuleBase<SocketCommandContext>
     {
         public Logger Logger { get; set; }
+        public FunService FunService { get; set; }
 
         [Command("8ball")]
         [Alias("ask", "8")]
@@ -73,6 +79,51 @@ namespace SammBotNET.Modules
             await ReplyAsync($"(c・_・)ノ”<@{User.Id}>");
 
             return ExecutionResult.Succesful();
+        }
+
+        [Command("urban")]
+        [Summary("Gets a definition from the urban dictionary!")]
+        public async Task<RuntimeResult> UrbanAsync([Remainder] string Term)
+        {
+            UrbanSearchParams searchParams = new()
+            {
+                term = Term
+            };
+
+            UrbanDefinitionList urbanDefinitions = null;
+            using (Context.Channel.EnterTypingState()) urbanDefinitions = await GetUrbanDefinitionAsync(searchParams);
+
+            if (urbanDefinitions == null || urbanDefinitions.List.Count == 0)
+                return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{Term}\"!");
+
+            UrbanDefinition selectedDefinition = urbanDefinitions.List.First();
+
+            string embedDescription = $"**Definition** : `{selectedDefinition.Definition.Truncate(1024)}`\n";
+            embedDescription += $"**Author** : `{selectedDefinition.Author}`\n";
+            embedDescription += $"**Thumbs Up** : {selectedDefinition.ThumbsUp}\n";
+            embedDescription += $"**Thumbs Down** : {selectedDefinition.ThumbsUp}\n";
+
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: embedDescription);
+            embed.ChangeTitle($"DEFINITION FOR \"{selectedDefinition.Word}\"");
+
+            await Context.Channel.SendMessageAsync(null, false, embed.Build());
+
+            return ExecutionResult.Succesful();
+        }
+
+        public async Task<UrbanDefinitionList> GetUrbanDefinitionAsync(UrbanSearchParams searchParams)
+        {
+            string queryString = searchParams.ToQueryString();
+            string jsonReply = string.Empty;
+
+            using (HttpResponseMessage response = await FunService.UrbanClient.GetAsync($"/v0/define?{queryString}"))
+            {
+                jsonReply = await response.Content.ReadAsStringAsync();
+            }
+
+            UrbanDefinitionList definitionReply = JsonConvert.DeserializeObject<UrbanDefinitionList>(jsonReply);
+
+            return definitionReply;
         }
     }
 }

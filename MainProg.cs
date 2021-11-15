@@ -68,6 +68,7 @@ namespace SammBotNET
             provider.GetRequiredService<RandomService>();
             provider.GetRequiredService<AdminService>();
             provider.GetRequiredService<NsfwService>();
+            provider.GetRequiredService<FunService>();
 
             Console.WriteLine("Starting Startup Service...".Pastel("#3d9785"));
             await provider.GetRequiredService<StartupService>().StartAsync();
@@ -89,6 +90,7 @@ namespace SammBotNET
             .AddSingleton<MathService>()
             .AddSingleton<RandomService>()
             .AddSingleton<AdminService>()
+            .AddSingleton<FunService>()
             .AddSingleton<NsfwService>();
         }
     }
