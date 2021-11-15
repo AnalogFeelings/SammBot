@@ -67,8 +67,8 @@ namespace SammBotNET.Modules
         public async Task<RuntimeResult> UserInfoAsync(SocketGuildUser User)
         {
             string userAvatarUrl = User.GetAvatarUrl() ?? User.GetDefaultAvatarUrl();
-            string hasAvatar = User.GetAvatarUrl() != null ? "Yes" : "No";
-            string userName = $"{User.Username}#{User.DiscriminatorValue}";
+            string userName = $"{User.Username}";
+            string userDiscriminator = $"#{User.DiscriminatorValue}";
             string nickName = User.Nickname ?? "None";
             string isABot = User.IsBot ? "Yes" : "No";
             string isAWebhook = User.IsWebhook ? "Yes" : "No";
@@ -93,13 +93,13 @@ namespace SammBotNET.Modules
             embed.WithThumbnailUrl(userAvatarUrl);
             embed.AddField("Username", userName, true);
             embed.AddField("Nickname", nickName, true);
+            embed.AddField("Discriminator", userDiscriminator, true);
             embed.AddField("Status", userStatus, true);
             embed.AddField("Is Bot", isABot, true);
             embed.AddField("Is Webhook", isAWebhook, true);
             embed.AddField("Join Date", joinDate, true);
             embed.AddField("Create Date", createDate, true);
             embed.AddField("Booster Since", boostingSince, true);
-            embed.AddField("Has Avatar", hasAvatar, true);
             embed.AddField("Roles", userRoles, false);
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
