@@ -15,6 +15,7 @@ It has some hardcoded bits, like the AestheticalUid and SkylerUid config entries
 * Nsfw Module: (Hope you are happy, assholes) Searches rule34 for NSFW content. Must be ran under a channel marked as NSFW.
 * Quotes Module: Stores some user messages into a database, that can be used to return wacky random quotes.
 * Random Module: Allows users to retrieve random content from the cat or dog APIs, or a random SCP.
+* Profiles Module: User profiles (pronouns).
  
 # Packages & Nuget
 Visual Studio/dotnet should already detect the packages you need and install them.
