@@ -65,21 +65,23 @@ namespace SammBotNET.Modules
         [Alias("user")]
         [MustRunInGuild]
         [Summary("Get information about a user!")]
-        public async Task<RuntimeResult> UserInfoAsync(SocketGuildUser User)
+        public async Task<RuntimeResult> UserInfoAsync(SocketGuildUser User = null)
         {
-            string userAvatarUrl = User.GetAvatarOrDefault();
-            string userName = $"{User.Username}";
-            string userDiscriminator = $"#{User.DiscriminatorValue}";
-            string nickName = User.Nickname ?? "None";
-            string isABot = User.IsBot.ToYesNo();
-            string isAWebhook = User.IsWebhook.ToYesNo();
-            string joinDate = $"<t:{User.JoinedAt.Value.ToUnixTimeSeconds()}>";
-            string createDate = $"<t:{User.CreatedAt.ToUnixTimeSeconds()}>";
-            string boostingSince = User.PremiumSince != null ? $"<t:{User.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
-            string userRoles = User.Roles.Count > 1 ?
-                string.Join(", ", User.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
+            SocketGuildUser userHolder = User ?? Context.Message.Author as SocketGuildUser;
+
+            string userAvatarUrl = userHolder.GetAvatarOrDefault();
+            string userName = $"{userHolder.Username}";
+            string userDiscriminator = $"#{userHolder.DiscriminatorValue}";
+            string nickName = userHolder.Nickname ?? "None";
+            string isABot = userHolder.IsBot.ToYesNo();
+            string isAWebhook = userHolder.IsWebhook.ToYesNo();
+            string joinDate = $"<t:{userHolder.JoinedAt.Value.ToUnixTimeSeconds()}>";
+            string createDate = $"<t:{userHolder.CreatedAt.ToUnixTimeSeconds()}>";
+            string boostingSince = userHolder.PremiumSince != null ? $"<t:{userHolder.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
+            string userRoles = userHolder.Roles.Count > 1 ?
+                string.Join(", ", userHolder.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
                 : "None";
-            string userStatus = User.GetStatusString();
+            string userStatus = userHolder.GetStatusString();
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("USER INFORMATION");
 
