@@ -114,7 +114,7 @@ namespace SammBotNET.Modules
                 foreach (ParameterInfo parameterInfo in command.Parameters)
                 {
                     commandParameters += $"[**{parameterInfo.Type.Name}**] `{parameterInfo.Name}`";
-                    if (parameterInfo.DefaultValue != null) commandParameters += " (OPTIONAL)";
+                    if (parameterInfo.IsOptional) commandParameters += " (OPTIONAL)";
                     commandParameters += "\n";
                 }
 
