@@ -67,7 +67,7 @@ namespace SammBotNET.Modules
         [Summary("Get information about a user!")]
         public async Task<RuntimeResult> UserInfoAsync(SocketGuildUser User)
         {
-            string userAvatarUrl = User.GetAvatarUrl() ?? User.GetDefaultAvatarUrl();
+            string userAvatarUrl = User.GetAvatarOrDefault();
             string userName = $"{User.Username}";
             string userDiscriminator = $"#{User.DiscriminatorValue}";
             string nickName = User.Nickname ?? "None";
@@ -79,15 +79,7 @@ namespace SammBotNET.Modules
             string userRoles = User.Roles.Count > 1 ?
                 string.Join(", ", User.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
                 : "None";
-            string userStatus = "Unknown";
-
-            switch (User.Status)
-            {
-                case UserStatus.DoNotDisturb: userStatus = "Do Not Disturb"; break;
-                case UserStatus.Idle: userStatus = "Idle"; break;
-                case UserStatus.Offline: userStatus = "Offline"; break;
-                case UserStatus.Online: userStatus = "Online"; break;
-            }
+            string userStatus = User.GetStatusString();
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("USER INFORMATION");
 

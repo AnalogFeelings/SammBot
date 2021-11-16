@@ -29,6 +29,9 @@ namespace SammBotNET.Modules
             if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
+            if (AdminService.ChannelId == 0 || AdminService.GuildId == 0)
+                return ExecutionResult.FromError("Please set a guild and channel ID beforehand!");
+
             SocketTextChannel channel = Context.Client.GetGuild(AdminService.GuildId).GetTextChannel(AdminService.ChannelId);
 
             using (channel.EnterTypingState()) await channel.SendMessageAsync(Message);

@@ -104,6 +104,7 @@ namespace SammBotNET.Core
         public List<string> BannedPrefixes { get; set; } = null;
         public List<string> MagicBallAnswers { get; set; } = null;
         public List<string> HugKaomojis { get; set; } = null;
+        public List<string> KillMessages { get; set; } = null;
 
         [NotModifiable] public bool RotatingStatus { get; set; } = true;
         [NotModifiable] public string BotToken { get; set; } = "";

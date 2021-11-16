@@ -65,9 +65,7 @@ namespace SammBotNET.Modules
 
             SocketGuildUser authorAsGuild = Context.Message.Author as SocketGuildUser;
 
-            string authorName = authorAsGuild.Nickname ?? authorAsGuild.Username;
-
-            await ReplyAsync($"Warm hugs from **{authorName}**!\n{chosenKaomoji} <@{User.Id}>");
+            await ReplyAsync($"Warm hugs from **{authorAsGuild.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>");
 
             return ExecutionResult.Succesful();
         }
@@ -78,6 +76,24 @@ namespace SammBotNET.Modules
         public async Task<RuntimeResult> PatUserAsync(IUser User)
         {
             await ReplyAsync($"(c・_・)ノ”<@{User.Id}>");
+
+            return ExecutionResult.Succesful();
+        }
+
+        [Command("kill")]
+        [Alias("murder")]
+        [MustRunInGuild]
+        [Summary("Commit first degree murder, fuck it.")]
+        public async Task<RuntimeResult> FirstDegreeMurderAsync(IUser User)
+        {
+            SocketGuildUser authorAsGuild = Context.Message.Author as SocketGuildUser;
+            SocketGuildUser targetAsGuild = User as SocketGuildUser;
+
+            string chosenMessage = GlobalConfig.Instance.LoadedConfig.KillMessages.PickRandom();
+            chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorAsGuild.GetUsernameOrNick()}**");
+            chosenMessage = chosenMessage.Replace("{Victim}", $"**{targetAsGuild.GetUsernameOrNick()}**");
+
+            await ReplyAsync(chosenMessage);
 
             return ExecutionResult.Succesful();
         }
