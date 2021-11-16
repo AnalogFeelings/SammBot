@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using SammBotNET.Core;
 using System;
 
 namespace SammBotNET.Extensions

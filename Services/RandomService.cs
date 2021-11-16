@@ -1,4 +1,5 @@
-﻿using SammBotNET.Extensions;
+﻿using SammBotNET.Core;
+using SammBotNET.Extensions;
 using SharpCat.Requester.Cat;
 using SharpCat.Requester.Dog;
 

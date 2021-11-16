@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Figgle;
 using Pastel;
+using SammBotNET.Core;
 using System;
 using System.Reflection;
 using System.Threading;

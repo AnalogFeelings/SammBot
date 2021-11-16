@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using SammBotNET.Core;
 using SammBotNET.Extensions;
 using System;
 using System.IO;

@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Color = System.Drawing.Color;
 
-namespace SammBotNET
+namespace SammBotNET.Core
 {
     public enum LogLevel
     {

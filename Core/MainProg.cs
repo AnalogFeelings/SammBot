@@ -9,7 +9,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace SammBotNET
+namespace SammBotNET.Core
 {
     public partial class MainProg
     {

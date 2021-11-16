@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace SammBotNET
+namespace SammBotNET.Core
 {
     public class GlobalConfig
     {
@@ -95,19 +95,22 @@ namespace SammBotNET
         public string BotName { get; set; } = "Samm-Bot";
         public string BotVersion { get; set; } = "v0.1";
         public string BotPrefix { get; set; } = "s.";
+        public string UrlRegex { get; set; } = "";
+
+        public ulong AestheticalUid { get; set; } = 337950448130719754;
+        public ulong SkylerUid { get; set; } = 850874605434175500;
+        public int Rule34Threshold { get; set; } = 30;
+
+        public List<string> BannedPrefixes { get; set; } = null;
+        public List<string> MagicBallAnswers { get; set; } = null;
+        public List<string> HugKaomojis { get; set; } = null;
+
         [NotModifiable] public bool RotatingStatus { get; set; } = true;
         [NotModifiable] public string BotToken { get; set; } = "";
         [NotModifiable] public string TwitchUrl { get; set; } = "https://www.twitch.tv/vanebrain";
-        public ulong AestheticalUid { get; set; } = 337950448130719754;
-        public ulong SkylerUid { get; set; } = 850874605434175500;
         [NotModifiable] public string CommandLogFormat { get; set; } = "Executing command {0}!";
         [NotModifiable] public string LogFolder { get; set; } = "Logs";
-        public string UrlRegex { get; set; } = "";
         [NotModifiable] public int RngResetTime { get; set; } = 25;
-        public List<string> BannedPrefixes { get; set; } = null;
-        public int Rule34Threshold { get; set; } = 30;
-        public List<string> MagicBallAnswers { get; set; } = null;
-        public List<string> HugKaomojis { get; set; } = null;
         [NotModifiable] public int PeoneRecentQueueSize { get; set; } = 15;
     }
 

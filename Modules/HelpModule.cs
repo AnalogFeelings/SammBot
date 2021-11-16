@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using SammBotNET.Core;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
 using System.Collections.Generic;

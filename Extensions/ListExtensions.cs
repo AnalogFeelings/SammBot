@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SammBotNET.Core;
+using System.Collections.Generic;
 
 namespace SammBotNET.Extensions
 {

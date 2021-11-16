@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
+using SammBotNET.Core;
 using SammBotNET.Extensions;
 using SammBotNET.RestDefinitions;
 using SammBotNET.Services;

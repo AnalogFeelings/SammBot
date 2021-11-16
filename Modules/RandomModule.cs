@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
+using SammBotNET.Core;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
 using SammBotNET.Services;
