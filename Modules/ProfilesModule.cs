@@ -59,7 +59,7 @@ namespace SammBotNET.Modules
                 await PronounsDatabase.SaveChangesAsync();
             }
 
-            await ReplyAsync($"Done! Your new pronouns are: `{Subject}/{Object}/{DependentPossessive}/{IndependentPossessive}/{Reflexive}`.");
+            await ReplyAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.");
 
             return ExecutionResult.Succesful();
         }
@@ -77,9 +77,7 @@ namespace SammBotNET.Modules
                 if (AllPronouns.Any(x => x.UserId == userHolder.Id))
                 {
                     Pronoun existingPronouns = AllPronouns.Single(y => y.UserId == userHolder.Id);
-                    string concatenatedPronouns = $"{existingPronouns.Subject}/{existingPronouns.Object}" +
-                        $"/{existingPronouns.DependentPossessive}" +
-                        $"/{existingPronouns.IndependentPossessive}/{existingPronouns.Reflexive}";
+                    string concatenatedPronouns = $"{existingPronouns.Subject}/{existingPronouns.Object}";
 
                     await ReplyAsync($"**{userHolder.GetUsernameOrNick()}**'s pronouns are: `{concatenatedPronouns}`.");
                 }
