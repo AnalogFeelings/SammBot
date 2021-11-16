@@ -113,7 +113,9 @@ namespace SammBotNET.Modules
                 string commandParameters = string.Empty;
                 foreach (ParameterInfo parameterInfo in command.Parameters)
                 {
-                    commandParameters += $"[**{parameterInfo.Type.Name}**] `{parameterInfo.Name}`\n";
+                    commandParameters += $"[**{parameterInfo.Type.Name}**] `{parameterInfo.Name}`";
+                    if (parameterInfo.DefaultValue != null) commandParameters += " (OPTIONAL)";
+                    commandParameters += "\n";
                 }
 
                 embed.AddField("Command Parameters", string.IsNullOrEmpty(commandParameters) ? "No parameters." : commandParameters);
