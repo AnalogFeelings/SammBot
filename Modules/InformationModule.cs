@@ -71,7 +71,7 @@ namespace SammBotNET.Modules
 
             string userAvatarUrl = userHolder.GetAvatarOrDefault();
             string userName = $"{userHolder.Username}";
-            string userDiscriminator = $"#{userHolder.DiscriminatorValue}";
+            string userDiscriminator = $"#{userHolder.Discriminator}";
             string nickName = userHolder.Nickname ?? "None";
             string isABot = userHolder.IsBot.ToYesNo();
             string isAWebhook = userHolder.IsWebhook.ToYesNo();
