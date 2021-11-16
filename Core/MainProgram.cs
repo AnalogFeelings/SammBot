@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Core
 {
-    public partial class MainProg
+    public partial class MainProgram
     {
         public DiscordSocketClient SocketClient;
         public CommandService CommandService;
 
         public static void Main()
-            => new MainProg().MainAsync().GetAwaiter().GetResult();
+            => new MainProgram().MainAsync().GetAwaiter().GetResult();
 
         public async Task MainAsync()
         {
@@ -60,7 +60,7 @@ namespace SammBotNET.Core
 
             ServiceProvider provider = services.BuildServiceProvider();
             provider.GetRequiredService<Logger>();
-            provider.GetRequiredService<CMDHandler>();
+            provider.GetRequiredService<CommandHandler>();
             provider.GetRequiredService<CustomCommandService>();
             provider.GetRequiredService<HelpService>();
             provider.GetRequiredService<QuoteService>();
@@ -80,7 +80,7 @@ namespace SammBotNET.Core
         {
             services.AddSingleton(SocketClient)
             .AddSingleton(CommandService)
-            .AddSingleton<CMDHandler>()
+            .AddSingleton<CommandHandler>()
             .AddSingleton<StartupService>()
             .AddSingleton<Logger>()
             .AddSingleton<CustomCommandService>()

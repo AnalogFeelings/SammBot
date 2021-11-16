@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Core
 {
-    public partial class CMDHandler
+    public partial class CommandHandler
     {
         private readonly DiscordSocketClient DiscordClient;
         private readonly CommandService CommandsService;
@@ -23,7 +23,7 @@ namespace SammBotNET.Core
         private string CommandName;
         private readonly AdminService AdminService;
 
-        public CMDHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services, Logger logger)
+        public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services, Logger logger)
         {
             CommandsService = commands;
             DiscordClient = client;

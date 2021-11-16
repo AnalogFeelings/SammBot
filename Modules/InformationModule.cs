@@ -16,7 +16,7 @@ namespace SammBotNET.Modules
     [Group("info")]
     public class InformationModule : ModuleBase<SocketCommandContext>
     {
-        [Command("full", RunMode = RunMode.Async)]
+        [Command("full")]
         [Summary("Shows the FULL information of the bot.")]
         public async Task<RuntimeResult> InformationFullAsync()
         {
@@ -39,7 +39,7 @@ namespace SammBotNET.Modules
             return ExecutionResult.Succesful();
         }
 
-        [Command("servers", RunMode = RunMode.Async)]
+        [Command("servers")]
         [Alias("guilds")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Shows a list of all the servers the bot is in.")]
