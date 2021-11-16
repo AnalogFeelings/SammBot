@@ -6,6 +6,10 @@ namespace SammBotNET.Database
     {
         [Key]
         public ulong UserId { get; set; }
-        public EnglishPronoun Pronouns { get; set; }
+        public string Subject { get; set; }
+        public string Object { get; set; }
+        public string DependentPossessive { get; set; }
+        public string IndependentPossessive { get; set; }
+        public string Reflexive { get; set; }
     }
 }
