@@ -18,7 +18,8 @@ namespace SammBotNET.Migrations.PronounsDBMigrations
                     Object = table.Column<string>(type: "TEXT", nullable: true),
                     DependentPossessive = table.Column<string>(type: "TEXT", nullable: true),
                     IndependentPossessive = table.Column<string>(type: "TEXT", nullable: true),
-                    Reflexive = table.Column<string>(type: "TEXT", nullable: true)
+                    ReflexiveSingular = table.Column<string>(type: "TEXT", nullable: true),
+                    ReflexivePlural = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

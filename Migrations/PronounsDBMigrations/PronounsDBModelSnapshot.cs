@@ -31,7 +31,10 @@ namespace SammBotNET.Migrations.PronounsDBMigrations
                     b.Property<string>("Object")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Reflexive")
+                    b.Property<string>("ReflexivePlural")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReflexiveSingular")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Subject")

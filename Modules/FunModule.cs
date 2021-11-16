@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
 using SammBotNET.Core;
+using SammBotNET.Database;
 using SammBotNET.Extensions;
 using SammBotNET.RestDefinitions;
 using SammBotNET.Services;
@@ -89,9 +90,25 @@ namespace SammBotNET.Modules
             SocketGuildUser authorAsGuild = Context.Message.Author as SocketGuildUser;
             SocketGuildUser targetAsGuild = User as SocketGuildUser;
 
+            Pronoun authorPronouns = await authorAsGuild.GetUserPronouns();
+            Pronoun targetPronouns = await targetAsGuild.GetUserPronouns();
+
             string chosenMessage = GlobalConfig.Instance.LoadedConfig.KillMessages.PickRandom();
             chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorAsGuild.GetUsernameOrNick()}**");
+            chosenMessage = chosenMessage.Replace("{mPrnSub}", authorPronouns.Subject ?? "they");
+            chosenMessage = chosenMessage.Replace("{mPrnObj}", authorPronouns.Object ?? "them");
+            chosenMessage = chosenMessage.Replace("{mPrnDepPos}", authorPronouns.DependentPossessive);
+            chosenMessage = chosenMessage.Replace("{mPrnIndepPos}", authorPronouns.IndependentPossessive);
+            chosenMessage = chosenMessage.Replace("{mPrnRefSing}", authorPronouns.ReflexiveSingular);
+            chosenMessage = chosenMessage.Replace("{mPrnRefPlur}", authorPronouns.ReflexivePlural);
+
             chosenMessage = chosenMessage.Replace("{Victim}", $"**{targetAsGuild.GetUsernameOrNick()}**");
+            chosenMessage = chosenMessage.Replace("{vPrnSub}", targetPronouns.Subject);
+            chosenMessage = chosenMessage.Replace("{vPrnObj}", targetPronouns.Object);
+            chosenMessage = chosenMessage.Replace("{vPrnDepPos}", targetPronouns.DependentPossessive);
+            chosenMessage = chosenMessage.Replace("{vPrnIndepPos}", targetPronouns.IndependentPossessive);
+            chosenMessage = chosenMessage.Replace("{vPrnRefSing}", targetPronouns.ReflexiveSingular);
+            chosenMessage = chosenMessage.Replace("{vPrnRefPlur}", targetPronouns.ReflexivePlural);
 
             await ReplyAsync(chosenMessage);
 

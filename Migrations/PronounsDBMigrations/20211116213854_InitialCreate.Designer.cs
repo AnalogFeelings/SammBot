@@ -10,7 +10,7 @@ using SammBotNET.Database;
 namespace SammBotNET.Migrations.PronounsDBMigrations
 {
     [DbContext(typeof(PronounsDB))]
-    [Migration("20211116210536_InitialCreate")]
+    [Migration("20211116213854_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,10 @@ namespace SammBotNET.Migrations.PronounsDBMigrations
                     b.Property<string>("Object")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Reflexive")
+                    b.Property<string>("ReflexivePlural")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReflexiveSingular")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Subject")

@@ -17,7 +17,7 @@ namespace SammBotNET.Modules
         [Command("setpronouns")]
         [Summary("Set your pronouns with this command.")]
         public async Task<RuntimeResult> SetPronounsAsync(string Subject, string Object,
-            string DependentPossessive, string IndependentPossessive, string Reflexive)
+            string DependentPossessive, string IndependentPossessive, string ReflexiveSingular, string ReflexivePlural)
         {
             if (Subject.Length > 8)
                 return ExecutionResult.FromError("The subject is too long! Must be less than 9 characters.");
@@ -27,8 +27,10 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("The dependent possessive is too long! Must be less than 10 characters.");
             if (IndependentPossessive.Length > 10)
                 return ExecutionResult.FromError("The independent possessive is too long! Must be less than 11 characters.");
-            if (IndependentPossessive.Length > 15)
-                return ExecutionResult.FromError("The reflexive is too long! Must be less than 16 characters.");
+            if (ReflexiveSingular.Length > 15)
+                return ExecutionResult.FromError("The singular reflexive is too long! Must be less than 16 characters.");
+            if (ReflexivePlural.Length > 15)
+                return ExecutionResult.FromError("The plural reflexive is too long! Must be less than 16 characters.");
 
             using (Context.Channel.EnterTypingState())
             {
@@ -43,7 +45,8 @@ namespace SammBotNET.Modules
                         existingPronouns.Object = Object;
                         existingPronouns.DependentPossessive = DependentPossessive;
                         existingPronouns.IndependentPossessive = IndependentPossessive;
-                        existingPronouns.Reflexive = Reflexive;
+                        existingPronouns.ReflexiveSingular = ReflexiveSingular;
+                        existingPronouns.ReflexivePlural = ReflexivePlural;
                     }
                     else
                     {
@@ -54,7 +57,8 @@ namespace SammBotNET.Modules
                             Object = Object,
                             DependentPossessive = DependentPossessive,
                             IndependentPossessive = IndependentPossessive,
-                            Reflexive = Reflexive
+                            ReflexiveSingular = ReflexiveSingular,
+                            ReflexivePlural = ReflexivePlural
                         });
                     }
 

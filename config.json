@@ -23,15 +23,15 @@
   "KillMessages": [
     "{Murderer} liked {Victim}'s cut.",
     "{Murderer} posted a dead meme and {Victim} died of cringe.",
-    "{Victim} was walking on the street, when {Murderer} stabbed them.",
-    "{Victim} was streaming on Twitch when {Murderer} swatted them.",
+    "{Victim} was walking on the street, when {Murderer} stabbed {vPrnObj}.",
+    "{Victim} was streaming on Twitch when {Murderer} swatted {vPrnObj}.",
     "{Murderer} sawed through {Victim}'s bones with an Übersaw.",
     "{Murderer} used the Marksman revolver on {Victim}.",
     "{Victim} got doxxed and {Murderer} took the opportunity to kill.",
     "{Murderer} stabbed {Victim}.",
     "{Murderer} shot {Victim} in the head.",
     "{Murderer} punched {Victim}, but {Murderer} had a random crit.",
-    "{Murderer} told {Victim} that they will get presents if they throw a rock at Israel's border wall.",
+    "{Murderer} told {Victim} that {vPrnSub} will get presents if {vPrnSub} throw(s) a rock at Israel's border wall.",
     "{Murderer} made a hot take and {Victim} cried about it."
   ],
   "MagicBallAnswers": [
