@@ -40,10 +40,11 @@ namespace SammBotNET.Extensions
             using (PronounsDB PronounsDatabase = new())
             {
                 List<Pronoun> AllPronouns = await PronounsDatabase.Pronouns.ToListAsync();
+                Pronoun pickedPronoun = AllPronouns.SingleOrDefault(y => y.UserId == User.Id);
 
-                if (AllPronouns.Any(x => x.UserId == User.Id))
+                if (pickedPronoun != null && pickedPronoun != default(Pronoun))
                 {
-                    return AllPronouns.Single(y => y.UserId == User.Id);
+                    return pickedPronoun;
                 }
                 else
                     return new()
