@@ -19,6 +19,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove=".gitattributes" />
+    <None Remove=".gitignore" />
+    <None Remove="customcmds.db" />
+    <None Remove="emotional.db" />
+    <None Remove="LICENSE" />
+    <None Remove="peone.db" />
+    <None Remove="PeoneDatabaseItems.csv" />
+    <None Remove="phrases.db" />
+    <None Remove="README.md" />
+    <None Remove="SharpCat.deps.json" />
+    <None Remove="SharpCat.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.0.0-dev-20210822.1" />
     <PackageReference Include="Figgle" Version="0.4.0" />
     <PackageReference Include="FlagPFP.Core" Version="1.2.0" />
