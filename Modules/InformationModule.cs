@@ -95,13 +95,12 @@ namespace SammBotNET.Modules
             embed.AddField("Banner", bannerUrl, true);
             embed.AddField("Discovery Splash", discoverySplashUrl, true);
             embed.AddField("Nitro Boosts", nitroBoosts, true);
+            embed.AddField("Nitro Tier", nitroTier, true);
             embed.AddField("Created At", createDate, true);
             embed.AddField("Channel Count", channelCount, true);
             embed.AddField("Emote Count", emoteCount, true);
             embed.AddField("Member Count", memberCount, true);
             embed.AddField("Role Count", roleCount, true);
-            embed.AddField("Nitro Boosts", nitroBoosts, true);
-            embed.AddField("Nitro Tier", nitroTier, true);
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
 
