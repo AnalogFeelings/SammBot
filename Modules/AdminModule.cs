@@ -116,14 +116,16 @@ namespace SammBotNET.Modules
         [Command("mime")]
         [Alias("mimic, spy")]
         [HideInHelp]
-        public async Task<RuntimeResult> MimicUserAsync(SocketGuildUser User)
+        public async Task<RuntimeResult> MimicUserAsync(SocketGuildUser User, string Command)
         {
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             SocketMessage message = Context.Message as SocketMessage;
             FieldInfo authorField = typeof(SocketMessage).GetField("Author", BindingFlags.Instance);
+            FieldInfo contentField = typeof(SocketMessage).GetField("Content", BindingFlags.Instance);
             authorField.SetValue(message, User);
+            contentField.SetValue(message, Command);
 
             await CommandHandler.HandleCommandAsync(message);
 
