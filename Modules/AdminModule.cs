@@ -122,8 +122,8 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             SocketMessage message = Context.Message as SocketMessage;
-            FieldInfo authorField = typeof(SocketMessage).GetField("Author", BindingFlags.Instance | BindingFlags.NonPublic);
-            FieldInfo contentField = typeof(SocketMessage).GetField("Content", BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo authorField = typeof(SocketMessage).GetField("<Author>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo contentField = typeof(SocketMessage).GetField("<Content>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
             authorField.SetValue(message, User);
             contentField.SetValue(message, Command);
 
