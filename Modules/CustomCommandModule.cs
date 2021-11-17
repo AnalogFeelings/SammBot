@@ -61,15 +61,14 @@ namespace SammBotNET.Modules
         [Command("delete")]
         [Alias("remove", "destroy")]
         [MustRunInGuild]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Deletes a custom command.")]
         public async Task<RuntimeResult> DeleteCMDAsync(string Name)
         {
             using (CommandDB CommandDatabase = new())
             {
                 List<CustomCommand> customCommands = await CommandDatabase.CustomCommand.ToListAsync();
-                CustomCommand customCommand = customCommands.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id
-                    || x.AuthorId == GlobalConfig.Instance.LoadedConfig.AestheticalUid);
+                CustomCommand customCommand = customCommands.SingleOrDefault(x => x.Name == Name && (x.AuthorId == Context.User.Id
+                    || x.AuthorId == GlobalConfig.Instance.LoadedConfig.AestheticalUid));
 
                 if (customCommand == null)
                     return ExecutionResult.FromError("That custom command does not exist!");
