@@ -21,6 +21,7 @@ namespace SammBotNET.Modules
     {
         public AdminService AdminService { get; set; }
         public Logger Logger { get; set; }
+        public CommandHandler CommandHandler { get; set; }
 
         [Command("say", RunMode = RunMode.Async)]
         [HideInHelp]
@@ -108,6 +109,23 @@ namespace SammBotNET.Modules
             await guild.LeaveAsync();
 
             await ReplyAsync($"Left the server \"{guildName}\".");
+
+            return ExecutionResult.Succesful();
+        }
+
+        [Command("mime")]
+        [Alias("mimic, spy")]
+        [HideInHelp]
+        public async Task<RuntimeResult> MimicUserAsync(SocketGuildUser User)
+        {
+            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+                return ExecutionResult.FromError("You are not allowed to execute this command.");
+
+            SocketMessage message = Context.Message as SocketMessage;
+            FieldInfo authorField = typeof(SocketMessage).GetField("Author", BindingFlags.Instance);
+            authorField.SetValue(message, User);
+
+            await CommandHandler.HandleCommandAsync(message);
 
             return ExecutionResult.Succesful();
         }

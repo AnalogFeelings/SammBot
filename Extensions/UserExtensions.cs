@@ -42,6 +42,7 @@ namespace SammBotNET.Extensions
                 List<Pronoun> AllPronouns = await PronounsDatabase.Pronouns.ToListAsync();
                 Pronoun pickedPronoun = AllPronouns.SingleOrDefault(y => y.UserId == User.Id);
 
+                //Check for both null and default, .NET can be pretty fucky sometimes.
                 if (pickedPronoun != null && pickedPronoun != default(Pronoun))
                 {
                     return pickedPronoun;

@@ -95,8 +95,8 @@ namespace SammBotNET.Modules
 
             string chosenMessage = GlobalConfig.Instance.LoadedConfig.KillMessages.PickRandom();
             chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorAsGuild.GetUsernameOrNick()}**");
-            chosenMessage = chosenMessage.Replace("{mPrnSub}", authorPronouns.Subject ?? "they");
-            chosenMessage = chosenMessage.Replace("{mPrnObj}", authorPronouns.Object ?? "them");
+            chosenMessage = chosenMessage.Replace("{mPrnSub}", authorPronouns.Subject);
+            chosenMessage = chosenMessage.Replace("{mPrnObj}", authorPronouns.Object);
             chosenMessage = chosenMessage.Replace("{mPrnDepPos}", authorPronouns.DependentPossessive);
             chosenMessage = chosenMessage.Replace("{mPrnIndepPos}", authorPronouns.IndependentPossessive);
             chosenMessage = chosenMessage.Replace("{mPrnRefSing}", authorPronouns.ReflexiveSingular);

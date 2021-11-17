@@ -71,7 +71,7 @@ namespace SammBotNET.Core
             }
         }
 
-        private async Task HandleCommandAsync(SocketMessage messageParam)
+        public async Task HandleCommandAsync(SocketMessage messageParam)
         {
             if (AdminService.ChangingConfig) return;
 
