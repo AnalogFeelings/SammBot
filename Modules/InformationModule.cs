@@ -83,7 +83,7 @@ namespace SammBotNET.Modules
             int nitroTier = (int)Context.Guild.PremiumTier;
             int roleCount = Context.Guild.Roles.Count;
             string nitroBoosts = Context.Guild.PremiumSubscriptionCount != null ? Context.Guild.PremiumSubscriptionCount.ToString() : "No Boosts";
-            string createDate = $"<t:{Context.Guild.CreatedAt}>";
+            string createDate = $"<t:{Context.Guild.CreatedAt.ToUnixTimeSeconds()}>";
             string guildName = Context.Guild.Name;
             string guildOwner = $"{ownerRestUser.Username}#{ownerRestUser.Discriminator}";
 
