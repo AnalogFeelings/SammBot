@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Rest;
 using Discord.WebSocket;
 using SammBotNET.Core;
 using SammBotNET.Extensions;
@@ -7,6 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
@@ -16,6 +18,8 @@ namespace SammBotNET.Modules
     [Group("info")]
     public class InformationModule : ModuleBase<SocketCommandContext>
     {
+        public DiscordSocketClient Client { get; set; }
+
         [Command("full")]
         [Summary("Shows the FULL information of the bot.")]
         public async Task<RuntimeResult> InformationFullAsync()
@@ -41,10 +45,12 @@ namespace SammBotNET.Modules
 
         [Command("servers")]
         [Alias("guilds")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Shows a list of all the servers the bot is in.")]
         public async Task<RuntimeResult> ServersAsync()
         {
+            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+                return ExecutionResult.FromError("You are not allowed to execute this command.");
+
             string builtMsg = "I am invited in the following servers:\n```\n";
             string inside = string.Empty;
 
@@ -57,6 +63,47 @@ namespace SammBotNET.Modules
             inside += "```";
             builtMsg += inside;
             await ReplyAsync(builtMsg);
+
+            return ExecutionResult.Succesful();
+        }
+
+        [Command("serverinfo")]
+        [Alias("server", "guildinfo")]
+        [MustRunInGuild]
+        [Summary("Get information about a server!")]
+        public async Task<RuntimeResult> ServerInfoAsync()
+        {
+            RestUser ownerRestUser = await Client.Rest.GetUserAsync(Context.Guild.OwnerId);
+
+            string bannerUrl = Context.Guild.BannerUrl != null ? $"[Banner URL]({Context.Guild.BannerUrl})" : "None";
+            string discoverySplashUrl = Context.Guild.DiscoverySplashUrl != null ? $"[Splash URL]({Context.Guild.DiscoverySplashId})" : "None";
+            int channelCount = Context.Guild.Channels.Count;
+            int emoteCount = Context.Guild.Emotes.Count;
+            int memberCount = Context.Guild.MemberCount;
+            int nitroTier = (int)Context.Guild.PremiumTier;
+            int roleCount = Context.Guild.Roles.Count;
+            string nitroBoosts = Context.Guild.PremiumSubscriptionCount != null ? Context.Guild.PremiumSubscriptionCount.ToString() : "No Boosts";
+            string createDate = $"<t:{Context.Guild.CreatedAt}>";
+            string guildName = Context.Guild.Name;
+            string guildOwner = $"{ownerRestUser.Username}#{ownerRestUser.Discriminator}";
+
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("GUILD INFORMATION");
+
+            if(Context.Guild.IconUrl != null) embed.WithThumbnailUrl(Context.Guild.IconUrl);
+            embed.AddField("Name", guildName, true);
+            embed.AddField("Owner", guildOwner, true);
+            embed.AddField("Banner", bannerUrl, true);
+            embed.AddField("Discovery Splash", discoverySplashUrl, true);
+            embed.AddField("Nitro Boosts", nitroBoosts, true);
+            embed.AddField("Created At", createDate, true);
+            embed.AddField("Channel Count", channelCount, true);
+            embed.AddField("Emote Count", emoteCount, true);
+            embed.AddField("Member Count", memberCount, true);
+            embed.AddField("Role Count", roleCount, true);
+            embed.AddField("Nitro Boosts", nitroBoosts, true);
+            embed.AddField("Nitro Tier", nitroTier, true);
+
+            await Context.Channel.SendMessageAsync(null, false, embed.Build());
 
             return ExecutionResult.Succesful();
         }
