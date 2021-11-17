@@ -121,6 +121,7 @@ namespace SammBotNET.Modules
             if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
+            //LORD HAVE MERCY
             SocketMessage message = Context.Message as SocketMessage;
             FieldInfo authorField = typeof(SocketMessage).GetField("<Author>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
             FieldInfo contentField = typeof(SocketMessage).GetField("<Content>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
