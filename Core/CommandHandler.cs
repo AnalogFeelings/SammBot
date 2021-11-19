@@ -61,13 +61,11 @@ namespace SammBotNET.Core
                                 }
                             }
                             await context.Channel.SendMessageAsync($"Unknown command! Use the {GlobalConfig.Instance.LoadedConfig.BotPrefix}help command.");
-                            return;
                         }
                     }
                     else
                     {
                         await context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + result.ErrorReason);
-                        return;
                     }
                     ExecutingCommand = false;
                     Thread.Sleep(500);
