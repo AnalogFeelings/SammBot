@@ -11,7 +11,6 @@ It has some hardcoded bits, like the AestheticalUid and SkylerUid config entries
 * Fun Module: Currently has a hug, pat, urban dictionary and magic 8-ball command.
 * Help Module: Easy to use automatic help command that uses reflection and client information to display modules and commands.
 * Information Module: Shows information about the bot (guilds, runtime information...) and can also show information about a user.
-* Math Module: Simple calculator.
 * Nsfw Module: (Hope you are happy, assholes) Searches rule34 for NSFW content. Must be ran under a channel marked as NSFW.
 * Quotes Module: Stores some user messages into a database, that can be used to return wacky random quotes.
 * Random Module: Allows users to retrieve random content from the cat or dog APIs, or a random SCP.
