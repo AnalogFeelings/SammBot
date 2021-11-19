@@ -68,9 +68,9 @@ namespace SammBotNET.Core
                         await context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + result.ErrorReason);
                     }
                 }
-                ExecutingCommand = false;
                 Thread.Sleep(GlobalConfig.Instance.LoadedConfig.QueueWaitTime);
                 MessageQueue.TryDequeue(out SocketMessage dequeuedMessage);
+                ExecutingCommand = false;
                 await HandleCommandAsync(dequeuedMessage);
             }
             catch (Exception ex)

@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
@@ -89,7 +88,7 @@ namespace SammBotNET.Modules
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("GUILD INFORMATION");
 
-            if(Context.Guild.IconUrl != null) embed.WithThumbnailUrl(Context.Guild.IconUrl);
+            if (Context.Guild.IconUrl != null) embed.WithThumbnailUrl(Context.Guild.IconUrl);
             embed.AddField("Name", guildName, true);
             embed.AddField("Owner", guildOwner, true);
             embed.AddField("Banner", bannerUrl, true);
