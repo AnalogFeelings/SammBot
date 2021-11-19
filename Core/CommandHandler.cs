@@ -69,7 +69,7 @@ namespace SammBotNET.Core
                     }
                 }
                 ExecutingCommand = false;
-                Thread.Sleep(500);
+                Thread.Sleep(GlobalConfig.Instance.LoadedConfig.QueueWaitTime);
                 MessageQueue.TryDequeue(out SocketMessage dequeuedMessage);
                 await HandleCommandAsync(dequeuedMessage);
             }
