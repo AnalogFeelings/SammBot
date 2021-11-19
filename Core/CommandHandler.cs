@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using SammBotNET.Database;
 using SammBotNET.Services;
 using System;
@@ -27,10 +28,17 @@ namespace SammBotNET.Core
 
         public string CommandName;
 
-        public CommandHandler()
+        public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services, Logger logger)
         {
+            CommandsService = commands;
+            DiscordClient = client;
+            ServiceProvider = services;
+            BotLogger = logger;
+
             DiscordClient.MessageReceived += HandleCommandAsync;
             CommandsService.CommandExecuted += OnCommandExecutedAsync;
+
+            AdminService = services.GetRequiredService<AdminService>();
         }
 
         public async Task OnCommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
