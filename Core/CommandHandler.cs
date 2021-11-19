@@ -102,6 +102,7 @@ namespace SammBotNET.Core
                 if (ExecutingCommand)
                 {
                     MessageQueue.Enqueue(messageParam);
+                    await message.AddReactionAsync(new Emoji("⌛"));
                     return;
                 }
 
