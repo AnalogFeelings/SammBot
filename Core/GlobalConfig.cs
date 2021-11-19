@@ -6,16 +6,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Xml;
 
 namespace SammBotNET.Core
 {
     public class GlobalConfig
     {
-        private static GlobalConfig PrivateInstance;
-
         public string ConfigFile = "config.json";
-        public string StatusFile = "status.xml";
+        public string StatusFile = "status.json";
 
         public Random GlobalRng = new(Guid.NewGuid().GetHashCode());
         public Stopwatch StartupStopwatch = new();
@@ -61,30 +58,18 @@ namespace SammBotNET.Core
         {
             if (!File.Exists(StatusFile)) return false;
 
-            XmlDocument document = new();
-            document.Load(StatusFile);
+            string statusFileContent = File.ReadAllText(StatusFile);
+            StatusList = JsonConvert.DeserializeObject<List<BotStatus>>(statusFileContent);
 
-            XmlNodeList cmdNodes = document.DocumentElement.SelectNodes("/Statuses/Status");
-
-            foreach (XmlNode cmdNode in cmdNodes)
-            {
-                XmlElement element = (XmlElement)cmdNode;
-
-                string status = element.GetAttribute("content");
-                string unconvertedType = element.GetAttribute("type");
-                int statusType = int.Parse(unconvertedType);
-
-                StatusList.Add(new BotStatus(status, statusType));
-                Debug.WriteLine($"Loaded status with content \"{status}\", type {statusType}");
-            }
             return true;
         }
 
+        private static GlobalConfig PrivateInstance;
         public static GlobalConfig Instance
         {
             get
             {
-                if (PrivateInstance == null) PrivateInstance = new GlobalConfig();
+                if (PrivateInstance == null) PrivateInstance = new();
                 return PrivateInstance;
             }
         }
@@ -117,13 +102,7 @@ namespace SammBotNET.Core
 
     public class BotStatus
     {
-        public string Content;
-        public int Type;
-
-        public BotStatus(string content, int type)
-        {
-            this.Content = content;
-            this.Type = type;
-        }
+        public string Content { get; set; }
+        public int Type { get; set; }
     }
 }

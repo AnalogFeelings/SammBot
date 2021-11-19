@@ -22,7 +22,7 @@ namespace SammBotNET.Core
 
         public Logger(DiscordSocketClient client, CommandService command)
         {
-            string LogFilename = DateTime.Now.ToString("d-M-yyy") + ".txt";
+            string LogFilename = DateTime.Now.ToString("yyy-M-d") + ".txt";
             LogFileWriter = new StreamWriter(File.Open(Path.Combine("Logs", LogFilename),
                                                         FileMode.Append, FileAccess.Write, FileShare.Read));
 

@@ -47,7 +47,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Pastel" Version="2.1.0" />
+    <PackageReference Include="Pastel" Version="3.0.0" />
     <PackageReference Include="Xabe.FFmpeg" Version="5.0.2" />
   </ItemGroup>
 
@@ -64,5 +64,7 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
     <Exec Command="robocopy &quot;$(TargetDir)\&quot; &quot;$(TargetDir)Libraries&quot; *.dll /XF $(TargetFileName) SharpCat.dll /MOV /IS&#xD;&#xA;set rce=%25errorlevel%25&#xD;&#xA;if not %25rce%25==1 if not %25rce%25==3 exit %25rce%25 else exit 0" />
   </Target>
+  
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

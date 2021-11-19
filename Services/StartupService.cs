@@ -14,28 +14,19 @@ namespace SammBotNET.Services
 {
     public class StartupService
     {
-        public readonly IServiceProvider ServiceProvider;
-        public readonly DiscordSocketClient SocketClient;
-        public readonly CommandService CommandsService;
-        public readonly Logger BotLogger;
+        public IServiceProvider ServiceProvider;
+        public DiscordSocketClient SocketClient { get; set; }
+        public CommandService CommandsService { get; set; }
+        public Logger BotLogger { get; set; }
 
         public Timer StatusTimer;
         public Timer RngResetTimer;
 
-        private bool UseRotatingStatus = true;
-
-        public StartupService(IServiceProvider provider, DiscordSocketClient discord, CommandService commands,
-                                Logger logger)
-        {
-            ServiceProvider = provider;
-            SocketClient = discord;
-            CommandsService = commands;
-            BotLogger = logger;
-        }
+        public StartupService(IServiceProvider provider) => ServiceProvider = provider;
 
         public Task Ready()
         {
-            if (UseRotatingStatus && GlobalConfig.Instance.LoadedConfig.RotatingStatus)
+            if (GlobalConfig.Instance.StatusList.Count > 0 && GlobalConfig.Instance.LoadedConfig.RotatingStatus)
             {
                 StatusTimer = new Timer(async _ =>
                 {
@@ -50,8 +41,9 @@ namespace SammBotNET.Services
             {
                 int hash = Guid.NewGuid().GetHashCode();
 
-                GlobalConfig.Instance.GlobalRng = new Random(hash);
+                GlobalConfig.Instance.GlobalRng = new(hash);
                 BotLogger.Log(LogLevel.Message, $"Regenerated RNG instance with hash {hash}.");
+
             }, null, TimeSpan.FromMinutes(GlobalConfig.Instance.LoadedConfig.RngResetTime),
                      TimeSpan.FromMinutes(GlobalConfig.Instance.LoadedConfig.RngResetTime));
 
@@ -71,7 +63,6 @@ namespace SammBotNET.Services
                 if (!GlobalConfig.Instance.LoadStatuses())
                 {
                     Console.WriteLine($"Could not load {GlobalConfig.Instance.StatusFile} correctly.".Pastel(Color.IndianRed));
-                    UseRotatingStatus = false;
                 }
             }
 

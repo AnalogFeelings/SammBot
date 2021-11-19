@@ -43,7 +43,7 @@ namespace SammBotNET.Core
             SocketClient = new(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Warning,
-                MessageCacheSize = 1000,
+                MessageCacheSize = 2000,
                 AlwaysDownloadUsers = true,
                 GatewayIntents = GatewayIntents.All
             });
@@ -64,7 +64,6 @@ namespace SammBotNET.Core
             provider.GetRequiredService<CustomCommandService>();
             provider.GetRequiredService<HelpService>();
             provider.GetRequiredService<QuoteService>();
-            provider.GetRequiredService<MathService>();
             provider.GetRequiredService<RandomService>();
             provider.GetRequiredService<AdminService>();
             provider.GetRequiredService<NsfwService>();
@@ -87,7 +86,6 @@ namespace SammBotNET.Core
             .AddSingleton<HelpService>()
             .AddSingleton<Random>()
             .AddSingleton<QuoteService>()
-            .AddSingleton<MathService>()
             .AddSingleton<RandomService>()
             .AddSingleton<AdminService>()
             .AddSingleton<FunService>()
