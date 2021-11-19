@@ -22,7 +22,13 @@ namespace SammBotNET.Services
         public Timer StatusTimer;
         public Timer RngResetTimer;
 
-        public StartupService(IServiceProvider provider) => ServiceProvider = provider;
+        public StartupService(IServiceProvider provider, DiscordSocketClient client, CommandService command, Logger logger)
+        {
+            ServiceProvider = provider;
+            SocketClient = client;
+            CommandsService = command;
+            BotLogger = logger;
+        }
 
         public Task Ready()
         {
