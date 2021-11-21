@@ -31,8 +31,8 @@ namespace SammBotNET.Modules
             using (TagDB TagDatabase = new())
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
-                UserTag userTag = userTags.SingleOrDefault(x => x.Name == Name && (x.AuthorId == Context.User.Id
-                    || x.AuthorId == GlobalConfig.Instance.LoadedConfig.AestheticalUid));
+                UserTag userTag = userTags.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id
+                    || x.AuthorId == GlobalConfig.Instance.LoadedConfig.AestheticalUid);
 
                 if (userTag == null)
                     return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
