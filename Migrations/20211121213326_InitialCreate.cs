@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace SammBotNET.Migrations
 {
     public partial class InitialCreate : Migration
@@ -7,7 +9,7 @@ namespace SammBotNET.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CustomCommand",
+                name: "UserTag",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -20,14 +22,14 @@ namespace SammBotNET.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomCommand", x => x.Id);
+                    table.PrimaryKey("PK_UserTag", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CustomCommand");
+                name: "UserTag");
         }
     }
 }

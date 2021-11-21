@@ -43,35 +43,16 @@ namespace SammBotNET.Core
 
         public async Task OnCommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
         {
-            try
+            if (result.ErrorReason != "Execution succesful.")
             {
-                if (result.ErrorReason != "Execution succesful.")
+                if (result.ErrorReason == "Unknown command.")
                 {
-                    if (result.ErrorReason == "Unknown command.")
-                    {
-                        using (CommandDB CommandDatabase = new())
-                        {
-                            List<CustomCommand> customCommands = await CommandDatabase.CustomCommand.ToListAsync();
-                            foreach (CustomCommand customCommand in customCommands)
-                            {
-                                if (customCommand.Name == CommandName)
-                                {
-                                    await context.Channel.SendMessageAsync(customCommand.Reply);
-                                    return;
-                                }
-                            }
-                            await context.Channel.SendMessageAsync($"Unknown command! Use the {GlobalConfig.Instance.LoadedConfig.BotPrefix}help command.");
-                        }
-                    }
-                    else
-                    {
-                        await context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + result.ErrorReason);
-                    }
+                    await context.Channel.SendMessageAsync($"Unknown command! Use the {GlobalConfig.Instance.LoadedConfig.BotPrefix}help command.");
                 }
-            }
-            catch (Exception ex)
-            {
-                BotLogger.LogException(ex);
+                else
+                {
+                    await context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + result.ErrorReason);
+                }
             }
             Thread.Sleep(GlobalConfig.Instance.LoadedConfig.QueueWaitTime);
             MessageQueue.TryDequeue(out SocketMessage dequeuedMessage);
@@ -114,41 +95,40 @@ namespace SammBotNET.Core
 
                 await CommandsService.ExecuteAsync(context, argPos, ServiceProvider);
             }
-            else
+            else await CreateQuoteAsync(message, context);
+        }
+
+        public async Task CreateQuoteAsync(SocketMessage Message, SocketCommandContext Context)
+        {
+            try
             {
-                try
-                {
-                    if (message.Content.Length < 20 || message.Content.Length > 64) return;
-                    if (message.Attachments.Count > 0 && message.Content.Length == 0) return;
-                    if (GlobalConfig.Instance.UrlRegex.IsMatch(message.Content)) return;
-                    if (GlobalConfig.Instance.LoadedConfig.BannedPrefixes.Any(x => message.Content.StartsWith(x))) return;
+                if (Message.Content.Length < 20 || Message.Content.Length > 64) return;
+                if (Message.Attachments.Count > 0 && Message.Content.Length == 0) return;
+                if (Message.MentionedUsers.Count > 0) return;
+                if (GlobalConfig.Instance.UrlRegex.IsMatch(Message.Content)) return;
+                if (GlobalConfig.Instance.LoadedConfig.BannedPrefixes.Any(x => Message.Content.StartsWith(x))) return;
 
-                    using (PhrasesDB PhrasesDatabase = new())
+                using (PhrasesDB PhrasesDatabase = new())
+                {
+                    List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
+                    foreach (Phrase phrase in phrases)
                     {
-                        List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-
-                        foreach (Phrase phrase in phrases)
-                        {
-                            if (message.Content == phrase.Content)
-                            {
-                                return;
-                            }
-                        }
-
-                        await PhrasesDatabase.AddAsync(new Phrase
-                        {
-                            Content = message.Content,
-                            AuthorId = message.Author.Id,
-                            ServerId = context.Guild.Id,
-                            CreatedAt = message.Timestamp.ToUnixTimeSeconds()
-                        });
-                        await PhrasesDatabase.SaveChangesAsync();
+                        if (Message.Content == phrase.Content) return;
                     }
+
+                    await PhrasesDatabase.AddAsync(new Phrase
+                    {
+                        Content = Message.Content,
+                        AuthorId = Message.Author.Id,
+                        ServerId = Context.Guild.Id,
+                        CreatedAt = Message.Timestamp.ToUnixTimeSeconds()
+                    });
+                    await PhrasesDatabase.SaveChangesAsync();
                 }
-                catch (Exception ex)
-                {
-                    BotLogger.LogException(ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                BotLogger.LogException(ex);
             }
         }
     }

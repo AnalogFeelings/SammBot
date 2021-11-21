@@ -20,7 +20,7 @@ namespace SammBotNET.Modules
         [Summary("Deletes all custom commands.")]
         public async Task<RuntimeResult> FlushCMDsAsync()
         {
-            using (CommandDB CommandDatabase = new())
+            using (TagDB CommandDatabase = new())
             {
                 await ReplyAsync("Flushing database...");
                 int rows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from CustomCommand");

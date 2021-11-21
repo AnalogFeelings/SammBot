@@ -67,7 +67,7 @@ namespace SammBotNET.Modules
                 Stopwatch timer = new();
 
                 timer.Start();
-                while (timer.ElapsedMilliseconds <= 20000)
+                while (timer.ElapsedMilliseconds <= 10000)
                 {
                     try
                     {

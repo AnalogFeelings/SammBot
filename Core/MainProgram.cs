@@ -61,7 +61,6 @@ namespace SammBotNET.Core
             ServiceProvider provider = services.BuildServiceProvider();
             provider.GetRequiredService<Logger>();
             provider.GetRequiredService<CommandHandler>();
-            provider.GetRequiredService<CustomCommandService>();
             provider.GetRequiredService<HelpService>();
             provider.GetRequiredService<QuoteService>();
             provider.GetRequiredService<RandomService>();
@@ -82,7 +81,6 @@ namespace SammBotNET.Core
             .AddSingleton<CommandHandler>()
             .AddSingleton<StartupService>()
             .AddSingleton<Logger>()
-            .AddSingleton<CustomCommandService>()
             .AddSingleton<HelpService>()
             .AddSingleton<Random>()
             .AddSingleton<QuoteService>()
