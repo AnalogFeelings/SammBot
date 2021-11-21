@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using SammBotNET.Core;
 using SammBotNET.Database;
 using SammBotNET.Extensions;
 using System.Collections.Generic;
@@ -14,16 +15,18 @@ namespace SammBotNET.Modules
     [Group("clean")]
     public class CleaningModule : ModuleBase<SocketCommandContext>
     {
-        [Command("customcmds")]
-        [Alias("customs", "commands")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
-        [Summary("Deletes all custom commands.")]
-        public async Task<RuntimeResult> FlushCMDsAsync()
+        [Command("tags")]
+        [Alias("usertags")]
+        [Summary("Deletes all tags.")]
+        public async Task<RuntimeResult> FlushTagsAsync()
         {
+            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+                return ExecutionResult.FromError("You are not allowed to execute this command.");
+
             using (TagDB CommandDatabase = new())
             {
                 await ReplyAsync("Flushing database...");
-                int rows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from CustomCommand");
+                int rows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from UserTag");
                 await ReplyAsync($"Success! `{rows}` rows affected.");
             }
 
@@ -32,10 +35,12 @@ namespace SammBotNET.Modules
 
         [Command("quotes")]
         [Alias("phrases")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         [Summary("Deletes all quotes.")]
         public async Task<RuntimeResult> FlushQuotesAsync()
         {
+            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+                return ExecutionResult.FromError("You are not allowed to execute this command.");
+
             using (PhrasesDB PhrasesDatabase = new())
             {
                 await ReplyAsync("Flushing database...");

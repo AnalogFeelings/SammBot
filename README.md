@@ -6,7 +6,7 @@ It has some hardcoded bits, like the AestheticalUid and SkylerUid config entries
 # Features
 * Administration Module: Allows the bot's owner to make the bot say a message to a specific channel and guild. Also allows the owner to set variables in config.json remotely.
 * Janitoring Module: Allows you to clear custom commands, quotes, or bulk delete messages.
-* Custom Commands Module: Allows users to create custom commands that make Samm-Bot reply with a custom message.
+* Tags Module: Allows users to create tags that make Samm-Bot reply with a custom message when used with the "tags get" command.
 * Emotional Support Module: Awww, ignore this, its for my girlfriend...
 * Fun Module: Currently has a hug, pat, urban dictionary and magic 8-ball command.
 * Help Module: Easy to use automatic help command that uses reflection and client information to display modules and commands.
