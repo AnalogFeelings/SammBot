@@ -35,7 +35,7 @@ namespace SammBotNET.Modules
                     || x.AuthorId == GlobalConfig.Instance.LoadedConfig.AestheticalUid));
 
                 if (userTag == null)
-                    return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
+                    return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
 
                 TagDatabase.Remove(userTag);
                 await TagDatabase.SaveChangesAsync();

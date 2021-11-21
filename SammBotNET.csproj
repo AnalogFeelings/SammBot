@@ -31,6 +31,7 @@
     <None Remove="README.md" />
     <None Remove="SharpCat.deps.json" />
     <None Remove="SharpCat.dll" />
+    <None Remove="usertags.db" />
   </ItemGroup>
 
   <ItemGroup>
