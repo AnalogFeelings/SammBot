@@ -74,7 +74,7 @@ namespace SammBotNET.Modules
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
                 List<UserTag> validTags = userTags.Where(x => x.ServerId == Context.Guild.Id &&
-                        Name.DamerauLevenshteinDistance(x.Name, 5) < int.MaxValue).Take(25).ToList();
+                        Name.DamerauLevenshteinDistance(x.Name, GlobalConfig.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"All of the tags similar to \"{Name}\".")
                     .ChangeTitle("TAG RESULTS");

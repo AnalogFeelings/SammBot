@@ -86,6 +86,7 @@ namespace SammBotNET.Core
         public ulong SkylerUid { get; set; } = 850874605434175500;
         public int Rule34Threshold { get; set; } = 30;
         public int QueueWaitTime { get; set; } = 1000;
+        public int TagDistance { get; set; } = 3;
 
         public List<string> BannedPrefixes { get; set; } = null;
         public List<string> MagicBallAnswers { get; set; } = null;
