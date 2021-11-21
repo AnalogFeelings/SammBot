@@ -15,6 +15,7 @@
   "Rule34Threshold": 35,
   "PeoneRecentQueueSize": 20,
   "QueueWaitTime": 1000,
+  "TagDistance": 3,
   "HugKaomojis": [
     "(つ≧▽≦)つ",
     "(づ￣ ³￣)づ",
