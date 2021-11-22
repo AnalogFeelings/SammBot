@@ -1,5 +1,4 @@
-﻿using SammBotNET.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SammBotNET.Extensions
 {
@@ -7,7 +6,7 @@ namespace SammBotNET.Extensions
     {
         public static T PickRandom<T>(this IList<T> items)
         {
-            return items[GlobalConfig.Instance.GlobalRng.Next(items.Count)];
+            return items[BotCore.Instance.GlobalRng.Next(items.Count)];
         }
     }
 }

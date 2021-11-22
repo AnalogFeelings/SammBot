@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using SammBotNET.Core;
 using System;
 
 namespace SammBotNET.Extensions
@@ -12,7 +11,7 @@ namespace SammBotNET.Extensions
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            string botName = GlobalConfig.Instance.LoadedConfig.BotName;
+            string botName = BotCore.Instance.LoadedConfig.BotName;
 
             builder.Color = Color.DarkPurple;
             builder.Title = $"{botName.ToUpper()} {title.ToUpper()}";
@@ -27,7 +26,7 @@ namespace SammBotNET.Extensions
 
         public static EmbedBuilder ChangeTitle(this EmbedBuilder builder, string title, bool includeName = false)
         {
-            string botName = GlobalConfig.Instance.LoadedConfig.BotName;
+            string botName = BotCore.Instance.LoadedConfig.BotName;
             if (includeName) builder.WithTitle($"{botName.ToUpper()} {title.ToUpper()}");
             else builder.WithTitle(title.ToUpper());
 

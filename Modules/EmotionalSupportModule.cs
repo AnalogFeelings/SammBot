@@ -1,8 +1,5 @@
 ﻿using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
-using SammBotNET.Core;
-using SammBotNET.Database;
-using SammBotNET.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,8 +15,8 @@ namespace SammBotNET.Modules
         [Summary("I love you, Skyler <3")]
         public async Task<RuntimeResult> RandomSupportAsync()
         {
-            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.SkylerUid &&
-                Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+            if (Context.Message.Author.Id != BotCore.Instance.LoadedConfig.SkylerUid &&
+                Context.Message.Author.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             using (EmotionalSupportDB SupportDatabase = new())
@@ -37,7 +34,7 @@ namespace SammBotNET.Modules
         [Summary("Edits a support message!")]
         public async Task<RuntimeResult> EditSupportAsync(int SupportId, [Remainder] string SupportMessage)
         {
-            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+            if (Context.Message.Author.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             using (EmotionalSupportDB SupportDatabase = new())
@@ -64,7 +61,7 @@ namespace SammBotNET.Modules
         [Summary("Lists all of the support messages!")]
         public async Task<RuntimeResult> ListSupportAsync()
         {
-            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+            if (Context.Message.Author.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             using (EmotionalSupportDB SupportDatabase = new())
@@ -90,7 +87,7 @@ namespace SammBotNET.Modules
         [Summary("Adds a cute little support message!")]
         public async Task<RuntimeResult> AddSupportAsync(string SupportMessage)
         {
-            if (Context.Message.Author.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+            if (Context.Message.Author.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             using (EmotionalSupportDB SupportDatabase = new())

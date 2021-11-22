@@ -2,8 +2,6 @@
 using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
-using SammBotNET.Core;
-using SammBotNET.Extensions;
 using System;
 using System.IO;
 using System.Linq;
@@ -26,11 +24,11 @@ namespace SammBotNET.Modules
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All public information about the bot.");
 
             string elapsedTime = string.Format("{0:00}d{1:00}h{2:00}m",
-                GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Days,
-                GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Hours,
-                GlobalConfig.Instance.RuntimeStopwatch.Elapsed.Minutes);
+                BotCore.Instance.RuntimeStopwatch.Elapsed.Days,
+                BotCore.Instance.RuntimeStopwatch.Elapsed.Hours,
+                BotCore.Instance.RuntimeStopwatch.Elapsed.Minutes);
 
-            embed.AddField("Bot Version", $"`{GlobalConfig.Instance.LoadedConfig.BotVersion}`", true);
+            embed.AddField("Bot Version", $"`{BotCore.Instance.LoadedConfig.BotVersion}`", true);
             embed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
             embed.AddField("Ping", $"`{Context.Client.Latency}ms.`", true);
             embed.AddField("Im In", $"`{Context.Client.Guilds.Count} server/s.`", true);
@@ -47,7 +45,7 @@ namespace SammBotNET.Modules
         [Summary("Shows a list of all the servers the bot is in.")]
         public async Task<RuntimeResult> ServersAsync()
         {
-            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             string builtMsg = "I am invited in the following servers:\n```\n";

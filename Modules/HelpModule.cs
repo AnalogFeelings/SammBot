@@ -1,8 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using SammBotNET.Core;
-using SammBotNET.Extensions;
-using SammBotNET.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +17,7 @@ namespace SammBotNET.Modules
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync()
         {
-            string prefix = GlobalConfig.Instance.LoadedConfig.BotPrefix;
+            string prefix = BotCore.Instance.LoadedConfig.BotPrefix;
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help", $"These are all of the modules available." +
                                                                     $"\n Use `{prefix}help <Module/Group Name>` to see its commands.");
@@ -53,7 +50,7 @@ namespace SammBotNET.Modules
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync([Remainder] string ModuleName)
         {
-            string prefix = GlobalConfig.Instance.LoadedConfig.BotPrefix;
+            string prefix = BotCore.Instance.LoadedConfig.BotPrefix;
             string[] splittedModuleName = ModuleName.Split(' ');
 
             if (splittedModuleName.Length == 1)

@@ -3,10 +3,6 @@ using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using SammBotNET.Core;
-using SammBotNET.Database;
-using SammBotNET.Extensions;
-using SammBotNET.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +28,7 @@ namespace SammBotNET.Modules
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
                 UserTag userTag = userTags.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id
-                    || x.AuthorId == GlobalConfig.Instance.LoadedConfig.AestheticalUid);
+                    || x.AuthorId == BotCore.Instance.LoadedConfig.AestheticalUid);
 
                 if (userTag == null)
                     return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
@@ -74,12 +70,12 @@ namespace SammBotNET.Modules
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
                 List<UserTag> validTags = userTags.Where(x => x.ServerId == Context.Guild.Id &&
-                        Name.DamerauLevenshteinDistance(x.Name, GlobalConfig.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
+                        Name.DamerauLevenshteinDistance(x.Name, BotCore.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"All of the tags similar to \"{Name}\".")
                     .ChangeTitle("TAG RESULTS");
 
-                foreach(UserTag tag in validTags)
+                foreach (UserTag tag in validTags)
                 {
                     RestUser user = await Context.Client.Rest.GetUserAsync(tag.AuthorId);
                     string userName = user != null ? $"{user.Username}#{user.Discriminator}" : "Unknown";
@@ -101,7 +97,7 @@ namespace SammBotNET.Modules
         {
             if (Name.Length > 15)
                 return ExecutionResult.FromError("Please make the tag name shorter than 15 characters!");
-            else if (Name.StartsWith(GlobalConfig.Instance.LoadedConfig.BotPrefix))
+            else if (Name.StartsWith(BotCore.Instance.LoadedConfig.BotPrefix))
                 return ExecutionResult.FromError("Tag names can't begin with my prefix!");
             else if (Context.Message.MentionedUsers.Count > 0)
                 return ExecutionResult.FromError("Tag names or replies cannot contain mentions!");
@@ -133,7 +129,7 @@ namespace SammBotNET.Modules
                 await TagDatabase.SaveChangesAsync();
             }
 
-            await ReplyAsync($"Tag created succesfully! Use `{GlobalConfig.Instance.LoadedConfig.BotPrefix}tags get {Name}` to use it!");
+            await ReplyAsync($"Tag created succesfully! Use `{BotCore.Instance.LoadedConfig.BotPrefix}tags get {Name}` to use it!");
 
             return ExecutionResult.Succesful();
         }

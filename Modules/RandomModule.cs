@@ -1,10 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
-using SammBotNET.Core;
-using SammBotNET.Database;
-using SammBotNET.Extensions;
-using SammBotNET.Services;
 using SharpCat.Types.Cat;
 using SharpCat.Types.Dog;
 using System.Collections.Generic;
@@ -100,7 +96,7 @@ namespace SammBotNET.Modules
         public async Task<RuntimeResult> GetSCPAsync()
         {
             int maxSCP = 5999;
-            int result = GlobalConfig.Instance.GlobalRng.Next(maxSCP + 1);
+            int result = BotCore.Instance.GlobalRng.Next(maxSCP + 1);
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: "http://www.scp-wiki.net/scp-" + result.ToString("D3"))
                                                     .ChangeTitle("Random SCP");

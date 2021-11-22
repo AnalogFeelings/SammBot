@@ -2,9 +2,6 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using SammBotNET.Core;
-using SammBotNET.Database;
-using SammBotNET.Extensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,7 +17,7 @@ namespace SammBotNET.Modules
         [Summary("Deletes all tags.")]
         public async Task<RuntimeResult> FlushTagsAsync()
         {
-            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             using (TagDB CommandDatabase = new())
@@ -38,7 +35,7 @@ namespace SammBotNET.Modules
         [Summary("Deletes all quotes.")]
         public async Task<RuntimeResult> FlushQuotesAsync()
         {
-            if (Context.User.Id != GlobalConfig.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             using (PhrasesDB PhrasesDatabase = new())

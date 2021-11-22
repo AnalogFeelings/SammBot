@@ -1,10 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
 using Newtonsoft.Json;
-using SammBotNET.Core;
-using SammBotNET.Extensions;
-using SammBotNET.RestDefinitions;
-using SammBotNET.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,7 +36,7 @@ namespace SammBotNET.Modules
             if (nsfwPosts == null || nsfwPosts.Count == 0)
                 return ExecutionResult.FromError("Rule34 returned no posts! Maybe one of your tags doesn't exist!");
 
-            List<Rule34Post> chosenPosts = nsfwPosts.Where(x => x.Score >= GlobalConfig.Instance.LoadedConfig.Rule34Threshold
+            List<Rule34Post> chosenPosts = nsfwPosts.Where(x => x.Score >= BotCore.Instance.LoadedConfig.Rule34Threshold
                                                             && !x.FileUrl.EndsWith(".mp4")).OrderByDescending(x => x.Score).ToList();
 
             string embedDescription = $"**Tags** : `{chosenPosts[0].Tags.Truncate(512)}`\n";

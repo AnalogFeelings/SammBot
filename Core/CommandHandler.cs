@@ -3,8 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SammBotNET.Database;
-using SammBotNET.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -47,14 +45,14 @@ namespace SammBotNET.Core
             {
                 if (result.ErrorReason == "Unknown command.")
                 {
-                    await context.Channel.SendMessageAsync($"Unknown command! Use the {GlobalConfig.Instance.LoadedConfig.BotPrefix}help command.");
+                    await context.Channel.SendMessageAsync($"Unknown command! Use the {BotCore.Instance.LoadedConfig.BotPrefix}help command.");
                 }
                 else
                 {
                     await context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + result.ErrorReason);
                 }
             }
-            Thread.Sleep(GlobalConfig.Instance.LoadedConfig.QueueWaitTime);
+            Thread.Sleep(BotCore.Instance.LoadedConfig.QueueWaitTime);
             MessageQueue.TryDequeue(out SocketMessage dequeuedMessage);
             ExecutingCommand = false;
             await HandleCommandAsync(dequeuedMessage);
@@ -73,13 +71,13 @@ namespace SammBotNET.Core
             int argPos = 0;
             if (message.Content.StartsWith($"<@!{DiscordClient.CurrentUser.Id}>"))
             {
-                await context.Channel.SendMessageAsync($"Hi! I'm **{GlobalConfig.Instance.LoadedConfig.BotName}**!\n" +
-                    $"My prefix is `{GlobalConfig.Instance.LoadedConfig.BotPrefix}`! " +
-                    $"You can use `{GlobalConfig.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!");
+                await context.Channel.SendMessageAsync($"Hi! I'm **{BotCore.Instance.LoadedConfig.BotName}**!\n" +
+                    $"My prefix is `{BotCore.Instance.LoadedConfig.BotPrefix}`! " +
+                    $"You can use `{BotCore.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!");
             }
-            else if (message.HasStringPrefix(GlobalConfig.Instance.LoadedConfig.BotPrefix, ref argPos))
+            else if (message.HasStringPrefix(BotCore.Instance.LoadedConfig.BotPrefix, ref argPos))
             {
-                if (message.Content.Length == GlobalConfig.Instance.LoadedConfig.BotPrefix.Length) return;
+                if (message.Content.Length == BotCore.Instance.LoadedConfig.BotPrefix.Length) return;
                 if (ExecutingCommand)
                 {
                     MessageQueue.Enqueue(messageParam);
@@ -88,9 +86,9 @@ namespace SammBotNET.Core
                 }
 
                 ExecutingCommand = true;
-                CommandName = message.Content.Remove(0, GlobalConfig.Instance.LoadedConfig.BotPrefix.Length).Split()[0];
+                CommandName = message.Content.Remove(0, BotCore.Instance.LoadedConfig.BotPrefix.Length).Split()[0];
 
-                BotLogger.Log(LogLevel.Message, string.Format(GlobalConfig.Instance.LoadedConfig.CommandLogFormat,
+                BotLogger.Log(LogLevel.Message, string.Format(BotCore.Instance.LoadedConfig.CommandLogFormat,
                                                 message.Content, message.Channel.Name, message.Author.Username));
 
                 await CommandsService.ExecuteAsync(context, argPos, ServiceProvider);
@@ -105,8 +103,8 @@ namespace SammBotNET.Core
                 if (Message.Content.Length < 20 || Message.Content.Length > 64) return;
                 if (Message.Attachments.Count > 0 && Message.Content.Length == 0) return;
                 if (Message.MentionedUsers.Count > 0) return;
-                if (GlobalConfig.Instance.UrlRegex.IsMatch(Message.Content)) return;
-                if (GlobalConfig.Instance.LoadedConfig.BannedPrefixes.Any(x => Message.Content.StartsWith(x))) return;
+                if (BotCore.Instance.UrlRegex.IsMatch(Message.Content)) return;
+                if (BotCore.Instance.LoadedConfig.BannedPrefixes.Any(x => Message.Content.StartsWith(x))) return;
 
                 using (PhrasesDB PhrasesDatabase = new())
                 {

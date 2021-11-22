@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using SammBotNET.Extensions;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules

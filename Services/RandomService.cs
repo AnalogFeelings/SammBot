@@ -1,6 +1,4 @@
-﻿using SammBotNET.Core;
-using SammBotNET.Extensions;
-using SharpCat.Requester.Cat;
+﻿using SharpCat.Requester.Cat;
 using SharpCat.Requester.Dog;
 
 namespace SammBotNET.Services
@@ -12,6 +10,6 @@ namespace SammBotNET.Services
 
         public AutodeqList<string> RecentPeoneImages;
 
-        public RandomService() => RecentPeoneImages = new(GlobalConfig.Instance.LoadedConfig.PeoneRecentQueueSize);
+        public RandomService() => RecentPeoneImages = new(BotCore.Instance.LoadedConfig.PeoneRecentQueueSize);
     }
 }

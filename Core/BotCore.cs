@@ -1,5 +1,10 @@
-﻿using Newtonsoft.Json;
-using SammBotNET.Extensions;
+﻿global using SammBotNET.Core;
+global using SammBotNET.Database;
+global using SammBotNET.Extensions;
+global using SammBotNET.RestDefinitions;
+global using SammBotNET.Services;
+
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace SammBotNET.Core
 {
-    public class GlobalConfig
+    public class BotCore
     {
         public string ConfigFile = "config.json";
         public string StatusFile = "status.json";
@@ -64,8 +69,8 @@ namespace SammBotNET.Core
             return true;
         }
 
-        private static GlobalConfig PrivateInstance;
-        public static GlobalConfig Instance
+        private static BotCore PrivateInstance;
+        public static BotCore Instance
         {
             get
             {

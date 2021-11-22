@@ -1,7 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using SammBotNET.Database;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
