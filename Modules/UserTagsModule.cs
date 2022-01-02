@@ -87,7 +87,7 @@ namespace SammBotNET.Modules
                     embed.AddField($"`{tag.Name}`", $"By: **{userName}**");
                 }
 
-                await Context.Channel.SendMessageAsync("", false, embed.Build());
+                await Context.Channel.SendMessageAsync("", false, embed.Build(), messageReference: new MessageReference(Context.Message.Id));
             }
 
             return ExecutionResult.Succesful();
