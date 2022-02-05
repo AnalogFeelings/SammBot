@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,8 +37,13 @@ namespace SammBotNET.Modules
                 }
 
                 if (foundCommand)
-                    embed.AddField($"{module.Name}\n(Group: `{module.Group}`)",
-                        string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
+				{
+					ModuleEmoji moduleEmoji = module.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
+					string emoji = moduleEmoji != null ? moduleEmoji.Emoji : string.Empty;
+
+					embed.AddField($"{emoji}{module.Name}\n(Group: `{module.Group}`)",
+						string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
+				}
             }
 
             await ReplyAsync("", false, embed.Build());
