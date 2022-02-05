@@ -39,7 +39,7 @@ namespace SammBotNET.Modules
                 if (foundCommand)
 				{
 					ModuleEmoji moduleEmoji = module.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
-					string emoji = moduleEmoji != null ? moduleEmoji.Emoji : string.Empty;
+					string emoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
 
 					embed.AddField($"{emoji}{module.Name}\n(Group: `{module.Group}`)",
 						string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
