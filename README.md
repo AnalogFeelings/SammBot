@@ -7,7 +7,7 @@ It has some hardcoded bits, like the AestheticalUid and SkylerUid config entries
 * Administration Module: Allows the bot's owner to make the bot say a message to a specific channel and guild. Also allows the owner to set variables in config.json remotely.
 * Janitoring Module: Allows you to clear custom commands, quotes, or bulk delete messages.
 * Tags Module: Allows users to create tags that make Samm-Bot reply with a custom message when used with the "tags get" command.
-* Emotional Support Module: Awww, ignore this, its for my girlfriend...
+* Emotional Support Module: Awww, ignore this, its for my boyfriend...
 * Fun Module: Currently has a hug, pat, urban dictionary and magic 8-ball command.
 * Help Module: Easy to use automatic help command that uses reflection and client information to display modules and commands.
 * Information Module: Shows information about the bot (guilds, runtime information...) and can also show information about a user.
@@ -20,7 +20,7 @@ It has some hardcoded bits, like the AestheticalUid and SkylerUid config entries
 Visual Studio/dotnet should already detect the packages you need and install them.
 Building should be straightforward.
 
-***Attention!*** config.json and status.xml files must be created manually! Templates for both are provided in the root of this repository.
+***Attention!*** config.json and status.json files must be created manually! Templates for both are provided in the root of this repository.
 
 ***Attention!*** Use .NET 6.0!
 
