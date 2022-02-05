@@ -66,8 +66,11 @@ namespace SammBotNET.Modules
                 if (moduleInfo == null || moduleInfo == default(ModuleInfo))
                     return ExecutionResult.FromError($"The module \"{ModuleName}\" doesn't exist.");
 
-                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context,
-                    "Help", $"Syntax: `{prefix}{moduleInfo.Group} <Command Name>`");
+				ModuleEmoji moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
+				string emoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
+
+				EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context,
+                    "Help", $"**{moduleEmoji}{moduleInfo.Name}**\nSyntax: `{prefix}{moduleInfo.Group} <Command Name>`");
 
                 string description = string.Empty;
                 foreach (CommandInfo match in moduleInfo.Commands)
