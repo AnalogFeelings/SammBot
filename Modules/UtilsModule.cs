@@ -7,6 +7,7 @@ namespace SammBotNET.Modules
     [Name("Utils")]
     [Group("utils")]
     [Summary("Moderation commands & misc.")]
+	[ModuleEmoji("🔧")]
     public class UtilsModule : ModuleBase<SocketCommandContext>
     {
         [Command("ban")]

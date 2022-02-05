@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("Information")]
-    [Summary("Bot information and statistics.")]
-    [Group("info")]
+	[Group("info")]
+	[Summary("Bot information and statistics.")]
+    [ModuleEmoji("ℹ️")]
     public class InformationModule : ModuleBase<SocketCommandContext>
     {
         public DiscordSocketClient Client { get; set; }

@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("Skyler")]
+	[Group("support")]
     [Summary("For my cute angel <3")]
-    [Group("support")]
+    [ModuleEmoji("💞")]
     public class EmotionalSupportModule : ModuleBase<SocketCommandContext>
     {
         [Command("random", RunMode = RunMode.Async)]

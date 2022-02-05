@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("Random")]
-    [Summary("Random crazyness!")]
-    [Group("random")]
+	[Group("random")]
+	[Summary("Random crazyness!")]
+    [ModuleEmoji("🎰")]
     public class RandomModule : ModuleBase<SocketCommandContext>
     {
         public RandomService RandomService { get; set; }

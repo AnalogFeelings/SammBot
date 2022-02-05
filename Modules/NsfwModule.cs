@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
+	[Name("NSFW")]
     [Group("nsfw")]
     [Summary("NSFW commands. Only visible in NSFW channels.")]
+	[ModuleEmoji("🔞")]
     public class NsfwModule : ModuleBase<SocketCommandContext>
     {
         public NsfwService NsfwService { get; set; }

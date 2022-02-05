@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("Janitoring")]
-    [Summary("Clearing and Purging.")]
     [Group("clean")]
+    [Summary("Clearing and Purging.")]
+	[ModuleEmoji("🧹")]
     public class CleaningModule : ModuleBase<SocketCommandContext>
     {
         [Command("tags")]

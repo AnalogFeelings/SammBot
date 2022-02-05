@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("User Tags")]
-    [Summary("Tags that reply with a message when searched.")]
-    [Group("tags")]
+	[Group("tags")]
+	[Summary("Tags that reply with a message when searched.")]
+    [ModuleEmoji("🏷")]
     public class UserTagsModule : ModuleBase<SocketCommandContext>
     {
         public StartupService StartupService { get; set; }
