@@ -21,7 +21,7 @@ namespace SammBotNET.Modules
         [Summary("Returns a random cat!")]
         public async Task<RuntimeResult> GetCatAsync()
         {
-            CatSearchParams searchParams = new()
+            CatImageSearchParams searchParams = new()
             {
                 has_breeds = true,
                 mime_types = "jpg,png",
@@ -47,7 +47,7 @@ namespace SammBotNET.Modules
         [Summary("Returns a random cat!")]
         public async Task<RuntimeResult> GetDogAsync()
         {
-            DogSearchParams searchParams = new()
+            DogImageSearchParams searchParams = new()
             {
                 has_breeds = true,
                 mime_types = "jpg,png",
