@@ -88,7 +88,6 @@ namespace SammBotNET.Core
         public string UrlRegex { get; set; } = "";
 
         public ulong AestheticalUid { get; set; } = 337950448130719754;
-        public ulong SkylerUid { get; set; } = 850874605434175500;
         public int Rule34Threshold { get; set; } = 30;
         public int QueueWaitTime { get; set; } = 1000;
         public int TagDistance { get; set; } = 3;
@@ -100,7 +99,7 @@ namespace SammBotNET.Core
 
         [NotModifiable] public bool RotatingStatus { get; set; } = true;
         [NotModifiable] public string BotToken { get; set; } = "";
-        [NotModifiable] public string TwitchUrl { get; set; } = "https://www.twitch.tv/vanebrain";
+        [NotModifiable] public string TwitchUrl { get; set; } = "https://www.twitch.tv/coreaesthetics";
         [NotModifiable] public string CommandLogFormat { get; set; } = "Executing command {0}!";
         [NotModifiable] public string LogFolder { get; set; } = "Logs";
         [NotModifiable] public int RngResetTime { get; set; } = 25;
