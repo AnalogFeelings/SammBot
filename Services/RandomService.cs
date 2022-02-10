@@ -5,11 +5,16 @@ namespace SammBotNET.Services
 {
     public class RandomService
     {
-        public SharpCatRequester CatRequester = new("0c1d1991-e890-4c04-8fe4-e97390999ad6");
-        public SharpDogRequester DogRequester = new("887787e5-9363-47b1-8cde-39706c529598");
+        public SharpCatRequester CatRequester;
+        public SharpDogRequester DogRequester;
 
         public AutodeqList<string> RecentPeoneImages;
 
-        public RandomService() => RecentPeoneImages = new(BotCore.Instance.LoadedConfig.PeoneRecentQueueSize);
+		public RandomService()
+		{
+			RecentPeoneImages = new(BotCore.Instance.LoadedConfig.PeoneRecentQueueSize);
+			CatRequester = new(BotCore.Instance.LoadedConfig.CatKey);
+			DogRequester = new(BotCore.Instance.LoadedConfig.DogKey);
+		}
     }
 }
