@@ -35,7 +35,7 @@ namespace SammBotNET.Services
             {
                 StatusTimer = new Timer(async _ =>
                 {
-                    BotStatus status = BotCore.Instance.StatusList[BotCore.Instance.GlobalRng.Next(BotCore.Instance.StatusList.Count)];
+                    BotStatus status = BotCore.Instance.StatusList.PickRandom();
 
                     await SocketClient.SetGameAsync(status.Content,
                         status.Type == 1 ? BotCore.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)status.Type);
