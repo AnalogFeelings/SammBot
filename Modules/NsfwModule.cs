@@ -47,7 +47,7 @@ namespace SammBotNET.Modules
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: embedDescription);
             embed.ChangeTitle("Rule34 Search");
-            embed.ChangeFooter(Context, $"Post 1/{chosenPosts.Count} | Requested by ${Context.Message.Author.GetFullUsername()}");
+            embed.ChangeFooter(Context, $"Post 1/{chosenPosts.Count} | Requested by {Context.Message.Author.GetFullUsername()}");
             embed.WithImageUrl(chosenPosts[0].FileUrl);
 
             //My wish is that this code is so fucking horrendous that I dont have to touch paginated
@@ -113,7 +113,7 @@ namespace SammBotNET.Modules
                                 embed.WithDescription(embedDescription);
                                 embed.WithImageUrl(chosenPosts[page].FileUrl);
 
-                                embed.ChangeFooter(Context, $"Post {page + 1}/{pageMax} | Requested by ${Context.Message.Author.GetFullUsername()}");
+                                embed.ChangeFooter(Context, $"Post {page + 1}/{pageMax} | Requested by {Context.Message.Author.GetFullUsername()}");
 
                                 await message.ModifyAsync(y => y.Embed = embed.Build());
                                 await message.RemoveReactionAsync(emoji, Context.Message.Author);
