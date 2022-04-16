@@ -96,7 +96,7 @@ namespace SammBotNET.Modules
         [Summary("Returns a random SCP!")]
         public async Task<RuntimeResult> GetSCPAsync()
         {
-            int maxSCP = 5999;
+            int maxSCP = 6999;
             int result = BotCore.Instance.GlobalRng.Next(maxSCP + 1);
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: "http://www.scp-wiki.net/scp-" + result.ToString("D3"))

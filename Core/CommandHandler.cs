@@ -7,7 +7,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Core
@@ -45,16 +44,19 @@ namespace SammBotNET.Core
             {
                 if (result.ErrorReason == "Unknown command.")
                 {
-                    await context.Channel.SendMessageAsync($"Unknown command! Use the {BotCore.Instance.LoadedConfig.BotPrefix}help command.");
+                    await context.Channel.SendMessageAsync($"Unknown command! Use the `{BotCore.Instance.LoadedConfig.BotPrefix}help` command.");
                 }
                 else
                 {
                     await context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + result.ErrorReason);
                 }
             }
-            Thread.Sleep(BotCore.Instance.LoadedConfig.QueueWaitTime);
+
+            await Task.Delay(BotCore.Instance.LoadedConfig.QueueWaitTime);
+
             MessageQueue.TryDequeue(out SocketMessage dequeuedMessage);
             ExecutingCommand = false;
+
             await HandleCommandAsync(dequeuedMessage);
         }
 
