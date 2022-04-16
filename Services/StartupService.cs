@@ -54,7 +54,9 @@ namespace SammBotNET.Services
 
                     if (avatarFiles.Count < 2) return;
 
-                    using(FileStream fileStream = new(avatarFiles.PickRandom(), FileMode.Open))
+                    string chosenAvatar = avatarFiles.PickRandom();
+                    BotLogger.Log(LogLevel.Message, $"Setting bot avatar to \"{Path.GetFileName(chosenAvatar)}\".");
+                    using (FileStream fileStream = new(chosenAvatar, FileMode.Open))
                     {
                         Image profilePic = new Image(fileStream);
 
