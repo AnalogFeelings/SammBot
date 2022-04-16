@@ -15,16 +15,12 @@ namespace SammBotNET.Modules
     [ModuleEmoji("🗣")]
     public class QuoteModule : ModuleBase<SocketCommandContext>
     {
-        public QuoteService PhrasesService { get; set; }
         public DiscordSocketClient Client { get; set; }
 
         [Command("random")]
         [Summary("Sends a random quote from a user in the server!")]
         public async Task<RuntimeResult> RandomAsync()
         {
-            if (PhrasesService.IsDisabled)
-                return ExecutionResult.FromError($"The module \"{nameof(QuoteModule)}\" is disabled.");
-
             using (PhrasesDB PhrasesDatabase = new PhrasesDB())
             {
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
@@ -49,9 +45,6 @@ namespace SammBotNET.Modules
         [Summary("Sends a quote from a user in the server!")]
         public async Task<RuntimeResult> PhraseAsync(IUser User)
         {
-            if (PhrasesService.IsDisabled)
-                return ExecutionResult.FromError($"The module \"{nameof(QuoteModule)}\" is disabled.");
-
             using (PhrasesDB PhrasesDatabase = new PhrasesDB())
             {
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();

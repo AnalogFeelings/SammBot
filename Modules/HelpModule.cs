@@ -10,7 +10,6 @@ namespace SammBotNET.Modules
     public class HelpModule : ModuleBase<SocketCommandContext>
     {
         public CommandService CommandService { get; set; }
-        public HelpService HelpService { get; set; }
 
         [Command("help")]
         [HideInHelp]
