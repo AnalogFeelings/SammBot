@@ -58,6 +58,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Avatars\**">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Update="status.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
