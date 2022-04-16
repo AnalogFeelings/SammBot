@@ -77,7 +77,7 @@ namespace SammBotNET.Services
             await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
             BotCore.Instance.StartupStopwatch.Stop();
 
-            string discordNetVersion = Assembly.GetAssembly(typeof(Discord.SessionStartLimit)).GetName().Version.ToString();
+            string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString();
 
             Console.Write(FiggleFonts.Slant.Render(BotCore.Instance.LoadedConfig.BotName).Pastel("#77b6a9"));
             Console.WriteLine($"----------Source code {BotCore.Instance.LoadedConfig.BotVersion}, Discord.NET {discordNetVersion}----------".Pastel(Color.CornflowerBlue));

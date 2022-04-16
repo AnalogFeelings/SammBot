@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("Random")]
-	[Group("random")]
-	[Summary("Random crazyness!")]
+    [Group("random")]
+    [Summary("Random crazyness!")]
     [ModuleEmoji("🎰")]
     public class RandomModule : ModuleBase<SocketCommandContext>
     {
@@ -110,6 +110,27 @@ namespace SammBotNET.Modules
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Fox");
 
             embed.ImageUrl = foxReply.ImageUrl;
+
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
+
+            return ExecutionResult.Succesful();
+        }
+
+        [Command("duck")]
+        [Summary("Returns a random duck!")]
+        public async Task<RuntimeResult> GetDuckAsync()
+        {
+            string jsonReply = string.Empty;
+
+            using (HttpResponseMessage response = await RandomService.RandomClient.GetAsync("https://random-d.uk/api/v2/random"))
+            {
+                jsonReply = await response.Content.ReadAsStringAsync();
+            }
+
+            DuckImage duckReply = JsonConvert.DeserializeObject<DuckImage>(jsonReply);
+
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Duck");
+            embed.ImageUrl = duckReply.ImageUrl;
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 
