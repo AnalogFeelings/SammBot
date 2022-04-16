@@ -60,7 +60,7 @@ namespace SammBotNET.Services
 
                         await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = profilePic);
                     }
-                }, null, TimeSpan.Zero, TimeSpan.FromHours(BotCore.Instance.LoadedConfig.AvatarRotationTime));
+                }, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
             }
 
             RngResetTimer = new Timer(_ =>
