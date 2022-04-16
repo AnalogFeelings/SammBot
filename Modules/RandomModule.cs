@@ -1,9 +1,11 @@
 ﻿using Discord;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SharpCat.Types.Cat;
 using SharpCat.Types.Dog;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
@@ -88,6 +90,28 @@ namespace SammBotNET.Modules
 
                 await Context.Channel.SendMessageAsync("", false, embed.Build());
             }
+
+            return ExecutionResult.Succesful();
+        }
+
+        [Command("fox")]
+        [Summary("Returns a random fox!")]
+        public async Task<RuntimeResult> GetFoxAsync()
+        {
+            string jsonReply = string.Empty;
+
+            using (HttpResponseMessage response = await RandomService.RandomClient.GetAsync("https://randomfox.ca/floof/"))
+            {
+                jsonReply = await response.Content.ReadAsStringAsync();
+            }
+
+            FoxImage foxReply = JsonConvert.DeserializeObject<FoxImage>(jsonReply);
+
+            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Fox");
+
+            embed.ImageUrl = foxReply.ImageUrl;
+
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
 
             return ExecutionResult.Succesful();
         }
