@@ -10,7 +10,7 @@ namespace SammBotNET.Modules
     [Name("Janitoring")]
     [Group("clean")]
     [Summary("Clearing and Purging.")]
-	[ModuleEmoji("🧹")]
+    [ModuleEmoji("🧹")]
     public class CleaningModule : ModuleBase<SocketCommandContext>
     {
         [Command("tags")]

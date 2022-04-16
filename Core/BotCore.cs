@@ -99,8 +99,8 @@ namespace SammBotNET.Core
 
         [NotModifiable] public bool RotatingStatus { get; set; } = true;
         [NotModifiable] public string BotToken { get; set; } = "";
-		[NotModifiable] public string CatKey { get; set; } = "";
-		[NotModifiable] public string DogKey { get; set; } = "";
+        [NotModifiable] public string CatKey { get; set; } = "";
+        [NotModifiable] public string DogKey { get; set; } = "";
         [NotModifiable] public string TwitchUrl { get; set; } = "https://www.twitch.tv/coreaesthetics";
         [NotModifiable] public string CommandLogFormat { get; set; } = "Executing command {0}!";
         [NotModifiable] public string LogFolder { get; set; } = "Logs";

@@ -25,15 +25,15 @@ namespace SammBotNET.Extensions
         public HideInHelp() { }
     }
 
-	[AttributeUsage(AttributeTargets.Class)]
-	public class ModuleEmoji : Attribute
-	{
-		public string Emoji = string.Empty;
+    [AttributeUsage(AttributeTargets.Class)]
+    public class ModuleEmoji : Attribute
+    {
+        public string Emoji = string.Empty;
 
-		public ModuleEmoji(string emoji) => Emoji = emoji;
-	}
+        public ModuleEmoji(string emoji) => Emoji = emoji;
+    }
 
-	[AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property)]
     public class NotModifiable : Attribute
     {
         public NotModifiable() { }

@@ -19,6 +19,11 @@ namespace SammBotNET.Extensions
             return User.Nickname ?? User.Username;
         }
 
+        public static string GetFullUsername(this SocketUser User)
+        {
+            return $"{User.Username}#{User.Discriminator}";
+        }
+
         public static string GetStatusString(this SocketUser User)
         {
             string userStatus = "Unknown";

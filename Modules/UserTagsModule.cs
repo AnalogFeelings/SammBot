@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("User Tags")]
-	[Group("tags")]
-	[Summary("Tags that reply with a message when searched.")]
+    [Group("tags")]
+    [Summary("Tags that reply with a message when searched.")]
     [ModuleEmoji("🏷")]
     public class UserTagsModule : ModuleBase<SocketCommandContext>
     {
@@ -28,14 +28,14 @@ namespace SammBotNET.Modules
             using (TagDB TagDatabase = new())
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
-				UserTag userTag = null;
+                UserTag userTag = null;
 
-				if(Context.Message.Author.Id == BotCore.Instance.LoadedConfig.AestheticalUid)
-					userTag = userTags.SingleOrDefault(x => x.Name == Name);
-				else
-					userTag = userTags.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id);
+                if (Context.Message.Author.Id == BotCore.Instance.LoadedConfig.AestheticalUid)
+                    userTag = userTags.SingleOrDefault(x => x.Name == Name);
+                else
+                    userTag = userTags.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id);
 
-				if (userTag == null)
+                if (userTag == null)
                     return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
 
                 TagDatabase.Remove(userTag);

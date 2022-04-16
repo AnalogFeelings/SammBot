@@ -13,12 +13,12 @@ namespace SammBotNET.Services
 
         public readonly HttpClient RandomClient;
 
-		public RandomService()
-		{
-			RecentPeoneImages = new(BotCore.Instance.LoadedConfig.PeoneRecentQueueSize);
-			CatRequester = new(BotCore.Instance.LoadedConfig.CatKey);
-			DogRequester = new(BotCore.Instance.LoadedConfig.DogKey);
+        public RandomService()
+        {
+            RecentPeoneImages = new(BotCore.Instance.LoadedConfig.PeoneRecentQueueSize);
+            CatRequester = new(BotCore.Instance.LoadedConfig.CatKey);
+            DogRequester = new(BotCore.Instance.LoadedConfig.DogKey);
             RandomClient = new();
-		}
+        }
     }
 }

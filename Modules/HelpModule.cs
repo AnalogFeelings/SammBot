@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,13 +36,13 @@ namespace SammBotNET.Modules
                 }
 
                 if (foundCommand)
-				{
-					ModuleEmoji moduleEmoji = module.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
-					string emoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
+                {
+                    ModuleEmoji moduleEmoji = module.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
+                    string emoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
 
-					embed.AddField($"{emoji}{module.Name}\n(Group: `{module.Group}`)",
-						string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
-				}
+                    embed.AddField($"{emoji}{module.Name}\n(Group: `{module.Group}`)",
+                        string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
+                }
             }
 
             await ReplyAsync("", false, embed.Build());
@@ -66,10 +65,10 @@ namespace SammBotNET.Modules
                 if (moduleInfo == null || moduleInfo == default(ModuleInfo))
                     return ExecutionResult.FromError($"The module \"{ModuleName}\" doesn't exist.");
 
-				ModuleEmoji moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
-				string emoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
+                ModuleEmoji moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
+                string emoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
 
-				EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context,
+                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context,
                     "Help", $"**{emoji}{moduleInfo.Name}**\nSyntax: `{prefix}{moduleInfo.Group} <Command Name>`");
 
                 string description = string.Empty;

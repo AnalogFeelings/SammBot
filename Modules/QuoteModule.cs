@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace SammBotNET.Modules
 {
     [Name("Quotes")]
-	[Group("quotes")]
-	[Summary("Random quotes by users.")]
+    [Group("quotes")]
+    [Summary("Random quotes by users.")]
     [ModuleEmoji("🗣")]
     public class QuoteModule : ModuleBase<SocketCommandContext>
     {
