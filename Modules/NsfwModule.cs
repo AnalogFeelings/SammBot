@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Interactions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -51,12 +50,9 @@ namespace SammBotNET.Modules
             embed.ChangeFooter(Context, $"Post 1/{chosenPosts.Count} | Requested by ${Context.Message.Author.GetFullUsername()}");
             embed.WithImageUrl(chosenPosts[0].FileUrl);
 
-            ComponentBuilder componentBuilder = new ComponentBuilder()
-                    .WithButton(emote: new Emoji("⏮"), customId: $"nsfw:start,{Context.Message.Id}");
-
             //My wish is that this code is so fucking horrendous that I dont have to touch paginated
             //embeds ever fucking again.
-            IUserMessage message = await Context.Channel.SendMessageAsync("", false, embed.Build(), components: componentBuilder.Build());
+            IUserMessage message = await Context.Channel.SendMessageAsync("", false, embed.Build());
 
             if (chosenPosts.Count > 1)
             {
@@ -138,12 +134,6 @@ namespace SammBotNET.Modules
             }
 
             return ExecutionResult.Succesful();
-        }
-
-        [ComponentInteraction("nsfw:*,*")]
-        public async Task HandleInteractions(string operation, ulong id)
-        {
-
         }
 
         public async Task<List<Rule34Post>> GetRule34PostsAsync(Rule34SearchParams searchParams)
