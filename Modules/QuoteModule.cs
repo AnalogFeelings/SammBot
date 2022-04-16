@@ -18,7 +18,7 @@ namespace SammBotNET.Modules
         public QuoteService PhrasesService { get; set; }
         public DiscordSocketClient Client { get; set; }
 
-        [Command("random", RunMode = RunMode.Async)]
+        [Command("random")]
         [Summary("Sends a random quote from a user in the server!")]
         public async Task<RuntimeResult> RandomAsync()
         {
@@ -28,6 +28,8 @@ namespace SammBotNET.Modules
             using (PhrasesDB PhrasesDatabase = new())
             {
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
+                if (phrases.Count == 0) return ExecutionResult.FromError("I have no quotes in my record!");
+
                 Phrase finalPhrase = phrases.Where(x => x.ServerId == Context.Guild.Id).ToList().PickRandom();
 
                 RestUser globalUser = await Client.Rest.GetUserAsync(finalPhrase.AuthorId);
@@ -42,7 +44,7 @@ namespace SammBotNET.Modules
             return ExecutionResult.Succesful();
         }
 
-        [Command("by", RunMode = RunMode.Async)]
+        [Command("by")]
         [Alias("from")]
         [Summary("Sends a quote from a user in the server!")]
         public async Task<RuntimeResult> PhraseAsync(IUser User)
@@ -53,7 +55,7 @@ namespace SammBotNET.Modules
             using (PhrasesDB PhrasesDatabase = new())
             {
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-                if (!phrases.Any(x => x.AuthorId == User.Id))
+                if (!phrases.Any(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id))
                     return ExecutionResult.FromError($"This user doesn't have any phrases!");
 
                 Phrase finalPhrase = phrases.Where(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id).ToList().PickRandom();
