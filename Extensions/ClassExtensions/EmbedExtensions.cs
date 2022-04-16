@@ -18,7 +18,7 @@ namespace SammBotNET.Extensions
             builder.Description = description;
 
             builder.WithAuthor(author => author.Name = $"{botName.ToUpper()} COMMANDS");
-            builder.WithFooter(footer => { footer.Text = $"Requested by **{context.Message.Author.GetFullUsername()}**"; footer.IconUrl = context.Client.CurrentUser.GetAvatarUrl(); });
+            builder.WithFooter(footer => { footer.Text = $"Requested by {context.Message.Author.GetFullUsername()}"; footer.IconUrl = context.Client.CurrentUser.GetAvatarUrl(); });
             builder.WithCurrentTimestamp();
 
             return builder;
