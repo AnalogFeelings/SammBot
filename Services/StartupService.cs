@@ -4,6 +4,9 @@ using Discord.WebSocket;
 using Figgle;
 using Pastel;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +23,7 @@ namespace SammBotNET.Services
 
         public Timer StatusTimer;
         public Timer RngResetTimer;
+        public Timer AvatarTimer;
 
         public StartupService(IServiceProvider provider, DiscordSocketClient client, CommandService command, Logger logger)
         {
@@ -40,6 +44,23 @@ namespace SammBotNET.Services
                     await SocketClient.SetGameAsync(status.Content,
                         status.Type == 1 ? BotCore.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)status.Type);
                 }, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
+            }
+
+            if(BotCore.Instance.LoadedConfig.RotatingAvatar)
+            {
+                AvatarTimer = new Timer(async _ =>
+                {
+                    List<string> avatarFiles = Directory.EnumerateFiles("Avatars").ToList();
+
+                    if (avatarFiles.Count < 2) return;
+
+                    using(FileStream fileStream = new(avatarFiles.PickRandom(), FileMode.Open))
+                    {
+                        Image profilePic = new Image(fileStream);
+
+                        await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = profilePic);
+                    }
+                }, null, TimeSpan.Zero, TimeSpan.FromHours(BotCore.Instance.LoadedConfig.AvatarRotationTime));
             }
 
             RngResetTimer = new Timer(_ =>

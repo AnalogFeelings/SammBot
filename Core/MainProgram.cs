@@ -36,6 +36,11 @@ namespace SammBotNET.Core
                 Console.WriteLine($"{BotCore.Instance.LoadedConfig.LogFolder} did not exist. Creating...".Pastel("#3d9785"));
                 Directory.CreateDirectory(BotCore.Instance.LoadedConfig.LogFolder);
             }
+            if (!Directory.Exists("Avatars"))
+            {
+                Console.WriteLine($"Avatars folder did not exist. Creating...".Pastel("#3d9785"));
+                Directory.CreateDirectory("Avatars");
+            }
 
             Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));
 

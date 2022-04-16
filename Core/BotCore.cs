@@ -98,6 +98,7 @@ namespace SammBotNET.Core
         public List<string> KillMessages { get; set; } = null;
 
         [NotModifiable] public bool RotatingStatus { get; set; } = true;
+        [NotModifiable] public bool RotatingAvatar { get; set; } = true;
         [NotModifiable] public string BotToken { get; set; } = "";
         [NotModifiable] public string CatKey { get; set; } = "";
         [NotModifiable] public string DogKey { get; set; } = "";
@@ -105,6 +106,7 @@ namespace SammBotNET.Core
         [NotModifiable] public string CommandLogFormat { get; set; } = "Executing command {0}!";
         [NotModifiable] public string LogFolder { get; set; } = "Logs";
         [NotModifiable] public int RngResetTime { get; set; } = 25;
+        [NotModifiable] public int AvatarRotationTime { get; set; } = 1;
         [NotModifiable] public int PeoneRecentQueueSize { get; set; } = 15;
     }
 
