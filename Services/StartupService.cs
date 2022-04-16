@@ -46,7 +46,7 @@ namespace SammBotNET.Services
                 }, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
             }
 
-            if(BotCore.Instance.LoadedConfig.RotatingAvatar)
+            if (BotCore.Instance.LoadedConfig.RotatingAvatar)
             {
                 AvatarTimer = new Timer(async _ =>
                 {
@@ -69,7 +69,7 @@ namespace SammBotNET.Services
             {
                 int hash = Guid.NewGuid().GetHashCode();
 
-                BotCore.Instance.GlobalRng = new(hash);
+                BotCore.Instance.GlobalRng = new Random(hash);
                 BotLogger.Log(LogLevel.Message, $"Regenerated RNG instance with hash {hash}.");
 
             }, null, TimeSpan.FromMinutes(BotCore.Instance.LoadedConfig.RngResetTime),

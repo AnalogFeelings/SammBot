@@ -33,7 +33,7 @@ namespace SammBotNET.Modules
 
             using (Context.Channel.EnterTypingState())
             {
-                using (PronounsDB PronounsDatabase = new())
+                using (PronounsDB PronounsDatabase = new PronounsDB())
                 {
                     List<Pronoun> AllPronouns = await PronounsDatabase.Pronouns.ToListAsync();
 
@@ -78,7 +78,7 @@ namespace SammBotNET.Modules
 
             using (Context.Channel.EnterTypingState())
             {
-                using (PronounsDB PronounsDatabase = new())
+                using (PronounsDB PronounsDatabase = new PronounsDB())
                 {
                     List<Pronoun> AllPronouns = await PronounsDatabase.Pronouns.ToListAsync();
 

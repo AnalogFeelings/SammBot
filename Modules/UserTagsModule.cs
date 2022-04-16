@@ -25,7 +25,7 @@ namespace SammBotNET.Modules
         [Summary("Deletes a user tag.")]
         public async Task<RuntimeResult> DeleteTagAsync(string Name)
         {
-            using (TagDB TagDatabase = new())
+            using (TagDB TagDatabase = new TagDB())
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
                 UserTag userTag = null;
@@ -52,7 +52,7 @@ namespace SammBotNET.Modules
         [Summary("Gets a tag by its name, and replies.")]
         public async Task<RuntimeResult> GetTagAsync(string Name)
         {
-            using (TagDB TagDatabase = new())
+            using (TagDB TagDatabase = new TagDB())
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
                 UserTag userTag = userTags.SingleOrDefault(x => x.ServerId == Context.Guild.Id && x.Name == Name);
@@ -71,7 +71,7 @@ namespace SammBotNET.Modules
         [Summary("Searches for similar tags.")]
         public async Task<RuntimeResult> SearchTagsAsync(string Name)
         {
-            using (TagDB TagDatabase = new())
+            using (TagDB TagDatabase = new TagDB())
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
                 List<UserTag> validTags = userTags.Where(x => x.ServerId == Context.Guild.Id &&
@@ -109,7 +109,7 @@ namespace SammBotNET.Modules
             else if (Name.Contains(' '))
                 return ExecutionResult.FromError("Tag names cannot contain spaces!");
 
-            using (TagDB TagDatabase = new())
+            using (TagDB TagDatabase = new TagDB())
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
                 userTags = userTags.Where(x => x.ServerId == Context.Guild.Id).ToList();

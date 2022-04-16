@@ -113,6 +113,7 @@ namespace SammBotNET.Modules
 
                 embed.AddField("Command Name", command.Name);
                 embed.AddField("Command Aliases", processedAliases.Count == 0 ? "No aliases." : string.Join(", ", processedAliases.ToArray()));
+                embed.AddField("Command Group", command.Module.Group);
                 embed.AddField("Command Summary", string.IsNullOrWhiteSpace(command.Summary) ? "No summary." : command.Summary);
 
                 string commandParameters = string.Empty;

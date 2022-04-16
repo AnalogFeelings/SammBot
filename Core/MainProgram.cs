@@ -44,14 +44,14 @@ namespace SammBotNET.Core
 
             Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));
 
-            SocketClient = new(new DiscordSocketConfig
+            SocketClient = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Warning,
                 MessageCacheSize = 2000,
                 AlwaysDownloadUsers = true,
                 GatewayIntents = GatewayIntents.All
             });
-            CommandService = new(new CommandServiceConfig
+            CommandService = new CommandService(new CommandServiceConfig
             {
                 LogLevel = LogSeverity.Info,
                 DefaultRunMode = RunMode.Async,
@@ -59,7 +59,7 @@ namespace SammBotNET.Core
 
             Console.WriteLine("Configuring Services...".Pastel("#3d9785"));
 
-            ServiceCollection services = new();
+            ServiceCollection services = new ServiceCollection();
             ConfigureServices(services);
 
             ServiceProvider provider = services.BuildServiceProvider();

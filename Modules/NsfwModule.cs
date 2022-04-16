@@ -25,7 +25,7 @@ namespace SammBotNET.Modules
         [Summary("Searches for posts in rule34.xxx")]
         public async Task<RuntimeResult> SearchR34Async([Remainder] string Tags)
         {
-            Rule34SearchParams searchParams = new()
+            Rule34SearchParams searchParams = new Rule34SearchParams()
             {
                 limit = 1000,
                 tags = Tags,
@@ -56,13 +56,13 @@ namespace SammBotNET.Modules
 
             if (chosenPosts.Count > 1)
             {
-                List<Emoji> emojiList = new() { new Emoji("⏮"), new Emoji("◀"), new Emoji("▶"), new Emoji("⏭"), new Emoji("❌") };
+                List<Emoji> emojiList = new List<Emoji>() { new Emoji("⏮"), new Emoji("◀"), new Emoji("▶"), new Emoji("⏭"), new Emoji("❌") };
 
                 await message.AddReactionsAsync(emojiList.ToArray());
 
                 int page = 0;
                 int pageMax = chosenPosts.Count;
-                Stopwatch timer = new();
+                Stopwatch timer = new Stopwatch();
 
                 timer.Start();
                 while (timer.ElapsedMilliseconds <= 10000)

@@ -23,7 +23,7 @@ namespace SammBotNET.Modules
         [Summary("Returns a random cat!")]
         public async Task<RuntimeResult> GetCatAsync()
         {
-            CatImageSearchParams searchParams = new()
+            CatImageSearchParams searchParams = new CatImageSearchParams()
             {
                 has_breeds = true,
                 mime_types = "jpg,png",
@@ -49,7 +49,7 @@ namespace SammBotNET.Modules
         [Summary("Returns a random cat!")]
         public async Task<RuntimeResult> GetDogAsync()
         {
-            DogImageSearchParams searchParams = new()
+            DogImageSearchParams searchParams = new DogImageSearchParams()
             {
                 has_breeds = true,
                 mime_types = "jpg,png",
@@ -74,7 +74,7 @@ namespace SammBotNET.Modules
         [Summary("Returns a random image of Peone.")]
         public async Task<RuntimeResult> GetPeoneAsync()
         {
-            using (PeoneImagesDB PeoneDatabase = new())
+            using (PeoneImagesDB PeoneDatabase = new PeoneImagesDB())
             {
                 List<PeoneImage> peoneImages = await PeoneDatabase.PeoneImage.ToListAsync();
             chooseImage:

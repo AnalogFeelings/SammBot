@@ -15,10 +15,10 @@ namespace SammBotNET.Services
 
         public RandomService()
         {
-            RecentPeoneImages = new(BotCore.Instance.LoadedConfig.PeoneRecentQueueSize);
-            CatRequester = new(BotCore.Instance.LoadedConfig.CatKey);
-            DogRequester = new(BotCore.Instance.LoadedConfig.DogKey);
-            RandomClient = new();
+            RecentPeoneImages = new AutodeqList<string>(BotCore.Instance.LoadedConfig.PeoneRecentQueueSize);
+            CatRequester = new SharpCatRequester(BotCore.Instance.LoadedConfig.CatKey);
+            DogRequester = new SharpDogRequester(BotCore.Instance.LoadedConfig.DogKey);
+            RandomClient = new HttpClient();
         }
     }
 }

@@ -19,12 +19,12 @@ namespace SammBotNET.Core
         public string ConfigFile = "config.json";
         public string StatusFile = "status.json";
 
-        public Random GlobalRng = new(Guid.NewGuid().GetHashCode());
-        public Stopwatch StartupStopwatch = new();
-        public Stopwatch RuntimeStopwatch = new();
+        public Random GlobalRng = new Random(Guid.NewGuid().GetHashCode());
+        public Stopwatch StartupStopwatch = new Stopwatch();
+        public Stopwatch RuntimeStopwatch = new Stopwatch();
 
-        public JsonConfig LoadedConfig = new();
-        public List<BotStatus> StatusList = new();
+        public JsonConfig LoadedConfig = new JsonConfig();
+        public List<BotStatus> StatusList = new List<BotStatus>();
 
         public Regex UrlRegex;
 
@@ -34,7 +34,7 @@ namespace SammBotNET.Core
 
             string configFileContent = File.ReadAllText(ConfigFile);
             LoadedConfig = JsonConvert.DeserializeObject<JsonConfig>(configFileContent);
-            UrlRegex = new(LoadedConfig.UrlRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            UrlRegex = new Regex(LoadedConfig.UrlRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             return true;
         }
@@ -49,7 +49,7 @@ namespace SammBotNET.Core
                 restartFileCmd = "bash";
             }
 
-            ProcessStartInfo startInfo = new()
+            ProcessStartInfo startInfo = new ProcessStartInfo()
             {
                 Arguments = restartTimeoutCmd,
                 FileName = restartFileCmd,
@@ -74,7 +74,7 @@ namespace SammBotNET.Core
         {
             get
             {
-                if (PrivateInstance == null) PrivateInstance = new();
+                if (PrivateInstance == null) PrivateInstance = new BotCore();
                 return PrivateInstance;
             }
         }

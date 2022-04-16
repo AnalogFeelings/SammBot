@@ -25,7 +25,7 @@ namespace SammBotNET.Modules
             if (PhrasesService.IsDisabled)
                 return ExecutionResult.FromError($"The module \"{nameof(QuoteModule)}\" is disabled.");
 
-            using (PhrasesDB PhrasesDatabase = new())
+            using (PhrasesDB PhrasesDatabase = new PhrasesDB())
             {
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
                 if (phrases.Count == 0) return ExecutionResult.FromError("I have no quotes in my record!");
@@ -52,7 +52,7 @@ namespace SammBotNET.Modules
             if (PhrasesService.IsDisabled)
                 return ExecutionResult.FromError($"The module \"{nameof(QuoteModule)}\" is disabled.");
 
-            using (PhrasesDB PhrasesDatabase = new())
+            using (PhrasesDB PhrasesDatabase = new PhrasesDB())
             {
                 List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
                 if (!phrases.Any(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id))

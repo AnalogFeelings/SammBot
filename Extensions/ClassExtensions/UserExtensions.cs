@@ -41,7 +41,7 @@ namespace SammBotNET.Extensions
 
         public static async Task<Pronoun> GetUserPronouns(this SocketUser User)
         {
-            using (PronounsDB PronounsDatabase = new())
+            using (PronounsDB PronounsDatabase = new PronounsDB())
             {
                 List<Pronoun> AllPronouns = await PronounsDatabase.Pronouns.ToListAsync();
                 Pronoun pickedPronoun = AllPronouns.SingleOrDefault(y => y.UserId == User.Id);
@@ -52,7 +52,7 @@ namespace SammBotNET.Extensions
                     return pickedPronoun;
                 }
                 else
-                    return new()
+                    return new Pronoun()
                     {
                         Subject = "they",
                         Object = "them",

@@ -20,7 +20,7 @@ namespace SammBotNET.Core
         public AdminService AdminService { get; set; }
         public CommandService CommandsService { get; set; }
 
-        private ConcurrentQueue<SocketMessage> MessageQueue = new();
+        private ConcurrentQueue<SocketMessage> MessageQueue = new ConcurrentQueue<SocketMessage>();
         private bool ExecutingCommand = false;
 
         public string CommandName;
@@ -68,7 +68,7 @@ namespace SammBotNET.Core
             if (message == null) return;
             if (message.Author.IsBot) return;
 
-            SocketCommandContext context = new(DiscordClient, message);
+            SocketCommandContext context = new SocketCommandContext(DiscordClient, message);
 
             int argPos = 0;
             if (message.Content.StartsWith($"<@!{DiscordClient.CurrentUser.Id}>"))
@@ -108,7 +108,7 @@ namespace SammBotNET.Core
                 if (BotCore.Instance.UrlRegex.IsMatch(Message.Content)) return;
                 if (BotCore.Instance.LoadedConfig.BannedPrefixes.Any(x => Message.Content.StartsWith(x))) return;
 
-                using (PhrasesDB PhrasesDatabase = new())
+                using (PhrasesDB PhrasesDatabase = new PhrasesDB())
                 {
                     List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
                     foreach (Phrase phrase in phrases)

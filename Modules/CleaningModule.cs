@@ -21,7 +21,7 @@ namespace SammBotNET.Modules
             if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            using (TagDB CommandDatabase = new())
+            using (TagDB CommandDatabase = new TagDB())
             {
                 await ReplyAsync("Flushing database...");
                 int rows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from UserTag");
@@ -39,7 +39,7 @@ namespace SammBotNET.Modules
             if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            using (PhrasesDB PhrasesDatabase = new())
+            using (PhrasesDB PhrasesDatabase = new PhrasesDB())
             {
                 await ReplyAsync("Flushing database...");
                 int rows = await PhrasesDatabase.Database.ExecuteSqlRawAsync("delete from Phrase");
