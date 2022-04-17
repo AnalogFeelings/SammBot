@@ -23,8 +23,6 @@ namespace SammBotNET.Core
         private ConcurrentQueue<SocketMessage> MessageQueue = new ConcurrentQueue<SocketMessage>();
         private bool ExecutingCommand = false;
 
-        public string CommandName;
-
         public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services, Logger logger)
         {
             CommandsService = commands;
@@ -40,7 +38,7 @@ namespace SammBotNET.Core
 
         public async Task OnCommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
         {
-            if (result.ErrorReason != "Execution succesful.")
+            if (!result.IsSuccess)
             {
                 if (result.ErrorReason == "Unknown command.")
                 {
@@ -88,7 +86,6 @@ namespace SammBotNET.Core
                 }
 
                 ExecutingCommand = true;
-                CommandName = message.Content.Remove(0, Settings.Instance.LoadedConfig.BotPrefix.Length).Split()[0];
 
                 BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
                                 message.Content, message.Channel.Name, message.Author.Username), LogLevel.Message);
