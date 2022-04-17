@@ -51,7 +51,7 @@ namespace SammBotNET.Core
 
         public void Log(LogLevel severity, string message, bool logToFile = true)
         {
-            string assembledMessageCon = "[".Pastel(Color.White) + DateTime.Now.ToString("g").Pastel(Color.Gray) + " ";
+            string assembledMessageCon = "[".Pastel(Color.White) + DateTime.Now.ToString("g").Pastel(Color.LightGray) + " ";
 
             Color messageColor = Color.CadetBlue;
 
