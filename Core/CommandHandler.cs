@@ -90,8 +90,8 @@ namespace SammBotNET.Core
                 ExecutingCommand = true;
                 CommandName = message.Content.Remove(0, Settings.Instance.LoadedConfig.BotPrefix.Length).Split()[0];
 
-                BotLogger.Log(LogLevel.Message, string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
-                                                message.Content, message.Channel.Name, message.Author.Username));
+                BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
+                                message.Content, message.Channel.Name, message.Author.Username), LogLevel.Message);
 
                 await CommandsService.ExecuteAsync(context, argPos, ServiceProvider);
             }

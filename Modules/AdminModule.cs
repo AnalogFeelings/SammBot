@@ -67,7 +67,7 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will shut down.");
-            Logger.Log(LogLevel.Warning, $"{Settings.Instance.LoadedConfig.BotName} will shut down.\n\n");
+            Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will shut down.\n\n", LogLevel.Warning);
 
             Environment.Exit(0);
 
@@ -83,7 +83,7 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.");
-            Logger.Log(LogLevel.Warning, $"{Settings.Instance.LoadedConfig.BotName} will restart.\n\n");
+            Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will restart.\n\n", LogLevel.Warning);
 
             Settings.Instance.RestartBot();
 

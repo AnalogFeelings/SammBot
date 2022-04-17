@@ -55,7 +55,7 @@ namespace SammBotNET.Services
                     if (avatarFiles.Count < 2) return;
 
                     string chosenAvatar = avatarFiles.PickRandom();
-                    BotLogger.Log(LogLevel.Message, $"Setting bot avatar to \"{Path.GetFileName(chosenAvatar)}\".");
+                    BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(chosenAvatar)}\".", LogLevel.Message);
                     using (FileStream fileStream = new(chosenAvatar, FileMode.Open))
                     {
                         Image profilePic = new Image(fileStream);
@@ -70,7 +70,7 @@ namespace SammBotNET.Services
                 int hash = Guid.NewGuid().GetHashCode();
 
                 Settings.Instance.GlobalRng = new Random(hash);
-                BotLogger.Log(LogLevel.Message, $"Regenerated RNG instance with hash {hash}.");
+                BotLogger.Log($"Regenerated RNG instance with hash {hash}.", LogLevel.Message);
 
             }, null, TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime),
                      TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime));
@@ -80,17 +80,17 @@ namespace SammBotNET.Services
 
         public async Task StartAsync()
         {
-            Console.WriteLine("Logging in as bot...".Pastel("#3d9785"));
+            BotLogger.Log("Logging in as a bot...", LogLevel.Message);
             await SocketClient.LoginAsync(TokenType.Bot, Settings.Instance.LoadedConfig.BotToken);
             await SocketClient.StartAsync();
-            Console.WriteLine("Connected to websocket.".Pastel("#3d9785"));
+            BotLogger.Log("Succesfully connected to web socket.", LogLevel.Message);
 
             if (Settings.Instance.LoadedConfig.RotatingStatus)
             {
-                Console.WriteLine("Loading rotating statuses...".Pastel("#3d9785"));
+                BotLogger.Log("Loading rotating status list...", LogLevel.Message);
                 if (!Settings.Instance.LoadStatuses())
                 {
-                    Console.WriteLine($"Could not load {Settings.Instance.StatusFile} correctly.".Pastel(Color.IndianRed));
+                    BotLogger.Log($"Could not load {Settings.Instance.StatusFile} correctly.", LogLevel.Error);
                 }
             }
 
@@ -102,14 +102,14 @@ namespace SammBotNET.Services
 
             string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString();
 
-            Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel("#77b6a9"));
+            Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel(Color.LightSteelBlue));
             Console.WriteLine($"----------Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {discordNetVersion}----------".Pastel(Color.CornflowerBlue));
             Console.WriteLine();
 
             Settings.Instance.RuntimeStopwatch.Start();
 
-            BotLogger.Log(LogLevel.Message, $"{Settings.Instance.LoadedConfig.BotName} took" +
-                $" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.");
+            BotLogger.Log($"{Settings.Instance.LoadedConfig.BotName} took" +
+                $" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogLevel.Message);
         }
     }
 }

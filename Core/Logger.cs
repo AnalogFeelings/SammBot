@@ -35,7 +35,7 @@ namespace SammBotNET.Core
             command.Log += LogAsync;
         }
 
-        public void Log(LogLevel severity, string message, bool logToFile = true)
+        public void Log(string message, LogLevel severity, bool logToFile = true)
         {
             string assembledMessageCon = "[".Pastel(Color.White) + DateTime.Now.ToString("g").Pastel(Color.LightGray) + " ";
 
@@ -68,7 +68,7 @@ namespace SammBotNET.Core
 
         public void LogException(Exception exception)
         {
-            Log(LogLevel.Error, exception.Message + exception.StackTrace);
+            Log(exception.Message + exception.StackTrace, LogLevel.Error);
         }
 
         //Used by the client and the command handler.
@@ -83,15 +83,15 @@ namespace SammBotNET.Core
                         string formattedException = string.Format("Exception in command \"{0}{1}\", at channel #{2}.\n{3}",
                             Settings.Instance.LoadedConfig.BotPrefix, cmdException.Command.Aliases[0], cmdException.Context.Channel, cmdException);
 
-                        Log(LogLevel.Error, formattedException);
+                        Log(formattedException, LogLevel.Error);
                     }
-                    else Log(LogLevel.Error, message.Message);
+                    else Log(message.Message, LogLevel.Error);
                     break;
                 case LogSeverity.Warning:
-                    Log(LogLevel.Warning, message.Message);
+                    Log(message.Message, LogLevel.Warning);
                     break;
                 default:
-                    Log(LogLevel.Message, message.Message);
+                    Log(message.Message, LogLevel.Message);
                     break;
             }
 
@@ -102,7 +102,7 @@ namespace SammBotNET.Core
         {
             if (LogFileWriter.BaseStream == null)
             {
-                Log(LogLevel.Error, "Could not write to log file!", false);
+                Log("Could not write to log file!", LogLevel.Error, false);
                 return;
             }
             LogFileWriter.WriteLine(message);
