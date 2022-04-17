@@ -69,7 +69,7 @@ namespace SammBotNET.Core
             SocketCommandContext context = new SocketCommandContext(DiscordClient, message);
 
             int argPos = 0;
-            if (message.Content.StartsWith($"<@!{DiscordClient.CurrentUser.Id}>"))
+            if (message.Content.StartsWith($"<@{DiscordClient.CurrentUser.Id}>"))
             {
                 await context.Channel.SendMessageAsync($"Hi! I'm **{Settings.Instance.LoadedConfig.BotName}**!\n" +
                     $"My prefix is `{Settings.Instance.LoadedConfig.BotPrefix}`! " +
