@@ -51,7 +51,7 @@ namespace SammBotNET.Core
 
         public void Log(LogLevel severity, string message, bool logToFile = true)
         {
-            string assembledMessageCon = "[".Pastel(Color.White) + DateTime.Now.ToString("g").Pastel(Color.Gray);
+            string assembledMessageCon = "[".Pastel(Color.White) + DateTime.Now.ToString("g").Pastel(Color.Gray) + " ";
 
             Color messageColor = Color.CadetBlue;
 
@@ -59,17 +59,17 @@ namespace SammBotNET.Core
             {
                 case LogLevel.Warning:
                     assembledMessageCon += "WRN".Pastel(Color.Yellow);
-                    assembledMessageCon += "]".Pastel(Color.White);
+                    assembledMessageCon += "] ".Pastel(Color.White);
                     messageColor = Color.Gold;
                     break;
                 case LogLevel.Error:
                     assembledMessageCon += "ERR".Pastel(Color.Red);
-                    assembledMessageCon += "]".Pastel(Color.White);
+                    assembledMessageCon += "] ".Pastel(Color.White);
                     messageColor = Color.IndianRed;
                     break;
                 case LogLevel.Message:
                     assembledMessageCon += "MSG".Pastel(Color.Cyan);
-                    assembledMessageCon += "]".Pastel(Color.White);
+                    assembledMessageCon += "] ".Pastel(Color.White);
                     break;
             }
 
