@@ -35,26 +35,11 @@ namespace SammBotNET.Core
             command.Log += LogAsync;
         }
 
-        public Task LogAsync(LogMessage message)
-        {
-            if (message.Exception is CommandException cmdException)
-            {
-                string formattedException = string.Format("Exception in command \"{0}{1}\", at channel #{2}.\n{3}",
-                    Settings.Instance.LoadedConfig.BotPrefix, cmdException.Command.Aliases[0], cmdException.Context.Channel, cmdException);
-
-                Log(LogLevel.Error, formattedException);
-            }
-            else Log(LogLevel.Message, message.Message);
-
-            return Task.CompletedTask;
-        }
-
         public void Log(LogLevel severity, string message, bool logToFile = true)
         {
             string assembledMessageCon = "[".Pastel(Color.White) + DateTime.Now.ToString("g").Pastel(Color.LightGray) + " ";
 
             Color messageColor = Color.CadetBlue;
-
             switch (severity)
             {
                 case LogLevel.Warning:
@@ -86,10 +71,31 @@ namespace SammBotNET.Core
             Log(LogLevel.Error, exception.Message + exception.StackTrace);
         }
 
-        public void DisposeStream()
+        //Used by the client and the command handler.
+        public Task LogAsync(LogMessage message)
         {
-            LogFileWriter.Close();
-            LogFileWriter.Dispose();
+            switch (message.Severity)
+            {
+                case LogSeverity.Critical:
+                case LogSeverity.Error:
+                    if (message.Exception is CommandException cmdException)
+                    {
+                        string formattedException = string.Format("Exception in command \"{0}{1}\", at channel #{2}.\n{3}",
+                            Settings.Instance.LoadedConfig.BotPrefix, cmdException.Command.Aliases[0], cmdException.Context.Channel, cmdException);
+
+                        Log(LogLevel.Error, formattedException);
+                    }
+                    else Log(LogLevel.Error, message.Message);
+                    break;
+                case LogSeverity.Warning:
+                    Log(LogLevel.Warning, message.Message);
+                    break;
+                default:
+                    Log(LogLevel.Message, message.Message);
+                    break;
+            }
+
+            return Task.CompletedTask;
         }
 
         private void WriteToLogFile(string message)
