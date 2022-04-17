@@ -14,6 +14,8 @@ namespace SammBotNET.Modules
 {
     [Name("Administration")]
     [Group("admin")]
+    [Summary("Bot management commands. Bot owner only.")]
+    [ModuleEmoji("🛠")]
     public class AdminModule : ModuleBase<SocketCommandContext>
     {
         public AdminService AdminService { get; set; }
@@ -21,7 +23,7 @@ namespace SammBotNET.Modules
         public CommandHandler CommandHandler { get; set; }
 
         [Command("say")]
-        [HideInHelp]
+        [BotOwnerOnly]
         public async Task<RuntimeResult> SayMessageAsync([Remainder] string Message)
         {
             if (Context.Message.Author.Id != Settings.Instance.LoadedConfig.AestheticalUid)

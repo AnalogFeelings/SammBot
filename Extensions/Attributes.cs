@@ -19,6 +19,20 @@ namespace SammBotNET.Extensions
         }
     }
 
+    public class BotOwnerOnly : PreconditionAttribute
+    {
+        public BotOwnerOnly() { }
+
+        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context,
+                                                                        CommandInfo command, IServiceProvider services)
+        {
+            if (context.User.Id == Settings.Instance.LoadedConfig.AestheticalUid)
+                return Task.FromResult(PreconditionResult.FromSuccess());
+
+            return Task.FromResult(PreconditionResult.FromError("You must be the bot owner to execute this command."));
+        }
+    }
+
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class HideInHelp : Attribute
     {
