@@ -20,7 +20,7 @@ namespace SammBotNET.Modules
         public Logger Logger { get; set; }
         public CommandHandler CommandHandler { get; set; }
 
-        [Command("say", RunMode = RunMode.Async)]
+        [Command("say")]
         [HideInHelp]
         public async Task<RuntimeResult> SayMessageAsync([Remainder] string Message)
         {
@@ -37,7 +37,7 @@ namespace SammBotNET.Modules
             return ExecutionResult.Succesful();
         }
 
-        [Command("setsay", RunMode = RunMode.Async)]
+        [Command("setsay")]
         [HideInHelp]
         public async Task<RuntimeResult> SetSayAsync(ulong Channel, ulong Guild)
         {
