@@ -15,9 +15,9 @@ namespace SammBotNET.Services
 
         public RandomService()
         {
-            RecentPeoneImages = new AutodeqList<string>(BotCore.Instance.LoadedConfig.PeoneRecentQueueSize);
-            CatRequester = new SharpCatRequester(BotCore.Instance.LoadedConfig.CatKey);
-            DogRequester = new SharpDogRequester(BotCore.Instance.LoadedConfig.DogKey);
+            RecentPeoneImages = new AutodeqList<string>(Settings.Instance.LoadedConfig.PeoneRecentQueueSize);
+            CatRequester = new SharpCatRequester(Settings.Instance.LoadedConfig.CatKey);
+            DogRequester = new SharpDogRequester(Settings.Instance.LoadedConfig.DogKey);
             RandomClient = new HttpClient();
         }
     }

@@ -25,11 +25,11 @@ namespace SammBotNET.Modules
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All public information about the bot.");
 
             string elapsedTime = string.Format("{0:00}d{1:00}h{2:00}m",
-                BotCore.Instance.RuntimeStopwatch.Elapsed.Days,
-                BotCore.Instance.RuntimeStopwatch.Elapsed.Hours,
-                BotCore.Instance.RuntimeStopwatch.Elapsed.Minutes);
+                Settings.Instance.RuntimeStopwatch.Elapsed.Days,
+                Settings.Instance.RuntimeStopwatch.Elapsed.Hours,
+                Settings.Instance.RuntimeStopwatch.Elapsed.Minutes);
 
-            embed.AddField("Bot Version", $"`{BotCore.Instance.LoadedConfig.BotVersion}`", true);
+            embed.AddField("Bot Version", $"`{Settings.Instance.LoadedConfig.BotVersion}`", true);
             embed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
             embed.AddField("Ping", $"`{Context.Client.Latency}ms.`", true);
             embed.AddField("Im In", $"`{Context.Client.Guilds.Count} server/s.`", true);
@@ -46,7 +46,7 @@ namespace SammBotNET.Modules
         [Summary("Shows a list of all the servers the bot is in.")]
         public async Task<RuntimeResult> ServersAsync()
         {
-            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             string builtMsg = "I am invited in the following servers:\n```\n";

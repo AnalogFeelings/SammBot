@@ -16,7 +16,7 @@ namespace SammBotNET.Modules
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync()
         {
-            string prefix = BotCore.Instance.LoadedConfig.BotPrefix;
+            string prefix = Settings.Instance.LoadedConfig.BotPrefix;
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help", $"These are all of the modules available." +
                                                                     $"\n Use `{prefix}help <Module/Group Name>` to see its commands.");
@@ -54,7 +54,7 @@ namespace SammBotNET.Modules
         [Summary("Provides all commands and modules available.")]
         public async Task<RuntimeResult> HelpAsync([Remainder] string ModuleName)
         {
-            string prefix = BotCore.Instance.LoadedConfig.BotPrefix;
+            string prefix = Settings.Instance.LoadedConfig.BotPrefix;
             string[] splittedModuleName = ModuleName.Split(' ');
 
             if (splittedModuleName.Length == 1)

@@ -18,7 +18,7 @@ namespace SammBotNET.Modules
         [Summary("Deletes all tags.")]
         public async Task<RuntimeResult> FlushTagsAsync()
         {
-            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             using (TagDB CommandDatabase = new TagDB())
@@ -36,7 +36,7 @@ namespace SammBotNET.Modules
         [Summary("Deletes all quotes.")]
         public async Task<RuntimeResult> FlushQuotesAsync()
         {
-            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             using (PhrasesDB PhrasesDatabase = new PhrasesDB())

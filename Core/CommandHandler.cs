@@ -44,7 +44,7 @@ namespace SammBotNET.Core
             {
                 if (result.ErrorReason == "Unknown command.")
                 {
-                    await context.Channel.SendMessageAsync($"Unknown command! Use the `{BotCore.Instance.LoadedConfig.BotPrefix}help` command.");
+                    await context.Channel.SendMessageAsync($"Unknown command! Use the `{Settings.Instance.LoadedConfig.BotPrefix}help` command.");
                 }
                 else
                 {
@@ -52,7 +52,7 @@ namespace SammBotNET.Core
                 }
             }
 
-            await Task.Delay(BotCore.Instance.LoadedConfig.QueueWaitTime);
+            await Task.Delay(Settings.Instance.LoadedConfig.QueueWaitTime);
 
             MessageQueue.TryDequeue(out SocketMessage dequeuedMessage);
             ExecutingCommand = false;
@@ -73,13 +73,13 @@ namespace SammBotNET.Core
             int argPos = 0;
             if (message.Content.StartsWith($"<@!{DiscordClient.CurrentUser.Id}>"))
             {
-                await context.Channel.SendMessageAsync($"Hi! I'm **{BotCore.Instance.LoadedConfig.BotName}**!\n" +
-                    $"My prefix is `{BotCore.Instance.LoadedConfig.BotPrefix}`! " +
-                    $"You can use `{BotCore.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!");
+                await context.Channel.SendMessageAsync($"Hi! I'm **{Settings.Instance.LoadedConfig.BotName}**!\n" +
+                    $"My prefix is `{Settings.Instance.LoadedConfig.BotPrefix}`! " +
+                    $"You can use `{Settings.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!");
             }
-            else if (message.HasStringPrefix(BotCore.Instance.LoadedConfig.BotPrefix, ref argPos))
+            else if (message.HasStringPrefix(Settings.Instance.LoadedConfig.BotPrefix, ref argPos))
             {
-                if (message.Content.Length == BotCore.Instance.LoadedConfig.BotPrefix.Length) return;
+                if (message.Content.Length == Settings.Instance.LoadedConfig.BotPrefix.Length) return;
                 if (ExecutingCommand)
                 {
                     MessageQueue.Enqueue(messageParam);
@@ -88,9 +88,9 @@ namespace SammBotNET.Core
                 }
 
                 ExecutingCommand = true;
-                CommandName = message.Content.Remove(0, BotCore.Instance.LoadedConfig.BotPrefix.Length).Split()[0];
+                CommandName = message.Content.Remove(0, Settings.Instance.LoadedConfig.BotPrefix.Length).Split()[0];
 
-                BotLogger.Log(LogLevel.Message, string.Format(BotCore.Instance.LoadedConfig.CommandLogFormat,
+                BotLogger.Log(LogLevel.Message, string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
                                                 message.Content, message.Channel.Name, message.Author.Username));
 
                 await CommandsService.ExecuteAsync(context, argPos, ServiceProvider);
@@ -105,8 +105,8 @@ namespace SammBotNET.Core
                 if (Message.Content.Length < 20 || Message.Content.Length > 64) return;
                 if (Message.Attachments.Count > 0 && Message.Content.Length == 0) return;
                 if (Message.MentionedUsers.Count > 0) return;
-                if (BotCore.Instance.UrlRegex.IsMatch(Message.Content)) return;
-                if (BotCore.Instance.LoadedConfig.BannedPrefixes.Any(x => Message.Content.StartsWith(x))) return;
+                if (Settings.Instance.UrlRegex.IsMatch(Message.Content)) return;
+                if (Settings.Instance.LoadedConfig.BannedPrefixes.Any(x => Message.Content.StartsWith(x))) return;
 
                 using (PhrasesDB PhrasesDatabase = new PhrasesDB())
                 {

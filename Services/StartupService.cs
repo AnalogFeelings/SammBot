@@ -35,18 +35,18 @@ namespace SammBotNET.Services
 
         public Task Ready()
         {
-            if (BotCore.Instance.StatusList.Count > 0 && BotCore.Instance.LoadedConfig.RotatingStatus)
+            if (Settings.Instance.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
             {
                 StatusTimer = new Timer(async _ =>
                 {
-                    BotStatus status = BotCore.Instance.StatusList.PickRandom();
+                    BotStatus status = Settings.Instance.StatusList.PickRandom();
 
                     await SocketClient.SetGameAsync(status.Content,
-                        status.Type == 1 ? BotCore.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)status.Type);
+                        status.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)status.Type);
                 }, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
             }
 
-            if (BotCore.Instance.LoadedConfig.RotatingAvatar)
+            if (Settings.Instance.LoadedConfig.RotatingAvatar)
             {
                 AvatarTimer = new Timer(async _ =>
                 {
@@ -62,18 +62,18 @@ namespace SammBotNET.Services
 
                         await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = profilePic);
                     }
-                }, null, TimeSpan.FromHours(BotCore.Instance.LoadedConfig.AvatarRotationTime), TimeSpan.FromHours(BotCore.Instance.LoadedConfig.AvatarRotationTime));
+                }, null, TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime), TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime));
             }
 
             RngResetTimer = new Timer(_ =>
             {
                 int hash = Guid.NewGuid().GetHashCode();
 
-                BotCore.Instance.GlobalRng = new Random(hash);
+                Settings.Instance.GlobalRng = new Random(hash);
                 BotLogger.Log(LogLevel.Message, $"Regenerated RNG instance with hash {hash}.");
 
-            }, null, TimeSpan.FromMinutes(BotCore.Instance.LoadedConfig.RngResetTime),
-                     TimeSpan.FromMinutes(BotCore.Instance.LoadedConfig.RngResetTime));
+            }, null, TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime),
+                     TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime));
 
             return Task.CompletedTask;
         }
@@ -81,16 +81,16 @@ namespace SammBotNET.Services
         public async Task StartAsync()
         {
             Console.WriteLine("Logging in as bot...".Pastel("#3d9785"));
-            await SocketClient.LoginAsync(TokenType.Bot, BotCore.Instance.LoadedConfig.BotToken);
+            await SocketClient.LoginAsync(TokenType.Bot, Settings.Instance.LoadedConfig.BotToken);
             await SocketClient.StartAsync();
             Console.WriteLine("Connected to websocket.".Pastel("#3d9785"));
 
-            if (BotCore.Instance.LoadedConfig.RotatingStatus)
+            if (Settings.Instance.LoadedConfig.RotatingStatus)
             {
                 Console.WriteLine("Loading rotating statuses...".Pastel("#3d9785"));
-                if (!BotCore.Instance.LoadStatuses())
+                if (!Settings.Instance.LoadStatuses())
                 {
-                    Console.WriteLine($"Could not load {BotCore.Instance.StatusFile} correctly.".Pastel(Color.IndianRed));
+                    Console.WriteLine($"Could not load {Settings.Instance.StatusFile} correctly.".Pastel(Color.IndianRed));
                 }
             }
 
@@ -98,18 +98,18 @@ namespace SammBotNET.Services
             Console.Clear();
 
             await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
-            BotCore.Instance.StartupStopwatch.Stop();
+            Settings.Instance.StartupStopwatch.Stop();
 
             string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString();
 
-            Console.Write(FiggleFonts.Slant.Render(BotCore.Instance.LoadedConfig.BotName).Pastel("#77b6a9"));
-            Console.WriteLine($"----------Source code {BotCore.Instance.LoadedConfig.BotVersion}, Discord.NET {discordNetVersion}----------".Pastel(Color.CornflowerBlue));
+            Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel("#77b6a9"));
+            Console.WriteLine($"----------Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {discordNetVersion}----------".Pastel(Color.CornflowerBlue));
             Console.WriteLine();
 
-            BotCore.Instance.RuntimeStopwatch.Start();
+            Settings.Instance.RuntimeStopwatch.Start();
 
-            BotLogger.Log(LogLevel.Message, $"{BotCore.Instance.LoadedConfig.BotName} took" +
-                $" {BotCore.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.");
+            BotLogger.Log(LogLevel.Message, $"{Settings.Instance.LoadedConfig.BotName} took" +
+                $" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.");
         }
     }
 }

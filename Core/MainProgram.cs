@@ -20,21 +20,21 @@ namespace SammBotNET.Core
 
         public async Task MainAsync()
         {
-            BotCore.Instance.StartupStopwatch.Start();
+            Settings.Instance.StartupStopwatch.Start();
 
-            Console.WriteLine($"Loading {BotCore.Instance.ConfigFile}...".Pastel("#3d9785"));
-            if (!BotCore.Instance.LoadConfiguration())
+            Console.WriteLine($"Loading {Settings.Instance.ConfigFile}...".Pastel("#3d9785"));
+            if (!Settings.Instance.LoadConfiguration())
             {
-                Console.WriteLine($"FATAL! Could not load {BotCore.Instance.ConfigFile} correctly!".Pastel(Color.Red));
-                File.WriteAllText(BotCore.Instance.ConfigFile,
-                    JsonConvert.SerializeObject(BotCore.Instance.LoadedConfig, Formatting.Indented));
+                Console.WriteLine($"FATAL! Could not load {Settings.Instance.ConfigFile} correctly!".Pastel(Color.Red));
+                File.WriteAllText(Settings.Instance.ConfigFile,
+                    JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
                 Environment.Exit(1);
             }
 
-            if (!Directory.Exists(BotCore.Instance.LoadedConfig.LogFolder))
+            if (!Directory.Exists(Settings.Instance.LoadedConfig.LogFolder))
             {
-                Console.WriteLine($"{BotCore.Instance.LoadedConfig.LogFolder} did not exist. Creating...".Pastel("#3d9785"));
-                Directory.CreateDirectory(BotCore.Instance.LoadedConfig.LogFolder);
+                Console.WriteLine($"{Settings.Instance.LoadedConfig.LogFolder} did not exist. Creating...".Pastel("#3d9785"));
+                Directory.CreateDirectory(Settings.Instance.LoadedConfig.LogFolder);
             }
             if (!Directory.Exists("Avatars"))
             {
@@ -65,8 +65,6 @@ namespace SammBotNET.Core
             ServiceProvider provider = services.BuildServiceProvider();
             provider.GetRequiredService<Logger>();
             provider.GetRequiredService<CommandHandler>();
-            provider.GetRequiredService<HelpService>();
-            provider.GetRequiredService<QuoteService>();
             provider.GetRequiredService<RandomService>();
             provider.GetRequiredService<AdminService>();
             provider.GetRequiredService<NsfwService>();
@@ -85,9 +83,7 @@ namespace SammBotNET.Core
             .AddSingleton<CommandHandler>()
             .AddSingleton<StartupService>()
             .AddSingleton<Logger>()
-            .AddSingleton<HelpService>()
             .AddSingleton<Random>()
-            .AddSingleton<QuoteService>()
             .AddSingleton<RandomService>()
             .AddSingleton<AdminService>()
             .AddSingleton<FunService>()

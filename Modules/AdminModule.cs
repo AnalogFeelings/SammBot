@@ -24,7 +24,7 @@ namespace SammBotNET.Modules
         [HideInHelp]
         public async Task<RuntimeResult> SayMessageAsync([Remainder] string Message)
         {
-            if (Context.Message.Author.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.Message.Author.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             if (AdminService.ChannelId == 0 || AdminService.GuildId == 0)
@@ -41,7 +41,7 @@ namespace SammBotNET.Modules
         [HideInHelp]
         public async Task<RuntimeResult> SetSayAsync(ulong Channel, ulong Guild)
         {
-            if (Context.Message.Author.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.Message.Author.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             if (Context.Client.GetGuild(Guild) == null) return ExecutionResult.FromError("I am not invited in that guild!");
@@ -63,11 +63,11 @@ namespace SammBotNET.Modules
         [HideInHelp]
         public async Task<RuntimeResult> ShutdownAsync()
         {
-            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            await ReplyAsync($"{BotCore.Instance.LoadedConfig.BotName} will shut down.");
-            Logger.Log(LogLevel.Warning, $"{BotCore.Instance.LoadedConfig.BotName} will shut down.\n\n");
+            await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will shut down.");
+            Logger.Log(LogLevel.Warning, $"{Settings.Instance.LoadedConfig.BotName} will shut down.\n\n");
 
             Environment.Exit(0);
 
@@ -79,13 +79,13 @@ namespace SammBotNET.Modules
         [HideInHelp]
         public async Task<RuntimeResult> RestartAsync()
         {
-            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
-            await ReplyAsync($"{BotCore.Instance.LoadedConfig.BotName} will restart.");
-            Logger.Log(LogLevel.Warning, $"{BotCore.Instance.LoadedConfig.BotName} will restart.\n\n");
+            await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.");
+            Logger.Log(LogLevel.Warning, $"{Settings.Instance.LoadedConfig.BotName} will restart.\n\n");
 
-            BotCore.Instance.RestartBot();
+            Settings.Instance.RestartBot();
 
             return ExecutionResult.Succesful();
         }
@@ -95,7 +95,7 @@ namespace SammBotNET.Modules
         [HideInHelp]
         public async Task<RuntimeResult> LeaveAsync(ulong ServerId)
         {
-            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             SocketGuild guild = Context.Client.GetGuild(ServerId);
@@ -115,7 +115,7 @@ namespace SammBotNET.Modules
         [HideInHelp]
         public async Task<RuntimeResult> MimicUserAsync(SocketGuildUser User, [Remainder] string Command)
         {
-            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             //LORD HAVE MERCY
@@ -135,7 +135,7 @@ namespace SammBotNET.Modules
         [HideInHelp]
         public async Task<RuntimeResult> ListConfigAsync(bool Override = false)
         {
-            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
@@ -150,7 +150,7 @@ namespace SammBotNET.Modules
 
             foreach (PropertyInfo property in properties)
             {
-                embed.AddField(property.Name, property.GetValue(BotCore.Instance.LoadedConfig, null));
+                embed.AddField(property.Name, property.GetValue(Settings.Instance.LoadedConfig, null));
             }
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
@@ -163,7 +163,7 @@ namespace SammBotNET.Modules
         [HideInHelp]
         public async Task<RuntimeResult> SetConfigAsync(string VarName, string VarValue, bool RestartBot = false)
         {
-            if (Context.User.Id != BotCore.Instance.LoadedConfig.AestheticalUid)
+            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
                 return ExecutionResult.FromError("You are not allowed to execute this command.");
 
             PropertyInfo retrievedVariable = typeof(JsonConfig).GetProperty(VarName);
@@ -180,18 +180,18 @@ namespace SammBotNET.Modules
 
             AdminService.ChangingConfig = true;
 
-            retrievedVariable.SetValue(BotCore.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
+            retrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
 
-            object newValue = retrievedVariable.GetValue(BotCore.Instance.LoadedConfig);
+            object newValue = retrievedVariable.GetValue(Settings.Instance.LoadedConfig);
 
             await ReplyAsync($"Set variable \"{VarName}\" to `{newValue.ToString().Truncate(128)}` succesfully.");
-            await File.WriteAllTextAsync(BotCore.Instance.ConfigFile,
-                JsonConvert.SerializeObject(BotCore.Instance.LoadedConfig, Formatting.Indented));
+            await File.WriteAllTextAsync(Settings.Instance.ConfigFile,
+                JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
             if (RestartBot)
             {
-                await ReplyAsync($"{BotCore.Instance.LoadedConfig.BotName} will restart.");
-                BotCore.Instance.RestartBot();
+                await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.");
+                Settings.Instance.RestartBot();
             }
 
             AdminService.ChangingConfig = false;

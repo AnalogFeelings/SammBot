@@ -30,7 +30,7 @@ namespace SammBotNET.Modules
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
                 UserTag userTag = null;
 
-                if (Context.Message.Author.Id == BotCore.Instance.LoadedConfig.AestheticalUid)
+                if (Context.Message.Author.Id == Settings.Instance.LoadedConfig.AestheticalUid)
                     userTag = userTags.SingleOrDefault(x => x.Name == Name);
                 else
                     userTag = userTags.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id);
@@ -75,7 +75,7 @@ namespace SammBotNET.Modules
             {
                 List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
                 List<UserTag> validTags = userTags.Where(x => x.ServerId == Context.Guild.Id &&
-                        Name.DamerauLevenshteinDistance(x.Name, BotCore.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
+                        Name.DamerauLevenshteinDistance(x.Name, Settings.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
                 EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"All of the tags similar to \"{Name}\".")
                     .ChangeTitle("TAG RESULTS");
@@ -102,7 +102,7 @@ namespace SammBotNET.Modules
         {
             if (Name.Length > 15)
                 return ExecutionResult.FromError("Please make the tag name shorter than 15 characters!");
-            else if (Name.StartsWith(BotCore.Instance.LoadedConfig.BotPrefix))
+            else if (Name.StartsWith(Settings.Instance.LoadedConfig.BotPrefix))
                 return ExecutionResult.FromError("Tag names can't begin with my prefix!");
             else if (Context.Message.MentionedUsers.Count > 0)
                 return ExecutionResult.FromError("Tag names or replies cannot contain mentions!");
@@ -134,7 +134,7 @@ namespace SammBotNET.Modules
                 await TagDatabase.SaveChangesAsync();
             }
 
-            await ReplyAsync($"Tag created succesfully! Use `{BotCore.Instance.LoadedConfig.BotPrefix}tags get {Name}` to use it!");
+            await ReplyAsync($"Tag created succesfully! Use `{Settings.Instance.LoadedConfig.BotPrefix}tags get {Name}` to use it!");
 
             return ExecutionResult.Succesful();
         }

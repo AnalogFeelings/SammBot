@@ -22,7 +22,7 @@ namespace SammBotNET.Modules
         [Summary("Ask the magic 8 ball!")]
         public async Task<RuntimeResult> MagicBallAsync([Remainder] string Question)
         {
-            string chosenAnswer = BotCore.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
+            string chosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
 
             IUserMessage message = await ReplyAsync(":8ball: Asking the magic 8-ball...");
 
@@ -41,7 +41,7 @@ namespace SammBotNET.Modules
             if (FaceCount < 3)
                 return ExecutionResult.FromError("The dice must have at least 3 faces!");
 
-            int chosenNumber = BotCore.Instance.GlobalRng.Next(0, FaceCount + 1);
+            int chosenNumber = Settings.Instance.GlobalRng.Next(0, FaceCount + 1);
 
             IUserMessage message = await ReplyAsync(":game_die: Rolling the dice...");
 
@@ -58,7 +58,7 @@ namespace SammBotNET.Modules
         [Summary("Hug a user!")]
         public async Task<RuntimeResult> HugUserAsync(IUser User)
         {
-            string chosenKaomoji = BotCore.Instance.LoadedConfig.HugKaomojis.PickRandom();
+            string chosenKaomoji = Settings.Instance.LoadedConfig.HugKaomojis.PickRandom();
 
             SocketGuildUser authorAsGuild = Context.Message.Author as SocketGuildUser;
 
@@ -89,7 +89,7 @@ namespace SammBotNET.Modules
             Pronoun authorPronouns = await authorAsGuild.GetUserPronouns();
             Pronoun targetPronouns = await targetAsGuild.GetUserPronouns();
 
-            string chosenMessage = BotCore.Instance.LoadedConfig.KillMessages.PickRandom();
+            string chosenMessage = Settings.Instance.LoadedConfig.KillMessages.PickRandom();
             chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorAsGuild.GetUsernameOrNick()}**");
             chosenMessage = chosenMessage.Replace("{mPrnSub}", authorPronouns.Subject);
             chosenMessage = chosenMessage.Replace("{mPrnObj}", authorPronouns.Object);

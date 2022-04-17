@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace SammBotNET.Core
 {
-    public class BotCore
+    public class Settings
     {
         public string ConfigFile = "config.json";
         public string StatusFile = "status.json";
@@ -69,12 +69,12 @@ namespace SammBotNET.Core
             return true;
         }
 
-        private static BotCore PrivateInstance;
-        public static BotCore Instance
+        private static Settings PrivateInstance;
+        public static Settings Instance
         {
             get
             {
-                if (PrivateInstance == null) PrivateInstance = new BotCore();
+                if (PrivateInstance == null) PrivateInstance = new Settings();
                 return PrivateInstance;
             }
         }
@@ -85,7 +85,6 @@ namespace SammBotNET.Core
         public string BotName { get; set; } = "Samm-Bot";
         public string BotVersion { get; set; } = "v0.1";
         public string BotPrefix { get; set; } = "s.";
-        public string UrlRegex { get; set; } = "";
 
         public ulong AestheticalUid { get; set; } = 337950448130719754;
         public int Rule34Threshold { get; set; } = 30;
@@ -97,6 +96,8 @@ namespace SammBotNET.Core
         public List<string> HugKaomojis { get; set; } = null;
         public List<string> KillMessages { get; set; } = null;
 
+        [NotModifiable] public string AnsiRegex { get; set; } = "";
+        [NotModifiable] public string UrlRegex { get; set; } = "";
         [NotModifiable] public bool RotatingStatus { get; set; } = true;
         [NotModifiable] public bool RotatingAvatar { get; set; } = true;
         [NotModifiable] public string BotToken { get; set; } = "";
