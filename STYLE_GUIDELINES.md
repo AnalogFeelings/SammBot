@@ -18,6 +18,7 @@ A module is defined by 4 class attributes. They may appear in this order:
 
 A command is defined by 2 or more function attributes. They may appear in this order:
 * `Command`
+* `Alias` (Optional)
 * `Summary`
 * `BotOwnerOnly` (Optional)
 * `RequireBotPermission` (Optional)
