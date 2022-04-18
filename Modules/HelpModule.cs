@@ -64,15 +64,13 @@ namespace SammBotNET.Modules
 				if (ModuleInfo == null || ModuleInfo == default(ModuleInfo))
 					return ExecutionResult.FromError($"The module \"{ModuleName}\" doesn't exist.");
 
-				if (ModuleInfo.Commands.Count == 0)
-					return ExecutionResult.FromError($"The module {ModuleInfo.Name} has no commands, or you don't have enough permissions to see them.");
-
 				ModuleEmoji ModuleEmoji = ModuleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
 				string StringifiedEmoji = ModuleEmoji != null ? ModuleEmoji.Emoji + " " : string.Empty;
 
 				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context,
 						"Help", $"**{StringifiedEmoji}{ModuleInfo.Name}**\nSyntax: `{BotPrefix}{ModuleInfo.Group} <Command Name>`");
 
+				bool FoundCommand = false;
 				string EmbedDescription = string.Empty;
 				foreach (CommandInfo Command in ModuleInfo.Commands)
 				{
@@ -81,8 +79,14 @@ namespace SammBotNET.Modules
 					PreconditionResult Result = await Command.CheckPreconditionsAsync(Context);
 
 					if (Result.IsSuccess)
+					{
 						ReplyEmbed.AddField(Command.Name, $"{(string.IsNullOrWhiteSpace(Command.Summary) ? "No description." : Command.Summary)}", true);
+						FoundCommand = true;
+					}
 				}
+
+				if(!FoundCommand)
+					return ExecutionResult.FromError($"The module {ModuleInfo.Name} has no commands, or you don't have enough permissions to see them.");
 
 				await ReplyAsync("", false, ReplyEmbed.Build());
 			}
