@@ -4,39 +4,39 @@ using System;
 
 namespace SammBotNET.Extensions
 {
-    public static class EmbedExtensions
-    {
-        public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder builder, SocketCommandContext context, string title = "", string description = "")
-        {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+	public static class EmbedExtensions
+	{
+		public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder builder, SocketCommandContext context, string title = "", string description = "")
+		{
+			if (context == null)
+				throw new ArgumentNullException(nameof(context));
 
-            string botName = Settings.Instance.LoadedConfig.BotName;
+			string botName = Settings.Instance.LoadedConfig.BotName;
 
-            builder.Color = Color.DarkPurple;
-            builder.Title = $"{botName.ToUpper()} {title.ToUpper()}";
-            builder.Description = description;
+			builder.Color = Color.DarkPurple;
+			builder.Title = $"{botName.ToUpper()} {title.ToUpper()}";
+			builder.Description = description;
 
-            builder.WithFooter(footer => { footer.Text = $"Requested by {context.Message.Author.GetFullUsername()}"; footer.IconUrl = context.Client.CurrentUser.GetAvatarUrl(); });
-            builder.WithCurrentTimestamp();
+			builder.WithFooter(footer => { footer.Text = $"Requested by {context.Message.Author.GetFullUsername()}"; footer.IconUrl = context.Client.CurrentUser.GetAvatarUrl(); });
+			builder.WithCurrentTimestamp();
 
-            return builder;
-        }
+			return builder;
+		}
 
-        public static EmbedBuilder ChangeTitle(this EmbedBuilder builder, string title, bool includeName = false)
-        {
-            string botName = Settings.Instance.LoadedConfig.BotName;
-            if (includeName) builder.WithTitle($"{botName.ToUpper()} {title.ToUpper()}");
-            else builder.WithTitle(title.ToUpper());
+		public static EmbedBuilder ChangeTitle(this EmbedBuilder builder, string title, bool includeName = false)
+		{
+			string botName = Settings.Instance.LoadedConfig.BotName;
+			if (includeName) builder.WithTitle($"{botName.ToUpper()} {title.ToUpper()}");
+			else builder.WithTitle(title.ToUpper());
 
-            return builder;
-        }
+			return builder;
+		}
 
-        public static EmbedBuilder ChangeFooter(this EmbedBuilder builder, SocketCommandContext context, string text)
-        {
-            builder.WithFooter(footer => { footer.Text = text; footer.IconUrl = context.Client.CurrentUser.GetAvatarUrl(); });
+		public static EmbedBuilder ChangeFooter(this EmbedBuilder builder, SocketCommandContext context, string text)
+		{
+			builder.WithFooter(footer => { footer.Text = text; footer.IconUrl = context.Client.CurrentUser.GetAvatarUrl(); });
 
-            return builder;
-        }
-    }
+			return builder;
+		}
+	}
 }

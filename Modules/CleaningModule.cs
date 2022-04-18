@@ -7,61 +7,60 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-    [Name("Janitoring")]
-    [Group("clean")]
-    [Summary("Clearing and Purging.")]
-    [ModuleEmoji("🧹")]
-    public class CleaningModule : ModuleBase<SocketCommandContext>
-    {
-        [Command("tags")]
-        [Alias("usertags")]
-        [Summary("Deletes all tags.")]
-        public async Task<RuntimeResult> FlushTagsAsync()
-        {
-            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
-                return ExecutionResult.FromError("You are not allowed to execute this command.");
+	[Name("Janitoring")]
+	[Group("clean")]
+	[Summary("Clearing and Purging.")]
+	[ModuleEmoji("🧹")]
+	public class CleaningModule : ModuleBase<SocketCommandContext>
+	{
+		[Command("tags")]
+		[Alias("usertags")]
+		[Summary("Deletes all tags.")]
+		[BotOwnerOnly]
+		public async Task<RuntimeResult> FlushTagsAsync()
+		{
+			using (TagDB CommandDatabase = new TagDB())
+			{
+				await ReplyAsync("Flushing database...");
+				int AffectedRows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from UserTag");
+				await ReplyAsync($"Success! `{AffectedRows}` rows affected.");
+			}
 
-            using (TagDB CommandDatabase = new TagDB())
-            {
-                await ReplyAsync("Flushing database...");
-                int rows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from UserTag");
-                await ReplyAsync($"Success! `{rows}` rows affected.");
-            }
+			return ExecutionResult.Succesful();
+		}
 
-            return ExecutionResult.Succesful();
-        }
+		[Command("quotes")]
+		[Alias("phrases")]
+		[Summary("Deletes all quotes.")]
+		[BotOwnerOnly]
+		public async Task<RuntimeResult> FlushQuotesAsync()
+		{
+			using (PhrasesDB PhrasesDatabase = new PhrasesDB())
+			{
+				await ReplyAsync("Flushing database...");
+				int AffectedRows = await PhrasesDatabase.Database.ExecuteSqlRawAsync("delete from Phrase");
+				await ReplyAsync($"Success! `{AffectedRows}` rows affected.");
+			}
 
-        [Command("quotes")]
-        [Alias("phrases")]
-        [Summary("Deletes all quotes.")]
-        public async Task<RuntimeResult> FlushQuotesAsync()
-        {
-            if (Context.User.Id != Settings.Instance.LoadedConfig.AestheticalUid)
-                return ExecutionResult.FromError("You are not allowed to execute this command.");
+			return ExecutionResult.Succesful();
+		}
 
-            using (PhrasesDB PhrasesDatabase = new PhrasesDB())
-            {
-                await ReplyAsync("Flushing database...");
-                int rows = await PhrasesDatabase.Database.ExecuteSqlRawAsync("delete from Phrase");
-                await ReplyAsync($"Success! `{rows}` rows affected.");
-            }
+		[Command("messages")]
+		[Summary("Deletes an amount of messages.")]
+		[RequireBotPermission(GuildPermission.ManageMessages)]
+		[RequireUserPermission(GuildPermission.ManageMessages)]
+		public async Task<RuntimeResult> FlushMessagesAsync(int Count)
+		{
+			IEnumerable<IMessage> RetrievedMessages = await Context.Message.Channel.GetMessagesAsync(Count + 1).FlattenAsync();
 
-            return ExecutionResult.Succesful();
-        }
+			await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(RetrievedMessages);
 
-        [Command("messages")]
-        [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
-        [Summary("Deletes an amount of messages.")]
-        public async Task<RuntimeResult> FlushMessagesAsync(int Count)
-        {
-            IEnumerable<IMessage> messages = await Context.Message.Channel.GetMessagesAsync(Count + 1).FlattenAsync();
-            await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(messages);
-            IUserMessage purgeMsg = await ReplyAsync($"Success! Cleared `{Count}` message/s.");
-            await Task.Delay(3000);
-            await purgeMsg.DeleteAsync();
+			IUserMessage SuccessMessage = await ReplyAsync($"Success! Cleared `{Count}` message/s.");
 
-            return ExecutionResult.Succesful();
-        }
-    }
+			await Task.Delay(3000);
+			await SuccessMessage.DeleteAsync();
+
+			return ExecutionResult.Succesful();
+		}
+	}
 }

@@ -8,7 +8,7 @@
   "CatKey": null,
   "DogKey": null,
   "TwitchUrl": null,
-  "AestheticalUid": null,
+  "OwnerUserId": null,
   "CommandLogFormat": "Executing command \"{0}\". Channel: #{1}. User: @{2}.",
   "LogFolder": "Logs",
   "RngResetTime": 30,

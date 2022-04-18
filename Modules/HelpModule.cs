@@ -6,129 +6,132 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-    [Name("Help")]
-    public class HelpModule : ModuleBase<SocketCommandContext>
-    {
-        public CommandService CommandService { get; set; }
+	[Name("Help")]
+	public class HelpModule : ModuleBase<SocketCommandContext>
+	{
+		public CommandService CommandService { get; set; }
 
-        [Command("help")]
-        [HideInHelp]
-        [Summary("Provides all commands and modules available.")]
-        public async Task<RuntimeResult> HelpAsync()
-        {
-            string prefix = Settings.Instance.LoadedConfig.BotPrefix;
+		[Command("help")]
+		[HideInHelp]
+		[Summary("Provides all commands and modules available.")]
+		public async Task<RuntimeResult> HelpAsync()
+		{
+			string BotPrefix = Settings.Instance.LoadedConfig.BotPrefix;
 
-            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help", $"These are all of the modules available." +
-                                                                    $"\n Use `{prefix}help <Module/Group Name>` to see its commands.");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help", $"These are all of the modules available to you." +
+																		$"\n Use `{BotPrefix}help <Module/Group Name>` to see its commands.");
 
-            foreach (ModuleInfo module in CommandService.Modules)
-            {
-                bool foundCommand = false;
+			foreach (ModuleInfo Module in CommandService.Modules)
+			{
+				bool FoundCommand = false;
 
-                foreach (CommandInfo cmd in module.Commands)
-                {
-                    PreconditionResult result = await cmd.CheckPreconditionsAsync(Context);
+				foreach (CommandInfo Command in Module.Commands)
+				{
+					PreconditionResult Result = await Command.CheckPreconditionsAsync(Context);
 
-                    if (cmd.Attributes.Any(x => x is HideInHelp)) continue;
+					if (Command.Attributes.Any(x => x is HideInHelp)) continue;
 
-                    if (result.IsSuccess) foundCommand = true;
-                }
+					if (Result.IsSuccess) FoundCommand = true;
+				}
 
-                if (foundCommand)
-                {
-                    ModuleEmoji moduleEmoji = module.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
-                    string emoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
+				if (FoundCommand)
+				{
+					ModuleEmoji ModuleEmoji = Module.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
+					string StringifiedEmoji = ModuleEmoji != null ? ModuleEmoji.Emoji + " " : string.Empty;
 
-                    embed.AddField($"{emoji}{module.Name}\n(Group: `{module.Group}`)",
-                        string.IsNullOrEmpty(module.Summary) ? "No description." : module.Summary, true);
-                }
-            }
+					ReplyEmbed.AddField($"{StringifiedEmoji}{Module.Name}\n(Group: `{Module.Group}`)",
+						string.IsNullOrEmpty(Module.Summary) ? "No description." : Module.Summary, true);
+				}
+			}
 
-            await ReplyAsync("", false, embed.Build());
+			await ReplyAsync("", false, ReplyEmbed.Build());
 
-            return ExecutionResult.Succesful();
-        }
+			return ExecutionResult.Succesful();
+		}
 
-        [Command("help")]
-        [HideInHelp]
-        [Summary("Provides all commands and modules available.")]
-        public async Task<RuntimeResult> HelpAsync([Remainder] string ModuleName)
-        {
-            string prefix = Settings.Instance.LoadedConfig.BotPrefix;
-            string[] splittedModuleName = ModuleName.Split(' ');
+		[Command("help")]
+		[HideInHelp]
+		[Summary("Provides all commands and modules available.")]
+		public async Task<RuntimeResult> HelpAsync([Remainder] string ModuleName)
+		{
+			string BotPrefix = Settings.Instance.LoadedConfig.BotPrefix;
+			string[] SplittedName = ModuleName.Split(' ');
 
-            if (splittedModuleName.Length == 1)
-            {
-                ModuleInfo moduleInfo = CommandService.Modules.SingleOrDefault(x => x.Name == ModuleName || x.Group == ModuleName);
+			if (SplittedName.Length == 1)
+			{
+				ModuleInfo ModuleInfo = CommandService.Modules.SingleOrDefault(x => x.Name == ModuleName || x.Group == ModuleName);
 
-                if (moduleInfo == null || moduleInfo == default(ModuleInfo))
-                    return ExecutionResult.FromError($"The module \"{ModuleName}\" doesn't exist.");
+				if (ModuleInfo == null || ModuleInfo == default(ModuleInfo))
+					return ExecutionResult.FromError($"The module \"{ModuleName}\" doesn't exist.");
 
-                ModuleEmoji moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
-                string emoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
+				if (ModuleInfo.Commands.Count == 0)
+					return ExecutionResult.FromError($"The module {ModuleInfo.Name} has no commands, or you don't have enough permissions to see them.");
 
-                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context,
-                    "Help", $"**{emoji}{moduleInfo.Name}**\nSyntax: `{prefix}{moduleInfo.Group} <Command Name>`");
+				ModuleEmoji ModuleEmoji = ModuleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
+				string StringifiedEmoji = ModuleEmoji != null ? ModuleEmoji.Emoji + " " : string.Empty;
 
-                string description = string.Empty;
-                foreach (CommandInfo match in moduleInfo.Commands)
-                {
-                    if (match.Attributes.Any(x => x is HideInHelp)) continue;
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context,
+						"Help", $"**{StringifiedEmoji}{ModuleInfo.Name}**\nSyntax: `{BotPrefix}{ModuleInfo.Group} <Command Name>`");
 
-                    PreconditionResult result = await match.CheckPreconditionsAsync(Context);
+				string EmbedDescription = string.Empty;
+				foreach (CommandInfo Command in ModuleInfo.Commands)
+				{
+					if (Command.Attributes.Any(x => x is HideInHelp)) continue;
 
-                    if (result.IsSuccess)
-                        embed.AddField(match.Name, $"{(string.IsNullOrWhiteSpace(match.Summary) ? "No description." : match.Summary)}", true);
-                }
+					PreconditionResult Result = await Command.CheckPreconditionsAsync(Context);
 
-                await ReplyAsync("", false, embed.Build());
-            }
-            else
-            {
-                string actualName = splittedModuleName.Last();
+					if (Result.IsSuccess)
+						ReplyEmbed.AddField(Command.Name, $"{(string.IsNullOrWhiteSpace(Command.Summary) ? "No description." : Command.Summary)}", true);
+				}
 
-                SearchResult result = CommandService.Search(Context, ModuleName);
+				await ReplyAsync("", false, ReplyEmbed.Build());
+			}
+			else
+			{
+				string ActualName = SplittedName.Last();
 
-                if (!result.IsSuccess)
-                    return ExecutionResult.FromError($"There is no command named \"{ModuleName}\". Check your spelling.");
+				SearchResult SearchResult = CommandService.Search(Context, ModuleName);
 
-                CommandMatch match = result.Commands.SingleOrDefault(x => x.Command.Name == actualName);
+				if (!SearchResult.IsSuccess)
+					return ExecutionResult.FromError($"There is no command named \"{ModuleName}\". Check your spelling.");
 
-                if (match.Command == null)
-                    return ExecutionResult.FromError($"There is no command named \"{ModuleName}\". Check your spelling.");
+				CommandMatch Match = SearchResult.Commands.SingleOrDefault(x => x.Command.Name == ActualName);
 
-                EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help");
+				if (Match.Command == null)
+					return ExecutionResult.FromError($"There is no command named \"{ModuleName}\". Check your spelling.");
 
-                CommandInfo command = match.Command;
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help");
 
-                List<string> processedAliases = command.Aliases.ToList();
-                processedAliases.RemoveAt(0); //Remove the command name itself from the aliases list.
+				CommandInfo Command = Match.Command;
 
-                //Remove group name from aliases list.
-                for (int i = 0; i < processedAliases.Count; i++)
-                {
-                    processedAliases[i] = processedAliases[i].Split(' ').Last();
-                }
+				List<string> ProcessedAliases = Command.Aliases.ToList();
+				ProcessedAliases.RemoveAt(0); //Remove the command name itself from the aliases list.
 
-                embed.AddField("Command Name", command.Name);
-                embed.AddField("Command Aliases", processedAliases.Count == 0 ? "No aliases." : string.Join(", ", processedAliases.ToArray()));
-                embed.AddField("Command Group", command.Module.Group);
-                embed.AddField("Command Summary", string.IsNullOrWhiteSpace(command.Summary) ? "No summary." : command.Summary);
+				//Remove group name from aliases list.
+				for (int i = 0; i < ProcessedAliases.Count; i++)
+				{
+					ProcessedAliases[i] = ProcessedAliases[i].Split(' ').Last();
+				}
 
-                string commandParameters = string.Empty;
-                foreach (ParameterInfo parameterInfo in command.Parameters)
-                {
-                    commandParameters += $"[**{parameterInfo.Type.Name}**] `{parameterInfo.Name}`";
-                    if (parameterInfo.IsOptional) commandParameters += " (OPTIONAL)";
-                    commandParameters += "\n";
-                }
+				ReplyEmbed.AddField("Command Name", Command.Name);
+				ReplyEmbed.AddField("Command Aliases", ProcessedAliases.Count == 0 ? "No aliases." : string.Join(", ", ProcessedAliases.ToArray()));
+				ReplyEmbed.AddField("Command Group", Command.Module.Group);
+				ReplyEmbed.AddField("Command Summary", string.IsNullOrWhiteSpace(Command.Summary) ? "No summary." : Command.Summary);
 
-                embed.AddField("Command Parameters", string.IsNullOrEmpty(commandParameters) ? "No parameters." : commandParameters);
+				string CommandParameters = string.Empty;
+				foreach (ParameterInfo ParameterInfo in Command.Parameters)
+				{
+					CommandParameters += $"[**{ParameterInfo.Type.Name}**] `{ParameterInfo.Name}`";
+					if (ParameterInfo.IsOptional) CommandParameters += " (OPTIONAL)";
+					CommandParameters += "\n";
+				}
 
-                await ReplyAsync("", false, embed.Build());
-            }
+				ReplyEmbed.AddField("Command Parameters", string.IsNullOrEmpty(CommandParameters) ? "No parameters." : CommandParameters);
 
-            return ExecutionResult.Succesful();
-        }
-    }
+				await ReplyAsync("", false, ReplyEmbed.Build());
+			}
+
+			return ExecutionResult.Succesful();
+		}
+	}
 }

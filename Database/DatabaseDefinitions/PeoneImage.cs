@@ -2,9 +2,9 @@
 
 namespace SammBotNET.Database
 {
-    public partial class PeoneImage
-    {
-        [Key]
-        public string TwitterUrl { get; set; }
-    }
+	public partial class PeoneImage
+	{
+		[Key]
+		public string TwitterUrl { get; set; }
+	}
 }
