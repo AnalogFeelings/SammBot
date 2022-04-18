@@ -39,7 +39,7 @@ namespace SammBotNET.Core
 		{
 			string AssembledMessage = "[".Pastel(Color.White) + DateTime.Now.ToString("g").Pastel(Color.LightGray) + " ";
 
-			Color MessageColor = Color.CadetBlue;
+			Color MessageColor = Color.LightBlue;
 			switch (Severity)
 			{
 				case LogLevel.Warning:
