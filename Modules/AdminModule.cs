@@ -90,14 +90,14 @@ namespace SammBotNET.Modules
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> LeaveAsync(ulong ServerId)
 		{
-			SocketGuild targetGuild = Context.Client.GetGuild(ServerId);
-			if (targetGuild == null)
+			SocketGuild TargetGuild = Context.Client.GetGuild(ServerId);
+			if (TargetGuild == null)
 				return ExecutionResult.FromError("I am not currently in this guild!");
 
-			string guildName = targetGuild.Name;
-			await targetGuild.LeaveAsync();
+			string GuildName = TargetGuild.Name;
+			await TargetGuild.LeaveAsync();
 
-			await ReplyAsync($"Left the server \"{guildName}\".");
+			await ReplyAsync($"Left the server \"{GuildName}\".");
 
 			return ExecutionResult.Succesful();
 		}
@@ -109,13 +109,13 @@ namespace SammBotNET.Modules
 		public async Task<RuntimeResult> MimicUserAsync(SocketGuildUser User, [Remainder] string Command)
 		{
 			//LORD HAVE MERCY
-			SocketMessage message = Context.Message as SocketMessage;
-			FieldInfo authorField = typeof(SocketMessage).GetField("<Author>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-			FieldInfo contentField = typeof(SocketMessage).GetField("<Content>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-			authorField.SetValue(message, User);
-			contentField.SetValue(message, Command);
+			SocketMessage SourceMessage = Context.Message as SocketMessage;
+			FieldInfo AuthorField = typeof(SocketMessage).GetField("<Author>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
+			FieldInfo ContentField = typeof(SocketMessage).GetField("<Content>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
+			AuthorField.SetValue(SourceMessage, User);
+			ContentField.SetValue(SourceMessage, Command);
 
-			await CommandHandler.HandleCommandAsync(message);
+			await CommandHandler.HandleCommandAsync(SourceMessage);
 
 			return ExecutionResult.Succesful();
 		}
@@ -126,22 +126,22 @@ namespace SammBotNET.Modules
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> ListConfigAsync(bool Override = false)
 		{
-			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
 
-			List<PropertyInfo> properties = typeof(JsonConfig).GetProperties()
+			List<PropertyInfo> Properties = typeof(JsonConfig).GetProperties()
 				.Where(x => !x.PropertyType.IsGenericType &&
 						x.Name != "UrlRegex" &&
 						x.Name != "BotToken").ToList();
 
 			if (!Override)
-				properties = properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
+				Properties = Properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
 
-			foreach (PropertyInfo property in properties)
+			foreach (PropertyInfo Property in Properties)
 			{
-				embed.AddField(property.Name, property.GetValue(Settings.Instance.LoadedConfig, null));
+				ReplyEmbed.AddField(Property.Name, Property.GetValue(Settings.Instance.LoadedConfig, null));
 			}
 
-			await Context.Channel.SendMessageAsync("", false, embed.Build());
+			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 
 			return ExecutionResult.Succesful();
 		}
@@ -152,25 +152,25 @@ namespace SammBotNET.Modules
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> SetConfigAsync(string VarName, string VarValue, bool RestartBot = false)
 		{
-			PropertyInfo retrievedVariable = typeof(JsonConfig).GetProperty(VarName);
+			PropertyInfo RetrievedVariable = typeof(JsonConfig).GetProperty(VarName);
 
-			if (retrievedVariable == null)
+			if (RetrievedVariable == null)
 				return ExecutionResult.FromError($"{VarName} does not exist!");
 
-			if (retrievedVariable.PropertyType is IList)
+			if (RetrievedVariable.PropertyType is IList)
 				return ExecutionResult.FromError($"{VarName} is a list variable!");
 
-			if (retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
+			if (RetrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
 				return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
 					$"Please pass `true` to the `restartBot` parameter.");
 
 			AdminService.ChangingConfig = true;
 
-			retrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
+			RetrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, RetrievedVariable.PropertyType));
 
-			object newValue = retrievedVariable.GetValue(Settings.Instance.LoadedConfig);
+			object NewValue = RetrievedVariable.GetValue(Settings.Instance.LoadedConfig);
 
-			await ReplyAsync($"Set variable \"{VarName}\" to `{newValue.ToString().Truncate(128)}` succesfully.");
+			await ReplyAsync($"Set variable \"{VarName}\" to `{NewValue.ToString().Truncate(128)}` succesfully.");
 			await File.WriteAllTextAsync(Settings.Instance.ConfigFile,
 				JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 

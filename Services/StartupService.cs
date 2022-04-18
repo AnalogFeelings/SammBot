@@ -111,7 +111,9 @@ namespace SammBotNET.Services
 			string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString();
 
 			Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel(Color.LightSteelBlue));
-			Console.WriteLine($"----------Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}----------".Pastel(Color.CornflowerBlue));
+			Console.Write("==========".Pastel(Color.LightBlue));
+			Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}".Pastel(Color.LightCyan));
+			Console.WriteLine("==========".Pastel(Color.LightBlue));
 			Console.WriteLine();
 
 			Settings.Instance.RuntimeStopwatch.Start();
