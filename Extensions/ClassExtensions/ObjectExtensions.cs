@@ -6,13 +6,13 @@ namespace SammBotNET.Extensions
 {
 	public static class ObjectExtensions
 	{
-		public static string ToQueryString(this object obj)
+		public static string ToQueryString(this object TargetObject)
 		{
-			IEnumerable<string> properties = from p in obj.GetType().GetProperties()
-											 where p.GetValue(obj, null) != null
-											 select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(obj, null).ToString());
+			IEnumerable<string> FormattedProperties = from p in TargetObject.GetType().GetProperties()
+														where p.GetValue(TargetObject, null) != null
+														select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
 
-			return string.Join("&", properties.ToArray());
+			return string.Join("&", FormattedProperties.ToArray());
 		}
 	}
 }

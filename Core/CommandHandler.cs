@@ -23,30 +23,30 @@ namespace SammBotNET.Core
 		private ConcurrentQueue<SocketMessage> MessageQueue = new ConcurrentQueue<SocketMessage>();
 		private bool ExecutingCommand = false;
 
-		public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services, Logger logger)
+		public CommandHandler(DiscordSocketClient Client, CommandService Commands, IServiceProvider Services, Logger Logger)
 		{
-			CommandsService = commands;
-			DiscordClient = client;
-			ServiceProvider = services;
-			BotLogger = logger;
+			CommandsService = Commands;
+			DiscordClient = Client;
+			ServiceProvider = Services;
+			BotLogger = Logger;
 
 			DiscordClient.MessageReceived += HandleCommandAsync;
 			CommandsService.CommandExecuted += OnCommandExecutedAsync;
 
-			AdminService = services.GetRequiredService<AdminService>();
+			AdminService = Services.GetRequiredService<AdminService>();
 		}
 
-		public async Task OnCommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
+		public async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
 		{
-			if (!result.IsSuccess)
+			if (!Result.IsSuccess)
 			{
-				if (result.ErrorReason == "Unknown command.")
+				if (Result.ErrorReason == "Unknown command.")
 				{
-					await context.Channel.SendMessageAsync($"Unknown command! Use the `{Settings.Instance.LoadedConfig.BotPrefix}help` command.");
+					await Context.Channel.SendMessageAsync($"Unknown command! Use the `{Settings.Instance.LoadedConfig.BotPrefix}help` command.");
 				}
 				else
 				{
-					await context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + result.ErrorReason);
+					await Context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + Result.ErrorReason);
 				}
 			}
 
@@ -58,41 +58,41 @@ namespace SammBotNET.Core
 			await HandleCommandAsync(dequeuedMessage);
 		}
 
-		public async Task HandleCommandAsync(SocketMessage messageParam)
+		public async Task HandleCommandAsync(SocketMessage ReceivedMessage)
 		{
 			if (AdminService.ChangingConfig) return;
 
-			SocketUserMessage message = messageParam as SocketUserMessage;
-			if (message == null) return;
-			if (message.Author.IsBot) return;
+			SocketUserMessage TargetMessage = ReceivedMessage as SocketUserMessage;
+			if (TargetMessage == null) return;
+			if (TargetMessage.Author.IsBot) return;
 
-			SocketCommandContext context = new SocketCommandContext(DiscordClient, message);
+			SocketCommandContext Context = new SocketCommandContext(DiscordClient, TargetMessage);
 
-			int argPos = 0;
-			if (message.Content.StartsWith($"<@{DiscordClient.CurrentUser.Id}>"))
+			int ArgumentPosition = 0;
+			if (TargetMessage.Content.StartsWith($"<@{DiscordClient.CurrentUser.Id}>"))
 			{
-				await context.Channel.SendMessageAsync($"Hi! I'm **{Settings.Instance.LoadedConfig.BotName}**!\n" +
-					$"My prefix is `{Settings.Instance.LoadedConfig.BotPrefix}`! " +
-					$"You can use `{Settings.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!");
+				await Context.Channel.SendMessageAsync($"Hi! I'm **{Settings.Instance.LoadedConfig.BotName}**!\n" +
+						$"My prefix is `{Settings.Instance.LoadedConfig.BotPrefix}`! " +
+						$"You can use `{Settings.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!");
 			}
-			else if (message.HasStringPrefix(Settings.Instance.LoadedConfig.BotPrefix, ref argPos))
+			else if (TargetMessage.HasStringPrefix(Settings.Instance.LoadedConfig.BotPrefix, ref ArgumentPosition))
 			{
-				if (message.Content.Length == Settings.Instance.LoadedConfig.BotPrefix.Length) return;
+				if (TargetMessage.Content.Length == Settings.Instance.LoadedConfig.BotPrefix.Length) return;
 				if (ExecutingCommand)
 				{
-					MessageQueue.Enqueue(messageParam);
-					await message.AddReactionAsync(new Emoji("⌛"));
+					MessageQueue.Enqueue(ReceivedMessage);
+					await TargetMessage.AddReactionAsync(new Emoji("⌛"));
 					return;
 				}
 
 				ExecutingCommand = true;
 
 				BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
-								message.Content, message.Channel.Name, message.Author.Username), LogLevel.Message);
+								TargetMessage.Content, TargetMessage.Channel.Name, TargetMessage.Author.Username), LogLevel.Message);
 
-				await CommandsService.ExecuteAsync(context, argPos, ServiceProvider);
+				await CommandsService.ExecuteAsync(Context, ArgumentPosition, ServiceProvider);
 			}
-			else await CreateQuoteAsync(message, context);
+			else await CreateQuoteAsync(TargetMessage, Context);
 		}
 
 		public async Task CreateQuoteAsync(SocketMessage Message, SocketCommandContext Context)
@@ -107,10 +107,10 @@ namespace SammBotNET.Core
 
 				using (PhrasesDB PhrasesDatabase = new PhrasesDB())
 				{
-					List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-					foreach (Phrase phrase in phrases)
+					List<Phrase> QuoteList = await PhrasesDatabase.Phrase.ToListAsync();
+					foreach (Phrase Quote in QuoteList)
 					{
-						if (Message.Content == phrase.Content) return;
+						if (Message.Content == Quote.Content) return;
 					}
 
 					await PhrasesDatabase.AddAsync(new Phrase

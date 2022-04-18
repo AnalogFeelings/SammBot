@@ -23,7 +23,7 @@ namespace SammBotNET.Modules
 		[Summary("Returns a random cat!")]
 		public async Task<RuntimeResult> GetCatAsync()
 		{
-			CatImageSearchParams searchParams = new CatImageSearchParams()
+			CatImageSearchParams SearchParameters = new CatImageSearchParams()
 			{
 				has_breeds = true,
 				mime_types = "jpg,png",
@@ -32,14 +32,14 @@ namespace SammBotNET.Modules
 				limit = 1
 			};
 
-			List<CatImage> images = await RandomService.CatRequester.GetImageAsync(searchParams);
+			List<CatImage> RetrievedImages = await RandomService.CatRequester.GetImageAsync(SearchParameters);
 
-			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"__Breed__: **{images[0].Breeds[0].Name}**" +
-				$"\n__Temperament__: *{images[0].Breeds[0].Temperament}*").ChangeTitle("Random Cat");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"__Breed__: **{RetrievedImages[0].Breeds[0].Name}**" +
+					$"\n__Temperament__: *{RetrievedImages[0].Breeds[0].Temperament}*").ChangeTitle("Random Cat");
 
-			embed.ImageUrl = images[0].Url;
+			ReplyEmbed.ImageUrl = RetrievedImages[0].Url;
 
-			await Context.Channel.SendMessageAsync("", false, embed.Build());
+			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 
 			return ExecutionResult.Succesful();
 		}
@@ -49,7 +49,7 @@ namespace SammBotNET.Modules
 		[Summary("Returns a random cat!")]
 		public async Task<RuntimeResult> GetDogAsync()
 		{
-			DogImageSearchParams searchParams = new DogImageSearchParams()
+			DogImageSearchParams SearchParameters = new DogImageSearchParams()
 			{
 				has_breeds = true,
 				mime_types = "jpg,png",
@@ -58,14 +58,14 @@ namespace SammBotNET.Modules
 				limit = 1
 			};
 
-			List<DogImage> images = await RandomService.DogRequester.GetImageAsync(searchParams);
+			List<DogImage> RetrievedImages = await RandomService.DogRequester.GetImageAsync(SearchParameters);
 
-			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"__Breed__: **{images[0].Breeds[0].Name}**" +
-				$"\n__Temperament__: *{images[0].Breeds[0].Temperament}*").ChangeTitle("Random Dog");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"__Breed__: **{RetrievedImages[0].Breeds[0].Name}**" +
+					$"\n__Temperament__: *{RetrievedImages[0].Breeds[0].Temperament}*").ChangeTitle("Random Dog");
 
-			embed.ImageUrl = images[0].Url;
+			ReplyEmbed.ImageUrl = RetrievedImages[0].Url;
 
-			await Context.Channel.SendMessageAsync("", false, embed.Build());
+			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 
 			return ExecutionResult.Succesful();
 		}
@@ -76,19 +76,19 @@ namespace SammBotNET.Modules
 		{
 			using (PeoneImagesDB PeoneDatabase = new PeoneImagesDB())
 			{
-				List<PeoneImage> peoneImages = await PeoneDatabase.PeoneImage.ToListAsync();
-			chooseImage:
-				PeoneImage selectedPeoneImage = peoneImages.PickRandom();
+				List<PeoneImage> ImageList = await PeoneDatabase.PeoneImage.ToListAsync();
+			RechooseImage:
+				PeoneImage ChosenImage = ImageList.PickRandom();
 
-				if (RandomService.RecentPeoneImages.Contains(selectedPeoneImage.TwitterUrl)) goto chooseImage;
-				RandomService.RecentPeoneImages.Push(selectedPeoneImage.TwitterUrl);
+				if (RandomService.RecentPeoneImages.Contains(ChosenImage.TwitterUrl)) goto RechooseImage;
+				RandomService.RecentPeoneImages.Push(ChosenImage.TwitterUrl);
 
-				EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Peone");
-				embed.Color = new Color(105, 219, 221);
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Peone");
+				ReplyEmbed.Color = new Color(105, 219, 221);
 
-				embed.ImageUrl = selectedPeoneImage.TwitterUrl;
+				ReplyEmbed.ImageUrl = ChosenImage.TwitterUrl;
 
-				await Context.Channel.SendMessageAsync("", false, embed.Build());
+				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 			}
 
 			return ExecutionResult.Succesful();
@@ -98,20 +98,19 @@ namespace SammBotNET.Modules
 		[Summary("Returns a random fox!")]
 		public async Task<RuntimeResult> GetFoxAsync()
 		{
-			string jsonReply = string.Empty;
+			string JsonReply = string.Empty;
 
-			using (HttpResponseMessage response = await RandomService.RandomClient.GetAsync("https://randomfox.ca/floof/"))
+			using (HttpResponseMessage HttpResponse = await RandomService.RandomClient.GetAsync("https://randomfox.ca/floof/"))
 			{
-				jsonReply = await response.Content.ReadAsStringAsync();
+				JsonReply = await HttpResponse.Content.ReadAsStringAsync();
 			}
 
-			FoxImage foxReply = JsonConvert.DeserializeObject<FoxImage>(jsonReply);
+			FoxImage RepliedImage = JsonConvert.DeserializeObject<FoxImage>(JsonReply);
 
-			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Fox");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Fox");
+			ReplyEmbed.ImageUrl = RepliedImage.ImageUrl;
 
-			embed.ImageUrl = foxReply.ImageUrl;
-
-			await Context.Channel.SendMessageAsync("", false, embed.Build());
+			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 
 			return ExecutionResult.Succesful();
 		}
@@ -120,19 +119,19 @@ namespace SammBotNET.Modules
 		[Summary("Returns a random duck!")]
 		public async Task<RuntimeResult> GetDuckAsync()
 		{
-			string jsonReply = string.Empty;
+			string JsonReply = string.Empty;
 
-			using (HttpResponseMessage response = await RandomService.RandomClient.GetAsync("https://random-d.uk/api/v2/random"))
+			using (HttpResponseMessage HttpResponse = await RandomService.RandomClient.GetAsync("https://random-d.uk/api/v2/random"))
 			{
-				jsonReply = await response.Content.ReadAsStringAsync();
+				JsonReply = await HttpResponse.Content.ReadAsStringAsync();
 			}
 
-			DuckImage duckReply = JsonConvert.DeserializeObject<DuckImage>(jsonReply);
+			DuckImage RepliedImage = JsonConvert.DeserializeObject<DuckImage>(JsonReply);
 
-			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Duck");
-			embed.ImageUrl = duckReply.ImageUrl;
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Duck");
+			ReplyEmbed.ImageUrl = RepliedImage.ImageUrl;
 
-			await Context.Channel.SendMessageAsync("", false, embed.Build());
+			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 
 			return ExecutionResult.Succesful();
 		}
@@ -141,13 +140,13 @@ namespace SammBotNET.Modules
 		[Summary("Returns a random SCP!")]
 		public async Task<RuntimeResult> GetSCPAsync()
 		{
-			int maxSCP = 6999;
-			int result = Settings.Instance.GlobalRng.Next(maxSCP + 1);
+			int MaxNumber = 6999;
+			int ChosenNumber = Settings.Instance.GlobalRng.Next(MaxNumber + 1);
 
-			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: "http://www.scp-wiki.net/scp-" + result.ToString("D3"))
-													.ChangeTitle("Random SCP");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: "http://www.scp-wiki.net/scp-" + ChosenNumber.ToString("D3"))
+														.ChangeTitle("Random SCP");
 
-			await Context.Channel.SendMessageAsync("", false, embed.Build());
+			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 
 			return ExecutionResult.Succesful();
 		}

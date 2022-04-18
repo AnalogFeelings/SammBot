@@ -9,10 +9,10 @@ namespace SammBotNET.Extensions
 	{
 		public MustRunInGuild() { }
 
-		public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context,
-																		CommandInfo command, IServiceProvider services)
+		public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext Context,
+																		CommandInfo Command, IServiceProvider Services)
 		{
-			if (context.User is SocketGuildUser)
+			if (Context.User is SocketGuildUser)
 				return Task.FromResult(PreconditionResult.FromSuccess());
 
 			return Task.FromResult(PreconditionResult.FromError("You must execute this command in a server!"));
@@ -23,10 +23,10 @@ namespace SammBotNET.Extensions
 	{
 		public BotOwnerOnly() { }
 
-		public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context,
-																		CommandInfo command, IServiceProvider services)
+		public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext Context,
+																		CommandInfo Command, IServiceProvider Services)
 		{
-			if (context.User.Id == Settings.Instance.LoadedConfig.OwnerUserId)
+			if (Context.User.Id == Settings.Instance.LoadedConfig.OwnerUserId)
 				return Task.FromResult(PreconditionResult.FromSuccess());
 
 			return Task.FromResult(PreconditionResult.FromError("You must be the bot owner to execute this command."));
@@ -44,7 +44,7 @@ namespace SammBotNET.Extensions
 	{
 		public string Emoji = string.Empty;
 
-		public ModuleEmoji(string emoji) => Emoji = emoji;
+		public ModuleEmoji(string Emoji) => this.Emoji = Emoji;
 	}
 
 	[AttributeUsage(AttributeTargets.Property)]

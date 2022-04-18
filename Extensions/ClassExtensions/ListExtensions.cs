@@ -4,9 +4,9 @@ namespace SammBotNET.Extensions
 {
 	public static class ListExtensions
 	{
-		public static T PickRandom<T>(this IList<T> items)
+		public static T PickRandom<T>(this IList<T> TargetList)
 		{
-			return items[Settings.Instance.GlobalRng.Next(items.Count)];
+			return TargetList[Settings.Instance.GlobalRng.Next(TargetList.Count)];
 		}
 	}
 }

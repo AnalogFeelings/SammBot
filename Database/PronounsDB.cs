@@ -7,11 +7,12 @@ namespace SammBotNET.Database
 	{
 		public virtual DbSet<Pronoun> Pronouns { get; set; }
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		protected override void OnConfiguring(DbContextOptionsBuilder OptionsBuilder)
 		{
-			SqliteConnectionStringBuilder cSb = new SqliteConnectionStringBuilder() { DataSource = "pronouns.db" };
-			SqliteConnection connection = new SqliteConnection(cSb.ToString());
-			optionsBuilder.UseSqlite(connection);
+			SqliteConnectionStringBuilder ConnectionStringBuilder = new SqliteConnectionStringBuilder() { DataSource = "pronouns.db" };
+			SqliteConnection Connection = new SqliteConnection(ConnectionStringBuilder.ToString());
+
+			OptionsBuilder.UseSqlite(Connection);
 		}
 	}
 }

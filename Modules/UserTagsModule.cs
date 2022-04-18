@@ -21,26 +21,27 @@ namespace SammBotNET.Modules
 
 		[Command("delete")]
 		[Alias("remove", "destroy")]
-		[MustRunInGuild]
 		[Summary("Deletes a user tag.")]
+		[MustRunInGuild]
 		public async Task<RuntimeResult> DeleteTagAsync(string Name)
 		{
 			using (TagDB TagDatabase = new TagDB())
 			{
-				List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
-				UserTag userTag = null;
+				List<UserTag> TagList = await TagDatabase.UserTag.ToListAsync();
+				UserTag RetrievedTag = null;
 
 				if (Context.Message.Author.Id == Settings.Instance.LoadedConfig.OwnerUserId)
-					userTag = userTags.SingleOrDefault(x => x.Name == Name);
+					RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name);
 				else
-					userTag = userTags.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id);
+					RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id);
 
-				if (userTag == null)
+				if (RetrievedTag == null)
 					return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
 
-				TagDatabase.Remove(userTag);
+				TagDatabase.Remove(RetrievedTag);
 				await TagDatabase.SaveChangesAsync();
 			}
+
 			await ReplyAsync("Success!");
 
 			return ExecutionResult.Succesful();
@@ -48,47 +49,48 @@ namespace SammBotNET.Modules
 
 		[Command("get")]
 		[Alias("what")]
-		[MustRunInGuild]
 		[Summary("Gets a tag by its name, and replies.")]
+		[MustRunInGuild]
 		public async Task<RuntimeResult> GetTagAsync(string Name)
 		{
 			using (TagDB TagDatabase = new TagDB())
 			{
-				List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
-				UserTag userTag = userTags.SingleOrDefault(x => x.ServerId == Context.Guild.Id && x.Name == Name);
+				List<UserTag> TagList = await TagDatabase.UserTag.ToListAsync();
+				UserTag RetrievedTag = TagList.SingleOrDefault(x => x.ServerId == Context.Guild.Id && x.Name == Name);
 
-				if (userTag == null)
+				if (RetrievedTag == null)
 					return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
 
-				await ReplyAsync(userTag.Reply);
+				await ReplyAsync(RetrievedTag.Reply);
 			}
+
 			return ExecutionResult.Succesful();
 		}
 
 		[Command("search")]
 		[Alias("find", "similar")]
-		[MustRunInGuild]
 		[Summary("Searches for similar tags.")]
+		[MustRunInGuild]
 		public async Task<RuntimeResult> SearchTagsAsync(string Name)
 		{
 			using (TagDB TagDatabase = new TagDB())
 			{
-				List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
-				List<UserTag> validTags = userTags.Where(x => x.ServerId == Context.Guild.Id &&
-						Name.DamerauLevenshteinDistance(x.Name, Settings.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
+				List<UserTag> TagList = await TagDatabase.UserTag.ToListAsync();
+				List<UserTag> FilteredTags = TagList.Where(x => x.ServerId == Context.Guild.Id &&
+							Name.DamerauLevenshteinDistance(x.Name, Settings.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
-				EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: $"All of the tags similar to \"{Name}\".")
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"All of the tags similar to \"{Name}\".")
 					.ChangeTitle("TAG RESULTS");
 
-				foreach (UserTag tag in validTags)
+				foreach (UserTag Tag in FilteredTags)
 				{
-					RestUser user = await Context.Client.Rest.GetUserAsync(tag.AuthorId);
-					string userName = user != null ? $"{user.Username}#{user.Discriminator}" : "Unknown";
+					RestUser GlobalAuthor = await Context.Client.Rest.GetUserAsync(Tag.AuthorId);
+					string userName = GlobalAuthor != null ? GlobalAuthor.GetFullUsername() : "Unknown";
 
-					embed.AddField($"`{tag.Name}`", $"By: **{userName}**");
+					ReplyEmbed.AddField($"`{Tag.Name}`", $"By: **{userName}**");
 				}
 
-				await Context.Channel.SendMessageAsync("", false, embed.Build(), messageReference: new MessageReference(Context.Message.Id));
+				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build(), messageReference: new MessageReference(Context.Message.Id));
 			}
 
 			return ExecutionResult.Succesful();
@@ -96,8 +98,8 @@ namespace SammBotNET.Modules
 
 		[Command("create")]
 		[Alias("new")]
-		[MustRunInGuild]
 		[Summary("Creates a new tag.")]
+		[MustRunInGuild]
 		public async Task<RuntimeResult> CreateTagAsync(string Name, string Reply)
 		{
 			if (Name.Length > 15)
@@ -111,20 +113,20 @@ namespace SammBotNET.Modules
 
 			using (TagDB TagDatabase = new TagDB())
 			{
-				List<UserTag> userTags = await TagDatabase.UserTag.ToListAsync();
-				userTags = userTags.Where(x => x.ServerId == Context.Guild.Id).ToList();
+				List<UserTag> TagList = await TagDatabase.UserTag.ToListAsync();
+				TagList = TagList.Where(x => x.ServerId == Context.Guild.Id).ToList();
 
-				foreach (UserTag userTag in userTags)
+				foreach (UserTag Tag in TagList)
 				{
-					if (Name == userTag.Name) return ExecutionResult.FromError($"There's already a tag called **\"{Name}\"**!");
+					if (Name == Tag.Name) return ExecutionResult.FromError($"There's already a tag called **\"{Name}\"**!");
 				}
 
-				int nextId = 0;
-				if (userTags.Count > 0) nextId = userTags.Max(x => x.Id) + 1;
+				int NextId = 0;
+				if (TagList.Count > 0) NextId = TagList.Max(x => x.Id) + 1;
 
 				await TagDatabase.AddAsync(new UserTag
 				{
-					Id = nextId,
+					Id = NextId,
 					Name = Name,
 					AuthorId = Context.Message.Author.Id,
 					ServerId = Context.Guild.Id,

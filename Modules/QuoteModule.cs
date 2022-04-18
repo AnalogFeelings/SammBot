@@ -23,18 +23,19 @@ namespace SammBotNET.Modules
 		{
 			using (PhrasesDB PhrasesDatabase = new PhrasesDB())
 			{
-				List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-				if (phrases.Count == 0) return ExecutionResult.FromError("I have no quotes in my record!");
+				List<Phrase> QuoteList = await PhrasesDatabase.Phrase.ToListAsync();
+				if (QuoteList.Count == 0) return ExecutionResult.FromError("I have no quotes in my record!");
 
-				Phrase finalPhrase = phrases.Where(x => x.ServerId == Context.Guild.Id).ToList().PickRandom();
+				List<Phrase> ServerQuotes = QuoteList.Where(x => x.ServerId == Context.Guild.Id).ToList();
+				if (ServerQuotes.Count == 0) return ExecutionResult.FromError("I have no quotes in my record!");
 
-				RestUser globalUser = await Client.Rest.GetUserAsync(finalPhrase.AuthorId);
-				string assembledAuthor = $"{globalUser.Username}#{globalUser.Discriminator}";
+				Phrase ChosenQuote = QuoteList.Where(x => x.ServerId == Context.Guild.Id).ToList().PickRandom();
+				RestUser GlobalAuthor = await Client.Rest.GetUserAsync(ChosenQuote.AuthorId);
 
-				EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-				embed.AddField($"*\"{finalPhrase.Content}\"*", $"- {assembledAuthor}, <t:{finalPhrase.CreatedAt}:D>");
-				await Context.Channel.SendMessageAsync("", false, embed.Build());
+				ReplyEmbed.AddField($"*\"{ChosenQuote.Content}\"*", $"- {GlobalAuthor.GetFullUsername()}, <t:{ChosenQuote.CreatedAt}:D>");
+				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 			}
 
 			return ExecutionResult.Succesful();
@@ -47,19 +48,18 @@ namespace SammBotNET.Modules
 		{
 			using (PhrasesDB PhrasesDatabase = new PhrasesDB())
 			{
-				List<Phrase> phrases = await PhrasesDatabase.Phrase.ToListAsync();
-				if (!phrases.Any(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id))
+				List<Phrase> QuoteList = await PhrasesDatabase.Phrase.ToListAsync();
+				if (!QuoteList.Any(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id))
 					return ExecutionResult.FromError($"This user doesn't have any phrases!");
 
-				Phrase finalPhrase = phrases.Where(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id).ToList().PickRandom();
+				Phrase ChosenQuote = QuoteList.Where(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id).ToList().PickRandom();
 
-				RestUser globalUser = await Client.Rest.GetUserAsync(finalPhrase.AuthorId);
-				string assembledAuthor = $"{globalUser.Username}#{globalUser.Discriminator}";
+				RestUser GlobalAuthor = await Client.Rest.GetUserAsync(ChosenQuote.AuthorId);
 
-				EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
-				embed.AddField($"*\"{finalPhrase.Content}\"*", $"- {assembledAuthor}, <t:{finalPhrase.CreatedAt}:D>");
-				await Context.Channel.SendMessageAsync("", false, embed.Build());
+				ReplyEmbed.AddField($"*\"{ChosenQuote.Content}\"*", $"- {GlobalAuthor.GetFullUsername()}, <t:{ChosenQuote.CreatedAt}:D>");
+				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 			}
 
 			return ExecutionResult.Succesful();

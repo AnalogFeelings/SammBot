@@ -59,35 +59,35 @@ namespace SammBotNET.Core
 
 			Console.WriteLine("Configuring Services...".Pastel("#3d9785"));
 
-			ServiceCollection services = new ServiceCollection();
-			ConfigureServices(services);
+			ServiceCollection Services = new ServiceCollection();
+			ConfigureServices(Services);
 
-			ServiceProvider provider = services.BuildServiceProvider();
-			provider.GetRequiredService<Logger>();
-			provider.GetRequiredService<CommandHandler>();
-			provider.GetRequiredService<RandomService>();
-			provider.GetRequiredService<AdminService>();
-			provider.GetRequiredService<NsfwService>();
-			provider.GetRequiredService<FunService>();
+			ServiceProvider Provider = Services.BuildServiceProvider();
+			Provider.GetRequiredService<Logger>();
+			Provider.GetRequiredService<CommandHandler>();
+			Provider.GetRequiredService<RandomService>();
+			Provider.GetRequiredService<AdminService>();
+			Provider.GetRequiredService<NsfwService>();
+			Provider.GetRequiredService<FunService>();
 
 			Console.WriteLine("Starting Startup Service...".Pastel("#3d9785"));
-			await provider.GetRequiredService<StartupService>().StartAsync();
+			await Provider.GetRequiredService<StartupService>().StartAsync();
 
 			await Task.Delay(-1);
 		}
 
-		private void ConfigureServices(IServiceCollection services)
+		private void ConfigureServices(IServiceCollection Services)
 		{
-			services.AddSingleton(SocketClient)
-			.AddSingleton(CommandService)
-			.AddSingleton<CommandHandler>()
-			.AddSingleton<StartupService>()
-			.AddSingleton<Logger>()
-			.AddSingleton<Random>()
-			.AddSingleton<RandomService>()
-			.AddSingleton<AdminService>()
-			.AddSingleton<FunService>()
-			.AddSingleton<NsfwService>();
+			Services.AddSingleton(SocketClient)
+				.AddSingleton(CommandService)
+				.AddSingleton<CommandHandler>()
+				.AddSingleton<StartupService>()
+				.AddSingleton<Logger>()
+				.AddSingleton<Random>()
+				.AddSingleton<RandomService>()
+				.AddSingleton<AdminService>()
+				.AddSingleton<FunService>()
+				.AddSingleton<NsfwService>();
 		}
 	}
 }

@@ -25,130 +25,130 @@ namespace SammBotNET.Modules
 		[Summary("Searches for posts in rule34.xxx")]
 		public async Task<RuntimeResult> SearchR34Async([Remainder] string Tags)
 		{
-			Rule34SearchParams searchParams = new Rule34SearchParams()
+			Rule34SearchParams SearchParameters = new Rule34SearchParams()
 			{
 				limit = 1000,
 				tags = Tags,
 				json = 1
 			};
 
-			List<Rule34Post> nsfwPosts = null;
-			using (Context.Channel.EnterTypingState()) nsfwPosts = await GetRule34PostsAsync(searchParams);
+			List<Rule34Post> NsfwPosts = null;
+			using (Context.Channel.EnterTypingState()) NsfwPosts = await GetRule34PostsAsync(SearchParameters);
 
-			if (nsfwPosts == null || nsfwPosts.Count == 0)
+			if (NsfwPosts == null || NsfwPosts.Count == 0)
 				return ExecutionResult.FromError("Rule34 returned no posts! Maybe one of your tags doesn't exist!");
 
-			List<Rule34Post> chosenPosts = nsfwPosts.Where(x => x.Score >= Settings.Instance.LoadedConfig.Rule34Threshold
+			List<Rule34Post> FilteredPosts = NsfwPosts.Where(x => x.Score >= Settings.Instance.LoadedConfig.Rule34Threshold
 															&& !x.FileUrl.EndsWith(".mp4")).OrderByDescending(x => x.Score).ToList();
 
-			string embedDescription = $"**Tags** : `{chosenPosts[0].Tags.Truncate(512)}`\n";
-			embedDescription += $"**Author** : `{chosenPosts[0].Owner}`\n";
-			embedDescription += $"**Score** : `{chosenPosts[0].Score}`";
+			string EmbedDescription = $"**Tags** : `{FilteredPosts[0].Tags.Truncate(512)}`\n";
+			EmbedDescription += $"**Author** : `{FilteredPosts[0].Owner}`\n";
+			EmbedDescription += $"**Score** : `{FilteredPosts[0].Score}`";
 
-			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: embedDescription);
-			embed.ChangeTitle("Rule34 Search");
-			embed.ChangeFooter(Context, $"Post 1/{chosenPosts.Count} | Requested by {Context.Message.Author.GetFullUsername()}");
-			embed.WithImageUrl(chosenPosts[0].FileUrl);
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: EmbedDescription);
+			ReplyEmbed.ChangeTitle("Rule34 Search");
+			ReplyEmbed.ChangeFooter(Context, $"Post 1/{FilteredPosts.Count} | Requested by {Context.Message.Author.GetFullUsername()}");
+			ReplyEmbed.WithImageUrl(FilteredPosts[0].FileUrl);
 
 			//My wish is that this code is so fucking horrendous that I dont have to touch paginated
 			//embeds ever fucking again.
-			IUserMessage message = await Context.Channel.SendMessageAsync("", false, embed.Build());
+			IUserMessage ReplyMessage = await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 
-			if (chosenPosts.Count > 1)
+			if (FilteredPosts.Count > 1)
 			{
-				List<Emoji> emojiList = new List<Emoji>() { new Emoji("⏮"), new Emoji("◀"), new Emoji("▶"), new Emoji("⏭"), new Emoji("❌") };
+				List<Emoji> ReactionList = new List<Emoji>() { new Emoji("⏮"), new Emoji("◀"), new Emoji("▶"), new Emoji("⏭"), new Emoji("❌") };
 
-				await message.AddReactionsAsync(emojiList.ToArray());
+				await ReplyMessage.AddReactionsAsync(ReactionList.ToArray());
 
-				int page = 0;
-				int pageMax = chosenPosts.Count;
-				Stopwatch timer = new Stopwatch();
+				int CurrentPage = 0;
+				int MaxPage = FilteredPosts.Count;
+				Stopwatch Timer = new Stopwatch();
 
-				timer.Start();
-				while (timer.ElapsedMilliseconds <= 10000)
+				Timer.Start();
+				while (Timer.ElapsedMilliseconds <= 10000)
 				{
 					try
 					{
-						foreach (Emoji emoji in emojiList)
+						foreach (Emoji Reaction in ReactionList)
 						{
-							IEnumerable<IUser> userEnumerable = await message.GetReactionUsersAsync(emoji, 4).FlattenAsync();
-							List<IUser> userList = userEnumerable.ToList();
-							if (userList.Count < 2) continue;
+							IEnumerable<IUser> UserEnumerable = await ReplyMessage.GetReactionUsersAsync(Reaction, 4).FlattenAsync();
+							List<IUser> UserList = UserEnumerable.ToList();
+							if (UserList.Count < 2) continue;
 
-							if (!userList.Any(x => x.Id == Context.Message.Author.Id))
+							if (!UserList.Any(x => x.Id == Context.Message.Author.Id))
 							{
-								foreach (IUser user in userList)
+								foreach (IUser User in UserList)
 								{
-									await message.RemoveReactionAsync(emoji, user);
+									await ReplyMessage.RemoveReactionAsync(Reaction, User);
 								}
 								continue;
 							}
 							else
 							{
-								switch (emoji.Name)
+								switch (Reaction.Name)
 								{
 									case "⏮":
-										page = 0;
+										CurrentPage = 0;
 										break;
 									case "◀":
-										if (page != 0) page--;
+										if (CurrentPage != 0) CurrentPage--;
 										break;
 									case "▶":
-										if (page < pageMax) page++;
+										if (CurrentPage < MaxPage) CurrentPage++;
 										break;
 									case "⏭":
-										page = pageMax - 1;
+										CurrentPage = MaxPage - 1;
 										break;
 									case "❌":
-										timer.Stop();
-										await message.RemoveAllReactionsAsync();
+										Timer.Stop();
+										await ReplyMessage.RemoveAllReactionsAsync();
 										return ExecutionResult.Succesful();
 									default:
 										break;
 								}
-								embedDescription = $"**Tags** : `{chosenPosts[page].Tags.Truncate(512)}`\n";
-								embedDescription += $"**Author** : `{chosenPosts[page].Owner}`\n";
-								embedDescription += $"**Score** : `{chosenPosts[page].Score}`";
+								EmbedDescription = $"**Tags** : `{FilteredPosts[CurrentPage].Tags.Truncate(512)}`\n";
+								EmbedDescription += $"**Author** : `{FilteredPosts[CurrentPage].Owner}`\n";
+								EmbedDescription += $"**Score** : `{FilteredPosts[CurrentPage].Score}`";
 
-								embed.WithDescription(embedDescription);
-								embed.WithImageUrl(chosenPosts[page].FileUrl);
+								ReplyEmbed.WithDescription(EmbedDescription);
+								ReplyEmbed.WithImageUrl(FilteredPosts[CurrentPage].FileUrl);
 
-								embed.ChangeFooter(Context, $"Post {page + 1}/{pageMax} | Requested by {Context.Message.Author.GetFullUsername()}");
+								ReplyEmbed.ChangeFooter(Context, $"Post {CurrentPage + 1}/{MaxPage} | Requested by {Context.Message.Author.GetFullUsername()}");
 
-								await message.ModifyAsync(y => y.Embed = embed.Build());
-								await message.RemoveReactionAsync(emoji, Context.Message.Author);
+								await ReplyMessage.ModifyAsync(y => y.Embed = ReplyEmbed.Build());
+								await ReplyMessage.RemoveReactionAsync(Reaction, Context.Message.Author);
 
-								timer.Restart();
+								Timer.Restart();
 							}
 						}
 					}
 					catch (Exception ex)
 					{
 						BotLogger.LogException(ex);
-						await message.RemoveAllReactionsAsync();
+						await ReplyMessage.RemoveAllReactionsAsync();
 						return ExecutionResult.FromError(ex.Message);
 					}
 				}
-				timer.Stop();
-				await message.RemoveAllReactionsAsync();
+				Timer.Stop();
+				await ReplyMessage.RemoveAllReactionsAsync();
 			}
 
 			return ExecutionResult.Succesful();
 		}
 
-		public async Task<List<Rule34Post>> GetRule34PostsAsync(Rule34SearchParams searchParams)
+		public async Task<List<Rule34Post>> GetRule34PostsAsync(Rule34SearchParams SearchParameters)
 		{
-			string queryString = searchParams.ToQueryString();
-			string jsonReply = string.Empty;
+			string QueryString = SearchParameters.ToQueryString();
+			string JsonReply = string.Empty;
 
-			using (HttpResponseMessage response = await NsfwService.NsfwClient.GetAsync($"index.php?page=dapi&s=post&q=index&{queryString}"))
+			using (HttpResponseMessage HttpResponse = await NsfwService.NsfwClient.GetAsync($"index.php?page=dapi&s=post&q=index&{QueryString}"))
 			{
-				jsonReply = await response.Content.ReadAsStringAsync();
+				JsonReply = await HttpResponse.Content.ReadAsStringAsync();
 			}
 
-			List<Rule34Post> postsReply = JsonConvert.DeserializeObject<List<Rule34Post>>(jsonReply);
+			List<Rule34Post> RetrievedPosts = JsonConvert.DeserializeObject<List<Rule34Post>>(JsonReply);
 
-			return postsReply;
+			return RetrievedPosts;
 		}
 	}
 }

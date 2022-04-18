@@ -8,9 +8,9 @@ namespace SammBotNET.Extensions
 
 		public AutodeqList(int MaxSize) => this.MaxSize = MaxSize;
 
-		public void Push(T item)
+		public void Push(T Item)
 		{
-			this.AddFirst(item);
+			this.AddFirst(Item);
 
 			if (this.Count > MaxSize) this.RemoveLast();
 		}

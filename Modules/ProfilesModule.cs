@@ -39,13 +39,13 @@ namespace SammBotNET.Modules
 
 					if (AllPronouns.Any(x => x.UserId == Context.Message.Author.Id))
 					{
-						Pronoun existingPronouns = AllPronouns.Single(y => y.UserId == Context.Message.Author.Id);
-						existingPronouns.Subject = Subject;
-						existingPronouns.Object = Object;
-						existingPronouns.DependentPossessive = DependentPossessive;
-						existingPronouns.IndependentPossessive = IndependentPossessive;
-						existingPronouns.ReflexiveSingular = ReflexiveSingular;
-						existingPronouns.ReflexivePlural = ReflexivePlural;
+						Pronoun ExistingPronouns = AllPronouns.Single(y => y.UserId == Context.Message.Author.Id);
+						ExistingPronouns.Subject = Subject;
+						ExistingPronouns.Object = Object;
+						ExistingPronouns.DependentPossessive = DependentPossessive;
+						ExistingPronouns.IndependentPossessive = IndependentPossessive;
+						ExistingPronouns.ReflexiveSingular = ReflexiveSingular;
+						ExistingPronouns.ReflexivePlural = ReflexivePlural;
 					}
 					else
 					{
@@ -74,7 +74,7 @@ namespace SammBotNET.Modules
 		[Summary("Get the pronouns of a user!")]
 		public async Task<RuntimeResult> GetPronounsAsync(SocketGuildUser User = null)
 		{
-			SocketGuildUser userHolder = User ?? Context.Message.Author as SocketGuildUser;
+			SocketGuildUser TargetUser = User ?? Context.Message.Author as SocketGuildUser;
 
 			using (Context.Channel.EnterTypingState())
 			{
@@ -82,15 +82,15 @@ namespace SammBotNET.Modules
 				{
 					List<Pronoun> AllPronouns = await PronounsDatabase.Pronouns.ToListAsync();
 
-					if (AllPronouns.Any(x => x.UserId == userHolder.Id))
+					if (AllPronouns.Any(x => x.UserId == TargetUser.Id))
 					{
-						Pronoun existingPronouns = AllPronouns.Single(y => y.UserId == userHolder.Id);
-						string concatenatedPronouns = $"{existingPronouns.Subject}/{existingPronouns.Object}";
+						Pronoun ExistingPronouns = AllPronouns.Single(y => y.UserId == TargetUser.Id);
+						string FormattedPronouns = $"{ExistingPronouns.Subject}/{ExistingPronouns.Object}";
 
-						await ReplyAsync($"**{userHolder.GetUsernameOrNick()}**'s pronouns are: `{concatenatedPronouns}`.");
+						await ReplyAsync($"**{TargetUser.GetUsernameOrNick()}**'s pronouns are: `{FormattedPronouns}`.");
 					}
 					else
-						return ExecutionResult.FromError($"The user **{userHolder.GetUsernameOrNick()}** does not have any pronouns set!");
+						return ExecutionResult.FromError($"The user **{TargetUser.GetUsernameOrNick()}** does not have any pronouns set!");
 				}
 			}
 

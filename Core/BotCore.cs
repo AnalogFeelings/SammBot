@@ -32,8 +32,8 @@ namespace SammBotNET.Core
 		{
 			if (!File.Exists(ConfigFile)) return false;
 
-			string configFileContent = File.ReadAllText(ConfigFile);
-			LoadedConfig = JsonConvert.DeserializeObject<JsonConfig>(configFileContent);
+			string ConfigContent = File.ReadAllText(ConfigFile);
+			LoadedConfig = JsonConvert.DeserializeObject<JsonConfig>(ConfigContent);
 			UrlRegex = new Regex(LoadedConfig.UrlRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 			return true;
@@ -41,21 +41,23 @@ namespace SammBotNET.Core
 
 		public void RestartBot()
 		{
-			string restartTimeoutCmd = $"/C timeout 3 && {Environment.ProcessPath}";
-			string restartFileCmd = "cmd.exe";
+			string TimeoutCommand = $"/C timeout 3 && {Environment.ProcessPath}";
+			string ExecutableCommand = "cmd.exe";
+
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 			{
-				restartTimeoutCmd = $"-c \"sleep 3s && {Environment.ProcessPath}\"";
-				restartFileCmd = "bash";
+				TimeoutCommand = $"-c \"sleep 3s && {Environment.ProcessPath}\"";
+				ExecutableCommand = "bash";
 			}
 
-			ProcessStartInfo startInfo = new ProcessStartInfo()
+			ProcessStartInfo StartInfo = new ProcessStartInfo()
 			{
-				Arguments = restartTimeoutCmd,
-				FileName = restartFileCmd,
+				Arguments = TimeoutCommand,
+				FileName = ExecutableCommand,
 				CreateNoWindow = true
 			};
-			Process.Start(startInfo);
+			Process.Start(StartInfo);
+
 			Environment.Exit(0);
 		}
 
@@ -63,8 +65,8 @@ namespace SammBotNET.Core
 		{
 			if (!File.Exists(StatusFile)) return false;
 
-			string statusFileContent = File.ReadAllText(StatusFile);
-			StatusList = JsonConvert.DeserializeObject<List<BotStatus>>(statusFileContent);
+			string StatusContent = File.ReadAllText(StatusFile);
+			StatusList = JsonConvert.DeserializeObject<List<BotStatus>>(StatusContent);
 
 			return true;
 		}

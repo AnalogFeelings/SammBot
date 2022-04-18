@@ -134,7 +134,7 @@ namespace SammBotNET.Modules
 			embedDescription += $"**Thumbs Up** : {selectedDefinition.ThumbsUp}\n";
 			embedDescription += $"**Thumbs Down** : {selectedDefinition.ThumbsDown}\n";
 
-			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, description: embedDescription);
+			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: embedDescription);
 			embed.ChangeTitle($"URBAN DEFINITION OF \"{selectedDefinition.Word}\"");
 			embed.WithUrl(selectedDefinition.Permalink);
 

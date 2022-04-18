@@ -4,9 +4,9 @@ namespace SammBotNET.Extensions
 {
 	public class ExecutionResult : RuntimeResult
 	{
-		public ExecutionResult(CommandError? error, string reason) : base(error, reason) { }
-		public static ExecutionResult FromError(string reason) =>
-			new(CommandError.Unsuccessful, reason);
+		public ExecutionResult(CommandError? Error, string Reason) : base(Error, Reason) { }
+		public static ExecutionResult FromError(string Reason) =>
+			new(CommandError.Unsuccessful, Reason);
 		public static ExecutionResult Succesful() =>
 			new(null, "Execution succesful.");
 	}

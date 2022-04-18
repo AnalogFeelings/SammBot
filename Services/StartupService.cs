@@ -39,10 +39,10 @@ namespace SammBotNET.Services
 			{
 				StatusTimer = new Timer(async _ =>
 				{
-					BotStatus status = Settings.Instance.StatusList.PickRandom();
+					BotStatus ChosenStatus = Settings.Instance.StatusList.PickRandom();
 
-					await SocketClient.SetGameAsync(status.Content,
-						status.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)status.Type);
+					await SocketClient.SetGameAsync(ChosenStatus.Content,
+						ChosenStatus.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)ChosenStatus.Type);
 				}, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 			}
 
@@ -50,27 +50,28 @@ namespace SammBotNET.Services
 			{
 				AvatarTimer = new Timer(async _ =>
 				{
-					List<string> avatarFiles = Directory.EnumerateFiles("Avatars").ToList();
+					List<string> AvatarList = Directory.EnumerateFiles("Avatars").ToList();
 
-					if (avatarFiles.Count < 2) return;
+					if (AvatarList.Count < 2) return;
 
-					string chosenAvatar = avatarFiles.PickRandom();
-					BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(chosenAvatar)}\".", LogLevel.Message);
-					using (FileStream fileStream = new(chosenAvatar, FileMode.Open))
+					string ChosenAvatar = AvatarList.PickRandom();
+					BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogLevel.Message);
+
+					using (FileStream AvatarStream = new(ChosenAvatar, FileMode.Open))
 					{
-						Image profilePic = new Image(fileStream);
+						Image LoadedAvatar = new Image(AvatarStream);
 
-						await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = profilePic);
+						await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = LoadedAvatar);
 					}
 				}, null, TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime), TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime));
 			}
 
 			RngResetTimer = new Timer(_ =>
 			{
-				int hash = Guid.NewGuid().GetHashCode();
+				int NewHash = Guid.NewGuid().GetHashCode();
 
-				Settings.Instance.GlobalRng = new Random(hash);
-				BotLogger.Log($"Regenerated RNG instance with hash {hash}.", LogLevel.Message);
+				Settings.Instance.GlobalRng = new Random(NewHash);
+				BotLogger.Log($"Regenerated RNG instance with hash {NewHash}.", LogLevel.Message);
 
 			}, null, TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime),
 					 TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime));
@@ -100,10 +101,10 @@ namespace SammBotNET.Services
 			await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
 			Settings.Instance.StartupStopwatch.Stop();
 
-			string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString();
+			string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString();
 
 			Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel(Color.LightSteelBlue));
-			Console.WriteLine($"----------Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {discordNetVersion}----------".Pastel(Color.CornflowerBlue));
+			Console.WriteLine($"----------Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}----------".Pastel(Color.CornflowerBlue));
 			Console.WriteLine();
 
 			Settings.Instance.RuntimeStopwatch.Start();
