@@ -112,7 +112,7 @@ namespace SammBotNET.Services
 
 			Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel(Color.LightSteelBlue));
 			Console.Write("==========".Pastel(Color.CadetBlue));
-			Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}".Pastel(Color.LightBlue));
+			Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}".Pastel(Color.LightCyan));
 			Console.WriteLine("==========".Pastel(Color.CadetBlue));
 			Console.WriteLine();
 
