@@ -127,6 +127,7 @@ namespace SammBotNET.Modules
 				{
 					CommandParameters += $"[**{ParameterInfo.Type.Name}**] `{ParameterInfo.Name}`";
 					if (ParameterInfo.IsOptional) CommandParameters += " (OPTIONAL)";
+					if (ParameterInfo.IsRemainder) CommandParameters += " (REMAINDER)";
 					CommandParameters += "\n";
 				}
 
