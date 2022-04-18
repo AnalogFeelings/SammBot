@@ -86,7 +86,7 @@ namespace SammBotNET.Modules
 				}
 
 				if(!FoundCommand)
-					return ExecutionResult.FromError($"The module {ModuleInfo.Name} has no commands, or you don't have enough permissions to see them.");
+					return ExecutionResult.FromError($"The module \"{ModuleInfo.Name}\" has no commands, or you don't have enough permissions to see them.");
 
 				await ReplyAsync("", false, ReplyEmbed.Build());
 			}
