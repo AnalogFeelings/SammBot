@@ -25,12 +25,16 @@ namespace SammBotNET.Services
 		public Timer RngResetTimer;
 		public Timer AvatarTimer;
 
+		public AutodeqList<string> RecentAvatars;
+
 		public StartupService(IServiceProvider provider, DiscordSocketClient client, CommandService command, Logger logger)
 		{
 			ServiceProvider = provider;
 			SocketClient = client;
 			CommandsService = command;
 			BotLogger = logger;
+
+			RecentAvatars = new AutodeqList<string>(Settings.Instance.LoadedConfig.AvatarRecentQueueSize);
 		}
 
 		public Task Ready()
@@ -51,10 +55,11 @@ namespace SammBotNET.Services
 				AvatarTimer = new Timer(async _ =>
 				{
 					List<string> AvatarList = Directory.EnumerateFiles("Avatars").ToList();
-
 					if (AvatarList.Count < 2) return;
 
-					string ChosenAvatar = AvatarList.PickRandom();
+					List<string> FilteredList = AvatarList.Except(RecentAvatars).ToList();
+
+					string ChosenAvatar = FilteredList.PickRandom();
 					BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogLevel.Message);
 
 					using (FileStream AvatarStream = new(ChosenAvatar, FileMode.Open))
@@ -63,6 +68,8 @@ namespace SammBotNET.Services
 
 						await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = LoadedAvatar);
 					}
+
+					RecentAvatars.Push(ChosenAvatar);
 				}, null, TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime), TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime));
 			}
 
