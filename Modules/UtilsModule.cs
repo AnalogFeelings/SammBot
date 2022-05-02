@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Rest;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
@@ -54,8 +53,8 @@ namespace SammBotNET.Modules
 
 		[Command("avatar")]
 		[Alias("pfp", "pic", "userpic")]
-		[Summary("Gets the avatar of a user. The target user doesn't need to be inside the guild.")]
-		public async Task<RuntimeResult> GetProfilePicAsync(RestUser User)
+		[Summary("Gets the avatar of a user.")]
+		public async Task<RuntimeResult> GetProfilePicAsync(IUser User)
 		{
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle($"{User.Username}'s Profile Picture");
 
