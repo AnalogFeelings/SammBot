@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace SammBotNET.Extensions
 {
@@ -7,6 +8,20 @@ namespace SammBotNET.Extensions
 		public static string Truncate(this string TargetString, int MaxCharacters)
 		{
 			return TargetString.Length <= MaxCharacters ? TargetString : TargetString.Substring(0, MaxCharacters) + "...";
+		}
+
+		public static string CountryCodeToFlag(this string CountryCode)
+		{
+			return string.Concat(CountryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
+		}
+
+		public static string CapitalizeFirst(this string Target)
+		{
+			if (string.IsNullOrEmpty(Target)) throw new ArgumentException("Target string is null or empty.");
+
+			string Result = char.ToUpper(Target.First()) + Target.Substring(1).ToLower();
+
+			return Result;
 		}
 
 		//Thanks Joshua Honig from StackOverflow :)
