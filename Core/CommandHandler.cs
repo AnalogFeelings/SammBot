@@ -1,12 +1,12 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Core
@@ -19,6 +19,8 @@ namespace SammBotNET.Core
 
 		public AdminService AdminService { get; set; }
 		public CommandService CommandsService { get; set; }
+
+		private List<MessageHook> HookList = new List<MessageHook>();
 
 		private ConcurrentQueue<SocketMessage> MessageQueue = new ConcurrentQueue<SocketMessage>();
 		private bool ExecutingCommand = false;
@@ -34,6 +36,9 @@ namespace SammBotNET.Core
 			CommandsService.CommandExecuted += OnCommandExecutedAsync;
 
 			AdminService = Services.GetRequiredService<AdminService>();
+
+			HookList = ReflectionEnumerator.GetChildrenOfType<MessageHook>()
+				.Where(x => x.GetType().GetCustomAttribute(typeof(RegisterHook), false) != null).ToList();
 		}
 
 		public async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
@@ -92,40 +97,17 @@ namespace SammBotNET.Core
 
 				await CommandsService.ExecuteAsync(Context, ArgumentPosition, ServiceProvider);
 			}
-			else await CreateQuoteAsync(TargetMessage, Context);
-		}
 
-		public async Task CreateQuoteAsync(SocketMessage Message, SocketCommandContext Context)
-		{
-			try
+			if (!TargetMessage.Content.StartsWith(Settings.Instance.LoadedConfig.BotPrefix))
 			{
-				if (Message.Content.Length < 20 || Message.Content.Length > 64) return;
-				if (Message.Attachments.Count > 0 && Message.Content.Length == 0) return;
-				if (Message.MentionedUsers.Count > 0) return;
-				if (Settings.Instance.UrlRegex.IsMatch(Message.Content)) return;
-				if (Settings.Instance.LoadedConfig.BannedPrefixes.Any(x => Message.Content.StartsWith(x))) return;
-
-				using (PhrasesDB PhrasesDatabase = new PhrasesDB())
+				foreach (MessageHook Hook in HookList)
 				{
-					List<Phrase> QuoteList = await PhrasesDatabase.Phrase.ToListAsync();
-					foreach (Phrase Quote in QuoteList)
-					{
-						if (Message.Content == Quote.Content) return;
-					}
+					Hook.Message = TargetMessage;
+					Hook.Context = Context;
+					Hook.BotLogger = BotLogger;
 
-					await PhrasesDatabase.AddAsync(new Phrase
-					{
-						Content = Message.Content,
-						AuthorId = Message.Author.Id,
-						ServerId = Context.Guild.Id,
-						CreatedAt = Message.Timestamp.ToUnixTimeSeconds()
-					});
-					await PhrasesDatabase.SaveChangesAsync();
+					_ = Task.Run(() => Hook.ExecuteHook());
 				}
-			}
-			catch (Exception ex)
-			{
-				BotLogger.LogException(ex);
 			}
 		}
 	}
