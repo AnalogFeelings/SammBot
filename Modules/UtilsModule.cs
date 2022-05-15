@@ -81,7 +81,7 @@ namespace SammBotNET.Modules
 		public async Task<RuntimeResult> GetWeatherAsync([Remainder] string City)
 		{
 			List<Location> RetrievedLocations = await GetWeatherLocationsAsync(City);
-			if(RetrievedLocations.Count == 0)
+			if (RetrievedLocations.Count == 0)
 				return ExecutionResult.FromError("That location does not exist.");
 
 			Location FinalLocation = RetrievedLocations.First();
@@ -126,12 +126,12 @@ namespace SammBotNET.Modules
 
 			float Cloudiness = RetrievedWeather.Clouds.Cloudiness;
 
-			float Temperature = RetrievedWeather.Information.Temperature;
-			float TemperatureMax = RetrievedWeather.Information.MaximumTemperature;
-			float TemperatureMin = RetrievedWeather.Information.MinimumTemperature;
-			float FeelsLike = RetrievedWeather.Information.FeelsLike;
+			float Temperature = RetrievedWeather.Information.Temperature.RoundTo(1);
+			float TemperatureMax = RetrievedWeather.Information.MaximumTemperature.RoundTo(1);
+			float TemperatureMin = RetrievedWeather.Information.MinimumTemperature.RoundTo(1);
+			float FeelsLike = RetrievedWeather.Information.FeelsLike.RoundTo(1);
 
-			float Pressure = RetrievedWeather.Information.Pressure;
+			float Pressure = RetrievedWeather.Information.Pressure.RoundTo(2);
 			float Humidity = RetrievedWeather.Information.Humidity;
 
 			float WindSpeed = RetrievedWeather.Wind.Speed.MpsToKmh();
@@ -158,6 +158,7 @@ namespace SammBotNET.Modules
 			EmbedDescription += $"🧭 Wind direction: **{WindDirection}**°\n";
 			EmbedDescription += $"🌬 Wind gust: **{WindGust}**km/h, **{WindGust.KmhToMph()}**mph\n\n";
 
+			EmbedDescription += "⚠️ **Sunrise and sunset times are adjusted to your timezone.**\n";
 			EmbedDescription += $"🌅 Sunrise: <t:{Sunrise}:t>\n";
 			EmbedDescription += $"🌇 Sunset: <t:{Sunset}:t>\n";
 

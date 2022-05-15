@@ -88,7 +88,7 @@ namespace SammBotNET.Core
 				ExecutingCommand = true;
 
 				BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
-								TargetMessage.Content, TargetMessage.Channel.Name, TargetMessage.Author.Username), LogLevel.Message);
+								TargetMessage.Content, TargetMessage.Channel.Name, TargetMessage.Author.Username), LogSeverity.Information);
 
 				await CommandsService.ExecuteAsync(Context, ArgumentPosition, ServiceProvider);
 			}

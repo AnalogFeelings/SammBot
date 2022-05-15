@@ -63,7 +63,7 @@ namespace SammBotNET.Modules
 		public async Task<RuntimeResult> ShutdownAsync()
 		{
 			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will shut down.");
-			Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will shut down.\n\n", LogLevel.Warning);
+			Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will shut down.\n\n", LogSeverity.Warning);
 
 			Environment.Exit(0);
 
@@ -77,7 +77,7 @@ namespace SammBotNET.Modules
 		public async Task<RuntimeResult> RestartAsync()
 		{
 			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.");
-			Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will restart.\n\n", LogLevel.Warning);
+			Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will restart.\n\n", LogSeverity.Warning);
 
 			Settings.Instance.RestartBot();
 

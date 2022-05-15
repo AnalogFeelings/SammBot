@@ -46,14 +46,14 @@ namespace SammBotNET.Core
 
 			SocketClient = new DiscordSocketClient(new DiscordSocketConfig
 			{
-				LogLevel = LogSeverity.Warning,
+				LogLevel = Discord.LogSeverity.Warning,
 				MessageCacheSize = 2000,
 				AlwaysDownloadUsers = true,
 				GatewayIntents = GatewayIntents.All
 			});
 			CommandService = new CommandService(new CommandServiceConfig
 			{
-				LogLevel = LogSeverity.Info,
+				LogLevel = Discord.LogSeverity.Info,
 				DefaultRunMode = RunMode.Async,
 			});
 

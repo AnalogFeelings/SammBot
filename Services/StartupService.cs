@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Figgle;
+using Matcha;
 using Pastel;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace SammBotNET.Services
 					List<string> FilteredList = AvatarList.Except(RecentAvatars).ToList();
 
 					string ChosenAvatar = FilteredList.PickRandom();
-					BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogLevel.Message);
+					BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogSeverity.Information);
 
 					using (FileStream AvatarStream = new(ChosenAvatar, FileMode.Open))
 					{
@@ -78,7 +79,7 @@ namespace SammBotNET.Services
 				int NewHash = Guid.NewGuid().GetHashCode();
 
 				Settings.Instance.GlobalRng = new Random(NewHash);
-				BotLogger.Log($"Regenerated RNG instance with hash {NewHash}.", LogLevel.Message);
+				BotLogger.Log($"Regenerated RNG instance with hash {NewHash}.", LogSeverity.Information);
 
 			}, null, TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime),
 					 TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime));
@@ -88,17 +89,17 @@ namespace SammBotNET.Services
 
 		public async Task StartAsync()
 		{
-			BotLogger.Log("Logging in as a bot...", LogLevel.Message);
+			BotLogger.Log("Logging in as a bot...", LogSeverity.Information);
 			await SocketClient.LoginAsync(TokenType.Bot, Settings.Instance.LoadedConfig.BotToken);
 			await SocketClient.StartAsync();
-			BotLogger.Log("Succesfully connected to web socket.", LogLevel.Message);
+			BotLogger.Log("Succesfully connected to web socket.", LogSeverity.Information);
 
 			if (Settings.Instance.LoadedConfig.RotatingStatus)
 			{
-				BotLogger.Log("Loading rotating status list...", LogLevel.Message);
+				BotLogger.Log("Loading rotating status list...", LogSeverity.Information);
 				if (!Settings.Instance.LoadStatuses())
 				{
-					BotLogger.Log($"Could not load {Settings.Instance.StatusFile} correctly.", LogLevel.Error);
+					BotLogger.Log($"Could not load {Settings.Instance.StatusFile} correctly.", LogSeverity.Error);
 				}
 			}
 
@@ -109,6 +110,7 @@ namespace SammBotNET.Services
 			Settings.Instance.StartupStopwatch.Stop();
 
 			string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString();
+			string MatchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString();
 
 			Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel(Color.SkyBlue));
 			Console.Write("==========".Pastel(Color.CadetBlue));
@@ -118,8 +120,10 @@ namespace SammBotNET.Services
 
 			Settings.Instance.RuntimeStopwatch.Start();
 
+			BotLogger.Log($"Using MatchaLogger {MatchaVersion}.", LogSeverity.Information);
+
 			BotLogger.Log($"{Settings.Instance.LoadedConfig.BotName} took" +
-				$" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogLevel.Message);
+				$" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
 		}
 	}
 }
