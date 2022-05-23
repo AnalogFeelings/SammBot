@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using Newtonsoft.Json;
 using SammBotNET.Extensions.ClassExtensions;
 using System.Collections.Generic;
@@ -63,15 +64,40 @@ namespace SammBotNET.Modules
 		[Summary("Gets the avatar of a user.")]
 		public async Task<RuntimeResult> GetProfilePicAsync(IUser User)
 		{
-			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle($"{User.Username}'s Profile Picture");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-			string UserAvatar = User.GetAvatarUrl(size: 2048);
-			if (UserAvatar == null)
-				return ExecutionResult.FromError("This user does not have an avatar!");
+			if(Context.User is SocketGuildUser)
+			{
+				SocketGuildUser Target = User as SocketGuildUser;
 
-			ReplyEmbed.ImageUrl = UserAvatar;
+				ReplyEmbed.ChangeTitle($"{Target.Username}'s Profile Picture");
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+				string GlobalAvatar = Target.GetAvatarUrl(size: 2048);
+				if(GlobalAvatar != null)
+				{
+					ReplyEmbed.Description = $"[Global Profile Picture]({GlobalAvatar})";
+				}
+
+				string UserAvatar = Target.GetGuildAvatarUrl(size: 2048);
+				if (UserAvatar == null)
+					return ExecutionResult.FromError("This user does not have an avatar!");
+
+				ReplyEmbed.ImageUrl = UserAvatar;
+
+				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			}
+			else
+			{
+				ReplyEmbed.ChangeTitle($"{User.Username}'s Profile Picture");
+
+				string UserAvatar = User.GetAvatarUrl(size: 2048);
+				if (UserAvatar == null)
+					return ExecutionResult.FromError("This user does not have an avatar!");
+
+				ReplyEmbed.ImageUrl = UserAvatar;
+
+				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			}
 
 			return ExecutionResult.Succesful();
 		}

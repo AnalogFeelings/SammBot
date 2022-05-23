@@ -21,8 +21,8 @@ namespace SammBotNET.Modules
 
 		[Command("r34")]
 		[Alias("rule34")]
-		[RequireNsfw]
 		[Summary("Searches for posts in rule34.xxx")]
+		[RequireNsfw]
 		public async Task<RuntimeResult> SearchR34Async([Remainder] string Tags)
 		{
 			Rule34SearchParams SearchParameters = new Rule34SearchParams()

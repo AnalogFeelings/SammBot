@@ -17,7 +17,7 @@ namespace SammBotNET.Extensions
 			Builder.Title = $"{BotName.ToUpper()} {Title.ToUpper()}";
 			Builder.Description = Description;
 
-			Builder.WithFooter(footer => { footer.Text = $"Requested by {Context.Message.Author.GetFullUsername()}"; footer.IconUrl = Context.Client.CurrentUser.GetAvatarUrl(); });
+			Builder.WithFooter(footer => { footer.Text = $"Requested by {Context.Message.Author.GetFullUsername()}"; footer.IconUrl = Context.Message.Author.GetGuildAvatarGlobalOrDefault(); });
 			Builder.WithCurrentTimestamp();
 
 			return Builder;

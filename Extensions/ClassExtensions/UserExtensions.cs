@@ -14,6 +14,14 @@ namespace SammBotNET.Extensions
 			return User.GetAvatarUrl() ?? User.GetDefaultAvatarUrl();
 		}
 
+		public static string GetGuildAvatarGlobalOrDefault(this SocketUser User)
+		{
+			if (User is SocketGuildUser Target)
+				return Target.GetGuildAvatarUrl() ?? Target.GetAvatarOrDefault();
+
+			return User.GetAvatarOrDefault();
+		}
+
 		public static string GetUsernameOrNick(this SocketGuildUser User)
 		{
 			return User.Nickname ?? User.Username;
