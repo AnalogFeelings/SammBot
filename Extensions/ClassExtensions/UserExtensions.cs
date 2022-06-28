@@ -9,17 +9,22 @@ namespace SammBotNET.Extensions
 {
 	public static class UserExtensions
 	{
-		public static string GetAvatarOrDefault(this SocketUser User)
+		public static string GetAvatarOrDefault(this SocketUser User, ushort Size)
 		{
-			return User.GetAvatarUrl() ?? User.GetDefaultAvatarUrl();
+			return User.GetAvatarUrl(size: Size) ?? User.GetDefaultAvatarUrl();
 		}
 
-		public static string GetGuildAvatarGlobalOrDefault(this SocketUser User)
+		public static string GetGuildOrGlobalAvatar(this SocketGuildUser User, ushort Size)
+		{
+			return User.GetGuildAvatarUrl(size: Size) ?? User.GetAvatarUrl(size: Size);
+		}
+
+		public static string GetGuildGlobalOrDefaultAvatar(this SocketUser User, ushort Size)
 		{
 			if (User is SocketGuildUser Target)
-				return Target.GetGuildAvatarUrl() ?? Target.GetAvatarOrDefault();
+				return Target.GetGuildAvatarUrl(size: Size) ?? Target.GetAvatarOrDefault(Size);
 
-			return User.GetAvatarOrDefault();
+			return User.GetAvatarOrDefault(Size);
 		}
 
 		public static string GetUsernameOrNick(this SocketGuildUser User)

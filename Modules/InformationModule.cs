@@ -112,7 +112,7 @@ namespace SammBotNET.Modules
 		{
 			SocketGuildUser TargetUser = User ?? Context.Message.Author as SocketGuildUser;
 
-			string UserAvatar = TargetUser.GetAvatarOrDefault();
+			string UserAvatar = TargetUser.GetAvatarOrDefault(2048);
 			string UserName = $"{TargetUser.Username}";
 			string UserDiscriminator = $"#{TargetUser.Discriminator}";
 			string UserNickname = TargetUser.Nickname ?? "None";
