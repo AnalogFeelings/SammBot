@@ -40,17 +40,17 @@
     <PackageReference Include="Discord.Net" Version="3.7.2" />
     <PackageReference Include="Figgle" Version="0.4.0" />
     <PackageReference Include="MatchaLogger" Version="1.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Pastel" Version="3.0.0" />
+    <PackageReference Include="Pastel" Version="3.0.1" />
     <PackageReference Include="SharpCat" Version="1.0.0" />
   </ItemGroup>
 
