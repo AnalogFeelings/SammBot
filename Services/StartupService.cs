@@ -109,13 +109,15 @@ namespace SammBotNET.Services
 			await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
 			Settings.Instance.StartupStopwatch.Stop();
 
-			string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString();
-			string MatchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString();
+			Console.Title = $"Samm-Bot {Settings.Instance.LoadedConfig.BotVersion}";
+
+			string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
+			string MatchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
 
 			Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel(Color.SkyBlue));
-			Console.Write("==========".Pastel(Color.CadetBlue));
+			Console.Write("===========".Pastel(Color.CadetBlue));
 			Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}".Pastel(Color.LightCyan));
-			Console.WriteLine("==========".Pastel(Color.CadetBlue));
+			Console.WriteLine("===========".Pastel(Color.CadetBlue));
 			Console.WriteLine();
 
 			Settings.Instance.RuntimeStopwatch.Start();
