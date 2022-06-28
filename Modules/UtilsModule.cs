@@ -66,38 +66,38 @@ namespace SammBotNET.Modules
 		{
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-			if(Context.User is SocketGuildUser)
+			ReplyEmbed.ChangeTitle($"{User.Username}'s Profile Picture");
+
+			string UserAvatar = User.GetAvatarUrl(size: 2048);
+
+			if (Context.User is SocketGuildUser)
 			{
 				SocketGuildUser Target = User as SocketGuildUser;
 
-				ReplyEmbed.ChangeTitle($"{Target.Username}'s Profile Picture");
-
-				string GlobalAvatar = Target.GetAvatarUrl(size: 2048);
-				if(GlobalAvatar != null)
+				string ServerAvatar = Target.GetGuildAvatarUrl(size: 2048);
+				if (ServerAvatar != null)
 				{
-					ReplyEmbed.Description = $"[Global Profile Picture]({GlobalAvatar})";
+					//The user doesnt have a global avatar? Thats fine, we still have the server-specific one.
+					if (UserAvatar != null)
+					{
+						ReplyEmbed.Description = $"[Global Profile Picture]({UserAvatar})";
+					}
+
+					ReplyEmbed.ImageUrl = ServerAvatar;
+
+					await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+
+					return ExecutionResult.Succesful();
 				}
-
-				string UserAvatar = Target.GetGuildAvatarUrl(size: 2048);
-				if (UserAvatar == null)
-					return ExecutionResult.FromError("This user does not have an avatar!");
-
-				ReplyEmbed.ImageUrl = UserAvatar;
-
-				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 			}
-			else
-			{
-				ReplyEmbed.ChangeTitle($"{User.Username}'s Profile Picture");
 
-				string UserAvatar = User.GetAvatarUrl(size: 2048);
-				if (UserAvatar == null)
-					return ExecutionResult.FromError("This user does not have an avatar!");
+			//The user doesnt have a server-specific avatar, and doesnt have a global avatar either. Exit!
+			if (UserAvatar == null)
+				return ExecutionResult.FromError("This user does not have an avatar!");
 
-				ReplyEmbed.ImageUrl = UserAvatar;
+			ReplyEmbed.ImageUrl = UserAvatar;
 
-				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
-			}
+			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
 
 			return ExecutionResult.Succesful();
 		}
