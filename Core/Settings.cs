@@ -1,10 +1,10 @@
-﻿global using SammBotNET.Core;
+﻿global using SammBotNET.Classes;
+global using SammBotNET.Core;
 global using SammBotNET.Database;
 global using SammBotNET.Extensions;
 global using SammBotNET.RestDefinitions;
 global using SammBotNET.Services;
 global using LogSeverity = Matcha.LogSeverity;
-
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

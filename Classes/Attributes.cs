@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SammBotNET.Extensions
+namespace SammBotNET.Classes
 {
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 	public class HideInHelp : Attribute

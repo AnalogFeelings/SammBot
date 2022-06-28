@@ -3,7 +3,7 @@ using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Extensions
+namespace SammBotNET.Classes
 {
 	public class MustRunInGuild : PreconditionAttribute
 	{

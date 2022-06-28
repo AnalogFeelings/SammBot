@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SammBotNET.Extensions
+namespace SammBotNET.Classes
 {
 	public class AutodeqList<T> : LinkedList<T>
 	{

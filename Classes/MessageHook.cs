@@ -3,7 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Extensions
+namespace SammBotNET.Classes
 {
 	public abstract class MessageHook
 	{

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace SammBotNET.Extensions
+namespace SammBotNET.Classes
 {
 	public static class ReflectionEnumerator
 	{
