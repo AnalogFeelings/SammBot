@@ -38,7 +38,9 @@ namespace SammBotNET.Modules
 
 			ReplyEmbed.ImageUrl = RetrievedImages[0].Url;
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -64,7 +66,9 @@ namespace SammBotNET.Modules
 
 			ReplyEmbed.ImageUrl = RetrievedImages[0].Url;
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -87,7 +91,9 @@ namespace SammBotNET.Modules
 
 				ReplyEmbed.ImageUrl = ChosenImage.TwitterUrl;
 
-				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
 			return ExecutionResult.Succesful();
@@ -109,7 +115,9 @@ namespace SammBotNET.Modules
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Fox");
 			ReplyEmbed.ImageUrl = RepliedImage.ImageUrl;
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -130,7 +138,9 @@ namespace SammBotNET.Modules
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Duck");
 			ReplyEmbed.ImageUrl = RepliedImage.ImageUrl;
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -145,7 +155,9 @@ namespace SammBotNET.Modules
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: "http://www.scp-wiki.net/scp-" + ChosenNumber.ToString("D3"))
 														.ChangeTitle("Random SCP");
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}

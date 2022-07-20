@@ -51,7 +51,9 @@ namespace SammBotNET.Modules
 
 			SocketGuild TargetGuild = Context.Client.GetGuild(Guild);
 
-			await ReplyAsync($"Success. Set guild to `{TargetGuild.Name}` and channel to `{TargetGuild.GetTextChannel(Channel).Name}`.");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"Success. Set guild to `{TargetGuild.Name}` and channel to `{TargetGuild.GetTextChannel(Channel).Name}`.", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -62,7 +64,10 @@ namespace SammBotNET.Modules
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> ShutdownAsync()
 		{
-			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will shut down.");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will shut down.", allowedMentions: AllowedMentions, messageReference: Reference);
+
 			Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will shut down.\n\n", LogSeverity.Warning);
 
 			Environment.Exit(0);
@@ -76,7 +81,10 @@ namespace SammBotNET.Modules
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> RestartAsync()
 		{
-			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
+
 			Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will restart.\n\n", LogSeverity.Warning);
 
 			Settings.Instance.RestartBot();
@@ -97,7 +105,9 @@ namespace SammBotNET.Modules
 			string GuildName = TargetGuild.Name;
 			await TargetGuild.LeaveAsync();
 
-			await ReplyAsync($"Left the server \"{GuildName}\".");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"Left the server \"{GuildName}\".", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -141,7 +151,9 @@ namespace SammBotNET.Modules
 				ReplyEmbed.AddField(Property.Name, Property.GetValue(Settings.Instance.LoadedConfig, null));
 			}
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -164,19 +176,23 @@ namespace SammBotNET.Modules
 				return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
 					$"Please pass `true` to the `restartBot` parameter.");
 
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
 			AdminService.ChangingConfig = true;
 
 			RetrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, RetrievedVariable.PropertyType));
 
 			object NewValue = RetrievedVariable.GetValue(Settings.Instance.LoadedConfig);
+			
+			await ReplyAsync($"Set variable \"{VarName}\" to `{NewValue.ToString().Truncate(128)}` succesfully.", allowedMentions: AllowedMentions, messageReference: Reference);
 
-			await ReplyAsync($"Set variable \"{VarName}\" to `{NewValue.ToString().Truncate(128)}` succesfully.");
 			await File.WriteAllTextAsync(Settings.Instance.ConfigFile,
 				JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
 			if (RestartBot)
 			{
-				await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.");
+				await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
 				Settings.Instance.RestartBot();
 			}
 

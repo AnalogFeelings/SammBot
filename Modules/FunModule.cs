@@ -24,11 +24,13 @@ namespace SammBotNET.Modules
 		{
 			string ChosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
 
-			IUserMessage ReplyMessage = await ReplyAsync(":8ball: Asking the magic 8-ball...");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			IUserMessage ReplyMessage = await ReplyAsync(":8ball: Asking the magic 8-ball...", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			using (Context.Channel.EnterTypingState()) await Task.Delay(2000);
 
-			await ReplyMessage.ModifyAsync(x => x.Content = $"<@{Context.Message.Author.Id}> **The magic 8-ball answered**:\n`{ChosenAnswer}`");
+			await ReplyMessage.ModifyAsync(x => x.Content = $"The magic 8-ball has answered!\n`{ChosenAnswer}`");
 
 			return ExecutionResult.Succesful();
 		}
@@ -43,7 +45,9 @@ namespace SammBotNET.Modules
 
 			int ChosenNumber = Settings.Instance.GlobalRng.Next(0, FaceCount + 1);
 
-			IUserMessage ReplyMessage = await ReplyAsync(":game_die: Rolling the dice...");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			IUserMessage ReplyMessage = await ReplyAsync(":game_die: Rolling the dice...", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			using (Context.Channel.EnterTypingState()) await Task.Delay(1500);
 
@@ -74,7 +78,9 @@ namespace SammBotNET.Modules
 		[Summary("Pats a user!")]
 		public async Task<RuntimeResult> PatUserAsync(IUser User)
 		{
-			await ReplyAsync($"(c・_・)ノ”<@{User.Id}>");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"(c・_・)ノ”<@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -108,7 +114,9 @@ namespace SammBotNET.Modules
 			ChosenMessage = ChosenMessage.Replace("{vPrnRefSing}", TargetPronouns.ReflexiveSingular);
 			ChosenMessage = ChosenMessage.Replace("{vPrnRefPlur}", TargetPronouns.ReflexivePlural);
 
-			await ReplyAsync(ChosenMessage);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(ChosenMessage, allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -140,7 +148,9 @@ namespace SammBotNET.Modules
 			ReplyEmbed.ChangeTitle($"URBAN DEFINITION OF \"{ChosenDefinition.Word}\"");
 			ReplyEmbed.WithUrl(ChosenDefinition.Permalink);
 
-			await Context.Channel.SendMessageAsync(null, false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}

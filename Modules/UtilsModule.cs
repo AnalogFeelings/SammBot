@@ -31,8 +31,10 @@ namespace SammBotNET.Modules
 			{
 				await Context.Guild.AddBanAsync(User, PruneDays, BanReason);
 
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 				await ReplyAsync($":hammer: **Banned user \"{User.Username}\" from this server.**\n" +
-					$"Reason: *{BanReason}*");
+					$"Reason: *{BanReason}*", allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
 			return ExecutionResult.Succesful();
@@ -52,8 +54,10 @@ namespace SammBotNET.Modules
 			{
 				await TargetUser.KickAsync(KickReason);
 
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 				await ReplyAsync($":boot: **Kicked user \"{User.Username}\" from this server.**\n" +
-					$"Reason: *{KickReason}*");
+					$"Reason: *{KickReason}*", allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
 			return ExecutionResult.Succesful();
@@ -70,6 +74,9 @@ namespace SammBotNET.Modules
 
 			string UserAvatar = User.GetAvatarUrl(size: 2048);
 
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
 			if (Context.User is SocketGuildUser)
 			{
 				SocketGuildUser Target = User as SocketGuildUser;
@@ -84,8 +91,8 @@ namespace SammBotNET.Modules
 					}
 
 					ReplyEmbed.ImageUrl = ServerAvatar;
-
-					await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+					
+					await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 					return ExecutionResult.Succesful();
 				}
@@ -97,7 +104,7 @@ namespace SammBotNET.Modules
 
 			ReplyEmbed.ImageUrl = UserAvatar;
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -195,7 +202,9 @@ namespace SammBotNET.Modules
 
 			ReplyEmbed.Description = EmbedDescription;
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}

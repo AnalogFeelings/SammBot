@@ -36,7 +36,9 @@ namespace SammBotNET.Modules
 			ReplyEmbed.AddField("Uptime", $"`{ElapsedUptime}`", true);
 			ReplyEmbed.AddField("Host", $"`{FriendlyOSName()}`", true);
 
-			await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -59,7 +61,9 @@ namespace SammBotNET.Modules
 			CodeBlock += "```";
 			BuiltMessage += CodeBlock;
 
-			await ReplyAsync(BuiltMessage);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(BuiltMessage, allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -99,7 +103,9 @@ namespace SammBotNET.Modules
 			embed.AddField("Member Count", MemberCount, true);
 			embed.AddField("Role Count", RoleCount, true);
 
-			await Context.Channel.SendMessageAsync(null, false, embed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, embed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -140,7 +146,9 @@ namespace SammBotNET.Modules
 			ReplyEmbed.AddField("Booster Since", BoostingSince, true);
 			ReplyEmbed.AddField("Roles", Roles, false);
 
-			await Context.Channel.SendMessageAsync(null, false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}

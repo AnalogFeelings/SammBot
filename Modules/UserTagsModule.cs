@@ -42,7 +42,9 @@ namespace SammBotNET.Modules
 				await TagDatabase.SaveChangesAsync();
 			}
 
-			await ReplyAsync("Success!");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync("Success!", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -61,7 +63,9 @@ namespace SammBotNET.Modules
 				if (RetrievedTag == null)
 					return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
 
-				await ReplyAsync(RetrievedTag.Reply);
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+				await ReplyAsync(RetrievedTag.Reply, allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
 			return ExecutionResult.Succesful();
@@ -90,7 +94,9 @@ namespace SammBotNET.Modules
 					ReplyEmbed.AddField($"`{Tag.Name}`", $"By: **{userName}**");
 				}
 
-				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build(), messageReference: new MessageReference(Context.Message.Id));
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
 			return ExecutionResult.Succesful();
@@ -136,7 +142,9 @@ namespace SammBotNET.Modules
 				await TagDatabase.SaveChangesAsync();
 			}
 
-			await ReplyAsync($"Tag created succesfully! Use `{Settings.Instance.LoadedConfig.BotPrefix}tags get {Name}` to use it!");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"Tag created succesfully! Use `{Settings.Instance.LoadedConfig.BotPrefix}tags get {Name}` to use it!", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}

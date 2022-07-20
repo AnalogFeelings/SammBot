@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -65,7 +66,9 @@ namespace SammBotNET.Modules
 				}
 			}
 
-			await ReplyAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -87,7 +90,9 @@ namespace SammBotNET.Modules
 						Pronoun ExistingPronouns = AllPronouns.Single(y => y.UserId == TargetUser.Id);
 						string FormattedPronouns = $"{ExistingPronouns.Subject}/{ExistingPronouns.Object}";
 
-						await ReplyAsync($"**{TargetUser.GetUsernameOrNick()}**'s pronouns are: `{FormattedPronouns}`.");
+						MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+						AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+						await ReplyAsync($"**{TargetUser.GetUsernameOrNick()}**'s pronouns are: `{FormattedPronouns}`.", allowedMentions: AllowedMentions, messageReference: Reference);
 					}
 					else
 						return ExecutionResult.FromError($"The user **{TargetUser.GetUsernameOrNick()}** does not have any pronouns set!");

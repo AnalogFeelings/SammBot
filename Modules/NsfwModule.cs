@@ -52,7 +52,9 @@ namespace SammBotNET.Modules
 
 			//My wish is that this code is so fucking horrendous that I dont have to touch paginated
 			//embeds ever fucking again.
-			IUserMessage ReplyMessage = await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			IUserMessage ReplyMessage = await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			if (FilteredPosts.Count > 1)
 			{

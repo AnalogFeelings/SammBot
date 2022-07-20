@@ -44,7 +44,9 @@ namespace SammBotNET.Modules
 				}
 			}
 
-			await ReplyAsync("", false, ReplyEmbed.Build());
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -56,6 +58,9 @@ namespace SammBotNET.Modules
 		{
 			string BotPrefix = Settings.Instance.LoadedConfig.BotPrefix;
 			string[] SplittedName = ModuleName.Split(' ');
+
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
 			if (SplittedName.Length == 1)
 			{
@@ -88,7 +93,7 @@ namespace SammBotNET.Modules
 				if(!FoundCommand)
 					return ExecutionResult.FromError($"The module \"{ModuleInfo.Name}\" has no commands, or you don't have enough permissions to see them.");
 
-				await ReplyAsync("", false, ReplyEmbed.Build());
+				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 			else
 			{
@@ -140,7 +145,7 @@ namespace SammBotNET.Modules
 
 				ReplyEmbed.AddField("Command Parameters", string.IsNullOrEmpty(CommandParameters) ? "No parameters." : CommandParameters);
 
-				await ReplyAsync("", false, ReplyEmbed.Build());
+				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
 			return ExecutionResult.Succesful();

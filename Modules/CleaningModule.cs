@@ -21,9 +21,13 @@ namespace SammBotNET.Modules
 		{
 			using (TagDB CommandDatabase = new TagDB())
 			{
-				await ReplyAsync("Flushing database...");
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+				IUserMessage Message = await ReplyAsync("Flushing database...", allowedMentions: AllowedMentions, messageReference: Reference);
+
 				int AffectedRows = await CommandDatabase.Database.ExecuteSqlRawAsync("delete from UserTag");
-				await ReplyAsync($"Success! `{AffectedRows}` rows affected.");
+
+				await Message.ModifyAsync(x => x.Content = $"Success! `{AffectedRows}` rows affected.");
 			}
 
 			return ExecutionResult.Succesful();
@@ -37,9 +41,13 @@ namespace SammBotNET.Modules
 		{
 			using (PhrasesDB PhrasesDatabase = new PhrasesDB())
 			{
-				await ReplyAsync("Flushing database...");
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+				IUserMessage Message = await ReplyAsync("Flushing database...", allowedMentions: AllowedMentions, messageReference: Reference);
+
 				int AffectedRows = await PhrasesDatabase.Database.ExecuteSqlRawAsync("delete from Phrase");
-				await ReplyAsync($"Success! `{AffectedRows}` rows affected.");
+
+				await Message.ModifyAsync(x => x.Content = $"Success! `{AffectedRows}` rows affected.");
 			}
 
 			return ExecutionResult.Succesful();
@@ -55,7 +63,9 @@ namespace SammBotNET.Modules
 
 			await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(RetrievedMessages);
 
-			IUserMessage SuccessMessage = await ReplyAsync($"Success! Cleared `{Count}` message/s.");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			IUserMessage SuccessMessage = await ReplyAsync($"Success! Cleared `{Count}` message/s.", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			await Task.Delay(3000);
 			await SuccessMessage.DeleteAsync();

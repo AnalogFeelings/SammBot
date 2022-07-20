@@ -35,7 +35,10 @@ namespace SammBotNET.Modules
 				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
 				ReplyEmbed.AddField($"*\"{ChosenQuote.Content}\"*", $"- {GlobalAuthor.GetFullUsername()}, <t:{ChosenQuote.CreatedAt}:D>");
-				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
 			return ExecutionResult.Succesful();
@@ -59,7 +62,10 @@ namespace SammBotNET.Modules
 				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle(string.Empty);
 
 				ReplyEmbed.AddField($"*\"{ChosenQuote.Content}\"*", $"- {GlobalAuthor.GetFullUsername()}, <t:{ChosenQuote.CreatedAt}:D>");
-				await Context.Channel.SendMessageAsync("", false, ReplyEmbed.Build());
+
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
 			return ExecutionResult.Succesful();
