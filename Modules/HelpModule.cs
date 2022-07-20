@@ -122,7 +122,7 @@ namespace SammBotNET.Modules
 				ReplyEmbed.AddField("Command Aliases", ProcessedAliases.Count == 0 ? "No aliases." : string.Join(", ", ProcessedAliases.ToArray()), false);
 				ReplyEmbed.AddField("Command Summary", string.IsNullOrWhiteSpace(Command.Summary) ? "No summary." : Command.Summary);
 
-				string CommandParameters = "`*` = Optional **||** `^` = No quote marks needed.\n";
+				string CommandParameters = "`*` = Optional **||** `^` = No quote marks needed if it contains spaces.\n";
 				foreach (ParameterInfo ParameterInfo in Command.Parameters)
 				{
 					string TypeName = ParameterInfo.Type.Name;
