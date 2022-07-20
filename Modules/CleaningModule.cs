@@ -21,7 +21,7 @@ namespace SammBotNET.Modules
 		{
 			using (TagDB CommandDatabase = new TagDB())
 			{
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 				IUserMessage Message = await ReplyAsync("Flushing database...", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -41,7 +41,7 @@ namespace SammBotNET.Modules
 		{
 			using (PhrasesDB PhrasesDatabase = new PhrasesDB())
 			{
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 				IUserMessage Message = await ReplyAsync("Flushing database...", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -63,7 +63,7 @@ namespace SammBotNET.Modules
 
 			await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(RetrievedMessages);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			IUserMessage SuccessMessage = await ReplyAsync($"Success! Cleared `{Count}` message/s.", allowedMentions: AllowedMentions, messageReference: Reference);
 

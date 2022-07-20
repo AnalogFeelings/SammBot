@@ -43,7 +43,7 @@ namespace SammBotNET.Core
 
 		public async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
 		{
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
 			if (!Result.IsSuccess)
@@ -81,9 +81,13 @@ namespace SammBotNET.Core
 			int ArgumentPosition = 0;
 			if (TargetMessage.Content.StartsWith($"<@{DiscordClient.CurrentUser.Id}>"))
 			{
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
 				await Context.Channel.SendMessageAsync($"Hi! I'm **{Settings.Instance.LoadedConfig.BotName}**!\n" +
 						$"My prefix is `{Settings.Instance.LoadedConfig.BotPrefix}`! " +
-						$"You can use `{Settings.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!");
+						$"You can use `{Settings.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!",
+						allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 			else if (TargetMessage.HasStringPrefix(Settings.Instance.LoadedConfig.BotPrefix, ref ArgumentPosition))
 			{
@@ -110,6 +114,7 @@ namespace SammBotNET.Core
 					Hook.Message = TargetMessage;
 					Hook.Context = Context;
 					Hook.BotLogger = BotLogger;
+					Hook.Client = DiscordClient;
 
 					_ = Task.Run(() => Hook.ExecuteHook());
 				}

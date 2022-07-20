@@ -36,7 +36,7 @@ namespace SammBotNET.Modules
 
 				ReplyEmbed.AddField($"*\"{ChosenQuote.Content}\"*", $"- {GlobalAuthor.GetFullUsername()}, <t:{ChosenQuote.CreatedAt}:D>");
 
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}
@@ -63,7 +63,7 @@ namespace SammBotNET.Modules
 
 				ReplyEmbed.AddField($"*\"{ChosenQuote.Content}\"*", $"- {GlobalAuthor.GetFullUsername()}, <t:{ChosenQuote.CreatedAt}:D>");
 
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}

@@ -24,7 +24,7 @@ namespace SammBotNET.Modules
 		{
 			string ChosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			IUserMessage ReplyMessage = await ReplyAsync(":8ball: Asking the magic 8-ball...", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -45,7 +45,7 @@ namespace SammBotNET.Modules
 
 			int ChosenNumber = Settings.Instance.GlobalRng.Next(0, FaceCount + 1);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			IUserMessage ReplyMessage = await ReplyAsync(":game_die: Rolling the dice...", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -66,7 +66,7 @@ namespace SammBotNET.Modules
 
 			SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync($"Warm hugs from **{AuthorGuildUser.GetUsernameOrNick()}**!\n{ChosenKaomoji} <@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -78,7 +78,7 @@ namespace SammBotNET.Modules
 		[Summary("Pats a user!")]
 		public async Task<RuntimeResult> PatUserAsync(IUser User)
 		{
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync($"(c・_・)ノ”<@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -114,7 +114,7 @@ namespace SammBotNET.Modules
 			ChosenMessage = ChosenMessage.Replace("{vPrnRefSing}", TargetPronouns.ReflexiveSingular);
 			ChosenMessage = ChosenMessage.Replace("{vPrnRefPlur}", TargetPronouns.ReflexivePlural);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync(ChosenMessage, allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -148,7 +148,7 @@ namespace SammBotNET.Modules
 			ReplyEmbed.ChangeTitle($"URBAN DEFINITION OF \"{ChosenDefinition.Word}\"");
 			ReplyEmbed.WithUrl(ChosenDefinition.Permalink);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 

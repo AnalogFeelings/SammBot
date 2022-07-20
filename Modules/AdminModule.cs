@@ -51,7 +51,7 @@ namespace SammBotNET.Modules
 
 			SocketGuild TargetGuild = Context.Client.GetGuild(Guild);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync($"Success. Set guild to `{TargetGuild.Name}` and channel to `{TargetGuild.GetTextChannel(Channel).Name}`.", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -64,7 +64,7 @@ namespace SammBotNET.Modules
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> ShutdownAsync()
 		{
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will shut down.", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -81,7 +81,7 @@ namespace SammBotNET.Modules
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> RestartAsync()
 		{
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -105,7 +105,7 @@ namespace SammBotNET.Modules
 			string GuildName = TargetGuild.Name;
 			await TargetGuild.LeaveAsync();
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync($"Left the server \"{GuildName}\".", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -151,7 +151,7 @@ namespace SammBotNET.Modules
 				ReplyEmbed.AddField(Property.Name, Property.GetValue(Settings.Instance.LoadedConfig, null));
 			}
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -176,7 +176,7 @@ namespace SammBotNET.Modules
 				return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
 					$"Please pass `true` to the `restartBot` parameter.");
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
 			AdminService.ChangingConfig = true;

@@ -10,6 +10,7 @@ namespace SammBotNET.Classes
 		public SocketUserMessage Message { get; set; }
 		public SocketCommandContext Context { get; set; }
 		public Logger BotLogger { get; set; }
+		public DiscordSocketClient Client { get; set; }
 
 		public abstract Task ExecuteHook();
 

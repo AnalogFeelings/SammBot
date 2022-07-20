@@ -35,7 +35,7 @@ namespace SammBotNET.Modules
 			{
 				await Context.Guild.AddBanAsync(User, PruneDays, BanReason);
 
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 				await ReplyAsync($":hammer: **Banned user \"{User.Username}\" from this server.**\n" +
 					$"Reason: *{BanReason}*", allowedMentions: AllowedMentions, messageReference: Reference);
@@ -58,7 +58,7 @@ namespace SammBotNET.Modules
 			{
 				await TargetUser.KickAsync(KickReason);
 
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 				await ReplyAsync($":boot: **Kicked user \"{User.Username}\" from this server.**\n" +
 					$"Reason: *{KickReason}*", allowedMentions: AllowedMentions, messageReference: Reference);
@@ -118,7 +118,7 @@ namespace SammBotNET.Modules
 				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
 				ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
 
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
 				await Context.Channel.SendFileAsync(Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
@@ -182,7 +182,7 @@ namespace SammBotNET.Modules
 				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
 				ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
 
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
 				await Context.Channel.SendFileAsync(Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
@@ -206,7 +206,7 @@ namespace SammBotNET.Modules
 
 			string UserAvatar = User.GetAvatarUrl(size: 2048);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
 			if (Context.User is SocketGuildUser)
@@ -334,7 +334,7 @@ namespace SammBotNET.Modules
 
 			ReplyEmbed.Description = EmbedDescription;
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 

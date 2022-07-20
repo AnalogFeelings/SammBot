@@ -44,7 +44,7 @@ namespace SammBotNET.Modules
 				}
 			}
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -59,7 +59,7 @@ namespace SammBotNET.Modules
 			string BotPrefix = Settings.Instance.LoadedConfig.BotPrefix;
 			string[] SplittedName = ModuleName.Split(' ');
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
 			if (SplittedName.Length == 1)

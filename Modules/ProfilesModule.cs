@@ -66,7 +66,7 @@ namespace SammBotNET.Modules
 				}
 			}
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.", allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -90,7 +90,7 @@ namespace SammBotNET.Modules
 						Pronoun ExistingPronouns = AllPronouns.Single(y => y.UserId == TargetUser.Id);
 						string FormattedPronouns = $"{ExistingPronouns.Subject}/{ExistingPronouns.Object}";
 
-						MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+						MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 						AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 						await ReplyAsync($"**{TargetUser.GetUsernameOrNick()}**'s pronouns are: `{FormattedPronouns}`.", allowedMentions: AllowedMentions, messageReference: Reference);
 					}

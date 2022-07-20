@@ -36,7 +36,7 @@ namespace SammBotNET.Modules
 			ReplyEmbed.AddField("Uptime", $"`{ElapsedUptime}`", true);
 			ReplyEmbed.AddField("Host", $"`{FriendlyOSName()}`", true);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -61,7 +61,7 @@ namespace SammBotNET.Modules
 			CodeBlock += "```";
 			BuiltMessage += CodeBlock;
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync(BuiltMessage, allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -103,7 +103,7 @@ namespace SammBotNET.Modules
 			embed.AddField("Member Count", MemberCount, true);
 			embed.AddField("Role Count", RoleCount, true);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync(null, false, embed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
@@ -146,7 +146,7 @@ namespace SammBotNET.Modules
 			ReplyEmbed.AddField("Booster Since", BoostingSince, true);
 			ReplyEmbed.AddField("Roles", Roles, false);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
