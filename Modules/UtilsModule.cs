@@ -2,11 +2,18 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
+using SammBotNET.Classes.ClassExtensions;
 using SammBotNET.Extensions.ClassExtensions;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+
+#pragma warning disable CA1416
 
 namespace SammBotNET.Modules
 {
@@ -58,6 +65,124 @@ namespace SammBotNET.Modules
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 				await ReplyAsync($":boot: **Kicked user \"{User.Username}\" from this server.**\n" +
 					$"Reason: *{KickReason}*", allowedMentions: AllowedMentions, messageReference: Reference);
+			}
+
+			return ExecutionResult.Succesful();
+		}
+
+		[Command("viewhex")]
+		[Alias("hex")]
+		[Summary("Visualizes a hex color.")]
+		public async Task<RuntimeResult> VisualizeColorHex([Remainder] string HexColor)
+		{
+			string Filename = Path.Combine("Temp", Guid.NewGuid().ToString() + ".png");
+			System.Drawing.Color ParsedColor;
+
+			if (!HexColor.StartsWith("#")) HexColor = HexColor.Insert(0, "#");
+
+			using(Bitmap Image = new Bitmap(400, 400))
+			{
+				using (Graphics Graphics = Graphics.FromImage(Image))
+				{
+					using(Font Font = new Font("JetBrains Mono", 48, FontStyle.Regular, GraphicsUnit.Point))
+					{
+						ParsedColor = ColorTranslator.FromHtml(HexColor);
+
+						Graphics.Clear(ParsedColor);
+
+						Graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+						Rectangle TextRect = new Rectangle(0, 0, Image.Width, Image.Height);
+						StringFormat Format = new StringFormat();
+
+						Format.LineAlignment = StringAlignment.Center;
+						Format.Alignment = StringAlignment.Center;
+
+						GraphicsPath Path = new GraphicsPath();
+						Path.AddString(ParsedColor.ToHexString().ToUpper(), Font.FontFamily, (int)FontStyle.Regular, 48, new Point(Image.Width / 2, Image.Height / 2), Format);
+
+						Graphics.FillPath(Brushes.White, Path);
+						Graphics.DrawPath(Pens.Black, Path);
+
+						Image.Save(Filename);
+					}
+				}
+			}
+
+			try
+			{
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+					.ChangeTitle($"Color Visualization Of {ParsedColor.ToHexString()}");
+
+				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
+				ReplyEmbed.Color = (Discord.Color)ParsedColor;
+
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
+				await Context.Channel.SendFileAsync(Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+			}
+			finally
+			{
+				File.Delete(Filename);
+			}
+
+			return ExecutionResult.Succesful();
+		}
+
+		[Command("viewrgb")]
+		[Alias("rgb")]
+		[Summary("Visualizes an RGB color.")]
+		public async Task<RuntimeResult> VisualizeColorRgb(byte Red, byte Green, byte Blue)
+		{
+			string Filename = Path.Combine("Temp", Guid.NewGuid().ToString() + ".png");
+			System.Drawing.Color ParsedColor;
+
+			using (Bitmap Image = new Bitmap(400, 400))
+			{
+				using (Graphics Graphics = Graphics.FromImage(Image))
+				{
+					using (Font Font = new Font("JetBrains Mono", 36, FontStyle.Regular, GraphicsUnit.Point))
+					{
+						ParsedColor = System.Drawing.Color.FromArgb(255, Red, Green, Blue);
+
+						Graphics.Clear(ParsedColor);
+
+						Graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+						Rectangle TextRect = new Rectangle(0, 0, Image.Width, Image.Height);
+						StringFormat Format = new StringFormat();
+
+						Format.LineAlignment = StringAlignment.Center;
+						Format.Alignment = StringAlignment.Center;
+
+						GraphicsPath Path = new GraphicsPath();
+						Path.AddString(ParsedColor.ToRgbString().ToUpper(), Font.FontFamily, (int)FontStyle.Regular, 36, new Point(Image.Width / 2, Image.Height / 2), Format);
+
+						Graphics.FillPath(Brushes.White, Path);
+						Graphics.DrawPath(Pens.Black, Path);
+
+						Image.Save(Filename);
+					}
+				}
+			}
+
+			try
+			{
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+					.ChangeTitle($"Color Visualization Of {ParsedColor.ToRgbString()}");
+
+				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
+				ReplyEmbed.Color = (Discord.Color)ParsedColor;
+
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
+				await Context.Channel.SendFileAsync(Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+			}
+			finally
+			{
+				File.Delete(Filename);
 			}
 
 			return ExecutionResult.Succesful();
