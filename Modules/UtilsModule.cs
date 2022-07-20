@@ -7,13 +7,10 @@ using SammBotNET.Extensions.ClassExtensions;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-
-#pragma warning disable CA1416
 
 namespace SammBotNET.Modules
 {
@@ -79,13 +76,13 @@ namespace SammBotNET.Modules
 			SKColor ParsedColor;
 
 			SKImageInfo ImageInfo = new SKImageInfo(512, 512);
-			using(SKSurface Surface = SKSurface.Create(ImageInfo))
+			using (SKSurface Surface = SKSurface.Create(ImageInfo))
 			{
 				ParsedColor = SKColor.Parse(HexColor);
 
 				Surface.Canvas.Clear(ParsedColor);
 
-				using(SKPaint Paint = new SKPaint())
+				using (SKPaint Paint = new SKPaint())
 				{
 					Paint.TextSize = 48;
 					Paint.IsAntialias = true;
@@ -226,7 +223,7 @@ namespace SammBotNET.Modules
 					}
 
 					ReplyEmbed.ImageUrl = ServerAvatar;
-					
+
 					await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 					return ExecutionResult.Succesful();
