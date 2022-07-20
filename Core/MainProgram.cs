@@ -89,7 +89,6 @@ namespace SammBotNET.Core
 				.AddSingleton<CommandHandler>()
 				.AddSingleton<StartupService>()
 				.AddSingleton<Logger>()
-				.AddSingleton<Random>()
 				.AddSingleton<RandomService>()
 				.AddSingleton<AdminService>()
 				.AddSingleton<FunService>()
