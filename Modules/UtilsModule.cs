@@ -167,7 +167,7 @@ namespace SammBotNET.Modules
 			long Sunrise = RetrievedWeather.System.Sunrise;
 			long Sunset = RetrievedWeather.System.Sunset;
 
-			string EmbedDescription = $"⚠️ Some data may be missing.\n\n";
+			string EmbedDescription = $"⚠️ Some data may be missing due to an API limitation.\n\n";
 
 			EmbedDescription += $"{ConditionEmoji} **{ActualWeather.Description.CapitalizeFirst()}**\n";
 			EmbedDescription += $"☁️ Cloudiness: **{Cloudiness}**%\n\n";
@@ -184,7 +184,7 @@ namespace SammBotNET.Modules
 			EmbedDescription += $"🧭 Wind direction: **{WindDirection}**°\n";
 			EmbedDescription += $"🌬 Wind gust: **{WindGust}**km/h, **{WindGust.KmhToMph()}**mph\n\n";
 
-			EmbedDescription += "⚠️ **Sunrise and sunset times are adjusted to your timezone.**\n";
+			EmbedDescription += "⚠️ Sunrise and sunset times are adjusted to your computer's timezone.\n";
 			EmbedDescription += $"🌅 Sunrise: <t:{Sunrise}:t>\n";
 			EmbedDescription += $"🌇 Sunset: <t:{Sunset}:t>\n";
 

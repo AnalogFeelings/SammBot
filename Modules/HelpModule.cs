@@ -68,7 +68,7 @@ namespace SammBotNET.Modules
 				string StringifiedEmoji = ModuleEmoji != null ? ModuleEmoji.Emoji + " " : string.Empty;
 
 				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context,
-						"Help", $"**{StringifiedEmoji}{ModuleInfo.Name}**\nSyntax: `{BotPrefix}{ModuleInfo.Group} <Command Name>`");
+						"Help", $"**{StringifiedEmoji}{ModuleInfo.Name}**\n{ModuleInfo.Summary}\n**Syntax**: `{BotPrefix}{ModuleInfo.Group} <Command Name>`");
 
 				bool FoundCommand = false;
 				string EmbedDescription = string.Empty;
@@ -117,17 +117,24 @@ namespace SammBotNET.Modules
 					ProcessedAliases[i] = ProcessedAliases[i].Split(' ').Last();
 				}
 
-				ReplyEmbed.AddField("Command Name", Command.Name);
-				ReplyEmbed.AddField("Command Aliases", ProcessedAliases.Count == 0 ? "No aliases." : string.Join(", ", ProcessedAliases.ToArray()));
-				ReplyEmbed.AddField("Command Group", Command.Module.Group);
+				ReplyEmbed.AddField("Command Name", Command.Name, true);
+				ReplyEmbed.AddField("Command Group", Command.Module.Group, true);
+				ReplyEmbed.AddField("Command Aliases", ProcessedAliases.Count == 0 ? "No aliases." : string.Join(", ", ProcessedAliases.ToArray()), false);
 				ReplyEmbed.AddField("Command Summary", string.IsNullOrWhiteSpace(Command.Summary) ? "No summary." : Command.Summary);
 
-				string CommandParameters = string.Empty;
+				string CommandParameters = "`*` = Optional **||** `^` = No quote marks needed.\n";
 				foreach (ParameterInfo ParameterInfo in Command.Parameters)
 				{
-					CommandParameters += $"[**{ParameterInfo.Type.Name}**] `{ParameterInfo.Name}`";
-					if (ParameterInfo.IsOptional) CommandParameters += " (OPTIONAL)";
-					if (ParameterInfo.IsRemainder) CommandParameters += " (REMAINDER)";
+					string TypeName = ParameterInfo.Type.Name;
+					string AdditionalSymbols = string.Empty;
+					string DefaultValue = string.Empty;
+					
+					if (ParameterInfo.IsOptional) AdditionalSymbols += "*";
+					if (ParameterInfo.IsRemainder) AdditionalSymbols += "^";
+					if (ParameterInfo.DefaultValue != null) DefaultValue = $" (Default: **{ParameterInfo.DefaultValue}**)";
+
+					CommandParameters += $"[**{TypeName}**{AdditionalSymbols}] `{ParameterInfo.Name}`{DefaultValue}";
+
 					CommandParameters += "\n";
 				}
 

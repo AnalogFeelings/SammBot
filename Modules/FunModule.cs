@@ -35,7 +35,7 @@ namespace SammBotNET.Modules
 
 		[Command("dice")]
 		[Alias("roll")]
-		[Summary("Random number between 0 and FaceCount (6 if no parameter passed).")]
+		[Summary("Roll the dice, and get a random number!")]
 		public async Task<RuntimeResult> RollDiceAsync(int FaceCount = 6)
 		{
 			if (FaceCount < 3)
@@ -62,7 +62,9 @@ namespace SammBotNET.Modules
 
 			SocketGuildUser authorAsGuild = Context.Message.Author as SocketGuildUser;
 
-			await ReplyAsync($"Warm hugs from **{authorAsGuild.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>");
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"Warm hugs from **{authorAsGuild.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}

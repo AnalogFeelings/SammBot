@@ -26,16 +26,15 @@ namespace SammBotNET.Modules
 			CatImageSearchParams SearchParameters = new CatImageSearchParams()
 			{
 				has_breeds = true,
-				mime_types = "jpg,png",
+				mime_types = "jpg,png,gif",
 				size = "small",
-				sub_id = Context.Message.Author.Username,
 				limit = 1
 			};
 
 			List<CatImage> RetrievedImages = await RandomService.CatRequester.GetImageAsync(SearchParameters);
 
-			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"__Breed__: **{RetrievedImages[0].Breeds[0].Name}**" +
-					$"\n__Temperament__: *{RetrievedImages[0].Breeds[0].Temperament}*").ChangeTitle("Random Cat");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: ":warning: **The breed information has been " +
+				"temporarily removed due to a bug in the Cat API.**").ChangeTitle("Random Cat");
 
 			ReplyEmbed.ImageUrl = RetrievedImages[0].Url;
 
@@ -52,7 +51,7 @@ namespace SammBotNET.Modules
 			DogImageSearchParams SearchParameters = new DogImageSearchParams()
 			{
 				has_breeds = true,
-				mime_types = "jpg,png",
+				mime_types = "jpg,png,gif",
 				size = "small",
 				sub_id = Context.Message.Author.Username,
 				limit = 1
@@ -60,8 +59,8 @@ namespace SammBotNET.Modules
 
 			List<DogImage> RetrievedImages = await RandomService.DogRequester.GetImageAsync(SearchParameters);
 
-			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"__Breed__: **{RetrievedImages[0].Breeds[0].Name}**" +
-					$"\n__Temperament__: *{RetrievedImages[0].Breeds[0].Temperament}*").ChangeTitle("Random Dog");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"**__Breed__**: {RetrievedImages[0].Breeds[0].Name}" +
+					$"\n**__Temperament__**: {RetrievedImages[0].Breeds[0].Temperament}").ChangeTitle("Random Dog");
 
 			ReplyEmbed.ImageUrl = RetrievedImages[0].Url;
 
