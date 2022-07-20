@@ -26,7 +26,7 @@ namespace SammBotNET.Core
 			LoggerInstance.Log(Message, Severity);
 
 		public void LogException(Exception TargetException) =>
-			Log(TargetException.Message + TargetException.StackTrace, LogSeverity.Error);
+			Log(TargetException.ToString(), LogSeverity.Error);
 
 		//Used by the client and the command handler.
 		public Task LogAsync(LogMessage Message)
