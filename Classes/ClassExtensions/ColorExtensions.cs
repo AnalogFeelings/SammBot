@@ -1,17 +1,18 @@
-﻿using System.Drawing;
+﻿using SkiaSharp;
+using System.Drawing;
 
 namespace SammBotNET.Classes.ClassExtensions
 {
 	public static class ColorExtensions
 	{
-		public static string ToHexString(this Color Color)
+		public static string ToHexString(this SKColor Color)
 		{
-			return "#" + Color.R.ToString("X2") + Color.G.ToString("X2") + Color.B.ToString("X2");
+			return "#" + Color.Red.ToString("X2") + Color.Green.ToString("X2") + Color.Blue.ToString("X2");
 		}
 
-		public static string ToRgbString(this Color Color)
+		public static string ToRgbString(this SKColor Color)
 		{
-			return "RGB(" + Color.R.ToString() + "," + Color.G.ToString() + "," + Color.B.ToString() + ")";
+			return "RGB(" + Color.Red.ToString() + "," + Color.Green.ToString() + "," + Color.Blue.ToString() + ")";
 		}
 	}
 }

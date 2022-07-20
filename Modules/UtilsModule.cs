@@ -4,10 +4,10 @@ using Discord.WebSocket;
 using Newtonsoft.Json;
 using SammBotNET.Classes.ClassExtensions;
 using SammBotNET.Extensions.ClassExtensions;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -76,36 +76,40 @@ namespace SammBotNET.Modules
 		public async Task<RuntimeResult> VisualizeColorHex([Remainder] string HexColor)
 		{
 			string Filename = Path.Combine("Temp", Guid.NewGuid().ToString() + ".png");
-			System.Drawing.Color ParsedColor;
+			SKColor ParsedColor;
 
-			if (!HexColor.StartsWith("#")) HexColor = HexColor.Insert(0, "#");
-
-			using(Bitmap Image = new Bitmap(400, 400))
+			SKImageInfo ImageInfo = new SKImageInfo(512, 512);
+			using(SKSurface Surface = SKSurface.Create(ImageInfo))
 			{
-				using (Graphics Graphics = Graphics.FromImage(Image))
+				ParsedColor = SKColor.Parse(HexColor);
+
+				Surface.Canvas.Clear(ParsedColor);
+
+				using(SKPaint Paint = new SKPaint())
 				{
-					using(Font Font = new Font("JetBrains Mono", 48, FontStyle.Regular, GraphicsUnit.Point))
-					{
-						ParsedColor = ColorTranslator.FromHtml(HexColor);
+					Paint.TextSize = 48;
+					Paint.IsAntialias = true;
+					Paint.TextAlign = SKTextAlign.Center;
 
-						Graphics.Clear(ParsedColor);
+					//Use black or white depending on background color.
+					if ((ParsedColor.Red * 0.299f + ParsedColor.Green * 0.587f + ParsedColor.Blue * 0.114f) > 149)
+						Paint.Color = SKColors.Black;
+					else
+						Paint.Color = SKColors.White;
 
-						Graphics.SmoothingMode = SmoothingMode.HighQuality;
+					//thanks stack overflow lol
+					int TextPosVertical = ImageInfo.Height / 2;
+					float TextY = TextPosVertical + (((-Paint.FontMetrics.Ascent + Paint.FontMetrics.Descent) / 2) - Paint.FontMetrics.Descent);
 
-						Rectangle TextRect = new Rectangle(0, 0, Image.Width, Image.Height);
-						StringFormat Format = new StringFormat();
+					Surface.Canvas.DrawText(ParsedColor.ToHexString().ToUpper(), ImageInfo.Width / 2f, TextY,
+						new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48), Paint);
+				}
 
-						Format.LineAlignment = StringAlignment.Center;
-						Format.Alignment = StringAlignment.Center;
-
-						GraphicsPath Path = new GraphicsPath();
-						Path.AddString(ParsedColor.ToHexString().ToUpper(), Font.FontFamily, (int)FontStyle.Regular, 48, new Point(Image.Width / 2, Image.Height / 2), Format);
-
-						Graphics.FillPath(Brushes.White, Path);
-						Graphics.DrawPath(Pens.Black, Path);
-
-						Image.Save(Filename);
-					}
+				using (SKImage Image = Surface.Snapshot())
+				using (SKData Data = Image.Encode(SKEncodedImageFormat.Png, 100))
+				using (FileStream Stream = File.OpenWrite(Filename))
+				{
+					Data.SaveTo(Stream);
 				}
 			}
 
@@ -115,7 +119,7 @@ namespace SammBotNET.Modules
 					.ChangeTitle($"Color Visualization Of {ParsedColor.ToHexString()}");
 
 				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
-				ReplyEmbed.Color = (Discord.Color)ParsedColor;
+				ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
 
 				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
@@ -136,34 +140,40 @@ namespace SammBotNET.Modules
 		public async Task<RuntimeResult> VisualizeColorRgb(byte Red, byte Green, byte Blue)
 		{
 			string Filename = Path.Combine("Temp", Guid.NewGuid().ToString() + ".png");
-			System.Drawing.Color ParsedColor;
+			SKColor ParsedColor;
 
-			using (Bitmap Image = new Bitmap(400, 400))
+			SKImageInfo ImageInfo = new SKImageInfo(512, 512);
+			using (SKSurface Surface = SKSurface.Create(ImageInfo))
 			{
-				using (Graphics Graphics = Graphics.FromImage(Image))
+				ParsedColor = new SKColor(Red, Green, Blue);
+
+				Surface.Canvas.Clear(ParsedColor);
+
+				using (SKPaint Paint = new SKPaint())
 				{
-					using (Font Font = new Font("JetBrains Mono", 36, FontStyle.Regular, GraphicsUnit.Point))
-					{
-						ParsedColor = System.Drawing.Color.FromArgb(255, Red, Green, Blue);
+					Paint.TextSize = 48;
+					Paint.IsAntialias = true;
+					Paint.TextAlign = SKTextAlign.Center;
 
-						Graphics.Clear(ParsedColor);
+					//Use black or white depending on background color.
+					if ((ParsedColor.Red * 0.299f + ParsedColor.Green * 0.587f + ParsedColor.Blue * 0.114f) > 149)
+						Paint.Color = SKColors.Black;
+					else
+						Paint.Color = SKColors.White;
 
-						Graphics.SmoothingMode = SmoothingMode.HighQuality;
+					//thanks stack overflow lol
+					int TextPosVertical = ImageInfo.Height / 2;
+					float TextY = TextPosVertical + (((-Paint.FontMetrics.Ascent + Paint.FontMetrics.Descent) / 2) - Paint.FontMetrics.Descent);
 
-						Rectangle TextRect = new Rectangle(0, 0, Image.Width, Image.Height);
-						StringFormat Format = new StringFormat();
+					Surface.Canvas.DrawText(ParsedColor.ToRgbString().ToUpper(), ImageInfo.Width / 2f, TextY,
+						new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48), Paint);
+				}
 
-						Format.LineAlignment = StringAlignment.Center;
-						Format.Alignment = StringAlignment.Center;
-
-						GraphicsPath Path = new GraphicsPath();
-						Path.AddString(ParsedColor.ToRgbString().ToUpper(), Font.FontFamily, (int)FontStyle.Regular, 36, new Point(Image.Width / 2, Image.Height / 2), Format);
-
-						Graphics.FillPath(Brushes.White, Path);
-						Graphics.DrawPath(Pens.Black, Path);
-
-						Image.Save(Filename);
-					}
+				using (SKImage Image = Surface.Snapshot())
+				using (SKData Data = Image.Encode(SKEncodedImageFormat.Png, 100))
+				using (FileStream Stream = File.OpenWrite(Filename))
+				{
+					Data.SaveTo(Stream);
 				}
 			}
 
@@ -173,7 +183,7 @@ namespace SammBotNET.Modules
 					.ChangeTitle($"Color Visualization Of {ParsedColor.ToRgbString()}");
 
 				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
-				ReplyEmbed.Color = (Discord.Color)ParsedColor;
+				ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
 
 				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
