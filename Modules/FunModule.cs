@@ -58,13 +58,13 @@ namespace SammBotNET.Modules
 		[MustRunInGuild]
 		public async Task<RuntimeResult> HugUserAsync(IUser User)
 		{
-			string chosenKaomoji = Settings.Instance.LoadedConfig.HugKaomojis.PickRandom();
+			string ChosenKaomoji = Settings.Instance.LoadedConfig.HugKaomojis.PickRandom();
 
-			SocketGuildUser authorAsGuild = Context.Message.Author as SocketGuildUser;
+			SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"Warm hugs from **{authorAsGuild.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
+			await ReplyAsync($"Warm hugs from **{AuthorGuildUser.GetUsernameOrNick()}**!\n{ChosenKaomoji} <@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -85,30 +85,30 @@ namespace SammBotNET.Modules
 		[Summary("Commit first degree murder, fuck it.")]
 		public async Task<RuntimeResult> FirstDegreeMurderAsync(IUser User)
 		{
-			SocketGuildUser authorAsGuild = Context.Message.Author as SocketGuildUser;
-			SocketGuildUser targetAsGuild = User as SocketGuildUser;
+			SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
+			SocketGuildUser TargetGuildUser = User as SocketGuildUser;
 
-			Pronoun authorPronouns = await authorAsGuild.GetUserPronouns();
-			Pronoun targetPronouns = await targetAsGuild.GetUserPronouns();
+			Pronoun AuthorPronouns = await AuthorGuildUser.GetUserPronouns();
+			Pronoun TargetPronouns = await TargetGuildUser.GetUserPronouns();
 
-			string chosenMessage = Settings.Instance.LoadedConfig.KillMessages.PickRandom();
-			chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorAsGuild.GetUsernameOrNick()}**");
-			chosenMessage = chosenMessage.Replace("{mPrnSub}", authorPronouns.Subject);
-			chosenMessage = chosenMessage.Replace("{mPrnObj}", authorPronouns.Object);
-			chosenMessage = chosenMessage.Replace("{mPrnDepPos}", authorPronouns.DependentPossessive);
-			chosenMessage = chosenMessage.Replace("{mPrnIndepPos}", authorPronouns.IndependentPossessive);
-			chosenMessage = chosenMessage.Replace("{mPrnRefSing}", authorPronouns.ReflexiveSingular);
-			chosenMessage = chosenMessage.Replace("{mPrnRefPlur}", authorPronouns.ReflexivePlural);
+			string ChosenMessage = Settings.Instance.LoadedConfig.KillMessages.PickRandom();
+			ChosenMessage = ChosenMessage.Replace("{Murderer}", $"**{AuthorGuildUser.GetUsernameOrNick()}**");
+			ChosenMessage = ChosenMessage.Replace("{mPrnSub}", AuthorPronouns.Subject);
+			ChosenMessage = ChosenMessage.Replace("{mPrnObj}", AuthorPronouns.Object);
+			ChosenMessage = ChosenMessage.Replace("{mPrnDepPos}", AuthorPronouns.DependentPossessive);
+			ChosenMessage = ChosenMessage.Replace("{mPrnIndepPos}", AuthorPronouns.IndependentPossessive);
+			ChosenMessage = ChosenMessage.Replace("{mPrnRefSing}", AuthorPronouns.ReflexiveSingular);
+			ChosenMessage = ChosenMessage.Replace("{mPrnRefPlur}", AuthorPronouns.ReflexivePlural);
 
-			chosenMessage = chosenMessage.Replace("{Victim}", $"**{targetAsGuild.GetUsernameOrNick()}**");
-			chosenMessage = chosenMessage.Replace("{vPrnSub}", targetPronouns.Subject);
-			chosenMessage = chosenMessage.Replace("{vPrnObj}", targetPronouns.Object);
-			chosenMessage = chosenMessage.Replace("{vPrnDepPos}", targetPronouns.DependentPossessive);
-			chosenMessage = chosenMessage.Replace("{vPrnIndepPos}", targetPronouns.IndependentPossessive);
-			chosenMessage = chosenMessage.Replace("{vPrnRefSing}", targetPronouns.ReflexiveSingular);
-			chosenMessage = chosenMessage.Replace("{vPrnRefPlur}", targetPronouns.ReflexivePlural);
+			ChosenMessage = ChosenMessage.Replace("{Victim}", $"**{TargetGuildUser.GetUsernameOrNick()}**");
+			ChosenMessage = ChosenMessage.Replace("{vPrnSub}", TargetPronouns.Subject);
+			ChosenMessage = ChosenMessage.Replace("{vPrnObj}", TargetPronouns.Object);
+			ChosenMessage = ChosenMessage.Replace("{vPrnDepPos}", TargetPronouns.DependentPossessive);
+			ChosenMessage = ChosenMessage.Replace("{vPrnIndepPos}", TargetPronouns.IndependentPossessive);
+			ChosenMessage = ChosenMessage.Replace("{vPrnRefSing}", TargetPronouns.ReflexiveSingular);
+			ChosenMessage = ChosenMessage.Replace("{vPrnRefPlur}", TargetPronouns.ReflexivePlural);
 
-			await ReplyAsync(chosenMessage);
+			await ReplyAsync(ChosenMessage);
 
 			return ExecutionResult.Succesful();
 		}
@@ -117,47 +117,47 @@ namespace SammBotNET.Modules
 		[Summary("Gets a definition from the urban dictionary!")]
 		public async Task<RuntimeResult> UrbanAsync([Remainder] string Term)
 		{
-			UrbanSearchParams searchParams = new()
+			UrbanSearchParams SearchParameters = new()
 			{
 				term = Term
 			};
 
-			UrbanDefinitionList urbanDefinitions = null;
-			using (Context.Channel.EnterTypingState()) urbanDefinitions = await GetUrbanDefinitionAsync(searchParams);
+			UrbanDefinitionList UrbanDefinitions = null;
+			using (Context.Channel.EnterTypingState()) UrbanDefinitions = await GetUrbanDefinitionAsync(SearchParameters);
 
-			if (urbanDefinitions == null || urbanDefinitions.List.Count == 0)
+			if (UrbanDefinitions == null || UrbanDefinitions.List.Count == 0)
 				return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{Term}\"!");
 
-			UrbanDefinition selectedDefinition = urbanDefinitions.List.First();
+			UrbanDefinition ChosenDefinition = UrbanDefinitions.List.First();
 
-			string embedDescription = $"**Definition** : *{selectedDefinition.Definition.Truncate(1024)}*\n\n";
-			embedDescription += $"**Example** : {(string.IsNullOrEmpty(selectedDefinition.Example) ? "No Example" : selectedDefinition.Example)}\n\n";
-			embedDescription += $"**Author** : {selectedDefinition.Author}\n";
-			embedDescription += $"**Thumbs Up** : {selectedDefinition.ThumbsUp}\n";
-			embedDescription += $"**Thumbs Down** : {selectedDefinition.ThumbsDown}\n";
+			string EmbedDescription = $"**Definition** : *{ChosenDefinition.Definition.Truncate(1024)}*\n\n";
+			EmbedDescription += $"**Example** : {(string.IsNullOrEmpty(ChosenDefinition.Example) ? "No Example" : ChosenDefinition.Example)}\n\n";
+			EmbedDescription += $"**Author** : {ChosenDefinition.Author}\n";
+			EmbedDescription += $"**Thumbs Up** : {ChosenDefinition.ThumbsUp}\n";
+			EmbedDescription += $"**Thumbs Down** : {ChosenDefinition.ThumbsDown}\n";
 
-			EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: embedDescription);
-			embed.ChangeTitle($"URBAN DEFINITION OF \"{selectedDefinition.Word}\"");
-			embed.WithUrl(selectedDefinition.Permalink);
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: EmbedDescription);
+			ReplyEmbed.ChangeTitle($"URBAN DEFINITION OF \"{ChosenDefinition.Word}\"");
+			ReplyEmbed.WithUrl(ChosenDefinition.Permalink);
 
-			await Context.Channel.SendMessageAsync(null, false, embed.Build());
+			await Context.Channel.SendMessageAsync(null, false, ReplyEmbed.Build());
 
 			return ExecutionResult.Succesful();
 		}
 
 		public async Task<UrbanDefinitionList> GetUrbanDefinitionAsync(UrbanSearchParams searchParams)
 		{
-			string queryString = searchParams.ToQueryString();
-			string jsonReply = string.Empty;
+			string QueryString = searchParams.ToQueryString();
+			string JsonReply = string.Empty;
 
-			using (HttpResponseMessage response = await FunService.UrbanClient.GetAsync($"/v0/define?{queryString}"))
+			using (HttpResponseMessage Response = await FunService.UrbanClient.GetAsync($"/v0/define?{QueryString}"))
 			{
-				jsonReply = await response.Content.ReadAsStringAsync();
+				JsonReply = await Response.Content.ReadAsStringAsync();
 			}
 
-			UrbanDefinitionList definitionReply = JsonConvert.DeserializeObject<UrbanDefinitionList>(jsonReply);
+			UrbanDefinitionList DefinitionReply = JsonConvert.DeserializeObject<UrbanDefinitionList>(JsonReply);
 
-			return definitionReply;
+			return DefinitionReply;
 		}
 	}
 }
