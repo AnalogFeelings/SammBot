@@ -3,6 +3,8 @@ SammBot rewritten for the fourth time, but in C#.
 
 It has some hardcoded bits, like the OwnerUserId config entry. Should be easy to replace it by your own UID.
 
+:warning: **JetBrains Mono Regular must be installed in your machine, otherwise the `viewhex` and `viewrgb` commands in the Utils module will NOT work!**
+
 # Features
 * **Administration Module**: Allows the bot's owner to make the bot say a message to a specific channel and guild. Also allows the owner to set variables in config.json, or restart/shutdown the bot, all remotely.
 * **Janitoring Module**: Allows you to clear custom commands, quotes, or bulk delete messages.
@@ -14,7 +16,7 @@ It has some hardcoded bits, like the OwnerUserId config entry. Should be easy to
 * **Quotes Module**: Stores some user messages into a database, that can be used to return random out-of-context quotes.
 * **Random Module**: Allows users to retrieve random content from the cat, dog, fox or duck APIs, or a random SCP.
 * **Profiles Module**: User profiles (pronouns).
-* **Utils Module**: Allows you to ban, kick, or get the profile picture of a user.
+* **Utils Module**: Allows you to ban, kick, or get the profile picture of a user, and more.
  
 # Packages & Nuget
 Visual Studio/dotnet should already detect the packages you need and install them.
