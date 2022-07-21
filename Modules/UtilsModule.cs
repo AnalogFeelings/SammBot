@@ -69,7 +69,7 @@ namespace SammBotNET.Modules
 
 		[Command("viewhex")]
 		[Alias("hex")]
-		[Summary("Visualizes a hex color.")]
+		[Summary("Displays a HEX color, and converts it in other formats.")]
 		public async Task<RuntimeResult> VisualizeColorHex([Remainder] string HexColor)
 		{
 			string Filename = Path.Combine("Temp", Guid.NewGuid().ToString() + ".png");
@@ -118,6 +118,11 @@ namespace SammBotNET.Modules
 				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
 				ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
 
+				ReplyEmbed.Description += $"**__RGB__**: {ParsedColor.ToRgbString()}\n";
+				ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
+				ReplyEmbed.Description += $"**__HSV__**: {ParsedColor.ToHsvString()}\n";
+				ReplyEmbed.Description += $"**__HSL__**: {ParsedColor.ToHslString()}\n";
+
 				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
@@ -133,7 +138,7 @@ namespace SammBotNET.Modules
 
 		[Command("viewrgb")]
 		[Alias("rgb")]
-		[Summary("Visualizes an RGB color.")]
+		[Summary("Displays an RGB color, and converts it in other formats.")]
 		public async Task<RuntimeResult> VisualizeColorRgb(byte Red, byte Green, byte Blue)
 		{
 			string Filename = Path.Combine("Temp", Guid.NewGuid().ToString() + ".png");
@@ -181,6 +186,11 @@ namespace SammBotNET.Modules
 
 				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
 				ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
+
+				ReplyEmbed.Description += $"**__HEX__**: {ParsedColor.ToHexString()}\n";
+				ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
+				ReplyEmbed.Description += $"**__HSV__**: {ParsedColor.ToHsvString()}\n";
+				ReplyEmbed.Description += $"**__HSL__**: {ParsedColor.ToHslString()}\n";
 
 				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
