@@ -72,7 +72,7 @@ namespace SammBotNET.Modules
 		[Summary("Displays a HEX color, and converts it in other formats.")]
 		public async Task<RuntimeResult> VisualizeColorHex([Remainder] string HexColor)
 		{
-			string Filename = Path.Combine("Temp", Guid.NewGuid().ToString() + ".png");
+			string Filename = "colorView.png";
 			SKColor ParsedColor;
 
 			SKImageInfo ImageInfo = new SKImageInfo(512, 512);
@@ -104,33 +104,33 @@ namespace SammBotNET.Modules
 
 				using (SKImage Image = Surface.Snapshot())
 				using (SKData Data = Image.Encode(SKEncodedImageFormat.Png, 100))
-				using (FileStream Stream = File.OpenWrite(Filename))
+				using (MemoryStream Stream = new MemoryStream((int)Data.Size))
 				{
 					Data.SaveTo(Stream);
+
+					try
+					{
+						EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+							.ChangeTitle($"Color Visualization Of {ParsedColor.ToHexString()}");
+
+						ReplyEmbed.ImageUrl = $"attachment://{Filename}";
+						ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
+
+						ReplyEmbed.Description += $"**__RGB__**: {ParsedColor.ToRgbString()}\n";
+						ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
+						ReplyEmbed.Description += $"**__HSV__**: {ParsedColor.ToHsvString()}\n";
+						ReplyEmbed.Description += $"**__HSL__**: {ParsedColor.ToHslString()}\n";
+
+						MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+						AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
+						await Context.Channel.SendFileAsync(Stream, Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+					}
+					finally
+					{
+						File.Delete(Filename);
+					}
 				}
-			}
-
-			try
-			{
-				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-					.ChangeTitle($"Color Visualization Of {ParsedColor.ToHexString()}");
-
-				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
-				ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
-
-				ReplyEmbed.Description += $"**__RGB__**: {ParsedColor.ToRgbString()}\n";
-				ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
-				ReplyEmbed.Description += $"**__HSV__**: {ParsedColor.ToHsvString()}\n";
-				ReplyEmbed.Description += $"**__HSL__**: {ParsedColor.ToHslString()}\n";
-
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-
-				await Context.Channel.SendFileAsync(Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
-			}
-			finally
-			{
-				File.Delete(Filename);
 			}
 
 			return ExecutionResult.Succesful();
@@ -141,7 +141,7 @@ namespace SammBotNET.Modules
 		[Summary("Displays an RGB color, and converts it in other formats.")]
 		public async Task<RuntimeResult> VisualizeColorRgb(byte Red, byte Green, byte Blue)
 		{
-			string Filename = Path.Combine("Temp", Guid.NewGuid().ToString() + ".png");
+			string Filename = "colorView.png";
 			SKColor ParsedColor;
 
 			SKImageInfo ImageInfo = new SKImageInfo(512, 512);
@@ -173,33 +173,33 @@ namespace SammBotNET.Modules
 
 				using (SKImage Image = Surface.Snapshot())
 				using (SKData Data = Image.Encode(SKEncodedImageFormat.Png, 100))
-				using (FileStream Stream = File.OpenWrite(Filename))
+				using (MemoryStream Stream = new MemoryStream((int)Data.Size))
 				{
 					Data.SaveTo(Stream);
+
+					try
+					{
+						EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+							.ChangeTitle($"Color Visualization Of {ParsedColor.ToRgbString()}");
+
+						ReplyEmbed.ImageUrl = $"attachment://{Filename}";
+						ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
+
+						ReplyEmbed.Description += $"**__HEX__**: {ParsedColor.ToHexString()}\n";
+						ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
+						ReplyEmbed.Description += $"**__HSV__**: {ParsedColor.ToHsvString()}\n";
+						ReplyEmbed.Description += $"**__HSL__**: {ParsedColor.ToHslString()}\n";
+
+						MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+						AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
+						await Context.Channel.SendFileAsync(Stream, Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+					}
+					finally
+					{
+						File.Delete(Filename);
+					}
 				}
-			}
-
-			try
-			{
-				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-					.ChangeTitle($"Color Visualization Of {ParsedColor.ToRgbString()}");
-
-				ReplyEmbed.ImageUrl = $"attachment://{Path.GetFileName(Filename)}";
-				ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
-
-				ReplyEmbed.Description += $"**__HEX__**: {ParsedColor.ToHexString()}\n";
-				ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
-				ReplyEmbed.Description += $"**__HSV__**: {ParsedColor.ToHsvString()}\n";
-				ReplyEmbed.Description += $"**__HSL__**: {ParsedColor.ToHslString()}\n";
-
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-
-				await Context.Channel.SendFileAsync(Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
-			}
-			finally
-			{
-				File.Delete(Filename);
 			}
 
 			return ExecutionResult.Succesful();

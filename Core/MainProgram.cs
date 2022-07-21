@@ -41,11 +41,6 @@ namespace SammBotNET.Core
 				Console.WriteLine($"Avatars folder did not exist. Creating...".Pastel("#3d9785"));
 				Directory.CreateDirectory("Avatars");
 			}
-			if (!Directory.Exists("Temp"))
-			{
-				Console.WriteLine($"Temp folder did not exist. Creating...".Pastel("#3d9785"));
-				Directory.CreateDirectory("Temp");
-			}
 
 			Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));
 
