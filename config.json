@@ -22,6 +22,12 @@
   "AvatarRecentQueueSize": 10,
   "QueueWaitTime": 1000,
   "TagDistance": 3,
+  "ShipBarStartEmpty": "<:FirstSegmentEmpty:999755752644280331>",
+  "ShipBarStartFull": "<:FirstSegmentFull:999755751608307852>",
+  "ShipBarHalfEmpty": "<:HalfwaySegmentEmpty:999755750199013416>",
+  "ShipBarHalfFull": "<:HalfwaySegmentFull:999755748269629464>",
+  "ShipBarEndEmpty": "<:EndSegmentEmpty:999755745484623892>",
+  "ShipBarEndFull": "<:EndSegmentFull:999755747330117772>",
   "HugKaomojis": [
 	"(つ≧▽≦)つ",
 	"(づ￣ ³￣)づ",

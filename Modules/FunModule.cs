@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,6 +17,11 @@ namespace SammBotNET.Modules
 	{
 		public Logger Logger { get; set; }
 		public FunService FunService { get; set; }
+
+		private int[] ShipSegments = new int[10]
+		{
+			10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+		};
 
 		[Command("8ball")]
 		[Alias("ask", "8")]
@@ -99,6 +105,98 @@ namespace SammBotNET.Modules
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 			await ReplyAsync($"<@{User.Id}>'s IPv4 address: `{FirstSegment}.{SecondSegment}.{ThirdSegment}.{FourthSegment}`", allowedMentions: AllowedMentions, messageReference: Reference);
+
+			return ExecutionResult.Succesful();
+		}
+
+		[Command("ship")]
+		[Alias("loverating, shiprating")]
+		[Summary("Ship 2 users together! Awww!")]
+		[MustRunInGuild]
+		public async Task<RuntimeResult> ShipUsersAsync(SocketGuildUser FirstUser, SocketGuildUser SecondUser = null)
+		{
+			//If the second user is null, ship the author with the first user.
+			SocketGuildUser LoverOne;
+			SocketGuildUser LoverTwo;
+			if (SecondUser == null)
+			{
+				LoverOne = Context.Message.Author as SocketGuildUser;
+				LoverTwo = FirstUser;
+			}
+			else
+			{
+				LoverOne = FirstUser;
+				LoverTwo = SecondUser;
+			}
+
+			//Get random ship percentage and text.
+			int Percentage = Settings.Instance.GlobalRng.Next(0, 101);
+			string PercentageText = string.Empty;
+
+			switch(Percentage)
+			{
+				case 0:
+					PercentageText = "Incompatible! ❌";
+					break;
+				case > 0 and <= 25:
+					PercentageText = "Awful! 💔";
+					break;
+				case > 25 and <= 50:
+					PercentageText = "Not bad! ❤️‍🩹";
+					break;
+				case > 50 and <= 75:
+					PercentageText = "Decent! ❤️";
+					break;
+				case > 75 and <= 85:
+					PercentageText = "True love! 💖";
+					break;
+				case > 85 and < 100:
+					PercentageText = "AMAZING! 💛";
+					break;
+				case 100:
+					PercentageText = "INSANE! 💗";
+					break;
+			}
+
+			//Split usernames into halves, then sanitize them.
+			string LoverOneUsername = LoverOne.GetUsernameOrNick();
+			string LoverTwoUsername = LoverTwo.GetUsernameOrNick();
+
+			if(LoverOneUsername.Length != 1)
+				LoverOneUsername = LoverOneUsername.Substring(0, LoverOneUsername.Length / 2);
+			if(LoverTwoUsername.Length != 1)
+				LoverTwoUsername = LoverTwoUsername.Substring(LoverTwoUsername.Length / 2, (int)Math.Ceiling(LoverTwoUsername.Length / 2f));
+
+			LoverOneUsername = Format.Sanitize(LoverOneUsername);
+			LoverTwoUsername = Format.Sanitize(LoverTwoUsername);
+
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).WithTitle(string.Empty).WithColor(new Color(221, 46, 68));
+
+			string ProgressBar = string.Empty;
+			for (int i = 0; i < ShipSegments.Length; i++)
+			{
+				if (Percentage < ShipSegments[i])
+				{
+					if (i == 0) ProgressBar += Settings.Instance.LoadedConfig.ShipBarStartEmpty;
+					else if (i == ShipSegments.Length - 1) ProgressBar += Settings.Instance.LoadedConfig.ShipBarEndEmpty;
+					else ProgressBar += Settings.Instance.LoadedConfig.ShipBarHalfEmpty;
+				}
+				else
+				{
+					if (i == 0) ProgressBar += Settings.Instance.LoadedConfig.ShipBarStartFull;
+					else if (i == ShipSegments.Length - 1) ProgressBar += Settings.Instance.LoadedConfig.ShipBarEndFull;
+					else ProgressBar += Settings.Instance.LoadedConfig.ShipBarHalfFull;
+				}
+			}
+
+			ReplyEmbed.Description += $"🔀 **Ship Name**: {LoverOneUsername}{LoverTwoUsername}\n";
+			ReplyEmbed.Description += $"{ProgressBar} **{Percentage}%** {PercentageText}";
+
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"💘 **THE SHIP-O-MATIC 5000** 💘\n" +
+				$"🔹 {Format.Sanitize(LoverOne.GetUsernameOrNick())}\n" +
+				$"🔹 {Format.Sanitize(LoverTwo.GetUsernameOrNick())}\n", embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}

@@ -99,6 +99,13 @@ namespace SammBotNET.Core
 		public List<string> HugKaomojis { get; set; } = null;
 		public List<string> KillMessages { get; set; } = null;
 
+		public string ShipBarStartEmpty { get; set; } = null;
+		public string ShipBarStartFull { get; set; } = null;
+		public string ShipBarHalfEmpty { get; set; } = null;
+		public string ShipBarHalfFull { get; set; } = null;
+		public string ShipBarEndEmpty { get; set; } = null;
+		public string ShipBarEndFull { get; set; } = null;
+
 		[NotModifiable] public string AnsiRegex { get; set; } = "";
 		[NotModifiable] public string UrlRegex { get; set; } = "";
 		[NotModifiable] public bool RotatingStatus { get; set; } = true;
