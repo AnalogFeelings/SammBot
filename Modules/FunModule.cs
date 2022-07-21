@@ -74,8 +74,8 @@ namespace SammBotNET.Modules
 		}
 
 		[Command("pat")]
-		[MustRunInGuild]
 		[Summary("Pats a user!")]
+		[MustRunInGuild]
 		public async Task<RuntimeResult> PatUserAsync(IUser User)
 		{
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
@@ -85,10 +85,28 @@ namespace SammBotNET.Modules
 			return ExecutionResult.Succesful();
 		}
 
+		[Command("dox")]
+		[Alias("doxx")]
+		[Summary("Leak someone's (fake) IP address!")]
+		[MustRunInGuild]
+		public async Task<RuntimeResult> DoxUserAsync(IUser User)
+		{
+			int FirstSegment = Settings.Instance.GlobalRng.Next(0, 256);
+			int SecondSegment = Settings.Instance.GlobalRng.Next(0, 256);
+			int ThirdSegment = Settings.Instance.GlobalRng.Next(0, 256);
+			int FourthSegment = Settings.Instance.GlobalRng.Next(0, 256);
+
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($"<@{User.Id}>'s IPv4 address: `{FirstSegment}.{SecondSegment}.{ThirdSegment}.{FourthSegment}`", allowedMentions: AllowedMentions, messageReference: Reference);
+
+			return ExecutionResult.Succesful();
+		}
+
 		[Command("kill")]
 		[Alias("murder")]
-		[MustRunInGuild]
 		[Summary("Commit first degree murder, fuck it.")]
+		[MustRunInGuild]
 		public async Task<RuntimeResult> FirstDegreeMurderAsync(IUser User)
 		{
 			SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
