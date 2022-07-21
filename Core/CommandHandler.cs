@@ -43,21 +43,28 @@ namespace SammBotNET.Core
 
 		public async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
 		{
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-
-			if (!Result.IsSuccess)
+			try
 			{
-				if (Result.ErrorReason == "Unknown command.")
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
+				if (!Result.IsSuccess)
 				{
-					await Context.Channel.SendMessageAsync($"Unknown command! Use the `{Settings.Instance.LoadedConfig.BotPrefix}help` command.",
-						allowedMentions: AllowedMentions, messageReference: Reference);
+					if (Result.ErrorReason == "Unknown command.")
+					{
+						await Context.Channel.SendMessageAsync($"Unknown command! Use the `{Settings.Instance.LoadedConfig.BotPrefix}help` command.",
+							allowedMentions: AllowedMentions, messageReference: Reference);
+					}
+					else
+					{
+						await Context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + Result.ErrorReason,
+							allowedMentions: AllowedMentions, messageReference: Reference);
+					}
 				}
-				else
-				{
-					await Context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + Result.ErrorReason,
-						allowedMentions: AllowedMentions, messageReference: Reference);
-				}
+			}
+			catch(Exception ex)
+			{
+				BotLogger.LogException(ex);
 			}
 
 			await Task.Delay(Settings.Instance.LoadedConfig.QueueWaitTime);
