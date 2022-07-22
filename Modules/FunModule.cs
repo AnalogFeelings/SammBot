@@ -270,10 +270,10 @@ namespace SammBotNET.Modules
 			{
 				Surface.Canvas.Clear(SKColors.Transparent);
 
-				using(SKBitmap FirstUserAvatar = SKBitmap.Decode(FirstUserAvatarStream))
-				using(SKBitmap SecondUserAvatar = SKBitmap.Decode(SecondUserAvatarStream))
-				using(SKBitmap EmojiBitmap = SKBitmap.Decode(EmojiStream))
-				using(SKPath LoversClipPath = new SKPath())
+				using (SKBitmap FirstUserAvatar = SKBitmap.Decode(FirstUserAvatarStream))
+				using (SKBitmap SecondUserAvatar = SKBitmap.Decode(SecondUserAvatarStream))
+				using (SKBitmap EmojiBitmap = SKBitmap.Decode(EmojiStream))
+				using (SKPath LoversClipPath = new SKPath())
 				{
 					//Add the two "Windows" to the clip path. They have their origin in the center, not the top left corner.
 					LoversClipPath.AddCircle(ImageInfo.Width / 4, ImageInfo.Height / 2, ImageInfo.Height / 2);
@@ -291,7 +291,7 @@ namespace SammBotNET.Modules
 					Surface.Canvas.Restore();
 
 					//Use a custom filter with a drop shadow effect.
-					using(SKPaint EmojiPaint = new SKPaint())
+					using (SKPaint EmojiPaint = new SKPaint())
 					{
 						EmojiPaint.IsAntialias = true;
 						EmojiPaint.FilterQuality = SKFilterQuality.High;
@@ -306,9 +306,9 @@ namespace SammBotNET.Modules
 				}
 
 				//Take snapshot, encode it into PNG, store it into MemoryStream to be uploaded to Discord.
-				using(SKImage SurfaceSnapshot = Surface.Snapshot())
-				using(SKData ImageData = SurfaceSnapshot.Encode(SKEncodedImageFormat.Png, 100))
-				using(MemoryStream FinalImageStream = new MemoryStream((int)ImageData.Size))
+				using (SKImage SurfaceSnapshot = Surface.Snapshot())
+				using (SKData ImageData = SurfaceSnapshot.Encode(SKEncodedImageFormat.Png, 100))
+				using (MemoryStream FinalImageStream = new MemoryStream((int)ImageData.Size))
 				{
 					//Save the actual image into the stream.
 					ImageData.SaveTo(FinalImageStream);
