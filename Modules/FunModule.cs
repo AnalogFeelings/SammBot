@@ -2,9 +2,12 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
+using SkiaSharp;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
@@ -18,10 +21,12 @@ namespace SammBotNET.Modules
 		public Logger Logger { get; set; }
 		public FunService FunService { get; set; }
 
-		private int[] ShipSegments = new int[10]
+		private readonly int[] ShipSegments = new int[10]
 		{
 			10, 20, 30, 40, 50, 60, 70, 80, 90, 100
 		};
+
+		private const string TWEMOJI_ASSETS = "https://raw.githubusercontent.com/twitter/twemoji/ad3d3d669bb3697946577247ebb15818f09c6c91/assets/72x72/";
 
 		[Command("8ball")]
 		[Alias("ask", "8")]
@@ -115,63 +120,72 @@ namespace SammBotNET.Modules
 		[MustRunInGuild]
 		public async Task<RuntimeResult> ShipUsersAsync(SocketGuildUser FirstUser, SocketGuildUser SecondUser = null)
 		{
+			string ImageFilename = "shipImage.png";
+
 			//If the second user is null, ship the author with the first user.
-			SocketGuildUser LoverOne;
-			SocketGuildUser LoverTwo;
 			if (SecondUser == null)
 			{
-				LoverOne = Context.Message.Author as SocketGuildUser;
-				LoverTwo = FirstUser;
-			}
-			else
-			{
-				LoverOne = FirstUser;
-				LoverTwo = SecondUser;
+				SecondUser = FirstUser;
+				FirstUser = Context.Message.Author as SocketGuildUser;
 			}
 
 			//Get random ship percentage and text.
 			int Percentage = Settings.Instance.GlobalRng.Next(0, 101);
 			string PercentageText = string.Empty;
+			string PercentageEmoji = string.Empty;
 
 			switch(Percentage)
 			{
 				case 0:
-					PercentageText = "Incompatible! ❌";
+					PercentageText = "Incompatible!";
+					PercentageEmoji = "❌";
 					break;
 				case > 0 and <= 25:
-					PercentageText = "Awful! 💔";
+					PercentageText = "Awful!";
+					PercentageEmoji = "💔";
 					break;
 				case > 25 and <= 50:
-					PercentageText = "Not bad! ❤️‍🩹";
+					PercentageText = "Not bad!";
+					PercentageEmoji = "❤️";
 					break;
 				case > 50 and <= 75:
-					PercentageText = "Decent! ❤️";
+					PercentageText = "Decent!";
+					PercentageEmoji = "💝";
 					break;
 				case > 75 and <= 85:
-					PercentageText = "True love! 💖";
+					PercentageText = "True love!";
+					PercentageEmoji = "💖";
 					break;
 				case > 85 and < 100:
-					PercentageText = "AMAZING! 💛";
+					PercentageText = "AMAZING!";
+					PercentageEmoji = "💛";
 					break;
 				case 100:
-					PercentageText = "INSANE! 💗";
+					PercentageText = "INSANE!";
+					PercentageEmoji = "💗";
 					break;
 			}
 
 			//Split usernames into halves, then sanitize them.
-			string LoverOneUsername = LoverOne.GetUsernameOrNick();
-			string LoverTwoUsername = LoverTwo.GetUsernameOrNick();
+			string FirstUserName = FirstUser.GetUsernameOrNick();
+			string SecondUserName = SecondUser.GetUsernameOrNick();
 
-			if(LoverOneUsername.Length != 1)
-				LoverOneUsername = LoverOneUsername.Substring(0, LoverOneUsername.Length / 2);
-			if(LoverTwoUsername.Length != 1)
-				LoverTwoUsername = LoverTwoUsername.Substring(LoverTwoUsername.Length / 2, (int)Math.Ceiling(LoverTwoUsername.Length / 2f));
+			string NameFirstHalf = string.Empty;
+			string NameSecondHalf = string.Empty;
 
-			LoverOneUsername = Format.Sanitize(LoverOneUsername);
-			LoverTwoUsername = Format.Sanitize(LoverTwoUsername);
+			if(FirstUserName.Length != 1)
+				NameFirstHalf = FirstUserName.Substring(0, FirstUserName.Length / 2);
+			if(SecondUserName.Length != 1)
+				NameSecondHalf = SecondUserName.Substring(SecondUserName.Length / 2, (int)Math.Ceiling(SecondUserName.Length / 2f));
 
-			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).WithTitle(string.Empty).WithColor(new Color(221, 46, 68));
+			NameFirstHalf = Format.Sanitize(NameFirstHalf);
+			NameSecondHalf = Format.Sanitize(NameSecondHalf);
 
+			//Sanitize usernames now, if we do it earlier, it would mess up the splitting code.
+			FirstUserName = Format.Sanitize(FirstUserName);
+			SecondUserName = Format.Sanitize(SecondUserName);
+
+			//Fill up ship progress bar.
 			string ProgressBar = string.Empty;
 			for (int i = 0; i < ShipSegments.Length; i++)
 			{
@@ -189,14 +203,91 @@ namespace SammBotNET.Modules
 				}
 			}
 
-			ReplyEmbed.Description += $"🔀 **Ship Name**: {LoverOneUsername}{LoverTwoUsername}\n";
-			ReplyEmbed.Description += $"{ProgressBar} **{Percentage}%** {PercentageText}";
+			//Download their profile pictures and store into memory stream.
+			//Also download the emoji from Twemoji's GitHub.
+			byte[] FirstUserAvatarRaw = await FunService.FunHttpClient.GetByteArrayAsync(FirstUser.GetGuildGlobalOrDefaultAvatar(2048));
+			byte[] SecondUserAvatarRaw = await FunService.FunHttpClient.GetByteArrayAsync(SecondUser.GetGuildGlobalOrDefaultAvatar(2048));
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"💘 **THE SHIP-O-MATIC 5000** 💘\n" +
-				$"🔹 {Format.Sanitize(LoverOne.GetUsernameOrNick())}\n" +
-				$"🔹 {Format.Sanitize(LoverTwo.GetUsernameOrNick())}\n", embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+			Encoding EmojiEncoding = new UTF32Encoding(true, false);
+			string EmojiUrl = TWEMOJI_ASSETS + Convert.ToHexString(EmojiEncoding.GetBytes(PercentageEmoji)).TrimStart('0').ToLower() + ".png";
+
+			byte[] EmojiImageRaw = await FunService.FunHttpClient.GetByteArrayAsync(EmojiUrl);
+
+			MemoryStream FirstUserAvatarStream = new MemoryStream(FirstUserAvatarRaw);
+			MemoryStream SecondUserAvatarStream = new MemoryStream(SecondUserAvatarRaw);
+			MemoryStream EmojiStream = new MemoryStream(EmojiImageRaw);
+
+			SKImageInfo ImageInfo = new SKImageInfo(384, 192);
+			SKSurface Surface = SKSurface.Create(ImageInfo);
+
+			SKBitmap EmojiBitmap = SKBitmap.Decode(EmojiStream);
+			SKBitmap FirstUserAvatar = SKBitmap.Decode(FirstUserAvatarStream);
+			SKBitmap SecondUserAvatar = SKBitmap.Decode(SecondUserAvatarStream);
+
+			SKPath LoversClipPath = new SKPath();
+			LoversClipPath.AddCircle(ImageInfo.Width / 4, ImageInfo.Height / 2, ImageInfo.Height / 2);
+			LoversClipPath.AddCircle((int)(ImageInfo.Width / 1.3333f), ImageInfo.Height / 2, ImageInfo.Height / 2);
+
+			SKPaint EmojiPaint = new SKPaint
+			{
+				IsAntialias = true,
+				FilterQuality = SKFilterQuality.High,
+				ImageFilter = SKImageFilter.CreateDropShadow(0, 0, 5, 5, SKColors.Black.WithAlpha(192))
+			};
+
+			SKImage Image = null;
+			SKData Data = null;
+			MemoryStream TargetStream = null;
+			try
+			{
+				Surface.Canvas.Clear(SKColors.Transparent);
+
+				Surface.Canvas.Save();
+
+				Surface.Canvas.ClipPath(LoversClipPath, SKClipOperation.Intersect, true);
+				Surface.Canvas.DrawBitmap(FirstUserAvatar, new SKRect(0, 0, ImageInfo.Width / 2, ImageInfo.Height));
+				Surface.Canvas.DrawBitmap(SecondUserAvatar, new SKRect(ImageInfo.Width / 2, 0, ImageInfo.Width, ImageInfo.Height));
+
+				Surface.Canvas.Restore();
+
+				int EmojiSize = 32;
+				Surface.Canvas.DrawBitmap(EmojiBitmap, new SKRect(ImageInfo.Width / 2 - EmojiSize, ImageInfo.Height / 2 - EmojiSize,
+					ImageInfo.Width / 2 + EmojiSize, ImageInfo.Height / 2 + EmojiSize), EmojiPaint);
+
+				Image = Surface.Snapshot();
+				Data = Image.Encode(SKEncodedImageFormat.Png, 100);
+				TargetStream = new MemoryStream((int)Data.Size);
+
+				Data.SaveTo(TargetStream);
+
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).WithTitle(string.Empty).WithColor(new Color(221, 46, 68));
+
+				ReplyEmbed.ImageUrl = $"attachment://{ImageFilename}";
+
+				ReplyEmbed.Description += $"🔀 **Ship Name**: {NameFirstHalf}{NameSecondHalf}\n";
+				ReplyEmbed.Description += $"{ProgressBar} **{Percentage}%** - {PercentageEmoji} {PercentageText}";
+
+				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+				await Context.Channel.SendFileAsync(TargetStream, ImageFilename, $"💘 **THE SHIP-O-MATIC 5000** 💘\n" +
+					$"🔹 {FirstUserName}\n" +
+					$"🔹 {SecondUserName}\n", embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+			}
+			finally
+			{
+				if (FirstUserAvatarStream != null) FirstUserAvatarStream.Dispose();
+				if (SecondUserAvatarStream != null) SecondUserAvatarStream.Dispose();
+				if (Surface != null) Surface.Dispose();
+				if (EmojiStream != null) EmojiStream.Dispose();
+				if (EmojiBitmap != null) EmojiBitmap.Dispose();
+				if (FirstUserAvatar != null) FirstUserAvatar.Dispose();
+				if (SecondUserAvatar != null) SecondUserAvatar.Dispose();
+				if (LoversClipPath != null) LoversClipPath.Dispose();
+				if (EmojiPaint != null) EmojiPaint.Dispose();
+				if (Image != null) Image.Dispose();
+				if (Data != null) Data.Dispose();
+				if (TargetStream != null) TargetStream.Dispose();
+			}
 
 			return ExecutionResult.Succesful();
 		}
@@ -276,7 +367,7 @@ namespace SammBotNET.Modules
 			string QueryString = searchParams.ToQueryString();
 			string JsonReply = string.Empty;
 
-			using (HttpResponseMessage Response = await FunService.UrbanClient.GetAsync($"/v0/define?{QueryString}"))
+			using (HttpResponseMessage Response = await FunService.FunHttpClient.GetAsync($"https://api.urbandictionary.com/v0/define?{QueryString}"))
 			{
 				JsonReply = await Response.Content.ReadAsStringAsync();
 			}
