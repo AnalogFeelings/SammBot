@@ -114,7 +114,7 @@ namespace SammBotNET.Modules
 							.ChangeTitle($"Color Visualization Of {ParsedColor.ToHexString()}");
 
 						ReplyEmbed.ImageUrl = $"attachment://{Filename}";
-						ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
+						ReplyEmbed.Color = new Color(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
 
 						ReplyEmbed.Description += $"**__RGB__**: {ParsedColor.ToRgbString()}\n";
 						ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
@@ -183,7 +183,7 @@ namespace SammBotNET.Modules
 							.ChangeTitle($"Color Visualization Of {ParsedColor.ToRgbString()}");
 
 						ReplyEmbed.ImageUrl = $"attachment://{Filename}";
-						ReplyEmbed.Color = (Discord.Color)System.Drawing.Color.FromArgb(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
+						ReplyEmbed.Color = new Color(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
 
 						ReplyEmbed.Description += $"**__HEX__**: {ParsedColor.ToHexString()}\n";
 						ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
