@@ -114,184 +114,6 @@ namespace SammBotNET.Modules
 			return ExecutionResult.Succesful();
 		}
 
-		[Command("ship")]
-		[Alias("loverating, shiprating")]
-		[Summary("Ship 2 users together! Awww!")]
-		[MustRunInGuild]
-		public async Task<RuntimeResult> ShipUsersAsync(SocketGuildUser FirstUser, SocketGuildUser SecondUser = null)
-		{
-			string ImageFilename = "shipImage.png";
-
-			//If the second user is null, ship the author with the first user.
-			if (SecondUser == null)
-			{
-				SecondUser = FirstUser;
-				FirstUser = Context.Message.Author as SocketGuildUser;
-			}
-
-			//Get random ship percentage and text.
-			int Percentage = Settings.Instance.GlobalRng.Next(0, 101);
-			string PercentageText = string.Empty;
-			string PercentageEmoji = string.Empty;
-
-			switch(Percentage)
-			{
-				case 0:
-					PercentageText = "Incompatible!";
-					PercentageEmoji = "❌";
-					break;
-				case > 0 and <= 25:
-					PercentageText = "Awful!";
-					PercentageEmoji = "💔";
-					break;
-				case > 25 and <= 50:
-					PercentageText = "Not bad!";
-					PercentageEmoji = "❤️";
-					break;
-				case > 50 and <= 75:
-					PercentageText = "Decent!";
-					PercentageEmoji = "💝";
-					break;
-				case > 75 and <= 85:
-					PercentageText = "True love!";
-					PercentageEmoji = "💖";
-					break;
-				case > 85 and < 100:
-					PercentageText = "AMAZING!";
-					PercentageEmoji = "💛";
-					break;
-				case 100:
-					PercentageText = "INSANE!";
-					PercentageEmoji = "💗";
-					break;
-			}
-
-			//Split usernames into halves, then sanitize them.
-			string FirstUserName = FirstUser.GetUsernameOrNick();
-			string SecondUserName = SecondUser.GetUsernameOrNick();
-
-			string NameFirstHalf = string.Empty;
-			string NameSecondHalf = string.Empty;
-
-			if(FirstUserName.Length != 1)
-				NameFirstHalf = FirstUserName.Substring(0, FirstUserName.Length / 2);
-			if(SecondUserName.Length != 1)
-				NameSecondHalf = SecondUserName.Substring(SecondUserName.Length / 2, (int)Math.Ceiling(SecondUserName.Length / 2f));
-
-			NameFirstHalf = Format.Sanitize(NameFirstHalf);
-			NameSecondHalf = Format.Sanitize(NameSecondHalf);
-
-			//Sanitize usernames now, if we do it earlier, it would mess up the splitting code.
-			FirstUserName = Format.Sanitize(FirstUserName);
-			SecondUserName = Format.Sanitize(SecondUserName);
-
-			//Fill up ship progress bar.
-			string ProgressBar = string.Empty;
-			for (int i = 0; i < ShipSegments.Length; i++)
-			{
-				if (Percentage < ShipSegments[i])
-				{
-					if (i == 0) ProgressBar += Settings.Instance.LoadedConfig.ShipBarStartEmpty;
-					else if (i == ShipSegments.Length - 1) ProgressBar += Settings.Instance.LoadedConfig.ShipBarEndEmpty;
-					else ProgressBar += Settings.Instance.LoadedConfig.ShipBarHalfEmpty;
-				}
-				else
-				{
-					if (i == 0) ProgressBar += Settings.Instance.LoadedConfig.ShipBarStartFull;
-					else if (i == ShipSegments.Length - 1) ProgressBar += Settings.Instance.LoadedConfig.ShipBarEndFull;
-					else ProgressBar += Settings.Instance.LoadedConfig.ShipBarHalfFull;
-				}
-			}
-
-			//Download their profile pictures and store into memory stream.
-			//Also download the emoji from Twemoji's GitHub.
-			byte[] FirstUserAvatarRaw = await FunService.FunHttpClient.GetByteArrayAsync(FirstUser.GetGuildGlobalOrDefaultAvatar(2048));
-			byte[] SecondUserAvatarRaw = await FunService.FunHttpClient.GetByteArrayAsync(SecondUser.GetGuildGlobalOrDefaultAvatar(2048));
-
-			Encoding EmojiEncoding = new UTF32Encoding(true, false);
-			string EmojiUrl = TWEMOJI_ASSETS + Convert.ToHexString(EmojiEncoding.GetBytes(PercentageEmoji)).TrimStart('0').ToLower() + ".png";
-
-			byte[] EmojiImageRaw = await FunService.FunHttpClient.GetByteArrayAsync(EmojiUrl);
-
-			MemoryStream FirstUserAvatarStream = new MemoryStream(FirstUserAvatarRaw);
-			MemoryStream SecondUserAvatarStream = new MemoryStream(SecondUserAvatarRaw);
-			MemoryStream EmojiStream = new MemoryStream(EmojiImageRaw);
-
-			SKImageInfo ImageInfo = new SKImageInfo(384, 192);
-			SKSurface Surface = SKSurface.Create(ImageInfo);
-
-			SKBitmap EmojiBitmap = SKBitmap.Decode(EmojiStream);
-			SKBitmap FirstUserAvatar = SKBitmap.Decode(FirstUserAvatarStream);
-			SKBitmap SecondUserAvatar = SKBitmap.Decode(SecondUserAvatarStream);
-
-			SKPath LoversClipPath = new SKPath();
-			LoversClipPath.AddCircle(ImageInfo.Width / 4, ImageInfo.Height / 2, ImageInfo.Height / 2);
-			LoversClipPath.AddCircle((int)(ImageInfo.Width / 1.3333f), ImageInfo.Height / 2, ImageInfo.Height / 2);
-
-			SKPaint EmojiPaint = new SKPaint
-			{
-				IsAntialias = true,
-				FilterQuality = SKFilterQuality.High,
-				ImageFilter = SKImageFilter.CreateDropShadow(0, 0, 5, 5, SKColors.Black.WithAlpha(192))
-			};
-
-			SKImage Image = null;
-			SKData Data = null;
-			MemoryStream TargetStream = null;
-			try
-			{
-				Surface.Canvas.Clear(SKColors.Transparent);
-
-				Surface.Canvas.Save();
-
-				Surface.Canvas.ClipPath(LoversClipPath, SKClipOperation.Intersect, true);
-				Surface.Canvas.DrawBitmap(FirstUserAvatar, new SKRect(0, 0, ImageInfo.Width / 2, ImageInfo.Height));
-				Surface.Canvas.DrawBitmap(SecondUserAvatar, new SKRect(ImageInfo.Width / 2, 0, ImageInfo.Width, ImageInfo.Height));
-
-				Surface.Canvas.Restore();
-
-				int EmojiSize = 32;
-				Surface.Canvas.DrawBitmap(EmojiBitmap, new SKRect(ImageInfo.Width / 2 - EmojiSize, ImageInfo.Height / 2 - EmojiSize,
-					ImageInfo.Width / 2 + EmojiSize, ImageInfo.Height / 2 + EmojiSize), EmojiPaint);
-
-				Image = Surface.Snapshot();
-				Data = Image.Encode(SKEncodedImageFormat.Png, 100);
-				TargetStream = new MemoryStream((int)Data.Size);
-
-				Data.SaveTo(TargetStream);
-
-				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).WithTitle(string.Empty).WithColor(new Color(221, 46, 68));
-
-				ReplyEmbed.ImageUrl = $"attachment://{ImageFilename}";
-
-				ReplyEmbed.Description += $"🔀 **Ship Name**: {NameFirstHalf}{NameSecondHalf}\n";
-				ReplyEmbed.Description += $"{ProgressBar} **{Percentage}%** - {PercentageEmoji} {PercentageText}";
-
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-				await Context.Channel.SendFileAsync(TargetStream, ImageFilename, $"💘 **THE SHIP-O-MATIC 5000** 💘\n" +
-					$"🔹 {FirstUserName}\n" +
-					$"🔹 {SecondUserName}\n", embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
-			}
-			finally
-			{
-				if (FirstUserAvatarStream != null) FirstUserAvatarStream.Dispose();
-				if (SecondUserAvatarStream != null) SecondUserAvatarStream.Dispose();
-				if (Surface != null) Surface.Dispose();
-				if (EmojiStream != null) EmojiStream.Dispose();
-				if (EmojiBitmap != null) EmojiBitmap.Dispose();
-				if (FirstUserAvatar != null) FirstUserAvatar.Dispose();
-				if (SecondUserAvatar != null) SecondUserAvatar.Dispose();
-				if (LoversClipPath != null) LoversClipPath.Dispose();
-				if (EmojiPaint != null) EmojiPaint.Dispose();
-				if (Image != null) Image.Dispose();
-				if (Data != null) Data.Dispose();
-				if (TargetStream != null) TargetStream.Dispose();
-			}
-
-			return ExecutionResult.Succesful();
-		}
-
 		[Command("kill")]
 		[Alias("murder")]
 		[Summary("Commit first degree murder, fuck it.")]
@@ -326,6 +148,203 @@ namespace SammBotNET.Modules
 			await ReplyAsync(ChosenMessage, allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
+		}
+
+		[Command("ship")]
+		[Alias("loverating, shiprating")]
+		[Summary("Ship 2 users together! Awww!")]
+		[MustRunInGuild]
+		public async Task<RuntimeResult> ShipUsersAsync(SocketGuildUser FirstUser, SocketGuildUser SecondUser = null)
+		{
+			//If the second user is null, ship the author with the first user.
+			if (SecondUser == null)
+			{
+				SecondUser = FirstUser;
+				FirstUser = Context.Message.Author as SocketGuildUser;
+			}
+
+			//Do not allow people to ship themselves, thats Sweetheart from OMORI levels of weird.
+			if (FirstUser.Id == SecondUser.Id)
+				return ExecutionResult.FromError("You can't ship yourself!");
+
+			//Get random ship percentage and text.
+			int Percentage = Settings.Instance.GlobalRng.Next(0, 101);
+			string PercentageText = string.Empty;
+			string PercentageEmoji = string.Empty;
+
+			switch (Percentage)
+			{
+				case 0:
+					PercentageText = "Incompatible!";
+					PercentageEmoji = "❌";
+					break;
+				case > 0 and < 25:
+					PercentageText = "Awful!";
+					PercentageEmoji = "💔";
+					break;
+				case >= 25 and < 50:
+					PercentageText = "Not Bad!";
+					PercentageEmoji = "❤";
+					break;
+				case >= 50 and < 75:
+					PercentageText = "Decent!";
+					PercentageEmoji = "💝";
+					break;
+				case >= 75 and < 85:
+					PercentageText = "True Love!";
+					PercentageEmoji = "💖";
+					break;
+				case >= 85 and < 100:
+					PercentageText = "AMAZING!";
+					PercentageEmoji = "💛";
+					break;
+				case 100:
+					PercentageText = "INSANE!";
+					PercentageEmoji = "💗";
+					break;
+			}
+
+			//Split usernames into halves, then sanitize them.
+			string FirstUserName = FirstUser.GetUsernameOrNick();
+			string SecondUserName = SecondUser.GetUsernameOrNick();
+
+			string NameFirstHalf = string.Empty;
+			string NameSecondHalf = string.Empty;
+
+			//Do the actual splitting.
+			if (FirstUserName.Length != 1)
+				NameFirstHalf = FirstUserName.Substring(0, FirstUserName.Length / 2);
+			if (SecondUserName.Length != 1)
+				NameSecondHalf = SecondUserName.Substring(SecondUserName.Length / 2, (int)Math.Ceiling(SecondUserName.Length / 2f));
+
+			//Sanitize splitted halves.
+			NameFirstHalf = Format.Sanitize(NameFirstHalf);
+			NameSecondHalf = Format.Sanitize(NameSecondHalf);
+
+			//Sanitize usernames now, if we do it earlier, it would mess up the splitting code.
+			FirstUserName = Format.Sanitize(FirstUserName);
+			SecondUserName = Format.Sanitize(SecondUserName);
+
+			//Fill up ship progress bar.
+			string ProgressBar = string.Empty;
+			for (int i = 0; i < ShipSegments.Length; i++)
+			{
+				if (Percentage < ShipSegments[i])
+				{
+					if (i == 0)
+						ProgressBar += Settings.Instance.LoadedConfig.ShipBarStartEmpty;
+					else if (i == ShipSegments.Length - 1)
+						ProgressBar += Settings.Instance.LoadedConfig.ShipBarEndEmpty;
+					else
+						ProgressBar += Settings.Instance.LoadedConfig.ShipBarHalfEmpty;
+				}
+				else
+				{
+					if (i == 0)
+						ProgressBar += Settings.Instance.LoadedConfig.ShipBarStartFull;
+					else if (i == ShipSegments.Length - 1)
+						ProgressBar += Settings.Instance.LoadedConfig.ShipBarEndFull;
+					else
+						ProgressBar += Settings.Instance.LoadedConfig.ShipBarHalfFull;
+				}
+			}
+
+			//Twemoji's repository expects filenames in big endian UTF-32, with no leading zeroes AND in PNG format.
+			Encoding EmojiEncoding = new UTF32Encoding(true, false);
+			string EmojiUrl = TWEMOJI_ASSETS + Convert.ToHexString(EmojiEncoding.GetBytes(PercentageEmoji)).TrimStart('0').ToLower() + ".png";
+
+			//Image generation code is so fucking ugly.
+			//Buckle up, this is a bumpy ride.
+
+			//Create image resolution information.
+			SKImageInfo ImageInfo = new SKImageInfo(384, 192);
+
+			//Download their profile pictures and store into memory stream.
+			//Also download the emoji from Twemoji's GitHub.
+			using (MemoryStream FirstUserAvatarStream = await DownloadToMemoryStream(FirstUser.GetGuildGlobalOrDefaultAvatar(2048)))
+			using (MemoryStream SecondUserAvatarStream = await DownloadToMemoryStream(SecondUser.GetGuildGlobalOrDefaultAvatar(2048)))
+			using (MemoryStream EmojiStream = await DownloadToMemoryStream(EmojiUrl))
+
+			//Create the actual drawing surface.
+			using (SKSurface Surface = SKSurface.Create(ImageInfo))
+			{
+				Surface.Canvas.Clear(SKColors.Transparent);
+
+				using(SKBitmap FirstUserAvatar = SKBitmap.Decode(FirstUserAvatarStream))
+				using(SKBitmap SecondUserAvatar = SKBitmap.Decode(SecondUserAvatarStream))
+				using(SKBitmap EmojiBitmap = SKBitmap.Decode(EmojiStream))
+				using(SKPath LoversClipPath = new SKPath())
+				{
+					//Add the two "Windows" to the clip path. They have their origin in the center, not the top left corner.
+					LoversClipPath.AddCircle(ImageInfo.Width / 4, ImageInfo.Height / 2, ImageInfo.Height / 2);
+					LoversClipPath.AddCircle((int)(ImageInfo.Width / 1.3333f), ImageInfo.Height / 2, ImageInfo.Height / 2);
+
+					//Save canvas state.
+					Surface.Canvas.Save();
+
+					//Set clip path and draw the 2 profile pictures.
+					Surface.Canvas.ClipPath(LoversClipPath, SKClipOperation.Intersect, true);
+					Surface.Canvas.DrawBitmap(FirstUserAvatar, new SKRect(0, 0, ImageInfo.Width / 2, ImageInfo.Height));
+					Surface.Canvas.DrawBitmap(SecondUserAvatar, new SKRect(ImageInfo.Width / 2, 0, ImageInfo.Width, ImageInfo.Height));
+
+					//Restore the canvas state, currently the only way to remove a clip path.
+					Surface.Canvas.Restore();
+
+					//Use a custom filter with a drop shadow effect.
+					using(SKPaint EmojiPaint = new SKPaint())
+					{
+						EmojiPaint.IsAntialias = true;
+						EmojiPaint.FilterQuality = SKFilterQuality.High;
+						EmojiPaint.ImageFilter = SKImageFilter.CreateDropShadow(0, 0, 5, 5, SKColors.Black.WithAlpha(192));
+
+						//Draw the emoji in the middle of the image, do some math trickery to get it perfectly centered
+						//since bitmaps have their origin in their top left corner.
+						int EmojiSize = 32;
+						Surface.Canvas.DrawBitmap(EmojiBitmap, new SKRect(ImageInfo.Width / 2 - EmojiSize, ImageInfo.Height / 2 - EmojiSize,
+							ImageInfo.Width / 2 + EmojiSize, ImageInfo.Height / 2 + EmojiSize), EmojiPaint);
+					}
+				}
+
+				//Take snapshot, encode it into PNG, store it into MemoryStream to be uploaded to Discord.
+				using(SKImage SurfaceSnapshot = Surface.Snapshot())
+				using(SKData ImageData = SurfaceSnapshot.Encode(SKEncodedImageFormat.Png, 100))
+				using(MemoryStream FinalImageStream = new MemoryStream((int)ImageData.Size))
+				{
+					//Save the actual image into the stream.
+					ImageData.SaveTo(FinalImageStream);
+
+					//Build the message itself.
+					//Start by creating an embed with no title and the color of the red heart emoji.
+					EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).WithTitle(string.Empty).WithColor(new Color(221, 46, 68));
+
+					//Tell Discord that the image will be uploaded from the local storage.
+					ReplyEmbed.ImageUrl = $"attachment://shipImage.png";
+
+					ReplyEmbed.Description += $":twisted_rightwards_arrows:  **Ship Name**: {NameFirstHalf}{NameSecondHalf}\n";
+					ReplyEmbed.Description += $"{ProgressBar} **{Percentage}%** - {PercentageEmoji} {PercentageText}";
+
+					//Set the raw text outisde the embed.
+					string PreEmbedText = ":cupid: **THE SHIP-O-MATIC 5000** :cupid:\n";
+					PreEmbedText += $":small_blue_diamond: {FirstUserName}\n";
+					PreEmbedText += $":small_blue_diamond: {SecondUserName}\n";
+
+					MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+					AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
+					//Use SendFileAsync to be able to upload the stream to Discord's servers. The file name has to be the same as the one set in ImageUrl.
+					await Context.Channel.SendFileAsync(FinalImageStream, "shipImage.png", PreEmbedText,
+						embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+				}
+			}
+
+			return ExecutionResult.Succesful();
+		}
+
+		public async Task<MemoryStream> DownloadToMemoryStream(string Url)
+		{
+			byte[] RawData = await FunService.FunHttpClient.GetByteArrayAsync(Url);
+
+			return new MemoryStream(RawData);
 		}
 
 		[Command("urban")]
