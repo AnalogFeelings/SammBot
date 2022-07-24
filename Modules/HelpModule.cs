@@ -148,7 +148,7 @@ namespace SammBotNET.Modules
 					CommandParameters += "\n";
 				}
 
-				ReplyEmbed.AddField("Command Parameters", string.IsNullOrEmpty(CommandParameters) ? "No parameters." : CommandParameters);
+				ReplyEmbed.AddField("Command Parameters", Command.Parameters.Count == 0 ? "No parameters." : CommandParameters);
 
 				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}
