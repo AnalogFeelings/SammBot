@@ -21,6 +21,7 @@ namespace SammBotNET.Modules
 		[Command("cat")]
 		[Alias("kit", "kitto", "cogga")]
 		[Summary("Returns a random cat!")]
+		[FullDescription("Gets a random cat image from The Cat API!")]
 		public async Task<RuntimeResult> GetCatAsync()
 		{
 			CatImageSearchParams SearchParameters = new CatImageSearchParams()
@@ -47,7 +48,8 @@ namespace SammBotNET.Modules
 
 		[Command("dog")]
 		[Alias("doggo", "dogger")]
-		[Summary("Returns a random cat!")]
+		[Summary("Returns a random dog!")]
+		[FullDescription("Gets a random dog image from The Dog API!")]
 		public async Task<RuntimeResult> GetDogAsync()
 		{
 			DogImageSearchParams SearchParameters = new DogImageSearchParams()
@@ -75,6 +77,7 @@ namespace SammBotNET.Modules
 
 		[Command("peone")]
 		[Summary("Returns a random image of Peone.")]
+		[FullDescription("Returns a random image of Noah's favourite snake woman.")]
 		public async Task<RuntimeResult> GetPeoneAsync()
 		{
 			using (PeoneImagesDB PeoneDatabase = new PeoneImagesDB())
@@ -101,6 +104,7 @@ namespace SammBotNET.Modules
 
 		[Command("fox")]
 		[Summary("Returns a random fox!")]
+		[FullDescription("Gets a random fox image from the RandomFox API!")]
 		public async Task<RuntimeResult> GetFoxAsync()
 		{
 			string JsonReply = string.Empty;
@@ -124,6 +128,7 @@ namespace SammBotNET.Modules
 
 		[Command("duck")]
 		[Summary("Returns a random duck!")]
+		[FullDescription("Gets a random duck image from the RandomDuk API!")]
 		public async Task<RuntimeResult> GetDuckAsync()
 		{
 			string JsonReply = string.Empty;
@@ -147,6 +152,7 @@ namespace SammBotNET.Modules
 
 		[Command("scp")]
 		[Summary("Returns a random SCP!")]
+		[FullDescription("Returns a random SCP! The article may not exist.")]
 		public async Task<RuntimeResult> GetSCPAsync()
 		{
 			int MaxNumber = 6999;

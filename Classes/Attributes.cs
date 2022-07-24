@@ -16,6 +16,14 @@ namespace SammBotNET.Classes
 		public ModuleEmoji(string Emoji) => this.Emoji = Emoji;
 	}
 
+	[AttributeUsage(AttributeTargets.Method)]
+	public class FullDescription : Attribute
+	{
+		public string Description;
+
+		public FullDescription(string Description) => this.Description = Description;
+	}
+
 	[AttributeUsage(AttributeTargets.Class)]
 	public class RegisterHook : Attribute
 	{

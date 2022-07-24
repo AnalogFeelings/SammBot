@@ -19,6 +19,8 @@ namespace SammBotNET.Modules
 
 		[Command("random")]
 		[Summary("Sends a random quote from a user in the server!")]
+		[FullDescription("Remember those funny quote memes? Now you can kind of recreate them with this command!")]
+		[MustRunInGuild]
 		public async Task<RuntimeResult> RandomAsync()
 		{
 			using (PhrasesDB PhrasesDatabase = new PhrasesDB())
@@ -47,13 +49,15 @@ namespace SammBotNET.Modules
 		[Command("by")]
 		[Alias("from")]
 		[Summary("Sends a quote from a user in the server!")]
+		[FullDescription("Gets a random quote from the specified user!")]
+		[MustRunInGuild]
 		public async Task<RuntimeResult> PhraseAsync(IUser User)
 		{
 			using (PhrasesDB PhrasesDatabase = new PhrasesDB())
 			{
 				List<Phrase> QuoteList = await PhrasesDatabase.Phrase.ToListAsync();
 				if (!QuoteList.Any(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id))
-					return ExecutionResult.FromError($"This user doesn't have any phrases!");
+					return ExecutionResult.FromError($"This user doesn't have any quotes!");
 
 				Phrase ChosenQuote = QuoteList.Where(x => x.AuthorId == User.Id && x.ServerId == Context.Guild.Id).ToList().PickRandom();
 

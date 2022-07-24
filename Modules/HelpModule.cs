@@ -12,8 +12,9 @@ namespace SammBotNET.Modules
 		public CommandService CommandService { get; set; }
 
 		[Command("help")]
-		[HideInHelp]
 		[Summary("Provides all commands and modules available.")]
+		[FullDescription("Provides a list of all the commands and modules available.")]
+		[HideInHelp]
 		public async Task<RuntimeResult> HelpAsync()
 		{
 			string BotPrefix = Settings.Instance.LoadedConfig.BotPrefix;
@@ -52,8 +53,9 @@ namespace SammBotNET.Modules
 		}
 
 		[Command("help")]
-		[HideInHelp]
 		[Summary("Provides all commands and modules available.")]
+		[FullDescription("Provides a list of all the commands and modules available.")]
+		[HideInHelp]
 		public async Task<RuntimeResult> HelpAsync([Remainder] string ModuleName)
 		{
 			string BotPrefix = Settings.Instance.LoadedConfig.BotPrefix;
@@ -66,17 +68,16 @@ namespace SammBotNET.Modules
 			{
 				ModuleInfo ModuleInfo = CommandService.Modules.SingleOrDefault(x => x.Name == ModuleName || x.Group == ModuleName);
 
-				if (ModuleInfo == null || ModuleInfo == default(ModuleInfo))
+				if (ModuleInfo == default(ModuleInfo))
 					return ExecutionResult.FromError($"The module \"{ModuleName}\" doesn't exist.");
 
 				ModuleEmoji ModuleEmoji = ModuleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
-				string StringifiedEmoji = ModuleEmoji != null ? ModuleEmoji.Emoji + " " : string.Empty;
+				string StringifiedEmoji = ModuleEmoji != default(ModuleEmoji) ? ModuleEmoji.Emoji + " " : string.Empty;
 
 				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context,
 						"Help", $"**{StringifiedEmoji}{ModuleInfo.Name}**\n{ModuleInfo.Summary}\n**Syntax**: `{BotPrefix}{ModuleInfo.Group} <Command Name>`");
 
 				bool FoundCommand = false;
-				string EmbedDescription = string.Empty;
 				foreach (CommandInfo Command in ModuleInfo.Commands)
 				{
 					if (Command.Attributes.Any(x => x is HideInHelp)) continue;
@@ -85,7 +86,7 @@ namespace SammBotNET.Modules
 
 					if (Result.IsSuccess)
 					{
-						ReplyEmbed.AddField(Command.Name, $"{(string.IsNullOrWhiteSpace(Command.Summary) ? "No description." : Command.Summary)}", true);
+						ReplyEmbed.AddField(Command.Name, $"{(string.IsNullOrWhiteSpace(Command.Summary) ? "No summary." : Command.Summary)}", true);
 						FoundCommand = true;
 					}
 				}
@@ -109,8 +110,6 @@ namespace SammBotNET.Modules
 				if (Match.Command == null)
 					return ExecutionResult.FromError($"There is no command named \"{ModuleName}\". Check your spelling.");
 
-				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help");
-
 				CommandInfo Command = Match.Command;
 
 				List<string> ProcessedAliases = Command.Aliases.ToList();
@@ -122,10 +121,16 @@ namespace SammBotNET.Modules
 					ProcessedAliases[i] = ProcessedAliases[i].Split(' ').Last();
 				}
 
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help");
+
+				FullDescription CommandDescription = Command.Attributes.FirstOrDefault(x => x is FullDescription) as FullDescription;
+				string FormattedDescription = CommandDescription != default(FullDescription) && !string.IsNullOrEmpty(CommandDescription.Description)
+					? CommandDescription.Description : "No description.";
+
 				ReplyEmbed.AddField("Command Name", Command.Name, true);
 				ReplyEmbed.AddField("Command Group", Command.Module.Group, true);
 				ReplyEmbed.AddField("Command Aliases", ProcessedAliases.Count == 0 ? "No aliases." : string.Join(", ", ProcessedAliases.ToArray()), false);
-				ReplyEmbed.AddField("Command Summary", string.IsNullOrWhiteSpace(Command.Summary) ? "No summary." : Command.Summary);
+				ReplyEmbed.AddField("Command Description", FormattedDescription);
 
 				string CommandParameters = "`*` = Optional **||** `^` = No quote marks needed if it contains spaces.\n";
 				foreach (ParameterInfo ParameterInfo in Command.Parameters)

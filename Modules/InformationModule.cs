@@ -20,6 +20,7 @@ namespace SammBotNET.Modules
 
 		[Command("full")]
 		[Summary("Shows the FULL information of the bot.")]
+		[FullDescription("Shows version, uptime, ping, etc...")]
 		public async Task<RuntimeResult> InformationFullAsync()
 		{
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All public information about the bot.");
@@ -43,34 +44,10 @@ namespace SammBotNET.Modules
 			return ExecutionResult.Succesful();
 		}
 
-		[Command("servers")]
-		[Alias("guilds")]
-		[Summary("Shows a list of all the servers the bot is in.")]
-		[BotOwnerOnly]
-		public async Task<RuntimeResult> ServersAsync()
-		{
-			string BuiltMessage = "I am invited in the following servers:\n```\n";
-			string CodeBlock = string.Empty;
-
-			int i = 1;
-			foreach (SocketGuild TargetGuild in Context.Client.Guilds)
-			{
-				CodeBlock += $"{i}. {TargetGuild.Name} (ID {TargetGuild.Id})\n";
-				i++;
-			}
-			CodeBlock += "```";
-			BuiltMessage += CodeBlock;
-
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync(BuiltMessage, allowedMentions: AllowedMentions, messageReference: Reference);
-
-			return ExecutionResult.Succesful();
-		}
-
 		[Command("serverinfo")]
 		[Alias("server", "guildinfo")]
 		[Summary("Get information about a server!")]
+		[FullDescription("Gets all the information about the server you execute the command in.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> ServerInfoAsync()
 		{
@@ -112,8 +89,9 @@ namespace SammBotNET.Modules
 
 		[Command("userinfo")]
 		[Alias("user")]
-		[MustRunInGuild]
 		[Summary("Get information about a user!")]
+		[FullDescription("Gets all the information about the provided user.")]
+		[MustRunInGuild]
 		public async Task<RuntimeResult> UserInfoAsync(SocketGuildUser User = null)
 		{
 			SocketGuildUser TargetUser = User ?? Context.Message.Author as SocketGuildUser;

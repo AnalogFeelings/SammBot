@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using SammBotNET.Classes.ClassExtensions;
 using SammBotNET.Extensions.ClassExtensions;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,19 +24,21 @@ namespace SammBotNET.Modules
 		[Command("ban")]
 		[Alias("toss", "bonk")]
 		[Summary("Bans a user with a reason.")]
+		[FullDescription("Bans a user from the server with the set reason.")]
+		[MustRunInGuild]
 		[RequireBotPermission(GuildPermission.BanMembers)]
 		[RequireUserPermission(GuildPermission.BanMembers)]
-		public async Task<RuntimeResult> BanUserAsync(IUser User, int PruneDays, string Reason = null)
+		public async Task<RuntimeResult> BanUserAsync(SocketGuildUser TargetUser, int PruneDays, string Reason = null)
 		{
 			string BanReason = Reason ?? "No reason specified.";
 
 			using (Context.Channel.EnterTypingState())
 			{
-				await Context.Guild.AddBanAsync(User, PruneDays, BanReason);
+				await Context.Guild.AddBanAsync(TargetUser, PruneDays, BanReason);
 
 				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-				await ReplyAsync($":hammer: **Banned user \"{User.Username}\" from this server.**\n" +
+				await ReplyAsync($":hammer: **Banned user \"{TargetUser.Username}\" from this server.**\n" +
 					$"Reason: *{BanReason}*", allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
@@ -47,12 +48,13 @@ namespace SammBotNET.Modules
 		[Command("kick")]
 		[Alias("boot", "exile")]
 		[Summary("Kicks a user with a reason.")]
+		[FullDescription("Kicks a user from the server with the set reason.")]
+		[MustRunInGuild]
 		[RequireBotPermission(GuildPermission.KickMembers)]
 		[RequireUserPermission(GuildPermission.KickMembers)]
-		public async Task<RuntimeResult> KickUserAsync(IUser User, string Reason = null)
+		public async Task<RuntimeResult> KickUserAsync(SocketGuildUser TargetUser, string Reason = null)
 		{
 			string KickReason = Reason ?? "No reason specified.";
-			IGuildUser TargetUser = Context.Guild.GetUser(User.Id);
 
 			using (Context.Channel.EnterTypingState())
 			{
@@ -60,7 +62,7 @@ namespace SammBotNET.Modules
 
 				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-				await ReplyAsync($":boot: **Kicked user \"{User.Username}\" from this server.**\n" +
+				await ReplyAsync($":boot: **Kicked user \"{TargetUser.Username}\" from this server.**\n" +
 					$"Reason: *{KickReason}*", allowedMentions: AllowedMentions, messageReference: Reference);
 			}
 
@@ -70,6 +72,8 @@ namespace SammBotNET.Modules
 		[Command("viewhex")]
 		[Alias("hex")]
 		[Summary("Displays a HEX color, and converts it in other formats.")]
+		[FullDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
+			"Also converts it to RGB, CMYK, HSV and HSL.")]
 		public async Task<RuntimeResult> VisualizeColorHex([Remainder] string HexColor)
 		{
 			string Filename = "colorView.png";
@@ -139,16 +143,16 @@ namespace SammBotNET.Modules
 		[Command("viewrgb")]
 		[Alias("rgb")]
 		[Summary("Displays an RGB color, and converts it in other formats.")]
+		[FullDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
+			"Also converts it to HEX, CMYK, HSV and HSL.")]
 		public async Task<RuntimeResult> VisualizeColorRgb(byte Red, byte Green, byte Blue)
 		{
 			string Filename = "colorView.png";
 			SKColor ParsedColor;
-
 			SKImageInfo ImageInfo = new SKImageInfo(512, 512);
 			using (SKSurface Surface = SKSurface.Create(ImageInfo))
 			{
 				ParsedColor = new SKColor(Red, Green, Blue);
-
 				Surface.Canvas.Clear(ParsedColor);
 
 				using (SKPaint Paint = new SKPaint())
@@ -208,6 +212,8 @@ namespace SammBotNET.Modules
 		[Command("avatar")]
 		[Alias("pfp", "pic", "userpic")]
 		[Summary("Gets the avatar of a user.")]
+		[FullDescription("Gets the avatar of a user. If `User` is a server user, it will display the per-guild avatar (if they have any), and send a link to the global one in " +
+			"the embed description.")]
 		public async Task<RuntimeResult> GetProfilePicAsync(IUser User)
 		{
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
@@ -253,6 +259,7 @@ namespace SammBotNET.Modules
 
 		[Command("weather")]
 		[Summary("Gets the current weather for your city.")]
+		[FullDescription("Gets the current weather forecast for your city. May not have all the information available, and the location may not be accurate.")]
 		public async Task<RuntimeResult> GetWeatherAsync([Remainder] string City)
 		{
 			List<Location> RetrievedLocations = await GetWeatherLocationsAsync(City);

@@ -22,6 +22,7 @@ namespace SammBotNET.Modules
 		[Command("delete")]
 		[Alias("remove", "destroy")]
 		[Summary("Deletes a user tag.")]
+		[FullDescription("Delets a user tag that you own.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> DeleteTagAsync(string Name)
 		{
@@ -52,6 +53,7 @@ namespace SammBotNET.Modules
 		[Command("get")]
 		[Alias("what")]
 		[Summary("Gets a tag by its name, and replies.")]
+		[FullDescription("Retrieve a tag by its name, and sends its content on the chat.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> GetTagAsync(string Name)
 		{
@@ -74,6 +76,7 @@ namespace SammBotNET.Modules
 		[Command("search")]
 		[Alias("find", "similar")]
 		[Summary("Searches for similar tags.")]
+		[FullDescription("Searches for tags with a similar name.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> SearchTagsAsync(string Name)
 		{
@@ -105,6 +108,7 @@ namespace SammBotNET.Modules
 		[Command("create")]
 		[Alias("new")]
 		[Summary("Creates a new tag.")]
+		[FullDescription("Creates a new tag with the specified reply.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> CreateTagAsync(string Name, string Reply)
 		{

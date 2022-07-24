@@ -30,7 +30,8 @@ namespace SammBotNET.Modules
 
 		[Command("8ball")]
 		[Alias("ask", "8")]
-		[Summary("Ask the magic 8 ball!")]
+		[Summary("Ask the magic 8-ball!")]
+		[FullDescription("Ask a question to the magic 8-ball! Not guaranteed to answer first try!")]
 		public async Task<RuntimeResult> MagicBallAsync([Remainder] string Question)
 		{
 			string ChosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
@@ -49,12 +50,13 @@ namespace SammBotNET.Modules
 		[Command("dice")]
 		[Alias("roll")]
 		[Summary("Roll the dice, and get a random number!")]
+		[FullDescription("Roll the dice! It returns a random number between 1 and `FaceCount`. `FaceCount` must be larger than 3!")]
 		public async Task<RuntimeResult> RollDiceAsync(int FaceCount = 6)
 		{
 			if (FaceCount < 3)
 				return ExecutionResult.FromError("The dice must have at least 3 faces!");
 
-			int ChosenNumber = Settings.Instance.GlobalRng.Next(0, FaceCount + 1);
+			int ChosenNumber = Settings.Instance.GlobalRng.Next(1, FaceCount + 1);
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
@@ -70,6 +72,7 @@ namespace SammBotNET.Modules
 		[Command("hug")]
 		[Alias("cuddle")]
 		[Summary("Hug a user!")]
+		[FullDescription("Hugs are good for everyone! Spread the joy with this command.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> HugUserAsync(IUser User)
 		{
@@ -86,12 +89,15 @@ namespace SammBotNET.Modules
 
 		[Command("pat")]
 		[Summary("Pats a user!")]
+		[FullDescription("Pets are ALSO good for everyone! Spread the joy with this command.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> PatUserAsync(IUser User)
 		{
+			SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
+
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"(c・_・)ノ”<@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
+			await ReplyAsync($"Pats from **{AuthorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -99,6 +105,7 @@ namespace SammBotNET.Modules
 		[Command("dox")]
 		[Alias("doxx")]
 		[Summary("Leak someone's (fake) IP address!")]
+		[FullDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> DoxUserAsync(IUser User)
 		{
@@ -117,17 +124,17 @@ namespace SammBotNET.Modules
 		[Command("kill")]
 		[Alias("murder")]
 		[Summary("Commit first degree murder, fuck it.")]
+		[FullDescription("Commit first degree murder! Don't worry, its fictional, the police isn't after you.")]
 		[MustRunInGuild]
-		public async Task<RuntimeResult> FirstDegreeMurderAsync(IUser User)
+		public async Task<RuntimeResult> FirstDegreeMurderAsync(SocketGuildUser TargetUser)
 		{
-			SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
-			SocketGuildUser TargetGuildUser = User as SocketGuildUser;
+			SocketGuildUser AuthorUser = Context.Message.Author as SocketGuildUser;
 
-			Pronoun AuthorPronouns = await AuthorGuildUser.GetUserPronouns();
-			Pronoun TargetPronouns = await TargetGuildUser.GetUserPronouns();
+			Pronoun AuthorPronouns = await AuthorUser.GetUserPronouns();
+			Pronoun TargetPronouns = await TargetUser.GetUserPronouns();
 
 			string ChosenMessage = Settings.Instance.LoadedConfig.KillMessages.PickRandom();
-			ChosenMessage = ChosenMessage.Replace("{Murderer}", $"**{AuthorGuildUser.GetUsernameOrNick()}**");
+			ChosenMessage = ChosenMessage.Replace("{Murderer}", $"**{AuthorUser.GetUsernameOrNick()}**");
 			ChosenMessage = ChosenMessage.Replace("{mPrnSub}", AuthorPronouns.Subject);
 			ChosenMessage = ChosenMessage.Replace("{mPrnObj}", AuthorPronouns.Object);
 			ChosenMessage = ChosenMessage.Replace("{mPrnDepPos}", AuthorPronouns.DependentPossessive);
@@ -135,7 +142,7 @@ namespace SammBotNET.Modules
 			ChosenMessage = ChosenMessage.Replace("{mPrnRefSing}", AuthorPronouns.ReflexiveSingular);
 			ChosenMessage = ChosenMessage.Replace("{mPrnRefPlur}", AuthorPronouns.ReflexivePlural);
 
-			ChosenMessage = ChosenMessage.Replace("{Victim}", $"**{TargetGuildUser.GetUsernameOrNick()}**");
+			ChosenMessage = ChosenMessage.Replace("{Victim}", $"**{TargetUser.GetUsernameOrNick()}**");
 			ChosenMessage = ChosenMessage.Replace("{vPrnSub}", TargetPronouns.Subject);
 			ChosenMessage = ChosenMessage.Replace("{vPrnObj}", TargetPronouns.Object);
 			ChosenMessage = ChosenMessage.Replace("{vPrnDepPos}", TargetPronouns.DependentPossessive);
@@ -153,6 +160,7 @@ namespace SammBotNET.Modules
 		[Command("ship")]
 		[Alias("loverating, shiprating")]
 		[Summary("Ship 2 users together! Awww!")]
+		[FullDescription("The Ship-O-Matic 5000 is here! If `SecondUser` is left empty, you will be shipped with `FirstUser`.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> ShipUsersAsync(SocketGuildUser FirstUser, SocketGuildUser SecondUser = null)
 		{
@@ -349,6 +357,7 @@ namespace SammBotNET.Modules
 
 		[Command("urban")]
 		[Summary("Gets a definition from the urban dictionary!")]
+		[FullDescription("Gets a definition from the urban dictionary. Click the embed's title to open the definition in your browser.")]
 		public async Task<RuntimeResult> UrbanAsync([Remainder] string Term)
 		{
 			UrbanSearchParams SearchParameters = new()
