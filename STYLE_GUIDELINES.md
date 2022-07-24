@@ -20,6 +20,7 @@ A command is defined by 2 or more function attributes. They may appear in this o
 * `Command`
 * `Alias` (Optional)
 * `Summary`
+* `FullDescription`
 * `BotOwnerOnly` (Optional)
 * `MustRunInGuild` (Optional)
 * `RequireBotPermission` (Optional)
