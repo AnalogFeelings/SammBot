@@ -16,7 +16,7 @@ namespace SammBotNET.Modules
 	{
 		[Command("setpronouns")]
 		[Summary("Set your pronouns with this command.")]
-		[FullDescription("Set your pronouns with this command. Some commands use **they/them** by default unless you set something else.")]
+		[FullDescription("Set your pronouns with this command. Some commands use they/them by default unless you set something else.")]
 		public async Task<RuntimeResult> SetPronounsAsync(string Subject, string Object,
 			string DependentPossessive, string IndependentPossessive, string ReflexiveSingular, string ReflexivePlural)
 		{

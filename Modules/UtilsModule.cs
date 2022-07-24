@@ -212,7 +212,7 @@ namespace SammBotNET.Modules
 		[Command("avatar")]
 		[Alias("pfp", "pic", "userpic")]
 		[Summary("Gets the avatar of a user.")]
-		[FullDescription("Gets the avatar of a user. If `User` is a server user, it will display the per-guild avatar (if they have any), and send a link to the global one in " +
+		[FullDescription("Gets the avatar of a user. If **User** is a server user, it will display the per-guild avatar (if they have any), and send a link to the global one in " +
 			"the embed description.")]
 		public async Task<RuntimeResult> GetProfilePicAsync(IUser User)
 		{

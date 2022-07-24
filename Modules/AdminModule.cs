@@ -24,7 +24,7 @@ namespace SammBotNET.Modules
 
 		[Command("say")]
 		[Summary("Make the bot say something.")]
-		[FullDescription("Makes the bot say something. Use the `setsay` command to set the channel and guild beforehand.")]
+		[FullDescription("Makes the bot say something. Use the **setsay** command to set the channel and guild beforehand.")]
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> SayMessageAsync([Remainder] string Message)
 		{
@@ -166,7 +166,7 @@ namespace SammBotNET.Modules
 		[Alias("lc")]
 		[Summary("Lists all of the bot settings available.")]
 		[FullDescription("Lists the bot settings. Does NOT list the bot's token or the URL detection regex. Some settings are not modifiable without a restart. " +
-			"Set Override to true to list non-modifiable settings.")]
+			"Set **Override** to true to list non-modifiable settings.")]
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> ListConfigAsync(bool Override = false)
 		{
@@ -195,7 +195,7 @@ namespace SammBotNET.Modules
 		[Command("setcfg")]
 		[Alias("config")]
 		[Summary("Sets a bot setting to the specified value.")]
-		[FullDescription("Sets a bot setting to the value specified. If the setting is marked as non-modifiable, `RestartBot` must be true.")]
+		[FullDescription("Sets a bot setting to the value specified. If the setting is marked as non-modifiable, **RestartBot** must be true.")]
 		[BotOwnerOnly]
 		public async Task<RuntimeResult> SetConfigAsync(string VarName, string VarValue, bool RestartBot = false)
 		{

@@ -50,7 +50,7 @@ namespace SammBotNET.Modules
 		[Command("dice")]
 		[Alias("roll")]
 		[Summary("Roll the dice, and get a random number!")]
-		[FullDescription("Roll the dice! It returns a random number between 1 and `FaceCount`. `FaceCount` must be larger than 3!")]
+		[FullDescription("Roll the dice! It returns a random number between 1 and **FaceCount**. **FaceCount** must be larger than 3!")]
 		public async Task<RuntimeResult> RollDiceAsync(int FaceCount = 6)
 		{
 			if (FaceCount < 3)
@@ -160,7 +160,7 @@ namespace SammBotNET.Modules
 		[Command("ship")]
 		[Alias("loverating, shiprating")]
 		[Summary("Ship 2 users together! Awww!")]
-		[FullDescription("The Ship-O-Matic 5000 is here! If `SecondUser` is left empty, you will be shipped with `FirstUser`.")]
+		[FullDescription("The Ship-O-Matic 5000 is here! If **SecondUser** is left empty, you will be shipped with **FirstUser**.")]
 		[MustRunInGuild]
 		public async Task<RuntimeResult> ShipUsersAsync(SocketGuildUser FirstUser, SocketGuildUser SecondUser = null)
 		{
