@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-	[Name("Administration")]
-	[Group("admin")]
+	[Name("Bot Administration")]
+	[Group("badmin")]
 	[Summary("Bot management commands. Bot owner only.")]
-	[ModuleEmoji("🛠")]
-	public class AdminModule : ModuleBase<SocketCommandContext>
+	[ModuleEmoji("⚙️")]
+	public class BotAdminModule : ModuleBase<SocketCommandContext>
 	{
 		public AdminService AdminService { get; set; }
 		public Logger Logger { get; set; }
