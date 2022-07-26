@@ -28,6 +28,8 @@ namespace SammBotNET.Services
 
 		public AutodeqList<string> RecentAvatars;
 
+		private bool FirstTimeConnection = true;
+
 		public StartupService(IServiceProvider provider, DiscordSocketClient client, CommandService command, Logger logger)
 		{
 			ServiceProvider = provider;
@@ -83,7 +85,12 @@ namespace SammBotNET.Services
 
 		private Task OnConnected()
 		{
-			BotLogger.Log("Connected to gateway.", LogSeverity.Information);
+			if(FirstTimeConnection)
+			{
+				BotLogger.Log("Connected to gateway.", LogSeverity.Information);
+				FirstTimeConnection = false;
+			}
+			else BotLogger.Log("Reconnected to gateway.", LogSeverity.Information);
 
 			return Task.CompletedTask;
 		}
@@ -141,7 +148,7 @@ namespace SammBotNET.Services
 
 		public Task OnDisconnect(Exception IncludedException)
 		{
-			BotLogger.Log("Client has disconnected from the gateway! Exception details below.\n" + IncludedException.ToString(), LogSeverity.Warning);
+			BotLogger.Log("Client has disconnected from the gateway! Reason: " + IncludedException.Message, LogSeverity.Warning);
 
 			return Task.CompletedTask;
 		}
