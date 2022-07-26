@@ -38,7 +38,57 @@ namespace SammBotNET.Services
 			RecentAvatars = new AutodeqList<string>(Settings.Instance.LoadedConfig.AvatarRecentQueueSize);
 		}
 
-		public Task Ready()
+		public async Task StartAsync()
+		{
+			BotLogger.Log("Logging in as a bot...", LogSeverity.Information);
+			await SocketClient.LoginAsync(TokenType.Bot, Settings.Instance.LoadedConfig.BotToken);
+			await SocketClient.StartAsync();
+			BotLogger.Log("Succesfully connected to web socket.", LogSeverity.Information);
+
+			if (Settings.Instance.LoadedConfig.RotatingStatus)
+			{
+				BotLogger.Log("Loading rotating status list...", LogSeverity.Information);
+				if (!Settings.Instance.LoadStatuses())
+				{
+					BotLogger.Log($"Could not load {Settings.Instance.StatusFile} correctly.", LogSeverity.Error);
+				}
+			}
+
+			SocketClient.Connected += OnConnected;
+			SocketClient.Ready += OnReady;
+			SocketClient.Disconnected += OnDisconnect;
+			Console.Clear();
+
+			await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
+			Settings.Instance.StartupStopwatch.Stop();
+
+			Console.Title = $"Samm-Bot {Settings.Instance.LoadedConfig.BotVersion}";
+
+			string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
+			string MatchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
+
+			Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel(Color.SkyBlue));
+			Console.Write("===========".Pastel(Color.CadetBlue));
+			Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}".Pastel(Color.LightCyan));
+			Console.WriteLine("===========".Pastel(Color.CadetBlue));
+			Console.WriteLine();
+
+			Settings.Instance.RuntimeStopwatch.Start();
+
+			BotLogger.Log($"Using MatchaLogger {MatchaVersion}.", LogSeverity.Information);
+
+			BotLogger.Log($"{Settings.Instance.LoadedConfig.BotName} took" +
+				$" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
+		}
+
+		private Task OnConnected()
+		{
+			BotLogger.Log("Connected to gateway.", LogSeverity.Information);
+
+			return Task.CompletedTask;
+		}
+
+		public Task OnReady()
 		{
 			if (Settings.Instance.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
 			{
@@ -84,48 +134,16 @@ namespace SammBotNET.Services
 			}, null, TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime),
 					 TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime));
 
+			BotLogger.Log($"{Settings.Instance.LoadedConfig.BotName} is ready to run.", LogSeverity.Information);
+
 			return Task.CompletedTask;
 		}
 
-		public async Task StartAsync()
+		public Task OnDisconnect(Exception IncludedException)
 		{
-			BotLogger.Log("Logging in as a bot...", LogSeverity.Information);
-			await SocketClient.LoginAsync(TokenType.Bot, Settings.Instance.LoadedConfig.BotToken);
-			await SocketClient.StartAsync();
-			BotLogger.Log("Succesfully connected to web socket.", LogSeverity.Information);
+			BotLogger.Log("Client has disconnected from the gateway! Exception details below.\n" + IncludedException.ToString(), LogSeverity.Warning);
 
-			if (Settings.Instance.LoadedConfig.RotatingStatus)
-			{
-				BotLogger.Log("Loading rotating status list...", LogSeverity.Information);
-				if (!Settings.Instance.LoadStatuses())
-				{
-					BotLogger.Log($"Could not load {Settings.Instance.StatusFile} correctly.", LogSeverity.Error);
-				}
-			}
-
-			SocketClient.Ready += Ready;
-			Console.Clear();
-
-			await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
-			Settings.Instance.StartupStopwatch.Stop();
-
-			Console.Title = $"Samm-Bot {Settings.Instance.LoadedConfig.BotVersion}";
-
-			string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
-			string MatchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
-
-			Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel(Color.SkyBlue));
-			Console.Write("===========".Pastel(Color.CadetBlue));
-			Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}".Pastel(Color.LightCyan));
-			Console.WriteLine("===========".Pastel(Color.CadetBlue));
-			Console.WriteLine();
-
-			Settings.Instance.RuntimeStopwatch.Start();
-
-			BotLogger.Log($"Using MatchaLogger {MatchaVersion}.", LogSeverity.Information);
-
-			BotLogger.Log($"{Settings.Instance.LoadedConfig.BotName} took" +
-				$" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
+			return Task.CompletedTask;
 		}
 	}
 }
