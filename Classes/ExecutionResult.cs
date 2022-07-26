@@ -6,8 +6,8 @@ namespace SammBotNET.Classes
 	{
 		public ExecutionResult(CommandError? Error, string Reason) : base(Error, Reason) { }
 		public static ExecutionResult FromError(string Reason) =>
-			new(CommandError.Unsuccessful, Reason);
+			new ExecutionResult(CommandError.Unsuccessful, Reason);
 		public static ExecutionResult Succesful() =>
-			new(null, "Execution succesful.");
+			new ExecutionResult(null, "Execution succesful.");
 	}
 }
