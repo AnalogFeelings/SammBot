@@ -89,7 +89,6 @@ namespace SammBotNET.Core
 		public string BotVersion { get; set; } = "v0.1";
 		public string BotPrefix { get; set; } = "s.";
 
-		public ulong OwnerUserId { get; set; } = 337950448130719754; //AKA AestheticalZ's discord account.
 		public int Rule34Threshold { get; set; } = 30;
 		public int QueueWaitTime { get; set; } = 1000;
 		public int TagDistance { get; set; } = 3;

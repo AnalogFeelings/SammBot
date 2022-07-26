@@ -17,7 +17,7 @@ namespace SammBotNET.Modules
 		[Alias("usertags")]
 		[Summary("Deletes all tags.")]
 		[FullDescription("Dumps the entire user tag database.")]
-		[BotOwnerOnly]
+		[RequireOwner]
 		public async Task<RuntimeResult> FlushTagsAsync()
 		{
 			using (TagDB CommandDatabase = new TagDB())
@@ -38,7 +38,7 @@ namespace SammBotNET.Modules
 		[Alias("phrases")]
 		[Summary("Deletes all quotes.")]
 		[FullDescription("Dumps the entire quote database.")]
-		[BotOwnerOnly]
+		[RequireOwner]
 		public async Task<RuntimeResult> FlushQuotesAsync()
 		{
 			using (PhrasesDB PhrasesDatabase = new PhrasesDB())

@@ -20,7 +20,7 @@ namespace SammBotNET.Modules
 		[Command("random")]
 		[Summary("Sends a random quote from a user in the server!")]
 		[FullDescription("Remember those funny quote memes? Now you can kind of recreate them with this command!")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> RandomAsync()
 		{
 			using (PhrasesDB PhrasesDatabase = new PhrasesDB())
@@ -50,7 +50,7 @@ namespace SammBotNET.Modules
 		[Alias("from")]
 		[Summary("Sends a quote from a user in the server!")]
 		[FullDescription("Gets a random quote from the specified user!")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> PhraseAsync(IUser User)
 		{
 			using (PhrasesDB PhrasesDatabase = new PhrasesDB())

@@ -16,6 +16,7 @@ namespace SammBotNET.Modules
 	[Group("badmin")]
 	[Summary("Bot management commands. Bot owner only.")]
 	[ModuleEmoji("⚙️")]
+	[RequireOwner]
 	public class BotAdminModule : ModuleBase<SocketCommandContext>
 	{
 		public AdminService AdminService { get; set; }
@@ -25,7 +26,6 @@ namespace SammBotNET.Modules
 		[Command("say")]
 		[Summary("Make the bot say something.")]
 		[FullDescription("Makes the bot say something. Use the **setsay** command to set the channel and guild beforehand.")]
-		[BotOwnerOnly]
 		public async Task<RuntimeResult> SayMessageAsync([Remainder] string Message)
 		{
 			if (AdminService.ChannelId == 0 || AdminService.GuildId == 0)
@@ -41,7 +41,6 @@ namespace SammBotNET.Modules
 		[Command("setsay")]
 		[Summary("Set the channel in which the say command will broadcast.")]
 		[FullDescription("Sets the channel and guild where the say command will send messages to.")]
-		[BotOwnerOnly]
 		public async Task<RuntimeResult> SetSayAsync(ulong Channel, ulong Guild)
 		{
 			if (Context.Client.GetGuild(Guild) == null) return ExecutionResult.FromError("I am not invited in that guild!");
@@ -64,7 +63,6 @@ namespace SammBotNET.Modules
 		[Alias("guilds")]
 		[Summary("Shows a list of all the servers the bot is in.")]
 		[FullDescription("Shows a list of the servers the bot is in, and their corresponding IDs.")]
-		[BotOwnerOnly]
 		public async Task<RuntimeResult> ServersAsync()
 		{
 			string BuiltMessage = "I am invited in the following servers:\n```\n";
@@ -90,7 +88,6 @@ namespace SammBotNET.Modules
 		[Alias("kill")]
 		[Summary("Shuts the bot down.")]
 		[FullDescription("Shuts the bot down. That's it.")]
-		[BotOwnerOnly]
 		public async Task<RuntimeResult> ShutdownAsync()
 		{
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
@@ -108,7 +105,6 @@ namespace SammBotNET.Modules
 		[Alias("reboot", "reset")]
 		[Summary("Restarts the bot.")]
 		[FullDescription("Restarts the bot. That's it.")]
-		[BotOwnerOnly]
 		public async Task<RuntimeResult> RestartAsync()
 		{
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
@@ -126,7 +122,6 @@ namespace SammBotNET.Modules
 		[Alias("leave")]
 		[Summary("Leaves the specified server.")]
 		[FullDescription("Forces the bot to leave the specified guild.")]
-		[BotOwnerOnly]
 		public async Task<RuntimeResult> LeaveAsync(ulong ServerId)
 		{
 			SocketGuild TargetGuild = Context.Client.GetGuild(ServerId);
@@ -147,7 +142,6 @@ namespace SammBotNET.Modules
 		[Alias("mimic, spy")]
 		[Summary("Mimics a user, used for testing.")]
 		[FullDescription("Hacky command to execute a command as someone else.")]
-		[BotOwnerOnly]
 		public async Task<RuntimeResult> MimicUserAsync(SocketGuildUser User, [Remainder] string Command)
 		{
 			//LORD HAVE MERCY
@@ -167,7 +161,6 @@ namespace SammBotNET.Modules
 		[Summary("Lists all of the bot settings available.")]
 		[FullDescription("Lists the bot settings. Does NOT list the bot's token or the URL detection regex. Some settings are not modifiable without a restart. " +
 			"Set **Override** to true to list non-modifiable settings.")]
-		[BotOwnerOnly]
 		public async Task<RuntimeResult> ListConfigAsync(bool Override = false)
 		{
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
@@ -196,7 +189,6 @@ namespace SammBotNET.Modules
 		[Alias("config")]
 		[Summary("Sets a bot setting to the specified value.")]
 		[FullDescription("Sets a bot setting to the value specified. If the setting is marked as non-modifiable, **RestartBot** must be true.")]
-		[BotOwnerOnly]
 		public async Task<RuntimeResult> SetConfigAsync(string VarName, string VarValue, bool RestartBot = false)
 		{
 			PropertyInfo RetrievedVariable = typeof(JsonConfig).GetProperty(VarName);

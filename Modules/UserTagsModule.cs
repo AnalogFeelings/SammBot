@@ -23,7 +23,7 @@ namespace SammBotNET.Modules
 		[Alias("remove", "destroy")]
 		[Summary("Deletes a user tag.")]
 		[FullDescription("Delets a user tag that you own.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> DeleteTagAsync(string Name)
 		{
 			using (TagDB TagDatabase = new TagDB())
@@ -31,10 +31,7 @@ namespace SammBotNET.Modules
 				List<UserTag> TagList = await TagDatabase.UserTag.ToListAsync();
 				UserTag RetrievedTag = null;
 
-				if (Context.Message.Author.Id == Settings.Instance.LoadedConfig.OwnerUserId)
-					RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name);
-				else
-					RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id);
+				RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id);
 
 				if (RetrievedTag == null)
 					return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
@@ -54,7 +51,7 @@ namespace SammBotNET.Modules
 		[Alias("what")]
 		[Summary("Gets a tag by its name, and replies.")]
 		[FullDescription("Retrieve a tag by its name, and sends its content on the chat.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> GetTagAsync(string Name)
 		{
 			using (TagDB TagDatabase = new TagDB())
@@ -77,7 +74,7 @@ namespace SammBotNET.Modules
 		[Alias("find", "similar")]
 		[Summary("Searches for similar tags.")]
 		[FullDescription("Searches for tags with a similar name.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> SearchTagsAsync(string Name)
 		{
 			using (TagDB TagDatabase = new TagDB())
@@ -109,7 +106,7 @@ namespace SammBotNET.Modules
 		[Alias("new")]
 		[Summary("Creates a new tag.")]
 		[FullDescription("Creates a new tag with the specified reply.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> CreateTagAsync(string Name, string Reply)
 		{
 			if (Name.Length > 15)

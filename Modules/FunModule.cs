@@ -73,7 +73,7 @@ namespace SammBotNET.Modules
 		[Alias("cuddle")]
 		[Summary("Hug a user!")]
 		[FullDescription("Hugs are good for everyone! Spread the joy with this command.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> HugUserAsync(IUser User)
 		{
 			string ChosenKaomoji = Settings.Instance.LoadedConfig.HugKaomojis.PickRandom();
@@ -90,7 +90,7 @@ namespace SammBotNET.Modules
 		[Command("pat")]
 		[Summary("Pats a user!")]
 		[FullDescription("Pets are ALSO good for everyone! Spread the joy with this command.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> PatUserAsync(IUser User)
 		{
 			SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
@@ -106,7 +106,7 @@ namespace SammBotNET.Modules
 		[Alias("doxx")]
 		[Summary("Leak someone's (fake) IP address!")]
 		[FullDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> DoxUserAsync(IUser User)
 		{
 			int FirstSegment = Settings.Instance.GlobalRng.Next(0, 256);
@@ -125,7 +125,7 @@ namespace SammBotNET.Modules
 		[Alias("murder")]
 		[Summary("Commit first degree murder, fuck it.")]
 		[FullDescription("Commit first degree murder! Don't worry, its fictional, the police isn't after you.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> FirstDegreeMurderAsync(SocketGuildUser TargetUser)
 		{
 			SocketGuildUser AuthorUser = Context.Message.Author as SocketGuildUser;
@@ -161,7 +161,7 @@ namespace SammBotNET.Modules
 		[Alias("loverating, shiprating")]
 		[Summary("Ship 2 users together! Awww!")]
 		[FullDescription("The Ship-O-Matic 5000 is here! If **SecondUser** is left empty, you will be shipped with **FirstUser**.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> ShipUsersAsync(SocketGuildUser FirstUser, SocketGuildUser SecondUser = null)
 		{
 			//If the second user is null, ship the author with the first user.

@@ -62,7 +62,7 @@ namespace SammBotNET.Services
 			await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
 			Settings.Instance.StartupStopwatch.Stop();
 
-			Console.Title = $"Samm-Bot {Settings.Instance.LoadedConfig.BotVersion}";
+			Console.Title = $"{Settings.Instance.LoadedConfig.BotName} {Settings.Instance.LoadedConfig.BotVersion}";
 
 			string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
 			string MatchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);

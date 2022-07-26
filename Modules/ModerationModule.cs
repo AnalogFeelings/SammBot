@@ -16,7 +16,7 @@ namespace SammBotNET.Modules
 		[Alias("toss", "bonk")]
 		[Summary("Bans a user with a reason.")]
 		[FullDescription("Bans a user from the server with the set reason.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		[RequireBotPermission(GuildPermission.BanMembers)]
 		[RequireUserPermission(GuildPermission.BanMembers)]
 		public async Task<RuntimeResult> BanUserAsync(SocketGuildUser TargetUser, int PruneDays, string Reason = null)
@@ -40,7 +40,7 @@ namespace SammBotNET.Modules
 		[Alias("boot", "exile")]
 		[Summary("Kicks a user with a reason.")]
 		[FullDescription("Kicks a user from the server with the set reason.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		[RequireBotPermission(GuildPermission.KickMembers)]
 		[RequireUserPermission(GuildPermission.KickMembers)]
 		public async Task<RuntimeResult> KickUserAsync(SocketGuildUser TargetUser, string Reason = null)
@@ -64,7 +64,7 @@ namespace SammBotNET.Modules
 		[Alias("timeout", "shush", "shutup")]
 		[Summary("Mutes a user for an amount of time with a reason.")]
 		[FullDescription("Mutes the specified user for an amount of time with the specified reason. The reason is optional.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		[RequireBotPermission(GuildPermission.ModerateMembers)]
 		[RequireUserPermission(GuildPermission.ModerateMembers)]
 		public async Task<RuntimeResult> MuteUserAsync(SocketGuildUser TargetUser, TimeSpan Duration, string Reason = null)

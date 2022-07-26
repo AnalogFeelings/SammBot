@@ -48,7 +48,7 @@ namespace SammBotNET.Modules
 		[Alias("server", "guildinfo")]
 		[Summary("Get information about a server!")]
 		[FullDescription("Gets all the information about the server you execute the command in.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> ServerInfoAsync()
 		{
 			RestUser ServerOwner = await Client.Rest.GetUserAsync(Context.Guild.OwnerId);
@@ -91,7 +91,7 @@ namespace SammBotNET.Modules
 		[Alias("user")]
 		[Summary("Get information about a user!")]
 		[FullDescription("Gets all the information about the provided user.")]
-		[MustRunInGuild]
+		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> UserInfoAsync(SocketGuildUser User = null)
 		{
 			SocketGuildUser TargetUser = User ?? Context.Message.Author as SocketGuildUser;
