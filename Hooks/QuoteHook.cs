@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Hooks
 {
-	[RegisterHook]
+	//Disabled due to concurrency issues.
+	//[RegisterHook]
 	public class QuoteHook : MessageHook
 	{
 		public override async Task ExecuteHook()
@@ -21,11 +21,10 @@ namespace SammBotNET.Hooks
 
 				using (PhrasesDB PhrasesDatabase = new PhrasesDB())
 				{
-					List<Phrase> QuoteList = await PhrasesDatabase.Phrase.ToListAsync();
-					foreach (Phrase Quote in QuoteList)
-					{
-						if (Message.Content == Quote.Content) return;
-					}
+					Phrase ExistingPhrase = await PhrasesDatabase.Phrase.FirstOrDefaultAsync(x => x.Content == Message.Content);
+
+					if (ExistingPhrase != default(Phrase))
+						return;
 
 					await PhrasesDatabase.AddAsync(new Phrase
 					{
