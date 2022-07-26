@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
@@ -92,6 +93,28 @@ namespace SammBotNET.Modules
 					$"**Duration**: {Days} day(s), {Hours} hour(s), {Minutes} minute(s) and {Seconds} second(s).\n" +
 					$"**Expires in**: <t:{UntilDate}:F>", allowedMentions: AllowedMentions, messageReference: Reference);
 			}
+
+			return ExecutionResult.Succesful();
+		}
+
+		[Command("purge")]
+		[Alias("clean", "clear")]
+		[Summary("Deletes an amount of messages.")]
+		[FullDescription("Deletes the provided amount of messages.")]
+		[RequireBotPermission(GuildPermission.ManageMessages)]
+		[RequireUserPermission(GuildPermission.ManageMessages)]
+		public async Task<RuntimeResult> PurgeMessagesAsync(int Count)
+		{
+			IEnumerable<IMessage> RetrievedMessages = await Context.Message.Channel.GetMessagesAsync(Count + 1).FlattenAsync();
+
+			await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(RetrievedMessages);
+
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			IUserMessage SuccessMessage = await ReplyAsync($"Success! Cleared `{Count}` message/s.", allowedMentions: AllowedMentions, messageReference: Reference);
+
+			await Task.Delay(3000);
+			await SuccessMessage.DeleteAsync();
 
 			return ExecutionResult.Succesful();
 		}
