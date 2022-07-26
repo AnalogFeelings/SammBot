@@ -13,61 +13,13 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-	[Name("Utils")]
+	[Name("Utilities")]
 	[Group("utils")]
-	[Summary("Moderation commands & misc.")]
+	[Summary("Miscellaneous utilities.")]
 	[ModuleEmoji("🔧")]
 	public class UtilsModule : ModuleBase<SocketCommandContext>
 	{
 		public UtilsService UtilsService { get; set; }
-
-		[Command("ban")]
-		[Alias("toss", "bonk")]
-		[Summary("Bans a user with a reason.")]
-		[FullDescription("Bans a user from the server with the set reason.")]
-		[MustRunInGuild]
-		[RequireBotPermission(GuildPermission.BanMembers)]
-		[RequireUserPermission(GuildPermission.BanMembers)]
-		public async Task<RuntimeResult> BanUserAsync(SocketGuildUser TargetUser, int PruneDays, string Reason = null)
-		{
-			string BanReason = Reason ?? "No reason specified.";
-
-			using (Context.Channel.EnterTypingState())
-			{
-				await Context.Guild.AddBanAsync(TargetUser, PruneDays, BanReason);
-
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-				await ReplyAsync($":hammer: **Banned user \"{TargetUser.Username}\" from this server.**\n" +
-					$"Reason: *{BanReason}*", allowedMentions: AllowedMentions, messageReference: Reference);
-			}
-
-			return ExecutionResult.Succesful();
-		}
-
-		[Command("kick")]
-		[Alias("boot", "exile")]
-		[Summary("Kicks a user with a reason.")]
-		[FullDescription("Kicks a user from the server with the set reason.")]
-		[MustRunInGuild]
-		[RequireBotPermission(GuildPermission.KickMembers)]
-		[RequireUserPermission(GuildPermission.KickMembers)]
-		public async Task<RuntimeResult> KickUserAsync(SocketGuildUser TargetUser, string Reason = null)
-		{
-			string KickReason = Reason ?? "No reason specified.";
-
-			using (Context.Channel.EnterTypingState())
-			{
-				await TargetUser.KickAsync(KickReason);
-
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-				await ReplyAsync($":boot: **Kicked user \"{TargetUser.Username}\" from this server.**\n" +
-					$"Reason: *{KickReason}*", allowedMentions: AllowedMentions, messageReference: Reference);
-			}
-
-			return ExecutionResult.Succesful();
-		}
 
 		[Command("viewhex")]
 		[Alias("hex")]
