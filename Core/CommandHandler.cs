@@ -50,16 +50,33 @@ namespace SammBotNET.Core
 
 				if (!Result.IsSuccess)
 				{
-					if (Result.ErrorReason == "Unknown command.")
+					string FinalMessage = string.Empty;
+
+					EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed((SocketCommandContext)Context);
+					ReplyEmbed.Title = "🛑 An error has occurred.";
+					ReplyEmbed.Color = new Color(255, 0 ,0);
+
+					switch(Result.ErrorReason)
 					{
-						await Context.Channel.SendMessageAsync($"Unknown command! Use the `{Settings.Instance.LoadedConfig.BotPrefix}help` command.",
-							allowedMentions: AllowedMentions, messageReference: Reference);
+						case "Unknown command.":
+							FinalMessage = $"Unknown command! Use the `{Settings.Instance.LoadedConfig.BotPrefix}help` command for a command list.";
+							break;
+						case "The input text has too few parameters.":
+							FinalMessage = $"You didn't provide enough required parameters!\nUse the `{Settings.Instance.LoadedConfig.BotPrefix}help " +
+								$"{Command.Value.Module.Group} {Command.Value.Name}` command to see all of the required parameters.";
+							break;
+						case "The input text has too many parameters.":
+							FinalMessage = $"You provided too many parameters!\nUse the `{Settings.Instance.LoadedConfig.BotPrefix}help " +
+								$"{Command.Value.Module.Group} {Command.Value.Name}` command to see all of the required parameters.";
+							break;
+						default:
+							FinalMessage = Result.ErrorReason;
+							break;
 					}
-					else
-					{
-						await Context.Channel.SendMessageAsync(":warning: **__Error executing command!__**\n" + Result.ErrorReason,
-							allowedMentions: AllowedMentions, messageReference: Reference);
-					}
+
+					ReplyEmbed.Description = FinalMessage;
+
+					await Context.Channel.SendMessageAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 				}
 			}
 			catch(Exception ex)
