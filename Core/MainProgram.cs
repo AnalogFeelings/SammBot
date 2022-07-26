@@ -52,7 +52,8 @@ namespace SammBotNET.Core
 				LogLevel = Discord.LogSeverity.Warning,
 				MessageCacheSize = 2000,
 				AlwaysDownloadUsers = true,
-				GatewayIntents = GatewayIntents.All
+				GatewayIntents = GatewayIntents.All,
+				LogGatewayIntentWarnings = false
 			});
 			CommandService = new CommandService(new CommandServiceConfig
 			{
