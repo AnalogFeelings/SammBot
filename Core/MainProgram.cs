@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Pastel;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -21,6 +22,8 @@ namespace SammBotNET.Core
 		public async Task MainAsync()
 		{
 			Settings.Instance.StartupStopwatch.Start();
+
+			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
 			Console.WriteLine($"Loading {Settings.Instance.ConfigFile}...".Pastel("#3d9785"));
 			if (!Settings.Instance.LoadConfiguration())
