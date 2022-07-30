@@ -23,6 +23,7 @@
   <ItemGroup>
     <None Remove=".gitattributes" />
     <None Remove=".gitignore" />
+    <None Remove="CODE_OF_CONDUCT.md" />
     <None Remove="customcmds.db" />
     <None Remove="emotional.db" />
     <None Remove="LICENSE" />
@@ -33,6 +34,12 @@
     <None Remove="README.md" />
     <None Remove="SharpCat.deps.json" />
     <None Remove="SharpCat.dll" />
+    <None Remove="Source\peone.db" />
+    <None Remove="Source\PeoneDatabaseItems.csv" />
+    <None Remove="Source\phrases.db" />
+    <None Remove="Source\pronouns.db" />
+    <None Remove="Source\usertags.db" />
+    <None Remove="STYLE_GUIDELINES.md" />
     <None Remove="usertags.db" />
   </ItemGroup>
 
