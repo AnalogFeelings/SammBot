@@ -65,7 +65,7 @@ namespace SammBotNET.Modules
 		[FullDescription("Shows a list of the servers the bot is in, and their corresponding IDs.")]
 		public async Task<RuntimeResult> ServersAsync()
 		{
-			string BuiltMessage = "I am invited in the following servers:\n```\n";
+			string BuiltMessage = "I am invited in the following servers:\n";
 			string CodeBlock = string.Empty;
 
 			int i = 1;
@@ -74,8 +74,8 @@ namespace SammBotNET.Modules
 				CodeBlock += $"{i}. {TargetGuild.Name} (ID {TargetGuild.Id})\n";
 				i++;
 			}
-			CodeBlock += "```";
-			BuiltMessage += CodeBlock;
+
+			BuiltMessage += Format.Code(CodeBlock);
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
