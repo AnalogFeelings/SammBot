@@ -99,7 +99,6 @@ namespace SammBotNET.Core
 		public int QueueWaitTime { get; set; } = 250;
 		public int TagDistance { get; set; } = 3;
 
-		public List<string> BannedPrefixes { get; set; } = null;
 		public List<string> MagicBallAnswers { get; set; } = null;
 		public List<string> HugKaomojis { get; set; } = null;
 		public List<string> KillMessages { get; set; } = null;
