@@ -17,7 +17,6 @@ namespace SammBotNET.Core
 	public class Settings
 	{
 		public string ConfigFile = "config.json";
-		public string StatusFile = "status.json";
 
 		public Random GlobalRng = new Random(Guid.NewGuid().GetHashCode());
 		public Stopwatch StartupStopwatch = new Stopwatch();
