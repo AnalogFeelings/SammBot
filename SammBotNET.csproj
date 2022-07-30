@@ -16,11 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Source\Modules\FlagModule.cs" />
-    <Compile Remove="Source\Services\FlagService.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove=".gitattributes" />
     <None Remove=".gitignore" />
     <None Remove="CODE_OF_CONDUCT.md" />
@@ -68,13 +63,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Source\Avatars\**">
+	  <ContentWithTargetPath Include="Source\Avatars\**">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Update="status.json">
+		<TargetPath>Avatars\%(Filename)%(Extension)</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="Source\status.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	  <TargetPath>status.json</TargetPath>
+    </ContentWithTargetPath>
+  
+</ItemGroup>
   
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
