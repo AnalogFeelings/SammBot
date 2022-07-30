@@ -47,6 +47,28 @@ namespace SammBotNET.Modules
 			return ExecutionResult.Succesful();
 		}
 
+		[Command("activity")]
+		[Alias("game", "vcgame")]
+		[Summary("Creates an invite for a voice channel activity!")]
+		[FullDescription("Creates an invite for a voice channel activity. Read [this](https://discordnet.dev/api/Discord.DefaultApplications.html) for" +
+			"a list of the available activities.")]
+		[RequireContext(ContextType.Guild)]
+		public async Task<RuntimeResult> CreateActivityAsync(SocketVoiceChannel TargetChannel, DefaultApplications ActivityType)
+		{
+			SocketGuildUser Author = Context.User as SocketGuildUser;
+			if (Author.VoiceChannel != TargetChannel)
+				return ExecutionResult.FromError("You must be in the voice channel you are trying to create an activity for!");
+
+			IInviteMetadata Invite = await TargetChannel.CreateInviteToApplicationAsync(ActivityType);
+
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync($":warning: **Most activities only work if the server has a Nitro Boost level of at least 1.**\n\n" +
+				$"{Invite.Url}", allowedMentions: AllowedMentions, messageReference: Reference);
+
+			return ExecutionResult.Succesful();
+		}
+
 		[Command("dice")]
 		[Alias("roll")]
 		[Summary("Roll the dice, and get a random number!")]
