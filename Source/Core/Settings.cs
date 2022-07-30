@@ -27,7 +27,7 @@ namespace SammBotNET.Core
 
 		public const string BOT_NAME = "Samm-Bot";
 
-		public string BotDataDirectory { get; init; }
+		public readonly string BotDataDirectory;
 
 		public Settings()
 		{
