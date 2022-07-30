@@ -64,12 +64,12 @@ namespace SammBotNET.Services
 			await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
 			Settings.Instance.StartupStopwatch.Stop();
 
-			Console.Title = $"{Settings.Instance.LoadedConfig.BotName} {Settings.Instance.LoadedConfig.BotVersion}";
+			Console.Title = $"{Settings.BOT_NAME} {Settings.Instance.LoadedConfig.BotVersion}";
 
 			string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
 			string MatchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
 
-			Console.Write(FiggleFonts.Slant.Render(Settings.Instance.LoadedConfig.BotName).Pastel(Color.SkyBlue));
+			Console.Write(FiggleFonts.Slant.Render(Settings.BOT_NAME).Pastel(Color.SkyBlue));
 			Console.Write("===========".Pastel(Color.CadetBlue));
 			Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}".Pastel(Color.LightCyan));
 			Console.WriteLine("===========".Pastel(Color.CadetBlue));
@@ -79,7 +79,7 @@ namespace SammBotNET.Services
 
 			BotLogger.Log($"Using MatchaLogger {MatchaVersion}.", LogSeverity.Information);
 
-			BotLogger.Log($"{Settings.Instance.LoadedConfig.BotName} took" +
+			BotLogger.Log($"{Settings.BOT_NAME} took" +
 				$" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
 		}
 
@@ -141,7 +141,7 @@ namespace SammBotNET.Services
 			}, null, TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime),
 					 TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime));
 
-			BotLogger.Log($"{Settings.Instance.LoadedConfig.BotName} is ready to run.", LogSeverity.Success);
+			BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
 
 			return Task.CompletedTask;
 		}

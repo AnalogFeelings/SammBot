@@ -28,9 +28,16 @@ namespace SammBotNET.Core
 			Console.WriteLine($"Loading {Settings.Instance.ConfigFile}...".Pastel("#3d9785"));
 			if (!Settings.Instance.LoadConfiguration())
 			{
-				Console.WriteLine($"FATAL! Could not load {Settings.Instance.ConfigFile} correctly!".Pastel(Color.Red));
-				File.WriteAllText(Settings.Instance.ConfigFile,
+				string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+				string FullPath = Path.Combine(AppData, Settings.BOT_NAME);
+
+				Console.WriteLine($"FATAL! Could not load {Settings.Instance.ConfigFile} correctly!\n".Pastel(Color.Red) +
+					$"Make sure the path \"{FullPath}\" exists.\n".Pastel(Color.Red) +
+					$"Either way, the program has attempted to write the default config.json file to that path.".Pastel(Color.Red));
+
+				File.WriteAllText(Path.Combine(FullPath, Settings.Instance.ConfigFile),
 					JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
+
 				Environment.Exit(1);
 			}
 

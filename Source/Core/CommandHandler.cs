@@ -108,7 +108,7 @@ namespace SammBotNET.Core
 				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
-				await Context.Channel.SendMessageAsync($"Hi! I'm **{Settings.Instance.LoadedConfig.BotName}**!\n" +
+				await Context.Channel.SendMessageAsync($"Hi! I'm **{Settings.BOT_NAME}**!\n" +
 						$"My prefix is `{Settings.Instance.LoadedConfig.BotPrefix}`! " +
 						$"You can use `{Settings.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!",
 						allowedMentions: AllowedMentions, messageReference: Reference);

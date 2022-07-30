@@ -92,9 +92,9 @@ namespace SammBotNET.Modules
 		{
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will shut down.", allowedMentions: AllowedMentions, messageReference: Reference);
+			await ReplyAsync($"{Settings.BOT_NAME} will shut down.", allowedMentions: AllowedMentions, messageReference: Reference);
 
-			Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will shut down.\n\n", LogSeverity.Warning);
+			Logger.Log($"{Settings.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
 
 			Environment.Exit(0);
 
@@ -109,9 +109,9 @@ namespace SammBotNET.Modules
 		{
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
+			await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
 
-			Logger.Log($"{Settings.Instance.LoadedConfig.BotName} will restart.\n\n", LogSeverity.Warning);
+			Logger.Log($"{Settings.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
 
 			Settings.Instance.RestartBot();
 
@@ -219,7 +219,7 @@ namespace SammBotNET.Modules
 
 			if (RestartBot)
 			{
-				await ReplyAsync($"{Settings.Instance.LoadedConfig.BotName} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
+				await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
 				Settings.Instance.RestartBot();
 			}
 

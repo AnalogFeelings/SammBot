@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 namespace SammBotNET.Core
 {
@@ -27,15 +26,27 @@ namespace SammBotNET.Core
 		public JsonConfig LoadedConfig = new JsonConfig();
 		public List<BotStatus> StatusList = new List<BotStatus>();
 
-		public Regex UrlRegex;
+		public const string BOT_NAME = "Samm-Bot";
 
 		public bool LoadConfiguration()
 		{
-			if (!File.Exists(ConfigFile)) return false;
+			string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			string BotDirectoryPath = Path.Combine(AppData, BOT_NAME);
+			string ConfigFilePath = Path.Combine(BotDirectoryPath, ConfigFile);
 
-			string ConfigContent = File.ReadAllText(ConfigFile);
+			try
+			{
+				DirectoryInfo BotDirectory = Directory.CreateDirectory(BotDirectoryPath);
+
+				if (!File.Exists(ConfigFilePath)) return false;
+			}
+			catch(Exception)
+			{
+				return false;
+			}
+
+			string ConfigContent = File.ReadAllText(ConfigFilePath);
 			LoadedConfig = JsonConvert.DeserializeObject<JsonConfig>(ConfigContent);
-			UrlRegex = new Regex(LoadedConfig.UrlRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 			return true;
 		}
@@ -85,7 +96,6 @@ namespace SammBotNET.Core
 
 	public class JsonConfig
 	{
-		public string BotName { get; set; } = "Samm-Bot";
 		public string BotVersion { get; set; } = "v0.1";
 		public string BotPrefix { get; set; } = "s.";
 
