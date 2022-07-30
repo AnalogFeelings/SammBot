@@ -45,7 +45,7 @@ namespace SammBotNET.Services
 			BotLogger.Log("Logging in as a bot...", LogSeverity.Information);
 			await SocketClient.LoginAsync(TokenType.Bot, Settings.Instance.LoadedConfig.BotToken);
 			await SocketClient.StartAsync();
-			BotLogger.Log("Succesfully connected to web socket.", LogSeverity.Information);
+			BotLogger.Log("Succesfully connected to web socket.", LogSeverity.Success);
 
 			if (Settings.Instance.LoadedConfig.RotatingStatus)
 			{
@@ -87,10 +87,10 @@ namespace SammBotNET.Services
 		{
 			if(FirstTimeConnection)
 			{
-				BotLogger.Log("Connected to gateway.", LogSeverity.Information);
+				BotLogger.Log("Connected to gateway.", LogSeverity.Success);
 				FirstTimeConnection = false;
 			}
-			else BotLogger.Log("Reconnected to gateway.", LogSeverity.Information);
+			else BotLogger.Log("Reconnected to gateway.", LogSeverity.Success);
 
 			return Task.CompletedTask;
 		}
@@ -118,7 +118,7 @@ namespace SammBotNET.Services
 					List<string> FilteredList = AvatarList.Except(RecentAvatars).ToList();
 
 					string ChosenAvatar = FilteredList.PickRandom();
-					BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogSeverity.Information);
+					BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogSeverity.Debug);
 
 					using (FileStream AvatarStream = new(ChosenAvatar, FileMode.Open))
 					{
@@ -136,12 +136,12 @@ namespace SammBotNET.Services
 				int NewHash = Guid.NewGuid().GetHashCode();
 
 				Settings.Instance.GlobalRng = new Random(NewHash);
-				BotLogger.Log($"Regenerated RNG instance with hash {NewHash}.", LogSeverity.Information);
+				BotLogger.Log($"Regenerated RNG instance with hash {NewHash}.", LogSeverity.Debug);
 
 			}, null, TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime),
 					 TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime));
 
-			BotLogger.Log($"{Settings.Instance.LoadedConfig.BotName} is ready to run.", LogSeverity.Information);
+			BotLogger.Log($"{Settings.Instance.LoadedConfig.BotName} is ready to run.", LogSeverity.Success);
 
 			return Task.CompletedTask;
 		}
