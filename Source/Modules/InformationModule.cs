@@ -16,8 +16,6 @@ namespace SammBotNET.Modules
 	[ModuleEmoji("ℹ️")]
 	public class InformationModule : ModuleBase<SocketCommandContext>
 	{
-		public DiscordSocketClient Client { get; set; }
-
 		[Command("full")]
 		[Summary("Shows the FULL information of the bot.")]
 		[FullDescription("Shows version, uptime, ping, etc...")]
@@ -61,7 +59,7 @@ namespace SammBotNET.Modules
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> ServerInfoAsync()
 		{
-			RestUser ServerOwner = await Client.Rest.GetUserAsync(Context.Guild.OwnerId);
+			RestUser ServerOwner = await Context.Client.Rest.GetUserAsync(Context.Guild.OwnerId);
 
 			string ServerBanner = Context.Guild.BannerUrl != null ? $"[Banner URL]({Context.Guild.BannerUrl})" : "None";
 			string DiscoverySplash = Context.Guild.DiscoverySplashUrl != null ? $"[Splash URL]({Context.Guild.DiscoverySplashId})" : "None";
