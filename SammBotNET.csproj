@@ -16,8 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Modules\FlagModule.cs" />
-    <Compile Remove="Services\FlagService.cs" />
+    <Compile Remove="Source\Modules\FlagModule.cs" />
+    <Compile Remove="Source\Services\FlagService.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,12 +56,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Hooks\" />
-    <Folder Include="Migrations\" />
+    <Folder Include="Source\Hooks\" />
+    <Folder Include="Source\Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Avatars\**">
+    <Content Include="Source\Avatars\**">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Update="status.json">
