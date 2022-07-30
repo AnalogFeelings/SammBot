@@ -103,7 +103,7 @@ namespace SammBotNET.Services
 			{
 				AvatarTimer = new Timer(async _ =>
 				{
-					List<string> AvatarList = Directory.EnumerateFiles("Avatars").ToList();
+					List<string> AvatarList = Directory.EnumerateFiles(Path.Combine(Settings.Instance.BotDataDirectory, "Avatars")).ToList();
 					if (AvatarList.Count < 2) return;
 
 					List<string> FilteredList = AvatarList.Except(RecentAvatars).ToList();
