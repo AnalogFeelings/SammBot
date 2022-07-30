@@ -53,8 +53,8 @@ namespace SammBotNET.Core
 					string FinalMessage = string.Empty;
 
 					EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed((SocketCommandContext)Context);
-					ReplyEmbed.Title = "🛑 An error has occurred.";
-					ReplyEmbed.Color = new Color(255, 0 ,0);
+					ReplyEmbed.Title = "⚠️ An error has occurred.";
+					ReplyEmbed.Color = new Color(255, 204, 77);
 
 					switch(Result.ErrorReason)
 					{
@@ -119,7 +119,7 @@ namespace SammBotNET.Core
 				if (ExecutingCommand)
 				{
 					MessageQueue.Enqueue(ReceivedMessage);
-					await TargetMessage.AddReactionAsync(new Emoji("⌛"));
+					
 					return;
 				}
 
