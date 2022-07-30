@@ -115,8 +115,6 @@ namespace SammBotNET.Core
 		public string ShipBarEndEmpty { get; set; } = null;
 		public string ShipBarEndFull { get; set; } = null;
 
-		[NotModifiable] public string AnsiRegex { get; set; } = "";
-		[NotModifiable] public string UrlRegex { get; set; } = "";
 		[NotModifiable] public bool RotatingStatus { get; set; } = true;
 		[NotModifiable] public bool RotatingAvatar { get; set; } = true;
 		[NotModifiable] public string BotToken { get; set; } = "";
@@ -124,7 +122,7 @@ namespace SammBotNET.Core
 		[NotModifiable] public string DogKey { get; set; } = "";
 		[NotModifiable] public string OpenWeatherKey { get; set; } = "";
 		[NotModifiable] public string TwitchUrl { get; set; } = "https://www.twitch.tv/coreaesthetics";
-		[NotModifiable] public string CommandLogFormat { get; set; } = "Executing command {0}!";
+		[NotModifiable] public string CommandLogFormat { get; set; } = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
 		[NotModifiable] public string LogFolder { get; set; } = "Logs";
 		[NotModifiable] public int RngResetTime { get; set; } = 25;
 		[NotModifiable] public int AvatarRotationTime { get; set; } = 1;
