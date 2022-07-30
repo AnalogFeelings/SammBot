@@ -61,14 +61,6 @@
     <Folder Include="Source\Hooks\" />
     <Folder Include="Source\Migrations\" />
   </ItemGroup>
-
-  <ItemGroup>
-	  <ContentWithTargetPath Include="Source\Avatars\**">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>Avatars\%(Filename)%(Extension)</TargetPath>
-    </ContentWithTargetPath>
-  
-</ItemGroup>
   
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 

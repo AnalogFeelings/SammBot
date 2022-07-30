@@ -41,15 +41,20 @@ namespace SammBotNET.Core
 				Environment.Exit(1);
 			}
 
-			if (!Directory.Exists(Settings.Instance.LoadedConfig.LogFolder))
+			string LogsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Logs");
+
+			if (!Directory.Exists(LogsDirectory))
 			{
-				Console.WriteLine($"{Settings.Instance.LoadedConfig.LogFolder} did not exist. Creating...".Pastel("#3d9785"));
-				Directory.CreateDirectory(Settings.Instance.LoadedConfig.LogFolder);
+				Console.WriteLine($"Logs folder did not exist. Creating...".Pastel("#3d9785"));
+				Directory.CreateDirectory(LogsDirectory);
 			}
-			if (!Directory.Exists("Avatars"))
+
+			string AvatarsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Avatars");
+
+			if (!Directory.Exists(AvatarsDirectory))
 			{
 				Console.WriteLine($"Avatars folder did not exist. Creating...".Pastel("#3d9785"));
-				Directory.CreateDirectory("Avatars");
+				Directory.CreateDirectory(AvatarsDirectory);
 			}
 
 			Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));

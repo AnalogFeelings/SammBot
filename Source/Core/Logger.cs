@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Matcha;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Core
@@ -14,9 +15,12 @@ namespace SammBotNET.Core
 		public Logger(DiscordSocketClient Client, CommandService CommandService)
 		{
 			//Default settings.
-			MatchaLoggerSettings Settings = new MatchaLoggerSettings();
+			MatchaLoggerSettings LoggerSettings = new MatchaLoggerSettings()
+			{
+				LogFilePath = Path.Combine(Settings.Instance.BotDataDirectory, "Logs")
+			};
 
-			LoggerInstance = new MatchaLogger(Settings);
+			LoggerInstance = new MatchaLogger(LoggerSettings);
 
 			Client.Log += LogAsync;
 			CommandService.Log += LogAsync;

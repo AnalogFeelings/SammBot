@@ -27,15 +27,22 @@ namespace SammBotNET.Core
 
 		public const string BOT_NAME = "Samm-Bot";
 
-		public bool LoadConfiguration()
+		public string BotDataDirectory { get; init; }
+
+		public Settings()
 		{
 			string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			string BotDirectoryPath = Path.Combine(AppData, BOT_NAME);
-			string ConfigFilePath = Path.Combine(BotDirectoryPath, ConfigFile);
+
+			BotDataDirectory = Path.Combine(AppData, BOT_NAME);
+		}
+
+		public bool LoadConfiguration()
+		{
+			string ConfigFilePath = Path.Combine(BotDataDirectory, ConfigFile);
 
 			try
 			{
-				DirectoryInfo BotDirectory = Directory.CreateDirectory(BotDirectoryPath);
+				DirectoryInfo BotDirectory = Directory.CreateDirectory(BotDataDirectory);
 
 				if (!File.Exists(ConfigFilePath)) return false;
 			}
@@ -113,7 +120,6 @@ namespace SammBotNET.Core
 		[NotModifiable] public string OpenWeatherKey { get; set; } = "";
 		[NotModifiable] public string TwitchUrl { get; set; } = "https://www.twitch.tv/coreaesthetics";
 		[NotModifiable] public string CommandLogFormat { get; set; } = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
-		[NotModifiable] public string LogFolder { get; set; } = "Logs";
 		[NotModifiable] public int RngResetTime { get; set; } = 25;
 		[NotModifiable] public int AvatarRotationTime { get; set; } = 1;
 		[NotModifiable] public int PeoneRecentQueueSize { get; set; } = 15;
