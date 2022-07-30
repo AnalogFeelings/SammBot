@@ -37,11 +37,20 @@ namespace SammBotNET.Core
 					Log(Message.Message, LogSeverity.Debug);
 					break;
 				case Discord.LogSeverity.Critical:
+					if (Message.Exception is CommandException CriticalException)
+					{
+						string FormattedException = string.Format("Critical exception in command \"{0}{1}\", at channel #{2}.\n{3}",
+								Settings.Instance.LoadedConfig.BotPrefix, CriticalException.Command.Aliases[0], CriticalException.Context.Channel, CriticalException);
+
+						Log(FormattedException, LogSeverity.Fatal);
+					}
+					else Log(Message.Message, LogSeverity.Fatal);
+					break;
 				case Discord.LogSeverity.Error:
-					if (Message.Exception is CommandException cmdException)
+					if (Message.Exception is CommandException ErrorException)
 					{
 						string FormattedException = string.Format("Exception in command \"{0}{1}\", at channel #{2}.\n{3}",
-								Settings.Instance.LoadedConfig.BotPrefix, cmdException.Command.Aliases[0], cmdException.Context.Channel, cmdException);
+								Settings.Instance.LoadedConfig.BotPrefix, ErrorException.Command.Aliases[0], ErrorException.Context.Channel, ErrorException);
 
 						Log(FormattedException, LogSeverity.Error);
 					}
