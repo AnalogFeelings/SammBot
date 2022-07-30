@@ -23,19 +23,29 @@ namespace SammBotNET.Modules
 		[FullDescription("Shows version, uptime, ping, etc...")]
 		public async Task<RuntimeResult> InformationFullAsync()
 		{
-			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All public information about the bot.");
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All of the public information about the bot.");
 
 			string ElapsedUptime = string.Format("{0:00}d{1:00}h{2:00}m",
 				Settings.Instance.RuntimeStopwatch.Elapsed.Days,
 				Settings.Instance.RuntimeStopwatch.Elapsed.Hours,
 				Settings.Instance.RuntimeStopwatch.Elapsed.Minutes);
 
+			string ReleaseConfig = "Unknown";
+#if DEBUG
+			ReleaseConfig = "Debug";
+#elif RELEASE
+			ReleaseConfig = "Release";
+#endif
+
 			ReplyEmbed.AddField("Bot Version", $"`{Settings.Instance.LoadedConfig.BotVersion}`", true);
+			ReplyEmbed.AddField("Target Config", $"`{ReleaseConfig}`", true);
 			ReplyEmbed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
-			ReplyEmbed.AddField("Ping", $"`{Context.Client.Latency}ms.`", true);
-			ReplyEmbed.AddField("Im In", $"`{Context.Client.Guilds.Count} server/s.`", true);
-			ReplyEmbed.AddField("Uptime", $"`{ElapsedUptime}`", true);
-			ReplyEmbed.AddField("Host", $"`{FriendlyOSName()}`", true);
+
+			ReplyEmbed.AddField("Ping", $"`{Context.Client.Latency}ms`", true);
+			ReplyEmbed.AddField("Server Count", $"`{Context.Client.Guilds.Count} server(s)`", true);
+			ReplyEmbed.AddField("Bot Uptime", $"`{ElapsedUptime}`", true);
+
+			ReplyEmbed.AddField("Host OS", $"`{FriendlyOSName()}`", true);
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
