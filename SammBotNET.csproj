@@ -67,10 +67,6 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		<TargetPath>Avatars\%(Filename)%(Extension)</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Source\status.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  <TargetPath>status.json</TargetPath>
-    </ContentWithTargetPath>
   
 </ItemGroup>
   

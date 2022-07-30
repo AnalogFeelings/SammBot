@@ -47,15 +47,6 @@ namespace SammBotNET.Services
 			await SocketClient.StartAsync();
 			BotLogger.Log("Succesfully connected to web socket.", LogSeverity.Success);
 
-			if (Settings.Instance.LoadedConfig.RotatingStatus)
-			{
-				BotLogger.Log("Loading rotating status list...", LogSeverity.Information);
-				if (!Settings.Instance.LoadStatuses())
-				{
-					BotLogger.Log($"Could not load {Settings.Instance.StatusFile} correctly.", LogSeverity.Error);
-				}
-			}
-
 			SocketClient.Connected += OnConnected;
 			SocketClient.Ready += OnReady;
 			SocketClient.Disconnected += OnDisconnect;
@@ -97,11 +88,11 @@ namespace SammBotNET.Services
 
 		public Task OnReady()
 		{
-			if (Settings.Instance.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
+			if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
 			{
 				StatusTimer = new Timer(async _ =>
 				{
-					BotStatus ChosenStatus = Settings.Instance.StatusList.PickRandom();
+					BotStatus ChosenStatus = Settings.Instance.LoadedConfig.StatusList.PickRandom();
 
 					await SocketClient.SetGameAsync(ChosenStatus.Content,
 						ChosenStatus.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)ChosenStatus.Type);

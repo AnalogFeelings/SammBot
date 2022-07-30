@@ -24,7 +24,6 @@ namespace SammBotNET.Core
 		public Stopwatch RuntimeStopwatch = new Stopwatch();
 
 		public JsonConfig LoadedConfig = new JsonConfig();
-		public List<BotStatus> StatusList = new List<BotStatus>();
 
 		public const string BOT_NAME = "Samm-Bot";
 
@@ -73,16 +72,6 @@ namespace SammBotNET.Core
 			Environment.Exit(0);
 		}
 
-		public bool LoadStatuses()
-		{
-			if (!File.Exists(StatusFile)) return false;
-
-			string StatusContent = File.ReadAllText(StatusFile);
-			StatusList = JsonConvert.DeserializeObject<List<BotStatus>>(StatusContent);
-
-			return true;
-		}
-
 		private static Settings PrivateInstance;
 		public static Settings Instance
 		{
@@ -107,6 +96,7 @@ namespace SammBotNET.Core
 		public List<string> MagicBallAnswers { get; set; } = null;
 		public List<string> HugKaomojis { get; set; } = null;
 		public List<string> KillMessages { get; set; } = null;
+		public List<BotStatus> StatusList { get; set; } = null;
 
 		public string ShipBarStartEmpty { get; set; } = null;
 		public string ShipBarStartFull { get; set; } = null;
