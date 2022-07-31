@@ -24,15 +24,17 @@ namespace SammBotNET.Modules
 		{
 			string BanReason = Reason ?? "No reason specified.";
 
-			using (Context.Channel.EnterTypingState())
-			{
-				await Context.Guild.AddBanAsync(TargetUser, PruneDays, BanReason);
+			await Context.Guild.AddBanAsync(TargetUser, PruneDays, BanReason);
 
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-				await ReplyAsync($":hammer: **Banned user \"{TargetUser.Username}\" from this server.**\n" +
-					$"**Reason**: {BanReason}", allowedMentions: AllowedMentions, messageReference: Reference);
-			}
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+				.WithTitle($"🔨 Banned user {TargetUser.Username}.").WithColor(new Color(255, 0, 0));
+
+			ReplyEmbed.Description = $"**Reason**: {BanReason}\n";
+			ReplyEmbed.Description += $"**Prune Days**: {PruneDays} day(s).";
+
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -48,15 +50,16 @@ namespace SammBotNET.Modules
 		{
 			string KickReason = Reason ?? "No reason specified.";
 
-			using (Context.Channel.EnterTypingState())
-			{
-				await TargetUser.KickAsync(KickReason);
+			await TargetUser.KickAsync(KickReason);
 
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-				await ReplyAsync($":boot: **Kicked user \"{TargetUser.Username}\" from this server.**\n" +
-					$"**Reason**: {KickReason}", allowedMentions: AllowedMentions, messageReference: Reference);
-			}
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+					.WithTitle($"👢 Kicked user {TargetUser.Username}.").WithColor(new Color(255, 255, 0));
+
+			ReplyEmbed.Description = $"**Reason**: {KickReason}";
+
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -75,24 +78,25 @@ namespace SammBotNET.Modules
 			if (Duration < TimeSpan.Zero)
 				return ExecutionResult.FromError("Mute duration must not be negative.");
 
-			using(Context.Channel.EnterTypingState())
-			{
-				await TargetUser.SetTimeOutAsync(Duration, new RequestOptions() { AuditLogReason = MuteReason });
+			await TargetUser.SetTimeOutAsync(Duration, new RequestOptions() { AuditLogReason = MuteReason });
 
-				string Days = Format.Bold(Duration.ToString("%d"));
-				string Hours = Format.Bold(Duration.ToString("%h"));
-				string Minutes = Format.Bold(Duration.ToString("%m"));
-				string Seconds = Format.Bold(Duration.ToString("%s"));
+			string Days = Format.Bold(Duration.ToString("%d"));
+			string Hours = Format.Bold(Duration.ToString("%h"));
+			string Minutes = Format.Bold(Duration.ToString("%m"));
+			string Seconds = Format.Bold(Duration.ToString("%s"));
 
-				long UntilDate = (DateTimeOffset.Now + Duration).ToUnixTimeSeconds();
+			long UntilDate = (DateTimeOffset.Now + Duration).ToUnixTimeSeconds();
 
-				MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-				AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-				await ReplyAsync($":stopwatch: **Timed out user \"{TargetUser.Username}\".**\n" +
-					$"**Reason**: {Reason}\n" +
-					$"**Duration**: {Days} day(s), {Hours} hour(s), {Minutes} minute(s) and {Seconds} second(s).\n" +
-					$"**Expires in**: <t:{UntilDate}:F>", allowedMentions: AllowedMentions, messageReference: Reference);
-			}
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+					.WithTitle($"⏱️ Timed out user {TargetUser.Username}.").WithColor(Color.LightGrey);
+
+			ReplyEmbed.Description = $"**Reason**: {Reason}\n";
+			ReplyEmbed.Description += $"**Duration**: {Days} day(s), {Hours} hour(s), {Minutes} minute(s) and {Seconds} second(s).\n";
+			ReplyEmbed.Description += $"**Expires in**: <t:{UntilDate}:F>";
+
+			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+			await ReplyAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
@@ -111,7 +115,7 @@ namespace SammBotNET.Modules
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			IUserMessage SuccessMessage = await ReplyAsync($"Success! Cleared `{Count}` message/s.", allowedMentions: AllowedMentions, messageReference: Reference);
+			IUserMessage SuccessMessage = await ReplyAsync($":white_check_mark: Cleared `{Count}` message/s.", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			await Task.Delay(3000);
 			await SuccessMessage.DeleteAsync();
