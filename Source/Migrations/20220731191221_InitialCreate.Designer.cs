@@ -7,16 +7,26 @@ using SammBotNET.Database;
 
 #nullable disable
 
-namespace SammBotNET.Migrations.PronounsDBMigrations
+namespace SammBotNET.Migrations
 {
-    [DbContext(typeof(PronounsDB))]
-    [Migration("20211116213854_InitialCreate")]
+    [DbContext(typeof(BotDatabase))]
+    [Migration("20220731191221_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
+
+            modelBuilder.Entity("SammBotNET.Database.PeoneImage", b =>
+                {
+                    b.Property<string>("TwitterUrl")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TwitterUrl");
+
+                    b.ToTable("PeoneImages");
+                });
 
             modelBuilder.Entity("SammBotNET.Database.Pronoun", b =>
                 {
@@ -45,6 +55,32 @@ namespace SammBotNET.Migrations.PronounsDBMigrations
                     b.HasKey("UserId");
 
                     b.ToTable("Pronouns");
+                });
+
+            modelBuilder.Entity("SammBotNET.Database.UserTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<ulong>("AuthorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reply")
+                        .HasColumnType("TEXT");
+
+                    b.Property<ulong>("ServerId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserTags");
                 });
 #pragma warning restore 612, 618
         }

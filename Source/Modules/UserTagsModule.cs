@@ -26,9 +26,9 @@ namespace SammBotNET.Modules
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> DeleteTagAsync(string Name)
 		{
-			using (TagDB TagDatabase = new TagDB())
+			using (BotDatabase BotDatabase = new BotDatabase())
 			{
-				List<UserTag> TagList = await TagDatabase.UserTag.ToListAsync();
+				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
 				UserTag RetrievedTag = null;
 
 				RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id);
@@ -36,8 +36,8 @@ namespace SammBotNET.Modules
 				if (RetrievedTag == null)
 					return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
 
-				TagDatabase.Remove(RetrievedTag);
-				await TagDatabase.SaveChangesAsync();
+				BotDatabase.UserTags.Remove(RetrievedTag);
+				await BotDatabase.SaveChangesAsync();
 			}
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
@@ -54,9 +54,9 @@ namespace SammBotNET.Modules
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> GetTagAsync(string Name)
 		{
-			using (TagDB TagDatabase = new TagDB())
+			using (BotDatabase BotDatabase = new BotDatabase())
 			{
-				List<UserTag> TagList = await TagDatabase.UserTag.ToListAsync();
+				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
 				UserTag RetrievedTag = TagList.SingleOrDefault(x => x.ServerId == Context.Guild.Id && x.Name == Name);
 
 				if (RetrievedTag == null)
@@ -77,9 +77,9 @@ namespace SammBotNET.Modules
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> SearchTagsAsync(string Name)
 		{
-			using (TagDB TagDatabase = new TagDB())
+			using (BotDatabase BotDatabase = new BotDatabase())
 			{
-				List<UserTag> TagList = await TagDatabase.UserTag.ToListAsync();
+				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
 				List<UserTag> FilteredTags = TagList.Where(x => x.ServerId == Context.Guild.Id &&
 							Name.DamerauLevenshteinDistance(x.Name, Settings.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
@@ -118,9 +118,9 @@ namespace SammBotNET.Modules
 			else if (Name.Contains(' '))
 				return ExecutionResult.FromError("Tag names cannot contain spaces!");
 
-			using (TagDB TagDatabase = new TagDB())
+			using (BotDatabase BotDatabase = new BotDatabase())
 			{
-				List<UserTag> TagList = await TagDatabase.UserTag.ToListAsync();
+				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
 				TagList = TagList.Where(x => x.ServerId == Context.Guild.Id).ToList();
 
 				foreach (UserTag Tag in TagList)
@@ -131,7 +131,7 @@ namespace SammBotNET.Modules
 				int NextId = 0;
 				if (TagList.Count > 0) NextId = TagList.Max(x => x.Id) + 1;
 
-				await TagDatabase.AddAsync(new UserTag
+				await BotDatabase.UserTags.AddAsync(new UserTag
 				{
 					Id = NextId,
 					Name = Name,
@@ -140,7 +140,7 @@ namespace SammBotNET.Modules
 					Reply = Reply,
 					CreatedAt = Context.Message.Timestamp.ToUnixTimeSeconds()
 				});
-				await TagDatabase.SaveChangesAsync();
+				await BotDatabase.SaveChangesAsync();
 			}
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);

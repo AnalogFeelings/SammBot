@@ -35,9 +35,9 @@ namespace SammBotNET.Modules
 
 			using (Context.Channel.EnterTypingState())
 			{
-				using (PronounsDB PronounsDatabase = new PronounsDB())
+				using (BotDatabase BotDatabase = new BotDatabase())
 				{
-					List<Pronoun> AllPronouns = await PronounsDatabase.Pronouns.ToListAsync();
+					List<Pronoun> AllPronouns = await BotDatabase.Pronouns.ToListAsync();
 
 					if (AllPronouns.Any(x => x.UserId == Context.Message.Author.Id))
 					{
@@ -51,7 +51,7 @@ namespace SammBotNET.Modules
 					}
 					else
 					{
-						await PronounsDatabase.AddAsync(new Pronoun
+						await BotDatabase.Pronouns.AddAsync(new Pronoun
 						{
 							UserId = Context.Message.Author.Id,
 							Subject = Subject,
@@ -63,7 +63,7 @@ namespace SammBotNET.Modules
 						});
 					}
 
-					await PronounsDatabase.SaveChangesAsync();
+					await BotDatabase.SaveChangesAsync();
 				}
 			}
 
@@ -83,9 +83,9 @@ namespace SammBotNET.Modules
 
 			using (Context.Channel.EnterTypingState())
 			{
-				using (PronounsDB PronounsDatabase = new PronounsDB())
+				using (BotDatabase BotDatabase = new BotDatabase())
 				{
-					List<Pronoun> AllPronouns = await PronounsDatabase.Pronouns.ToListAsync();
+					List<Pronoun> AllPronouns = await BotDatabase.Pronouns.ToListAsync();
 
 					if (AllPronouns.Any(x => x.UserId == TargetUser.Id))
 					{

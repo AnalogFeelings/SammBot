@@ -2,7 +2,7 @@
 
 namespace SammBotNET.Database
 {
-	public partial class UserTag
+	public class UserTag
 	{
 		[Key]
 		public int Id { get; set; }

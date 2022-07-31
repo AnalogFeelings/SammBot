@@ -2,7 +2,7 @@
 
 namespace SammBotNET.Database
 {
-	public partial class Pronoun
+	public class Pronoun
 	{
 		[Key]
 		public ulong UserId { get; set; }

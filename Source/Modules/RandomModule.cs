@@ -80,9 +80,9 @@ namespace SammBotNET.Modules
 		[FullDescription("Returns a random image of Noah's favourite snake woman.")]
 		public async Task<RuntimeResult> GetPeoneAsync()
 		{
-			using (PeoneImagesDB PeoneDatabase = new PeoneImagesDB())
+			using (BotDatabase BotDatabase = new BotDatabase())
 			{
-				List<PeoneImage> ImageList = await PeoneDatabase.PeoneImage.ToListAsync();
+				List<PeoneImage> ImageList = await BotDatabase.PeoneImages.ToListAsync();
 			RechooseImage:
 				PeoneImage ChosenImage = ImageList.PickRandom();
 

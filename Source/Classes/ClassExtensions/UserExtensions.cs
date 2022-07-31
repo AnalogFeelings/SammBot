@@ -54,9 +54,9 @@ namespace SammBotNET.Extensions
 
 		public static async Task<Pronoun> GetUserPronouns(this SocketUser User)
 		{
-			using (PronounsDB PronounsDatabase = new PronounsDB())
+			using (BotDatabase BotDatabase = new BotDatabase())
 			{
-				List<Pronoun> PronounList = await PronounsDatabase.Pronouns.ToListAsync();
+				List<Pronoun> PronounList = await BotDatabase.Pronouns.ToListAsync();
 				Pronoun ChosenPronoun = PronounList.SingleOrDefault(y => y.UserId == User.Id);
 
 				//Check for both null and default, .NET can be pretty fucky sometimes.
