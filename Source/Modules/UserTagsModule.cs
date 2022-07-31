@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +32,10 @@ namespace SammBotNET.Modules
 				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
 				UserTag RetrievedTag = null;
 
-				RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id);
+				if((Context.User as SocketGuildUser).GuildPermissions.Has(GuildPermission.ManageMessages))
+					RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.GuildId == Context.Guild.Id);
+				else
+					RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id && x.GuildId == Context.Guild.Id);
 
 				if (RetrievedTag == null)
 					return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
@@ -57,7 +61,7 @@ namespace SammBotNET.Modules
 			using (BotDatabase BotDatabase = new BotDatabase())
 			{
 				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
-				UserTag RetrievedTag = TagList.SingleOrDefault(x => x.ServerId == Context.Guild.Id && x.Name == Name);
+				UserTag RetrievedTag = TagList.SingleOrDefault(x => x.GuildId == Context.Guild.Id && x.Name == Name);
 
 				if (RetrievedTag == null)
 					return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
@@ -80,8 +84,11 @@ namespace SammBotNET.Modules
 			using (BotDatabase BotDatabase = new BotDatabase())
 			{
 				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
-				List<UserTag> FilteredTags = TagList.Where(x => x.ServerId == Context.Guild.Id &&
+				List<UserTag> FilteredTags = TagList.Where(x => x.GuildId == Context.Guild.Id &&
 							Name.DamerauLevenshteinDistance(x.Name, Settings.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
+
+				if (!FilteredTags.Any())
+					return ExecutionResult.FromError($"No tags found with a name similar to \"{Name}\".");
 
 				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"All of the tags similar to \"{Name}\".")
 					.ChangeTitle("TAG RESULTS");
@@ -121,22 +128,19 @@ namespace SammBotNET.Modules
 			using (BotDatabase BotDatabase = new BotDatabase())
 			{
 				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
-				TagList = TagList.Where(x => x.ServerId == Context.Guild.Id).ToList();
+				TagList = TagList.Where(x => x.GuildId == Context.Guild.Id).ToList();
 
-				foreach (UserTag Tag in TagList)
-				{
-					if (Name == Tag.Name) return ExecutionResult.FromError($"There's already a tag called **\"{Name}\"**!");
-				}
+				if(TagList.Any(x => x.Name == Name))
+					return ExecutionResult.FromError($"There's already a tag called **\"{Name}\"**!");
 
-				int NextId = 0;
-				if (TagList.Count > 0) NextId = TagList.Max(x => x.Id) + 1;
+				Guid NewId = Guid.NewGuid();
 
 				await BotDatabase.UserTags.AddAsync(new UserTag
 				{
-					Id = NextId,
+					Id = NewId.ToString(),
 					Name = Name,
 					AuthorId = Context.Message.Author.Id,
-					ServerId = Context.Guild.Id,
+					GuildId = Context.Guild.Id,
 					Reply = Reply,
 					CreatedAt = Context.Message.Timestamp.ToUnixTimeSeconds()
 				});
