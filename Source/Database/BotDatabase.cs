@@ -9,6 +9,7 @@ namespace SammBotNET.Database
 		public DbSet<PeoneImage> PeoneImages { get; set; }
 		public DbSet<Pronoun> Pronouns { get; set; }
 		public DbSet<UserTag> UserTags { get; set; }
+		public DbSet<UserWarning> UserWarnings { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder OptionsBuilder)
 		{
