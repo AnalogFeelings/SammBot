@@ -23,41 +23,75 @@ namespace SammBotNET.Core
 		{
 			Settings.Instance.StartupStopwatch.Start();
 
+			BootLogger BootLogger = new BootLogger();
+
 			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
-			Console.WriteLine($"Loading {Settings.Instance.ConfigFile}...".Pastel("#3d9785"));
+			BootLogger.Log($"Loading {Settings.Instance.ConfigFile}...", LogSeverity.Information);
 			if (!Settings.Instance.LoadConfiguration())
 			{
 				string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 				string FullPath = Path.Combine(AppData, Settings.BOT_NAME);
 
-				Console.WriteLine($"FATAL! Could not load {Settings.Instance.ConfigFile} correctly!\n".Pastel(Color.Red) +
-					$"Make sure the path \"{FullPath}\" exists.\n".Pastel(Color.Red) +
-					$"Either way, the program has attempted to write the default config.json file to that path.".Pastel(Color.Red));
+				BootLogger.Log($"Could not load {Settings.Instance.ConfigFile} correctly! Make sure the path \"{FullPath}\" exists.\n" +
+					$"Either way, the program has attempted to write the default {Settings.Instance.ConfigFile} file to that path.", LogSeverity.Fatal);
 
 				File.WriteAllText(Path.Combine(FullPath, Settings.Instance.ConfigFile),
 					JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
+				BootLogger.Log("Press any key to exit...", LogSeverity.Information);
+				Console.ReadKey();
+
 				Environment.Exit(1);
 			}
+
+			BootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
 
 			string LogsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Logs");
 
 			if (!Directory.Exists(LogsDirectory))
 			{
-				Console.WriteLine($"Logs folder did not exist. Creating...".Pastel("#3d9785"));
-				Directory.CreateDirectory(LogsDirectory);
+				BootLogger.Log("Logs folder did not exist. Creating...", LogSeverity.Warning);
+				
+				try
+				{
+					Directory.CreateDirectory(LogsDirectory);
+					BootLogger.Log("Created Logs folder successfully.", LogSeverity.Success);
+				}
+				catch(Exception ex)
+				{
+					BootLogger.Log("Could not create Logs folder. Running the bot without file logging has yet to be implemented.\n" +
+						$"Exception Message: {ex.Message}", LogSeverity.Error);
+
+					BootLogger.Log("Press any key to exit...", LogSeverity.Information);
+					Console.ReadKey();
+
+					Environment.Exit(1);
+				}
 			}
 
 			string AvatarsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Avatars");
 
 			if (!Directory.Exists(AvatarsDirectory))
 			{
-				Console.WriteLine($"Avatars folder did not exist. Creating...".Pastel("#3d9785"));
-				Directory.CreateDirectory(AvatarsDirectory);
+				BootLogger.Log("Avatars folder did not exist. Creating...", LogSeverity.Warning);
+				
+				try
+				{
+					Directory.CreateDirectory(AvatarsDirectory);
+					BootLogger.Log("Created Avatars folder successfully.", LogSeverity.Success);
+				}
+				catch(Exception ex)
+				{
+					BootLogger.Log("Could not create Avatars folder. Rotating avatars will not be available.\n" +
+						$"Exception Message: {ex.Message}", LogSeverity.Error);
+
+					BootLogger.Log("Press any key to continue...", LogSeverity.Information);
+					Console.ReadKey();
+				}
 			}
 
-			Console.WriteLine("Starting Socket Client...".Pastel("#3d9785"));
+			BootLogger.Log("Creating Discord client...", LogSeverity.Information);
 
 			SocketClient = new DiscordSocketClient(new DiscordSocketConfig
 			{
@@ -73,7 +107,9 @@ namespace SammBotNET.Core
 				DefaultRunMode = RunMode.Async,
 			});
 
-			Console.WriteLine("Configuring Services...".Pastel("#3d9785"));
+			BootLogger.Log("Created Discord client successfully.", LogSeverity.Success);
+
+			BootLogger.Log("Configuring service provider...", LogSeverity.Information);
 
 			ServiceCollection Services = new ServiceCollection();
 			ConfigureServices(Services);
@@ -87,7 +123,9 @@ namespace SammBotNET.Core
 			Provider.GetRequiredService<FunService>();
 			Provider.GetRequiredService<UtilsService>();
 
-			Console.WriteLine("Starting Startup Service...".Pastel("#3d9785"));
+			BootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
+
+			BootLogger.Log("Starting the startup service...", LogSeverity.Information);
 			await Provider.GetRequiredService<StartupService>().StartAsync();
 
 			await Task.Delay(-1);
