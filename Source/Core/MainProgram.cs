@@ -3,7 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Pastel;
 using System;
 using System.Globalization;
 using System.IO;
@@ -52,13 +51,13 @@ namespace SammBotNET.Core
 			if (!Directory.Exists(LogsDirectory))
 			{
 				BootLogger.Log("Logs folder did not exist. Creating...", LogSeverity.Warning);
-				
+
 				try
 				{
 					Directory.CreateDirectory(LogsDirectory);
 					BootLogger.Log("Created Logs folder successfully.", LogSeverity.Success);
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					BootLogger.Log("Could not create Logs folder. Running the bot without file logging has yet to be implemented.\n" +
 						$"Exception Message: {ex.Message}", LogSeverity.Error);
@@ -75,13 +74,13 @@ namespace SammBotNET.Core
 			if (!Directory.Exists(AvatarsDirectory))
 			{
 				BootLogger.Log("Avatars folder did not exist. Creating...", LogSeverity.Warning);
-				
+
 				try
 				{
 					Directory.CreateDirectory(AvatarsDirectory);
 					BootLogger.Log("Created Avatars folder successfully.", LogSeverity.Success);
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					BootLogger.Log("Could not create Avatars folder. Rotating avatars will not be available.\n" +
 						$"Exception Message: {ex.Message}", LogSeverity.Error);
