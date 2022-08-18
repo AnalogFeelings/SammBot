@@ -51,7 +51,7 @@ namespace SammBotNET.Modules
 		[Alias("game", "vcgame")]
 		[Summary("Creates an invite for a voice channel activity!")]
 		[FullDescription("Creates an invite for a voice channel activity. Read [this](https://discordnet.dev/api/Discord.DefaultApplications.html) for" +
-			"a list of the available activities.")]
+			" a list of the available activities.")]
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> CreateActivityAsync(SocketVoiceChannel TargetChannel, DefaultApplications ActivityType)
 		{
