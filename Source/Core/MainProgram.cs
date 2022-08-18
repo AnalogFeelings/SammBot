@@ -29,8 +29,7 @@ namespace SammBotNET.Core
 			BootLogger.Log($"Loading {Settings.Instance.ConfigFile}...", LogSeverity.Information);
 			if (!Settings.Instance.LoadConfiguration())
 			{
-				string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-				string FullPath = Path.Combine(AppData, Settings.BOT_NAME);
+				string FullPath = Settings.Instance.BotDataDirectory;
 
 				BootLogger.Log($"Could not load {Settings.Instance.ConfigFile} correctly! Make sure the path \"{FullPath}\" exists.\n" +
 					$"Either way, the program has attempted to write the default {Settings.Instance.ConfigFile} file to that path.", LogSeverity.Fatal);
