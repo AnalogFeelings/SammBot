@@ -26,15 +26,15 @@ namespace SammBotNET.Core
 
 			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
-			BootLogger.Log($"Loading {Settings.Instance.ConfigFile}...", LogSeverity.Information);
+			BootLogger.Log($"Loading {Settings.CONFIG_FILE}...", LogSeverity.Information);
 			if (!Settings.Instance.LoadConfiguration())
 			{
 				string FullPath = Settings.Instance.BotDataDirectory;
 
-				BootLogger.Log($"Could not load {Settings.Instance.ConfigFile} correctly! Make sure the path \"{FullPath}\" exists.\n" +
-					$"Either way, the program has attempted to write the default {Settings.Instance.ConfigFile} file to that path.", LogSeverity.Fatal);
+				BootLogger.Log($"Could not load {Settings.CONFIG_FILE} correctly! Make sure the path \"{FullPath}\" exists.\n" +
+					$"Either way, the program has attempted to write the default {Settings.CONFIG_FILE} file to that path.", LogSeverity.Fatal);
 
-				File.WriteAllText(Path.Combine(FullPath, Settings.Instance.ConfigFile),
+				File.WriteAllText(Path.Combine(FullPath, Settings.CONFIG_FILE),
 					JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
 				BootLogger.Log("Press any key to exit...", LogSeverity.Information);

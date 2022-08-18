@@ -16,8 +16,6 @@ namespace SammBotNET.Core
 {
 	public class Settings
 	{
-		public string ConfigFile = "config.json";
-
 		public Random GlobalRng = new Random(Guid.NewGuid().GetHashCode());
 		public Stopwatch StartupStopwatch = new Stopwatch();
 		public Stopwatch RuntimeStopwatch = new Stopwatch();
@@ -25,6 +23,7 @@ namespace SammBotNET.Core
 		public JsonConfig LoadedConfig = new JsonConfig();
 
 		public const string BOT_NAME = "Samm-Bot";
+		public const string CONFIG_FILE = "config.json";
 
 		public readonly string BotDataDirectory;
 
@@ -37,7 +36,7 @@ namespace SammBotNET.Core
 
 		public bool LoadConfiguration()
 		{
-			string ConfigFilePath = Path.Combine(BotDataDirectory, ConfigFile);
+			string ConfigFilePath = Path.Combine(BotDataDirectory, CONFIG_FILE);
 
 			try
 			{

@@ -214,7 +214,7 @@ namespace SammBotNET.Modules
 			
 			await ReplyAsync($"Set variable \"{VarName}\" to `{NewValue.ToString().Truncate(128)}` succesfully.", allowedMentions: AllowedMentions, messageReference: Reference);
 
-			await File.WriteAllTextAsync(Settings.Instance.ConfigFile,
+			await File.WriteAllTextAsync(Settings.CONFIG_FILE,
 				JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
 			if (RestartBot)
