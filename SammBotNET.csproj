@@ -16,6 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Source\obj\**" />
+    <EmbeddedResource Remove="Source\obj\**" />
+    <None Remove="Source\obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove=".gitattributes" />
     <None Remove=".gitignore" />
     <None Remove="CODE_OF_CONDUCT.md" />
