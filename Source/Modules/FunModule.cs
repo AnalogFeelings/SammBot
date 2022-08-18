@@ -53,13 +53,13 @@ namespace SammBotNET.Modules
 		[FullDescription("Creates an invite for a voice channel activity. Read [this](https://discordnet.dev/api/Discord.DefaultApplications.html) for" +
 			" a list of the available activities.")]
 		[RequireContext(ContextType.Guild)]
-		public async Task<RuntimeResult> CreateActivityAsync(SocketVoiceChannel TargetChannel, DefaultApplications ActivityType)
+		public async Task<RuntimeResult> CreateActivityAsync(DefaultApplications ActivityType)
 		{
 			SocketGuildUser Author = Context.User as SocketGuildUser;
-			if (Author.VoiceChannel != TargetChannel)
-				return ExecutionResult.FromError("You must be in the voice channel you are trying to create an activity for!");
+			if (Author.VoiceChannel == null)
+				return ExecutionResult.FromError("You must be in a voice channel to create an activity!");
 
-			IInviteMetadata Invite = await TargetChannel.CreateInviteToApplicationAsync(ActivityType);
+			IInviteMetadata Invite = await Author.VoiceChannel.CreateInviteToApplicationAsync(ActivityType);
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
