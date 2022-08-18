@@ -64,7 +64,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Source\Hooks\" />
     <Folder Include="Source\Migrations\" />
   </ItemGroup>
   
