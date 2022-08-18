@@ -2,11 +2,11 @@
 
 namespace SammBotNET.Classes
 {
-	public class AutodeqList<T> : LinkedList<T>
+	public class AutoDequeueList<T> : LinkedList<T>
 	{
 		private readonly int MaxSize;
 
-		public AutodeqList(int MaxSize) => this.MaxSize = MaxSize;
+		public AutoDequeueList(int MaxSize) => this.MaxSize = MaxSize;
 
 		public void Push(T Item)
 		{

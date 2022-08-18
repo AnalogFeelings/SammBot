@@ -26,7 +26,7 @@ namespace SammBotNET.Services
 		public Timer RngResetTimer;
 		public Timer AvatarTimer;
 
-		public AutodeqList<string> RecentAvatars;
+		public AutoDequeueList<string> RecentAvatars;
 
 		private bool FirstTimeConnection = true;
 
@@ -37,7 +37,7 @@ namespace SammBotNET.Services
 			CommandsService = command;
 			BotLogger = logger;
 
-			RecentAvatars = new AutodeqList<string>(Settings.Instance.LoadedConfig.AvatarRecentQueueSize);
+			RecentAvatars = new AutoDequeueList<string>(Settings.Instance.LoadedConfig.AvatarRecentQueueSize);
 		}
 
 		public async Task StartAsync()
