@@ -53,6 +53,8 @@ namespace SammBotNET.Modules
 		[FullDescription("Creates an invite for a voice channel activity. Read [this](https://discordnet.dev/api/Discord.DefaultApplications.html) for" +
 			" a list of the available activities.")]
 		[RequireContext(ContextType.Guild)]
+		[RequireBotPermission(GuildPermission.CreateInstantInvite)]
+		[RequireUserPermission(GuildPermission.CreateInstantInvite)]
 		public async Task<RuntimeResult> CreateActivityAsync(DefaultApplications ActivityType)
 		{
 			SocketGuildUser Author = Context.User as SocketGuildUser;
