@@ -131,7 +131,7 @@ namespace SammBotNET.Modules
 		[Summary("Leak someone's (fake) IP address!")]
 		[FullDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
 		[RequireContext(ContextType.Guild)]
-		public async Task<RuntimeResult> DoxUserAsync(IUser User)
+		public async Task<RuntimeResult> DoxUserAsync(SocketGuildUser User)
 		{
 			int FirstSegment = Random.Shared.Next(0, 256);
 			int SecondSegment = Random.Shared.Next(0, 256);
@@ -140,7 +140,7 @@ namespace SammBotNET.Modules
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"<@{User.Id}>'s IPv4 address: `{FirstSegment}.{SecondSegment}.{ThirdSegment}.{FourthSegment}`", allowedMentions: AllowedMentions, messageReference: Reference);
+			await ReplyAsync($"**{User.GetUsernameOrNick()}**'s IPv4 address: `{FirstSegment}.{SecondSegment}.{ThirdSegment}.{FourthSegment}`", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			return ExecutionResult.Succesful();
 		}
