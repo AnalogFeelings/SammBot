@@ -159,7 +159,7 @@ namespace SammBotNET.Modules
 			int MaxNumber = 6999;
 			int ChosenNumber = Random.Shared.Next(MaxNumber + 1);
 
-			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: "http://www.scp-wiki.net/scp-" + ChosenNumber.ToString("D3"))
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: "https://scp-wiki.wikidot.com/scp-" + ChosenNumber.ToString("D3"))
 														.ChangeTitle("Random SCP");
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
