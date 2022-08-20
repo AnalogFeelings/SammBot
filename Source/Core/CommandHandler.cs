@@ -4,9 +4,6 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Core
@@ -20,7 +17,7 @@ namespace SammBotNET.Core
 		public AdminService AdminService { get; set; }
 		public CommandService CommandsService { get; set; }
 
-		private List<MessageHook> HookList = new List<MessageHook>();
+		//private List<MessageHook> HookList = new List<MessageHook>();
 
 		private ConcurrentQueue<SocketMessage> MessageQueue = new ConcurrentQueue<SocketMessage>();
 		private bool ExecutingCommand = false;
@@ -37,8 +34,8 @@ namespace SammBotNET.Core
 
 			AdminService = Services.GetRequiredService<AdminService>();
 
-			HookList = ReflectionEnumerator.GetChildrenOfType<MessageHook>()
-				.Where(x => x.GetType().GetCustomAttribute(typeof(RegisterHook), false) != null).ToList();
+			//HookList = ReflectionEnumerator.GetChildrenOfType<MessageHook>()
+			//	.Where(x => x.GetType().GetCustomAttribute(typeof(RegisterHook), false) != null).ToList();
 		}
 
 		public async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
@@ -56,7 +53,7 @@ namespace SammBotNET.Core
 					ReplyEmbed.Title = "⚠️ An error has occurred.";
 					ReplyEmbed.Color = new Color(255, 204, 77);
 
-					switch(Result.ErrorReason)
+					switch (Result.ErrorReason)
 					{
 						case "Unknown command.":
 							FinalMessage = $"Unknown command! Use the `{Settings.Instance.LoadedConfig.BotPrefix}help` command for a command list.";
@@ -79,7 +76,7 @@ namespace SammBotNET.Core
 					await Context.Channel.SendMessageAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				BotLogger.LogException(ex);
 			}
@@ -119,7 +116,7 @@ namespace SammBotNET.Core
 				if (ExecutingCommand)
 				{
 					MessageQueue.Enqueue(ReceivedMessage);
-					
+
 					return;
 				}
 
@@ -131,18 +128,18 @@ namespace SammBotNET.Core
 				await CommandsService.ExecuteAsync(Context, ArgumentPosition, ServiceProvider);
 			}
 
-			if (!TargetMessage.Content.StartsWith(Settings.Instance.LoadedConfig.BotPrefix))
-			{
-				foreach (MessageHook Hook in HookList)
-				{
-					Hook.Message = TargetMessage;
-					Hook.Context = Context;
-					Hook.BotLogger = BotLogger;
-					Hook.Client = DiscordClient;
+			//if (!TargetMessage.Content.StartsWith(Settings.Instance.LoadedConfig.BotPrefix))
+			//{
+			//	foreach (MessageHook Hook in HookList)
+			//	{
+			//		Hook.Message = TargetMessage;
+			//		Hook.Context = Context;
+			//		Hook.BotLogger = BotLogger;
+			//		Hook.Client = DiscordClient;
 
-					_ = Task.Run(() => Hook.ExecuteHook());
-				}
-			}
+			//		_ = Task.Run(() => Hook.ExecuteHook());
+			//	}
+			//}
 		}
 	}
 }
