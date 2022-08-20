@@ -16,7 +16,6 @@ namespace SammBotNET.Core
 {
 	public class Settings
 	{
-		public Random GlobalRng = new Random(Guid.NewGuid().GetHashCode());
 		public Stopwatch StartupStopwatch = new Stopwatch();
 		public Stopwatch RuntimeStopwatch = new Stopwatch();
 
@@ -117,7 +116,6 @@ namespace SammBotNET.Core
 		[NotModifiable] public string OpenWeatherKey { get; set; } = "";
 		[NotModifiable] public string TwitchUrl { get; set; } = "https://www.twitch.tv/coreaesthetics";
 		[NotModifiable] public string CommandLogFormat { get; set; } = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
-		[NotModifiable] public int RngResetTime { get; set; } = 25;
 		[NotModifiable] public int AvatarRotationTime { get; set; } = 1;
 		[NotModifiable] public int PeoneRecentQueueSize { get; set; } = 15;
 		[NotModifiable] public int AvatarRecentQueueSize { get; set; } = 10;

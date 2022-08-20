@@ -23,7 +23,6 @@ namespace SammBotNET.Services
 		public Logger BotLogger { get; set; }
 
 		public Timer StatusTimer;
-		public Timer RngResetTimer;
 		public Timer AvatarTimer;
 
 		public AutoDequeueList<string> RecentAvatars;
@@ -121,16 +120,6 @@ namespace SammBotNET.Services
 					RecentAvatars.Push(ChosenAvatar);
 				}, null, TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime), TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime));
 			}
-
-			RngResetTimer = new Timer(_ =>
-			{
-				int NewHash = Guid.NewGuid().GetHashCode();
-
-				Settings.Instance.GlobalRng = new Random(NewHash);
-				BotLogger.Log($"Regenerated RNG instance with hash {NewHash}.", LogSeverity.Debug);
-
-			}, null, TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime),
-					 TimeSpan.FromMinutes(Settings.Instance.LoadedConfig.RngResetTime));
 
 			BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
 

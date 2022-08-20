@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SammBotNET.Extensions
 {
@@ -6,7 +7,7 @@ namespace SammBotNET.Extensions
 	{
 		public static T PickRandom<T>(this IList<T> TargetList)
 		{
-			return TargetList[Settings.Instance.GlobalRng.Next(TargetList.Count)];
+			return TargetList[Random.Shared.Next(TargetList.Count)];
 		}
 	}
 }

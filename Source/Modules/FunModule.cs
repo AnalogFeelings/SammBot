@@ -80,7 +80,7 @@ namespace SammBotNET.Modules
 			if (FaceCount < 3)
 				return ExecutionResult.FromError("The dice must have at least 3 faces!");
 
-			int ChosenNumber = Settings.Instance.GlobalRng.Next(1, FaceCount + 1);
+			int ChosenNumber = Random.Shared.Next(1, FaceCount + 1);
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
@@ -133,10 +133,10 @@ namespace SammBotNET.Modules
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> DoxUserAsync(IUser User)
 		{
-			int FirstSegment = Settings.Instance.GlobalRng.Next(0, 256);
-			int SecondSegment = Settings.Instance.GlobalRng.Next(0, 256);
-			int ThirdSegment = Settings.Instance.GlobalRng.Next(0, 256);
-			int FourthSegment = Settings.Instance.GlobalRng.Next(0, 256);
+			int FirstSegment = Random.Shared.Next(0, 256);
+			int SecondSegment = Random.Shared.Next(0, 256);
+			int ThirdSegment = Random.Shared.Next(0, 256);
+			int FourthSegment = Random.Shared.Next(0, 256);
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
@@ -200,7 +200,7 @@ namespace SammBotNET.Modules
 				return ExecutionResult.FromError("You can't ship yourself!");
 
 			//Get random ship percentage and text.
-			int Percentage = Settings.Instance.GlobalRng.Next(0, 101);
+			int Percentage = Random.Shared.Next(0, 101);
 			string PercentageText = string.Empty;
 			string PercentageEmoji = string.Empty;
 

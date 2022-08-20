@@ -10,7 +10,6 @@
   "TwitchUrl": null,
   "OwnerUserId": null,
   "CommandLogFormat": "Executing command \"{0}\". Channel: #{1}. User: @{2}.",
-  "RngResetTime": 30,
   "AvatarRotationTime": 1,
   "Rule34Threshold": 35,
   "PeoneRecentQueueSize": 20,

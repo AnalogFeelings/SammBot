@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharpCat.Types.Cat;
 using SharpCat.Types.Dog;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -156,7 +157,7 @@ namespace SammBotNET.Modules
 		public async Task<RuntimeResult> GetSCPAsync()
 		{
 			int MaxNumber = 6999;
-			int ChosenNumber = Settings.Instance.GlobalRng.Next(MaxNumber + 1);
+			int ChosenNumber = Random.Shared.Next(MaxNumber + 1);
 
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: "http://www.scp-wiki.net/scp-" + ChosenNumber.ToString("D3"))
 														.ChangeTitle("Random SCP");
