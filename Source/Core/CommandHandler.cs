@@ -3,7 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace SammBotNET.Core
@@ -18,9 +17,6 @@ namespace SammBotNET.Core
 		public CommandService CommandsService { get; set; }
 
 		//private List<MessageHook> HookList = new List<MessageHook>();
-
-		private ConcurrentQueue<SocketMessage> MessageQueue = new ConcurrentQueue<SocketMessage>();
-		private bool ExecutingCommand = false;
 
 		public CommandHandler(DiscordSocketClient Client, CommandService Commands, IServiceProvider Services, Logger Logger)
 		{
@@ -80,13 +76,6 @@ namespace SammBotNET.Core
 			{
 				BotLogger.LogException(ex);
 			}
-
-			await Task.Delay(Settings.Instance.LoadedConfig.QueueWaitTime);
-
-			MessageQueue.TryDequeue(out SocketMessage dequeuedMessage);
-			ExecutingCommand = false;
-
-			await HandleCommandAsync(dequeuedMessage);
 		}
 
 		public async Task HandleCommandAsync(SocketMessage ReceivedMessage)
@@ -113,14 +102,6 @@ namespace SammBotNET.Core
 			else if (TargetMessage.HasStringPrefix(Settings.Instance.LoadedConfig.BotPrefix, ref ArgumentPosition))
 			{
 				if (TargetMessage.Content.Length == Settings.Instance.LoadedConfig.BotPrefix.Length) return;
-				if (ExecutingCommand)
-				{
-					MessageQueue.Enqueue(ReceivedMessage);
-
-					return;
-				}
-
-				ExecutingCommand = true;
 
 				BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
 								TargetMessage.Content, TargetMessage.Channel.Name, TargetMessage.Author.Username), LogSeverity.Information);
