@@ -88,37 +88,13 @@ namespace SammBotNET.Services
 		public Task OnReady()
 		{
 			if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
-			{
-				StatusTimer = new Timer(async _ =>
-				{
-					BotStatus ChosenStatus = Settings.Instance.LoadedConfig.StatusList.PickRandom();
-
-					await SocketClient.SetGameAsync(ChosenStatus.Content,
-						ChosenStatus.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null, (ActivityType)ChosenStatus.Type);
-				}, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
-			}
+				StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 
 			if (Settings.Instance.LoadedConfig.RotatingAvatar)
 			{
-				AvatarTimer = new Timer(async _ =>
-				{
-					List<string> AvatarList = Directory.EnumerateFiles(Path.Combine(Settings.Instance.BotDataDirectory, "Avatars")).ToList();
-					if (AvatarList.Count < 2) return;
+				TimeSpan AvatarDelay = TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime);
 
-					List<string> FilteredList = AvatarList.Except(RecentAvatars).ToList();
-
-					string ChosenAvatar = FilteredList.PickRandom();
-					BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogSeverity.Debug);
-
-					using (FileStream AvatarStream = new(ChosenAvatar, FileMode.Open))
-					{
-						Image LoadedAvatar = new Image(AvatarStream);
-
-						await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = LoadedAvatar);
-					}
-
-					RecentAvatars.Push(ChosenAvatar);
-				}, null, TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime), TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime));
+				AvatarTimer = new Timer(RotateAvatar ,null, AvatarDelay, AvatarDelay);
 			}
 
 			BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
@@ -131,6 +107,35 @@ namespace SammBotNET.Services
 			BotLogger.Log("Client has disconnected from the gateway! Reason: " + IncludedException.Message, LogSeverity.Warning);
 
 			return Task.CompletedTask;
+		}
+
+		public async void RotateStatus(object State)
+		{
+			BotStatus ChosenStatus = Settings.Instance.LoadedConfig.StatusList.PickRandom();
+
+			string GameUrl = ChosenStatus.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null;
+
+			await SocketClient.SetGameAsync(ChosenStatus.Content, GameUrl, (ActivityType)ChosenStatus.Type);
+		}
+
+		public async void RotateAvatar(object State)
+		{
+			List<string> AvatarList = Directory.EnumerateFiles(Path.Combine(Settings.Instance.BotDataDirectory, "Avatars")).ToList();
+			if (AvatarList.Count < 2) return;
+
+			List<string> FilteredList = AvatarList.Except(RecentAvatars).ToList();
+
+			string ChosenAvatar = FilteredList.PickRandom();
+			BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogSeverity.Debug);
+
+			using (FileStream AvatarStream = new(ChosenAvatar, FileMode.Open))
+			{
+				Image LoadedAvatar = new Image(AvatarStream);
+
+				await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = LoadedAvatar);
+			}
+
+			RecentAvatars.Push(ChosenAvatar);
 		}
 	}
 }
