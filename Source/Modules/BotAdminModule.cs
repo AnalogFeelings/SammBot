@@ -201,7 +201,7 @@ namespace SammBotNET.Modules
 
 			if (RetrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
 				return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
-					$"Please pass `true` to the `restartBot` parameter.");
+					$"Please pass `true` to the `RestartBot` parameter.");
 
 			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
 			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
