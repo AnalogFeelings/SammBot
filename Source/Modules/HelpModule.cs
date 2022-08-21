@@ -129,12 +129,22 @@ namespace SammBotNET.Modules
 				string FormattedDescription = CommandDescription != default(FullDescription) && !string.IsNullOrEmpty(CommandDescription.Description)
 					? CommandDescription.Description : "No description.";
 
-				ReplyEmbed.AddField("Command Name", Command.Name, true);
-				ReplyEmbed.AddField("Command Group", Command.Module.Group, true);
-				ReplyEmbed.AddField("Command Aliases", ProcessedAliases.Count == 0 ? "No aliases." : string.Join(", ", ProcessedAliases.ToArray()), false);
-				ReplyEmbed.AddField("Command Description", FormattedDescription);
+				ReplyEmbed.AddField("🏷 Name", Command.Name, true);
+				ReplyEmbed.AddField("🗃 Group", Command.Module.Group, true);
+				ReplyEmbed.AddField("🎭 Aliases", ProcessedAliases.Count == 0 ? "No aliases." : string.Join(", ", ProcessedAliases.ToArray()), true);
+				ReplyEmbed.AddField("📋 Description", FormattedDescription);
 
-				string CommandParameters = "`*` = Optional **||** `^` = No quote marks needed if it contains spaces.\n";
+				RateLimit CommandRateLimit = (RateLimit)Command.Preconditions.FirstOrDefault(x => x is RateLimit);
+				string RateLimitString = string.Empty;
+
+				if(CommandRateLimit == default(RateLimit))
+					RateLimitString = "This command has no cooldown.";
+				else
+					RateLimitString = $"Cooldown of **{CommandRateLimit.Seconds}** second(s).\nTriggered after using the command **{CommandRateLimit.Requests}** time(s).";
+
+				ReplyEmbed.AddField("⏱️ Cooldown", RateLimitString);
+
+				string CommandParameters = "`*` = Optional • `^` = No quote marks needed if it contains spaces.\n";
 				foreach (ParameterInfo ParameterInfo in Command.Parameters)
 				{
 					string TypeName = ParameterInfo.Type.Name;
@@ -150,7 +160,7 @@ namespace SammBotNET.Modules
 					CommandParameters += "\n";
 				}
 
-				ReplyEmbed.AddField("Command Parameters", Command.Parameters.Count == 0 ? "No parameters." : CommandParameters);
+				ReplyEmbed.AddField("📃 Parameters", Command.Parameters.Count == 0 ? "No parameters." : CommandParameters);
 
 				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 			}

@@ -19,8 +19,8 @@ namespace SammBotNET.Classes
 	{
 		private static ConcurrentDictionary<ulong, List<RateLimitItem>> Items = new ConcurrentDictionary<ulong, List<RateLimitItem>>();
 		private readonly RateLimitType? LimitType;
-		private readonly int Requests;
-		private readonly int Seconds;
+		public readonly int Requests;
+		public readonly int Seconds;
 
 		/// <summary>
 		/// The constructor for the <see cref="RateLimit"/> class.
