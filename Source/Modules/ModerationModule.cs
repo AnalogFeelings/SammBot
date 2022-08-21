@@ -19,6 +19,7 @@ namespace SammBotNET.Modules
 		[Alias("toss", "bonk")]
 		[Summary("Bans a user with a reason.")]
 		[FullDescription("Bans a user from the server with the set reason.")]
+		[RateLimit(1, 2)]
 		[RequireContext(ContextType.Guild)]
 		[RequireBotPermission(GuildPermission.BanMembers)]
 		[RequireUserPermission(GuildPermission.BanMembers)]
@@ -45,6 +46,7 @@ namespace SammBotNET.Modules
 		[Alias("boot", "exile")]
 		[Summary("Kicks a user with a reason.")]
 		[FullDescription("Kicks a user from the server with the set reason.")]
+		[RateLimit(1, 2)]
 		[RequireContext(ContextType.Guild)]
 		[RequireBotPermission(GuildPermission.KickMembers)]
 		[RequireUserPermission(GuildPermission.KickMembers)]
@@ -69,6 +71,7 @@ namespace SammBotNET.Modules
 		[Command("warn")]
 		[Summary("Warns a user with a reason.")]
 		[FullDescription("Warns a user with a reason. Warnings will be stored in the bot's database, and you will be able to list them afterwards.")]
+		[RateLimit(1, 2)]
 		[RequireContext(ContextType.Guild)]
 		[RequireUserPermission(GuildPermission.KickMembers)]
 		public async Task<RuntimeResult> WarnUserAsync(SocketGuildUser TargetUser, [Remainder] string Reason)
@@ -128,6 +131,7 @@ namespace SammBotNET.Modules
 		[Command("unwarn")]
 		[Summary("Removes a warn from a user.")]
 		[FullDescription("Removes the warning with the specified ID.")]
+		[RateLimit(1, 2)]
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> RemoveWarnAsync([Remainder] string WarningId)
 		{
@@ -155,6 +159,7 @@ namespace SammBotNET.Modules
 		[Alias("warnlist")]
 		[Summary("Lists all of the warns given to a user.")]
 		[FullDescription("Replies with a list of warnings given to the specified user.")]
+		[RateLimit(2, 1)]
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> ListWarnsAsync(SocketGuildUser TargetUser)
 		{
@@ -189,6 +194,7 @@ namespace SammBotNET.Modules
 		[Alias("getwarn", "listwarn")]
 		[Summary("Lists a specific warn.")]
 		[FullDescription("Lists a warning, and the full reason.")]
+		[RateLimit(2, 1)]
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> ListWarnAsync([Remainder] string WarningId)
 		{
@@ -220,6 +226,7 @@ namespace SammBotNET.Modules
 		[Alias("timeout", "shush", "shutup")]
 		[Summary("Mutes a user for an amount of time with a reason.")]
 		[FullDescription("Mutes the specified user for an amount of time with the specified reason. The reason is optional.")]
+		[RateLimit(1, 2)]
 		[RequireContext(ContextType.Guild)]
 		[RequireBotPermission(GuildPermission.ModerateMembers)]
 		[RequireUserPermission(GuildPermission.ModerateMembers)]
@@ -257,6 +264,7 @@ namespace SammBotNET.Modules
 		[Alias("clean", "clear")]
 		[Summary("Deletes an amount of messages.")]
 		[FullDescription("Deletes the provided amount of messages.")]
+		[RateLimit(2, 2)]
 		[RequireBotPermission(GuildPermission.ManageMessages)]
 		[RequireUserPermission(GuildPermission.ManageMessages)]
 		public async Task<RuntimeResult> PurgeMessagesAsync(int Count)

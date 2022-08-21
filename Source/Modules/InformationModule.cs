@@ -19,6 +19,7 @@ namespace SammBotNET.Modules
 		[Command("full")]
 		[Summary("Shows the FULL information of the bot.")]
 		[FullDescription("Shows version, uptime, ping, etc...")]
+		[RateLimit(3, 1)]
 		public async Task<RuntimeResult> InformationFullAsync()
 		{
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All of the public information about the bot.");
@@ -56,6 +57,7 @@ namespace SammBotNET.Modules
 		[Alias("server", "guildinfo")]
 		[Summary("Get information about a server!")]
 		[FullDescription("Gets all the information about the server you execute the command in.")]
+		[RateLimit(3, 1)]
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> ServerInfoAsync()
 		{
@@ -99,6 +101,7 @@ namespace SammBotNET.Modules
 		[Alias("user")]
 		[Summary("Get information about a user!")]
 		[FullDescription("Gets all the information about the provided user.")]
+		[RateLimit(3, 1)]
 		[RequireContext(ContextType.Guild)]
 		public async Task<RuntimeResult> UserInfoAsync(SocketGuildUser User = null)
 		{

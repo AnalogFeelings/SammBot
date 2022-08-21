@@ -14,6 +14,7 @@ namespace SammBotNET.Modules
 		[Command("help")]
 		[Summary("Provides all commands and modules available.")]
 		[FullDescription("Provides a list of all the commands and modules available.")]
+		[RateLimit(1, 3)]
 		[HideInHelp]
 		public async Task<RuntimeResult> HelpAsync()
 		{
@@ -55,6 +56,7 @@ namespace SammBotNET.Modules
 		[Command("help")]
 		[Summary("Provides all commands and modules available.")]
 		[FullDescription("Provides a list of all the commands and modules available.")]
+		[RateLimit(1, 3)]
 		[HideInHelp]
 		public async Task<RuntimeResult> HelpAsync([Remainder] string ModuleName)
 		{

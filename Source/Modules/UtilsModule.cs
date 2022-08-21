@@ -26,6 +26,7 @@ namespace SammBotNET.Modules
 		[Summary("Displays a HEX color, and converts it in other formats.")]
 		[FullDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
 			"Also converts it to RGB, CMYK, HSV and HSL.")]
+		[RateLimit(3, 2)]
 		public async Task<RuntimeResult> VisualizeColorHex([Remainder] string HexColor)
 		{
 			string Filename = "colorView.png";
@@ -97,6 +98,7 @@ namespace SammBotNET.Modules
 		[Summary("Displays an RGB color, and converts it in other formats.")]
 		[FullDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
 			"Also converts it to HEX, CMYK, HSV and HSL.")]
+		[RateLimit(3, 2)]
 		public async Task<RuntimeResult> VisualizeColorRgb(byte Red, byte Green, byte Blue)
 		{
 			string Filename = "colorView.png";
@@ -166,6 +168,7 @@ namespace SammBotNET.Modules
 		[Summary("Gets the avatar of a user.")]
 		[FullDescription("Gets the avatar of a user. If **User** is a server user, it will display the per-guild avatar (if they have any), and send a link to the global one in " +
 			"the embed description.")]
+		[RateLimit(3, 2)]
 		public async Task<RuntimeResult> GetProfilePicAsync(IUser User)
 		{
 			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
@@ -212,6 +215,7 @@ namespace SammBotNET.Modules
 		[Command("weather")]
 		[Summary("Gets the current weather for your city.")]
 		[FullDescription("Gets the current weather forecast for your city. May not have all the information available, and the location may not be accurate.")]
+		[RateLimit(3, 2)]
 		public async Task<RuntimeResult> GetWeatherAsync([Remainder] string City)
 		{
 			List<Location> RetrievedLocations = await GetWeatherLocationsAsync(City);

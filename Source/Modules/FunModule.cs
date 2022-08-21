@@ -32,6 +32,7 @@ namespace SammBotNET.Modules
 		[Alias("ask", "8")]
 		[Summary("Ask the magic 8-ball!")]
 		[FullDescription("Ask a question to the magic 8-ball! Not guaranteed to answer first try!")]
+		[RateLimit(2, 1)]
 		public async Task<RuntimeResult> MagicBallAsync([Remainder] string Question)
 		{
 			string ChosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
@@ -55,6 +56,7 @@ namespace SammBotNET.Modules
 		[RequireContext(ContextType.Guild)]
 		[RequireBotPermission(GuildPermission.CreateInstantInvite)]
 		[RequireUserPermission(GuildPermission.CreateInstantInvite)]
+		[RateLimit(6, 1)]
 		public async Task<RuntimeResult> CreateActivityAsync(DefaultApplications ActivityType)
 		{
 			SocketGuildUser Author = Context.User as SocketGuildUser;
@@ -75,6 +77,7 @@ namespace SammBotNET.Modules
 		[Alias("roll")]
 		[Summary("Roll the dice, and get a random number!")]
 		[FullDescription("Roll the dice! It returns a random number between 1 and **FaceCount**. **FaceCount** must be larger than 3!")]
+		[RateLimit(2, 1)]
 		public async Task<RuntimeResult> RollDiceAsync(int FaceCount = 6)
 		{
 			if (FaceCount < 3)
@@ -98,6 +101,7 @@ namespace SammBotNET.Modules
 		[Summary("Hug a user!")]
 		[FullDescription("Hugs are good for everyone! Spread the joy with this command.")]
 		[RequireContext(ContextType.Guild)]
+		[RateLimit(3, 1)]
 		public async Task<RuntimeResult> HugUserAsync(IUser User)
 		{
 			string ChosenKaomoji = Settings.Instance.LoadedConfig.HugKaomojis.PickRandom();
@@ -115,6 +119,7 @@ namespace SammBotNET.Modules
 		[Summary("Pats a user!")]
 		[FullDescription("Pets are ALSO good for everyone! Spread the joy with this command.")]
 		[RequireContext(ContextType.Guild)]
+		[RateLimit(3, 1)]
 		public async Task<RuntimeResult> PatUserAsync(IUser User)
 		{
 			SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
@@ -131,6 +136,7 @@ namespace SammBotNET.Modules
 		[Summary("Leak someone's (fake) IP address!")]
 		[FullDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
 		[RequireContext(ContextType.Guild)]
+		[RateLimit(3, 1)]
 		public async Task<RuntimeResult> DoxUserAsync(SocketGuildUser User)
 		{
 			int FirstSegment = Random.Shared.Next(0, 256);
@@ -150,6 +156,7 @@ namespace SammBotNET.Modules
 		[Summary("Commit first degree murder, fuck it.")]
 		[FullDescription("Commit first degree murder! Don't worry, its fictional, the police isn't after you.")]
 		[RequireContext(ContextType.Guild)]
+		[RateLimit(4, 1)]
 		public async Task<RuntimeResult> FirstDegreeMurderAsync(SocketGuildUser TargetUser)
 		{
 			SocketGuildUser AuthorUser = Context.Message.Author as SocketGuildUser;
@@ -186,6 +193,7 @@ namespace SammBotNET.Modules
 		[Summary("Ship 2 users together! Awww!")]
 		[FullDescription("The Ship-O-Matic 5000 is here! If **SecondUser** is left empty, you will be shipped with **FirstUser**.")]
 		[RequireContext(ContextType.Guild)]
+		[RateLimit(5, 1)]
 		public async Task<RuntimeResult> ShipUsersAsync(SocketGuildUser FirstUser, SocketGuildUser SecondUser = null)
 		{
 			//If the second user is null, ship the author with the first user.
@@ -382,6 +390,7 @@ namespace SammBotNET.Modules
 		[Command("urban")]
 		[Summary("Gets a definition from the urban dictionary!")]
 		[FullDescription("Gets a definition from the urban dictionary. Click the embed's title to open the definition in your browser.")]
+		[RateLimit(6, 1)]
 		public async Task<RuntimeResult> UrbanAsync([Remainder] string Term)
 		{
 			UrbanSearchParams SearchParameters = new()

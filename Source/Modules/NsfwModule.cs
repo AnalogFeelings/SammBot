@@ -23,6 +23,7 @@ namespace SammBotNET.Modules
 		[Alias("rule34")]
 		[Summary("Searches for posts in rule34.xxx")]
 		[FullDescription("Returns a paginated embed of posts that contain the provided tags from rule34.xxx.")]
+		[RateLimit(3, 2)]
 		[RequireNsfw]
 		public async Task<RuntimeResult> SearchR34Async([Remainder] string Tags)
 		{

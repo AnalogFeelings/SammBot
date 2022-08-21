@@ -61,8 +61,9 @@ namespace SammBotNET.Classes
 			{
 				int SecondsLeft = (RateLimitItems.Last().ExpiresAt - DateNow).Seconds;
 
-				return PreconditionResult.FromError($"This command is in cooldown! You can use it again in **{SecondsLeft}** second(s).\n" +
-					$"The default cooldown for this command is **{Seconds}** second(s).");
+				return PreconditionResult.FromError($"This command is in cooldown! You can use it again in **{SecondsLeft}** second(s).\n\n" +
+					$"The default cooldown for this command is **{Seconds}** second(s).\n" +
+					$"You can run this command **{Requests}** time(s) before hitting cooldown.");
 			}
 
 			TargetItem.Add(new RateLimitItem()

@@ -17,6 +17,7 @@ namespace SammBotNET.Modules
 		[Command("setpronouns")]
 		[Summary("Set your pronouns with this command.")]
 		[FullDescription("Set your pronouns with this command. Some commands use they/them by default unless you set something else.")]
+		[RateLimit(3, 1)]
 		public async Task<RuntimeResult> SetPronounsAsync(string Subject, string Object,
 			string DependentPossessive, string IndependentPossessive, string ReflexiveSingular, string ReflexivePlural)
 		{
@@ -77,6 +78,7 @@ namespace SammBotNET.Modules
 		[Command("getpronouns")]
 		[Summary("Get the pronouns of a user!")]
 		[FullDescription("Gets the pronoun information about a user!")]
+		[RateLimit(3, 2)]
 		public async Task<RuntimeResult> GetPronounsAsync(SocketGuildUser User = null)
 		{
 			SocketGuildUser TargetUser = User ?? Context.Message.Author as SocketGuildUser;
