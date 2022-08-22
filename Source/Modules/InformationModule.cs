@@ -181,19 +181,19 @@ namespace SammBotNET.Modules
 				switch(Version.Major)
 				{
 					case 10:
-						OsName = $"macOS Catalina {Version}";
+						OsName = $"macOS Catalina";
 						break;
 					case 11:
-						OsName = $"macOS Big Sur {Version}";
+						OsName = $"macOS Big Sur";
 						break;
 					case 12:
-						OsName = $"macOS Monterey {Version}";
+						OsName = $"macOS Monterey";
 						break;
 					case 13:
-						OsName = $"macOS Ventura {Version}";
+						OsName = $"macOS Ventura";
 						break;
 					default:
-						OsName = $"Unknown macOS ({Version})";
+						OsName = $"Unknown macOS";
 						break;
 				}
 			}
