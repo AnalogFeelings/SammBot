@@ -145,11 +145,10 @@ namespace SammBotNET.Modules
 		public string FriendlyOSName()
 		{
 			string OsName = string.Empty;
+			Version Version = Environment.OSVersion.Version;
 
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				Version Version = Environment.OSVersion.Version;
-
 				switch (Version.Major)
 				{
 					case 6:
@@ -177,12 +176,37 @@ namespace SammBotNET.Modules
 						break;
 				}
 			}
+			else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			{
+				switch(Version.Major)
+				{
+					case 19:
+						OsName = $"macOS Catalina {Version}";
+						break;
+					case 20:
+						OsName = $"macOS Big Sur {Version}";
+						break;
+					case 21:
+						OsName = $"macOS Monterey {Version}";
+						break;
+					case 22:
+						OsName = $"macOS Ventura {Version}";
+						break;
+					default:
+						OsName = $"Unknown macOS ({Version})";
+						break;
+				}
+			}
 			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 			{
 				if (File.Exists("/etc/issue.net"))
 					OsName = File.ReadAllText("/etc/issue.net");
 				else
 					OsName = "Linux";
+			}
+			else
+			{
+				OsName = "Unknown OS";
 			}
 
 			return OsName;
