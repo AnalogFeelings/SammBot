@@ -180,16 +180,16 @@ namespace SammBotNET.Modules
 			{
 				switch(Version.Major)
 				{
-					case 19:
+					case 10:
 						OsName = $"macOS Catalina {Version}";
 						break;
-					case 20:
+					case 11:
 						OsName = $"macOS Big Sur {Version}";
 						break;
-					case 21:
+					case 12:
 						OsName = $"macOS Monterey {Version}";
 						break;
-					case 22:
+					case 13:
 						OsName = $"macOS Ventura {Version}";
 						break;
 					default:
