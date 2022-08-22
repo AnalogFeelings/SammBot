@@ -178,14 +178,24 @@ namespace SammBotNET.Modules
 			}
 			else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 			{
-				OsName = Version.Major switch
+				switch(Version.Major)
 				{
-					10 => $"macOS Catalina",
-					11 => $"macOS Big Sur",
-					12 => $"macOS Monterey",
-					13 => $"macOS Ventura",
-					_ => $"Unknown macOS",
-				};
+					case 10:
+						OsName = $"macOS Catalina";
+						break;
+					case 11:
+						OsName = $"macOS Big Sur";
+						break;
+					case 12:
+						OsName = $"macOS Monterey";
+						break;
+					case 13:
+						OsName = $"macOS Ventura";
+						break;
+					default:
+						OsName = $"Unknown macOS";
+						break;
+				}
 			}
 			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 			{
