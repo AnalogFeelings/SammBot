@@ -20,7 +20,7 @@ namespace SammBotNET.Modules
 		{
 			string BotPrefix = Settings.Instance.LoadedConfig.BotPrefix;
 
-			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help", $"These are all of the modules available to you." +
+			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Module List", $"These are all of the modules available to you." +
 																		$"\n Use `{BotPrefix}help <Group Name>` to see its commands.");
 
 			foreach (ModuleInfo Module in CommandService.Modules)
@@ -77,7 +77,7 @@ namespace SammBotNET.Modules
 				string StringifiedEmoji = ModuleEmoji != default(ModuleEmoji) ? ModuleEmoji.Emoji + " " : string.Empty;
 
 				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context,
-						"Help", $"**{StringifiedEmoji}{ModuleInfo.Name}**\n{ModuleInfo.Summary}\n**Syntax**: `{BotPrefix}{ModuleInfo.Group} <Command Name>`");
+						"Module Help", $"**{StringifiedEmoji}{ModuleInfo.Name}**\n{ModuleInfo.Summary}\n**Syntax**: `{BotPrefix}{ModuleInfo.Group} <Command Name>`");
 
 				bool FoundCommand = false;
 				foreach (CommandInfo Command in ModuleInfo.Commands)
@@ -123,7 +123,7 @@ namespace SammBotNET.Modules
 					ProcessedAliases[i] = ProcessedAliases[i].Split(' ').Last();
 				}
 
-				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Help");
+				EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Command Help");
 
 				FullDescription CommandDescription = Command.Attributes.FirstOrDefault(x => x is FullDescription) as FullDescription;
 				string FormattedDescription = CommandDescription != default(FullDescription) && !string.IsNullOrEmpty(CommandDescription.Description)
