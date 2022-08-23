@@ -11,7 +11,7 @@ namespace SammBotNET.Modules
 {
 	[Name("Moderation")]
 	[Group("mod")]
-	[Summary("Moderation commands like kick, ban, mute...")]
+	[Summary("Moderation commands like kick, ban, mute, etc.")]
 	[ModuleEmoji("🧑‍⚖️")]
 	public class ModerationModule : ModuleBase<SocketCommandContext>
 	{
