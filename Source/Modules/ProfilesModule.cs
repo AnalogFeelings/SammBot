@@ -11,7 +11,7 @@ namespace SammBotNET.Modules
 	[Name("User Profiles")]
 	[Group("profiles")]
 	[Summary("Commands related to user profiles.")]
-	[ModuleEmoji("🚻")]
+	[ModuleEmoji("👥")]
 	public class ProfilesModule : ModuleBase<SocketCommandContext>
 	{
 		[Command("setpronouns")]
