@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SammBotNET.Extensions.ClassExtensions
+namespace SammBotNET.Extensions
 {
 	public static class NumberExtensions
 	{

@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 
-namespace SammBotNET.Classes.ClassExtensions
+namespace SammBotNET.Extensions
 {
 	public static class ColorExtensions
 	{

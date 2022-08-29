@@ -2,8 +2,6 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
-using SammBotNET.Classes.ClassExtensions;
-using SammBotNET.Extensions.ClassExtensions;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.IO;
