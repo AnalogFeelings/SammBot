@@ -1,6 +1,5 @@
 ﻿using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace SammBotNET.Extensions
 {
@@ -53,7 +52,7 @@ namespace SammBotNET.Extensions
 			double V = 0;
 
 			if (CMax == CMin) H = 0;
-			else if(CMax == R) H = (60 * ((G - B) / CDifference) + 360) % 360;
+			else if (CMax == R) H = (60 * ((G - B) / CDifference) + 360) % 360;
 			else if (CMax == G) H = (60 * ((B - R) / CDifference) + 120) % 360;
 			else if (CMax == B) H = (60 * ((R - G) / CDifference) + 240) % 360;
 
@@ -84,7 +83,7 @@ namespace SammBotNET.Extensions
 			double S = 0;
 			double L = (CMax + CMin) / 2f;
 
-			if(CDifference != 0)
+			if (CDifference != 0)
 			{
 				if (L <= 0.5f) S = CDifference / (CMax + CMin);
 				else S = CDifference / (2f - CDifference);

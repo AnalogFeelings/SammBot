@@ -93,7 +93,7 @@ namespace SammBotNET.Modules
 					}
 				}
 
-				if(!FoundCommand)
+				if (!FoundCommand)
 					return ExecutionResult.FromError($"The module \"{ModuleInfo.Name}\" has no commands, or you don't have enough permissions to see them.");
 
 				await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
@@ -137,7 +137,7 @@ namespace SammBotNET.Modules
 				RateLimit CommandRateLimit = (RateLimit)Command.Preconditions.FirstOrDefault(x => x is RateLimit);
 				string RateLimitString = string.Empty;
 
-				if(CommandRateLimit == default(RateLimit))
+				if (CommandRateLimit == default(RateLimit))
 					RateLimitString = "This command has no cooldown.";
 				else
 					RateLimitString = $"Cooldown of **{CommandRateLimit.Seconds}** second(s).\nTriggered after using the command **{CommandRateLimit.Requests}** time(s).";
@@ -150,7 +150,7 @@ namespace SammBotNET.Modules
 					string TypeName = ParameterInfo.Type.Name;
 					string AdditionalSymbols = string.Empty;
 					string DefaultValue = string.Empty;
-					
+
 					if (ParameterInfo.IsOptional) AdditionalSymbols += "*";
 					if (ParameterInfo.IsRemainder) AdditionalSymbols += "^";
 					if (ParameterInfo.DefaultValue != null) DefaultValue = $" (Default: **{ParameterInfo.DefaultValue}**)";

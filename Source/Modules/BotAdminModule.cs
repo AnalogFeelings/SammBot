@@ -219,7 +219,7 @@ namespace SammBotNET.Modules
 			RetrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, RetrievedVariable.PropertyType));
 
 			object NewValue = RetrievedVariable.GetValue(Settings.Instance.LoadedConfig);
-			
+
 			await ReplyAsync($"Set variable \"{VarName}\" to `{NewValue.ToString().Truncate(128)}` succesfully.", allowedMentions: AllowedMentions, messageReference: Reference);
 
 			await File.WriteAllTextAsync(Settings.CONFIG_FILE,

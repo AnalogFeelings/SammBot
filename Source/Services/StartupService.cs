@@ -75,7 +75,7 @@ namespace SammBotNET.Services
 
 		private Task OnConnected()
 		{
-			if(FirstTimeConnection)
+			if (FirstTimeConnection)
 			{
 				BotLogger.Log("Connected to gateway.", LogSeverity.Success);
 				FirstTimeConnection = false;
@@ -94,7 +94,7 @@ namespace SammBotNET.Services
 			{
 				TimeSpan AvatarDelay = TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime);
 
-				AvatarTimer = new Timer(RotateAvatar ,null, AvatarDelay, AvatarDelay);
+				AvatarTimer = new Timer(RotateAvatar, null, AvatarDelay, AvatarDelay);
 			}
 
 			BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);

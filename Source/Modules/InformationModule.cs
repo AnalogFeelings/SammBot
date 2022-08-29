@@ -178,10 +178,10 @@ namespace SammBotNET.Modules
 			}
 			else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 			{
-				switch(Version.Major)
+				switch (Version.Major)
 				{
 					case 10:
-						switch(Version.Minor)
+						switch (Version.Minor)
 						{
 							case 15:
 								OsName = "macOS Catalina";

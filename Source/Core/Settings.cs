@@ -43,7 +43,7 @@ namespace SammBotNET.Core
 
 				if (!File.Exists(ConfigFilePath)) return false;
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				return false;
 			}

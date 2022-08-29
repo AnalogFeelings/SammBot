@@ -117,7 +117,7 @@ namespace SammBotNET.Modules
 
 					await TargetUser.SendMessageAsync(null, embed: DirectMessageEmbed.Build());
 				}
-				catch(Exception)
+				catch (Exception)
 				{
 					ReplyEmbed.Description += "I could not DM the user about this warning.";
 				}

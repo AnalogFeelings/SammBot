@@ -33,7 +33,7 @@ namespace SammBotNET.Modules
 				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
 				UserTag RetrievedTag = null;
 
-				if((Context.User as SocketGuildUser).GuildPermissions.Has(GuildPermission.ManageMessages))
+				if ((Context.User as SocketGuildUser).GuildPermissions.Has(GuildPermission.ManageMessages))
 					RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.GuildId == Context.Guild.Id);
 				else
 					RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id && x.GuildId == Context.Guild.Id);
@@ -134,7 +134,7 @@ namespace SammBotNET.Modules
 				List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
 				TagList = TagList.Where(x => x.GuildId == Context.Guild.Id).ToList();
 
-				if(TagList.Any(x => x.Name == Name))
+				if (TagList.Any(x => x.Name == Name))
 					return ExecutionResult.FromError($"There's already a tag called **\"{Name}\"**!");
 
 				Guid NewId = Guid.NewGuid();
