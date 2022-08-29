@@ -13,7 +13,7 @@ namespace SammBotNET.Modules
 	[Name("User Tags")]
 	[Group("tags")]
 	[Summary("Tags that reply with a message when searched.")]
-	[ModuleEmoji("🏷")]
+	[ModuleEmoji("\U0001f3f7\uFE0F")]
 	public class UserTagsModule : ModuleBase<SocketCommandContext>
 	{
 		public StartupService StartupService { get; set; }

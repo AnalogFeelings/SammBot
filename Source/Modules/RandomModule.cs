@@ -14,7 +14,7 @@ namespace SammBotNET.Modules
 	[Name("Random")]
 	[Group("random")]
 	[Summary("Random crazyness!")]
-	[ModuleEmoji("🎰")]
+	[ModuleEmoji("\U0001f3b0")]
 	public class RandomModule : ModuleBase<SocketCommandContext>
 	{
 		public RandomService RandomService { get; set; }

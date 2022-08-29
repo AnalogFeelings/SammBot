@@ -15,7 +15,7 @@ namespace SammBotNET.Modules
 	[Name("Fun")]
 	[Group("fun")]
 	[Summary("Games and fun!")]
-	[ModuleEmoji("🎲")]
+	[ModuleEmoji("\U0001F3B2")]
 	public class FunModule : ModuleBase<SocketCommandContext>
 	{
 		public Logger Logger { get; set; }

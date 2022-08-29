@@ -16,7 +16,7 @@ namespace SammBotNET.Modules
 	[Name("Utilities")]
 	[Group("utils")]
 	[Summary("Miscellaneous utilities.")]
-	[ModuleEmoji("🔧")]
+	[ModuleEmoji("\U0001f527")]
 	public class UtilsModule : ModuleBase<SocketCommandContext>
 	{
 		public UtilsService UtilsService { get; set; }

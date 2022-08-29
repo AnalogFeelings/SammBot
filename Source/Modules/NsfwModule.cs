@@ -13,7 +13,7 @@ namespace SammBotNET.Modules
 	[Name("NSFW")]
 	[Group("nsfw")]
 	[Summary("NSFW commands. Only visible in NSFW channels.")]
-	[ModuleEmoji("🔞")]
+	[ModuleEmoji("\U0001f51e")]
 	public class NsfwModule : ModuleBase<SocketCommandContext>
 	{
 		public NsfwService NsfwService { get; set; }

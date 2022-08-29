@@ -13,7 +13,7 @@ namespace SammBotNET.Modules
 	[Name("Information")]
 	[Group("info")]
 	[Summary("Bot information and statistics.")]
-	[ModuleEmoji("ℹ️")]
+	[ModuleEmoji("\u2139")]
 	public class InformationModule : ModuleBase<SocketCommandContext>
 	{
 		[Command("full")]
