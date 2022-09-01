@@ -66,19 +66,19 @@
   ],
   "StatusList": [
 	{
-	  "Content": "OneShot.",
+	  "Content": "indie games.",
 	  "Type": 0
 	},
 	{
-	  "Content": "the sun glow.",
+	  "Content": "the sun shine on the field.",
 	  "Type": 3
 	},
 	{
-	  "Content": "the TV.",
+	  "Content": "TV.",
 	  "Type": 3
 	},
 	{
-	  "Content": "with Samm-E.",
+	  "Content": "with my console.",
 	  "Type": 0
 	},
 	{
@@ -91,10 +91,6 @@
 	},
 	{
 	  "Content": "with my computer.",
-	  "Type": 0
-	},
-	{
-	  "Content": "with the World Machine.",
 	  "Type": 0
 	}
   ]
