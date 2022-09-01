@@ -33,6 +33,7 @@
     <None Remove="phrases.db" />
     <None Remove="pronouns.db" />
     <None Remove="README.md" />
+    <None Remove="SammBot.png" />
     <None Remove="SharpCat.deps.json" />
     <None Remove="SharpCat.dll" />
     <None Remove="Source\peone.db" />
