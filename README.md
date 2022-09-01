@@ -1,9 +1,9 @@
-# SammBot.NET
-SammBot rewritten for the fourth time, but in C# and Discord.NET instead of TypeScript and discord.js. In constant evolution!
+![sammbot](SammBot.png)
+# Samm-Bot
+Samm-Bot rewritten for the fourth time, but in C# and [Discord.Net](https://github.com/discord-net/Discord.Net) instead of TypeScript and [discord.js](https://github.com/discordjs/discord.js). In constant evolution!  
+It uses [Matcha](https://github.com/AestheticalZ/Matcha) for event logging!
 
-Uses [Matcha](https://github.com/AestheticalZ/Matcha) for logging!
-
-:warning: **JetBrains Mono Regular is needed for the `viewhex` and `viewrgb` commands in the Utils module to work!**
+This README file is not updated often, so sometimes it's possible for new commands or modules to be added without them being listed here.
 
 ## Features
 * :gear: **Bot Administration Module**: Allows the bot's owner to manage the bot remotely.
@@ -21,6 +21,8 @@ Visual Studio/dotnet should already detect the packages you need and install the
 Building should be straightforward.
 
 :warning: **The file config.json must be filled in manually! Run the bot, and it will create an empty config.json file for you.**
+
+:warning: **JetBrains Mono Regular is needed for the `viewhex` and `viewrgb` commands in the Utils module to work!**
 
 ## Handling Databases
 
