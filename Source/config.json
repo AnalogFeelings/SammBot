@@ -2,7 +2,7 @@
   "BotVersion": "v5.4",
   "BotPrefix": "s.",
   "RotatingStatus": true,
-  "RotatingAvatar": true,
+  "RotatingAvatar": false,
   "BotToken": null,
   "CatKey": null,
   "DogKey": null,
