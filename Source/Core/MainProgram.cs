@@ -117,7 +117,6 @@ namespace SammBotNET.Core
             Provider.GetRequiredService<CommandHandler>();
             Provider.GetRequiredService<RandomService>();
             Provider.GetRequiredService<AdminService>();
-            Provider.GetRequiredService<NsfwService>();
             Provider.GetRequiredService<FunService>();
             Provider.GetRequiredService<UtilsService>();
 
@@ -139,8 +138,7 @@ namespace SammBotNET.Core
                 .AddSingleton<RandomService>()
                 .AddSingleton<AdminService>()
                 .AddSingleton<FunService>()
-                .AddSingleton<UtilsService>()
-                .AddSingleton<NsfwService>();
+                .AddSingleton<UtilsService>();
         }
     }
 }
