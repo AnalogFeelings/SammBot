@@ -51,3 +51,8 @@ Please read the [style guidelines](STYLE_GUIDELINES.md) before creating a pull r
 # License
 © Copyright 2022 AestheticalZ.  
 Licensed under the [GPL v3.0 license](LICENSE)
+
+# Special Thanks
+| Logo | Message |
+| ---- | ------- |
+| <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains" width="128"/> | Thanks to **JetBrains** for providing an OSS license for their products! |
