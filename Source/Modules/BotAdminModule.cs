@@ -12,228 +12,231 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Modules
 {
-	[Name("Bot Administration")]
-	[Group("badmin")]
-	[Summary("Bot management commands. Bot owner only.")]
-	[ModuleEmoji("\u2699")]
-	[RequireOwner]
-	public class BotAdminModule : ModuleBase<SocketCommandContext>
-	{
-		public AdminService AdminService { get; set; }
-		public Logger Logger { get; set; }
-		public CommandHandler CommandHandler { get; set; }
+    [Name("Bot Administration")]
+    [Group("badmin")]
+    [Summary("Bot management commands. Bot owner only.")]
+    [ModuleEmoji("\u2699")]
+    [RequireOwner]
+    public class BotAdminModule : ModuleBase<SocketCommandContext>
+    {
+        public AdminService AdminService { get; set; }
+        public Logger Logger { get; set; }
+        public CommandHandler CommandHandler { get; set; }
 
-		[Command("say")]
-		[Summary("Make the bot say something.")]
-		[FullDescription("Makes the bot say something. Use the **setsay** command to set the channel and guild beforehand.")]
-		[RateLimit(2, 1)]
-		public async Task<RuntimeResult> SayMessageAsync([Remainder] string Message)
-		{
-			if (AdminService.ChannelId == 0 || AdminService.GuildId == 0)
-				return ExecutionResult.FromError("Please set a guild and channel ID beforehand!");
+        [Command("say")]
+        [Summary("Make the bot say something.")]
+        [FullDescription("Makes the bot say something. Use the **setsay** command to set the channel and guild beforehand.")]
+        [RateLimit(2, 1)]
+        public async Task<RuntimeResult> SayMessageAsync([Summary("The message text.")] [Remainder] string Message)
+        {
+            if (AdminService.ChannelId == 0 || AdminService.GuildId == 0)
+                return ExecutionResult.FromError("Please set a guild and channel ID beforehand!");
 
-			SocketTextChannel TargetChannel = Context.Client.GetGuild(AdminService.GuildId).GetTextChannel(AdminService.ChannelId);
+            SocketTextChannel TargetChannel = Context.Client.GetGuild(AdminService.GuildId).GetTextChannel(AdminService.ChannelId);
 
-			using (TargetChannel.EnterTypingState()) await TargetChannel.SendMessageAsync(Message);
+            using (TargetChannel.EnterTypingState()) await TargetChannel.SendMessageAsync(Message);
 
-			return ExecutionResult.Succesful();
-		}
+            return ExecutionResult.Succesful();
+        }
 
-		[Command("setsay")]
-		[Summary("Set the channel in which the say command will broadcast.")]
-		[FullDescription("Sets the channel and guild where the say command will send messages to.")]
-		[RateLimit(2, 1)]
-		public async Task<RuntimeResult> SetSayAsync(ulong Channel, ulong Guild)
-		{
-			if (Context.Client.GetGuild(Guild) == null) return ExecutionResult.FromError("I am not invited in that guild!");
-			if (Context.Client.GetGuild(Guild).GetTextChannel(Channel) == null)
-				return ExecutionResult.FromError($"Channel with ID {Channel} does not exist in guild with ID {Guild}.");
+        [Command("setsay")]
+        [Summary("Set the channel in which the say command will broadcast.")]
+        [FullDescription("Sets the channel and guild where the say command will send messages to.")]
+        [RateLimit(2, 1)]
+        public async Task<RuntimeResult> SetSayAsync([Summary("The target channel's ID.")] ulong Channel, 
+                                                     [Summary("The target guild's ID.")] ulong Guild)
+        {
+            if (Context.Client.GetGuild(Guild) == null) return ExecutionResult.FromError("I am not invited in that guild!");
+            if (Context.Client.GetGuild(Guild).GetTextChannel(Channel) == null)
+                return ExecutionResult.FromError($"Channel with ID {Channel} does not exist in guild with ID {Guild}.");
 
-			AdminService.ChannelId = Channel;
-			AdminService.GuildId = Guild;
+            AdminService.ChannelId = Channel;
+            AdminService.GuildId = Guild;
 
-			SocketGuild TargetGuild = Context.Client.GetGuild(Guild);
+            SocketGuild TargetGuild = Context.Client.GetGuild(Guild);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"Success. Set guild to `{TargetGuild.Name}` and channel to `{TargetGuild.GetTextChannel(Channel).Name}`.", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"Success. Set guild to `{TargetGuild.Name}` and channel to `{TargetGuild.GetTextChannel(Channel).Name}`.", allowedMentions: AllowedMentions, messageReference: Reference);
 
-			return ExecutionResult.Succesful();
-		}
+            return ExecutionResult.Succesful();
+        }
 
-		[Command("listservers")]
-		[Alias("guilds")]
-		[Summary("Shows a list of all the servers the bot is in.")]
-		[FullDescription("Shows a list of the servers the bot is in, and their corresponding IDs.")]
-		[RateLimit(3, 1)]
-		public async Task<RuntimeResult> ServersAsync()
-		{
-			string BuiltMessage = "I am invited in the following servers:\n";
-			string CodeBlock = string.Empty;
+        [Command("listservers")]
+        [Alias("guilds")]
+        [Summary("Shows a list of all the servers the bot is in.")]
+        [FullDescription("Shows a list of the servers the bot is in, and their corresponding IDs.")]
+        [RateLimit(3, 1)]
+        public async Task<RuntimeResult> ServersAsync()
+        {
+            string BuiltMessage = "I am invited in the following servers:\n";
+            string CodeBlock = string.Empty;
 
-			int i = 1;
-			foreach (SocketGuild TargetGuild in Context.Client.Guilds)
-			{
-				CodeBlock += $"{i}. {TargetGuild.Name} (ID {TargetGuild.Id})\n";
-				i++;
-			}
+            int i = 1;
+            foreach (SocketGuild TargetGuild in Context.Client.Guilds)
+            {
+                CodeBlock += $"{i}. {TargetGuild.Name} (ID {TargetGuild.Id})\n";
+                i++;
+            }
 
-			BuiltMessage += Format.Code(CodeBlock);
+            BuiltMessage += Format.Code(CodeBlock);
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync(BuiltMessage, allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(BuiltMessage, allowedMentions: AllowedMentions, messageReference: Reference);
 
-			return ExecutionResult.Succesful();
-		}
+            return ExecutionResult.Succesful();
+        }
 
-		[Command("shutdown")]
-		[Alias("kill")]
-		[Summary("Shuts the bot down.")]
-		[FullDescription("Shuts the bot down. That's it.")]
-		[RateLimit(1, 1)]
-		public async Task<RuntimeResult> ShutdownAsync()
-		{
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"{Settings.BOT_NAME} will shut down.", allowedMentions: AllowedMentions, messageReference: Reference);
+        [Command("shutdown")]
+        [Alias("kill")]
+        [Summary("Shuts the bot down.")]
+        [FullDescription("Shuts the bot down. That's it.")]
+        [RateLimit(1, 1)]
+        public async Task<RuntimeResult> ShutdownAsync()
+        {
+            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"{Settings.BOT_NAME} will shut down.", allowedMentions: AllowedMentions, messageReference: Reference);
 
-			Logger.Log($"{Settings.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
+            Logger.Log($"{Settings.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
 
-			Environment.Exit(0);
+            Environment.Exit(0);
 
-			return ExecutionResult.Succesful();
-		}
+            return ExecutionResult.Succesful();
+        }
 
-		[Command("restart")]
-		[Alias("reboot", "reset")]
-		[Summary("Restarts the bot.")]
-		[FullDescription("Restarts the bot. That's it.")]
-		[RateLimit(1, 1)]
-		public async Task<RuntimeResult> RestartAsync()
-		{
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
+        [Command("restart")]
+        [Alias("reboot", "reset")]
+        [Summary("Restarts the bot.")]
+        [FullDescription("Restarts the bot. That's it.")]
+        [RateLimit(1, 1)]
+        public async Task<RuntimeResult> RestartAsync()
+        {
+            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
 
-			Logger.Log($"{Settings.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
+            Logger.Log($"{Settings.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
 
-			Settings.Instance.RestartBot();
+            Settings.Instance.RestartBot();
 
-			return ExecutionResult.Succesful();
-		}
+            return ExecutionResult.Succesful();
+        }
 
-		[Command("leaveserver")]
-		[Alias("leave")]
-		[Summary("Leaves the specified server.")]
-		[FullDescription("Forces the bot to leave the specified guild.")]
-		[RateLimit(3, 1)]
-		public async Task<RuntimeResult> LeaveAsync(ulong ServerId)
-		{
-			SocketGuild TargetGuild = Context.Client.GetGuild(ServerId);
-			if (TargetGuild == null)
-				return ExecutionResult.FromError("I am not currently in this guild!");
+        [Command("leaveserver")]
+        [Alias("leave")]
+        [Summary("Leaves the specified server.")]
+        [FullDescription("Forces the bot to leave the specified guild.")]
+        [RateLimit(3, 1)]
+        public async Task<RuntimeResult> LeaveAsync([Summary("The ID of the guild you want the bot to leave.")] ulong ServerId)
+        {
+            SocketGuild TargetGuild = Context.Client.GetGuild(ServerId);
+            if (TargetGuild == null)
+                return ExecutionResult.FromError("I am not currently in this guild!");
 
-			string GuildName = TargetGuild.Name;
-			await TargetGuild.LeaveAsync();
+            string GuildName = TargetGuild.Name;
+            await TargetGuild.LeaveAsync();
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync($"Left the server \"{GuildName}\".", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"Left the server \"{GuildName}\".", allowedMentions: AllowedMentions, messageReference: Reference);
 
-			return ExecutionResult.Succesful();
-		}
+            return ExecutionResult.Succesful();
+        }
 
-		[Command("mime")]
-		[Alias("mimic, spy")]
-		[Summary("Mimics a user, used for testing.")]
-		[FullDescription("Hacky command to execute a command as someone else.")]
-		public async Task<RuntimeResult> MimicUserAsync(SocketGuildUser User, [Remainder] string Command)
-		{
-			//LORD HAVE MERCY
-			SocketMessage SourceMessage = Context.Message as SocketMessage;
-			FieldInfo AuthorField = typeof(SocketMessage).GetField("<Author>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-			FieldInfo ContentField = typeof(SocketMessage).GetField("<Content>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-			AuthorField.SetValue(SourceMessage, User);
-			ContentField.SetValue(SourceMessage, Command);
+        [Command("mime")]
+        [Alias("mimic, spy")]
+        [Summary("Mimics a user, used for testing.")]
+        [FullDescription("Hacky command to execute a command as someone else.")]
+        public async Task<RuntimeResult> MimicUserAsync([Summary("The user you want to execute the command as.")] SocketGuildUser User, 
+                                                        [Summary("The command you want to execute.")] [Remainder] string Command)
+        {
+            //LORD HAVE MERCY
+            SocketMessage SourceMessage = Context.Message as SocketMessage;
+            FieldInfo AuthorField = typeof(SocketMessage).GetField("<Author>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo ContentField = typeof(SocketMessage).GetField("<Content>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
+            AuthorField.SetValue(SourceMessage, User);
+            ContentField.SetValue(SourceMessage, Command);
 
-			await CommandHandler.HandleCommandAsync(SourceMessage);
+            await CommandHandler.HandleCommandAsync(SourceMessage);
 
-			return ExecutionResult.Succesful();
-		}
+            return ExecutionResult.Succesful();
+        }
 
-		[Command("listcfg")]
-		[Alias("lc")]
-		[Summary("Lists all of the bot settings available.")]
-		[FullDescription("Lists the bot settings. Does NOT list the bot's token or the URL detection regex. Some settings are not modifiable without a restart. " +
-			"Set **Override** to true to list non-modifiable settings.")]
-		[RateLimit(3, 1)]
-		public async Task<RuntimeResult> ListConfigAsync(bool Override = false)
-		{
-			EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
+        [Command("listcfg")]
+        [Alias("lc")]
+        [Summary("Lists all of the bot settings available.")]
+        [FullDescription("Lists the bot settings. Does NOT list the bot's token or the URL detection regex. Some settings are not modifiable without a restart.")]
+        [RateLimit(3, 1)]
+        public async Task<RuntimeResult> ListConfigAsync([Summary("Set to **true** to list non-modifiable settings.")] bool Override = false)
+        {
+            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
 
-			List<PropertyInfo> Properties = typeof(JsonConfig).GetProperties()
-				.Where(x => !x.PropertyType.IsGenericType &&
-						x.Name != "UrlRegex" &&
-						x.Name != "BotToken").ToList();
+            List<PropertyInfo> Properties = typeof(JsonConfig).GetProperties()
+                .Where(x => !x.PropertyType.IsGenericType &&
+                        x.Name != "UrlRegex" &&
+                        x.Name != "BotToken").ToList();
 
-			if (!Override)
-				Properties = Properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
+            if (!Override)
+                Properties = Properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
 
-			foreach (PropertyInfo Property in Properties)
-			{
-				ReplyEmbed.AddField(Property.Name, Property.GetValue(Settings.Instance.LoadedConfig, null));
-			}
+            foreach (PropertyInfo Property in Properties)
+            {
+                ReplyEmbed.AddField(Property.Name, Property.GetValue(Settings.Instance.LoadedConfig, null));
+            }
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-			await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
 
-			return ExecutionResult.Succesful();
-		}
+            return ExecutionResult.Succesful();
+        }
 
-		[Command("setcfg")]
-		[Alias("config")]
-		[Summary("Sets a bot setting to the specified value.")]
-		[FullDescription("Sets a bot setting to the value specified. If the setting is marked as non-modifiable, **RestartBot** must be true.")]
-		[RateLimit(2, 1)]
-		public async Task<RuntimeResult> SetConfigAsync(string VarName, string VarValue, bool RestartBot = false)
-		{
-			PropertyInfo RetrievedVariable = typeof(JsonConfig).GetProperty(VarName);
+        [Command("setcfg")]
+        [Alias("config")]
+        [Summary("Sets a bot setting to the specified value.")]
+        [FullDescription("Sets a bot setting to the value specified.")]
+        [RateLimit(2, 1)]
+        public async Task<RuntimeResult> SetConfigAsync([Summary("The name of the setting you want to modify.")] string VarName,
+                                                        [Summary("The new value of the setting.")] string VarValue,
+                                                        [Summary("Set to **true** to restart the bot afterwards. Needed for non-modifiable settings.")] bool RestartBot = false)
+        {
+            PropertyInfo RetrievedVariable = typeof(JsonConfig).GetProperty(VarName);
 
-			if (RetrievedVariable == null)
-				return ExecutionResult.FromError($"{VarName} does not exist!");
+            if (RetrievedVariable == null)
+                return ExecutionResult.FromError($"{VarName} does not exist!");
 
-			if (RetrievedVariable.PropertyType is IList)
-				return ExecutionResult.FromError($"{VarName} is a list variable!");
+            if (RetrievedVariable.PropertyType is IList)
+                return ExecutionResult.FromError($"{VarName} is a list variable!");
 
-			if (RetrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
-				return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
-					$"Please pass `true` to the `RestartBot` parameter.");
+            if (RetrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
+                return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
+                    $"Please pass `true` to the `RestartBot` parameter.");
 
-			MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-			AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
-			AdminService.ChangingConfig = true;
+            AdminService.ChangingConfig = true;
 
-			RetrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, RetrievedVariable.PropertyType));
+            RetrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, RetrievedVariable.PropertyType));
 
-			object NewValue = RetrievedVariable.GetValue(Settings.Instance.LoadedConfig);
+            object NewValue = RetrievedVariable.GetValue(Settings.Instance.LoadedConfig);
 
-			await ReplyAsync($"Set variable \"{VarName}\" to `{NewValue.ToString().Truncate(128)}` succesfully.", allowedMentions: AllowedMentions, messageReference: Reference);
+            await ReplyAsync($"Set variable \"{VarName}\" to `{NewValue.ToString().Truncate(128)}` succesfully.", allowedMentions: AllowedMentions, messageReference: Reference);
 
-			await File.WriteAllTextAsync(Settings.CONFIG_FILE,
-				JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
+            await File.WriteAllTextAsync(Settings.CONFIG_FILE,
+                JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
-			if (RestartBot)
-			{
-				await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
-				Settings.Instance.RestartBot();
-			}
+            if (RestartBot)
+            {
+                await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
+                Settings.Instance.RestartBot();
+            }
 
-			AdminService.ChangingConfig = false;
+            AdminService.ChangingConfig = false;
 
-			return ExecutionResult.Succesful();
-		}
-	}
+            return ExecutionResult.Succesful();
+        }
+    }
 }
