@@ -78,34 +78,6 @@ namespace SammBotNET.Modules
             return ExecutionResult.Succesful();
         }
 
-        [Command("peone")]
-        [Summary("Returns a random image of Peone.")]
-        [FullDescription("Returns a random image of Noah's favourite snake woman.")]
-        [RateLimit(2, 3)]
-        public async Task<RuntimeResult> GetPeoneAsync()
-        {
-            using (BotDatabase BotDatabase = new BotDatabase())
-            {
-                List<PeoneImage> ImageList = await BotDatabase.PeoneImages.ToListAsync();
-            RechooseImage:
-                PeoneImage ChosenImage = ImageList.PickRandom();
-
-                if (RandomService.RecentPeoneImages.Contains(ChosenImage.TwitterUrl)) goto RechooseImage;
-                RandomService.RecentPeoneImages.Push(ChosenImage.TwitterUrl);
-
-                EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Peone");
-                ReplyEmbed.Color = new Color(105, 219, 221);
-
-                ReplyEmbed.ImageUrl = ChosenImage.TwitterUrl;
-
-                MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
-            }
-
-            return ExecutionResult.Succesful();
-        }
-
         [Command("fox")]
         [Summary("Returns a random fox!")]
         [FullDescription("Gets a random fox image from the RandomFox API!")]

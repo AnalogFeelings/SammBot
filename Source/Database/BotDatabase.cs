@@ -6,7 +6,6 @@ namespace SammBotNET.Database
 {
     public class BotDatabase : DbContext
     {
-        public DbSet<PeoneImage> PeoneImages { get; set; }
         public DbSet<Pronoun> Pronouns { get; set; }
         public DbSet<UserTag> UserTags { get; set; }
         public DbSet<UserWarning> UserWarnings { get; set; }
