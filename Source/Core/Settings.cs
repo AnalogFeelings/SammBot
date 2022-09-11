@@ -16,8 +16,8 @@ namespace SammBotNET.Core
 {
     public class Settings
     {
-        public Stopwatch StartupStopwatch = new Stopwatch();
-        public Stopwatch RuntimeStopwatch = new Stopwatch();
+        public readonly Stopwatch StartupStopwatch = new Stopwatch();
+        public readonly Stopwatch RuntimeStopwatch = new Stopwatch();
 
         public JsonConfig LoadedConfig = new JsonConfig();
 
@@ -26,7 +26,7 @@ namespace SammBotNET.Core
 
         public readonly string BotDataDirectory;
 
-        public Settings()
+        private Settings()
         {
             string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 

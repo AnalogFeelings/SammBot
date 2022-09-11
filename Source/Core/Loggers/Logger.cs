@@ -10,7 +10,7 @@ namespace SammBotNET.Core
 {
     public class Logger
     {
-        private MatchaLogger LoggerInstance;
+        private readonly MatchaLogger LoggerInstance;
 
         public Logger(DiscordSocketClient Client, CommandService CommandService)
         {
@@ -33,7 +33,7 @@ namespace SammBotNET.Core
             Log(TargetException.ToString(), LogSeverity.Error);
 
         //Used by the client and the command handler.
-        public Task LogAsync(LogMessage Message)
+        private Task LogAsync(LogMessage Message)
         {
             switch (Message.Severity)
             {

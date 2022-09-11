@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Core
 {
-    public partial class MainProgram
+    public class MainProgram
     {
-        public DiscordSocketClient SocketClient;
-        public CommandService CommandService;
+        private DiscordSocketClient SocketClient;
+        private CommandService CommandService;
 
         public static void Main()
             => new MainProgram().MainAsync().GetAwaiter().GetResult();
 
-        public async Task MainAsync()
+        private async Task MainAsync()
         {
             Settings.Instance.StartupStopwatch.Start();
 

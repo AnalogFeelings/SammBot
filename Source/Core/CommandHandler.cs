@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace SammBotNET.Core
 {
-    public partial class CommandHandler
+    public class CommandHandler
     {
-        public DiscordSocketClient DiscordClient { get; set; }
-        public IServiceProvider ServiceProvider { get; set; }
-        public Logger BotLogger { get; set; }
+        private DiscordSocketClient DiscordClient { get; set; }
+        private IServiceProvider ServiceProvider { get; set; }
+        private Logger BotLogger { get; set; }
 
-        public AdminService AdminService { get; set; }
-        public CommandService CommandsService { get; set; }
+        private AdminService AdminService { get; set; }
+        private CommandService CommandsService { get; set; }
 
         //private List<MessageHook> HookList = new List<MessageHook>();
 
