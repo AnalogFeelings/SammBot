@@ -17,15 +17,15 @@ namespace SammBotNET.Services
 {
     public class StartupService
     {
-        public IServiceProvider ServiceProvider;
-        public DiscordSocketClient SocketClient { get; set; }
-        public CommandService CommandsService { get; set; }
-        public Logger BotLogger { get; set; }
+        private IServiceProvider ServiceProvider;
+        private DiscordSocketClient SocketClient { get; set; }
+        private CommandService CommandsService { get; set; }
+        private Logger BotLogger { get; set; }
 
-        public Timer StatusTimer;
-        public Timer AvatarTimer;
+        private Timer StatusTimer;
+        private Timer AvatarTimer;
 
-        public AutoDequeueList<string> RecentAvatars;
+        private AutoDequeueList<string> RecentAvatars;
 
         private bool FirstTimeConnection = true;
 
@@ -85,7 +85,7 @@ namespace SammBotNET.Services
             return Task.CompletedTask;
         }
 
-        public Task OnReady()
+        private Task OnReady()
         {
             if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
                 StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
@@ -102,14 +102,14 @@ namespace SammBotNET.Services
             return Task.CompletedTask;
         }
 
-        public Task OnDisconnect(Exception IncludedException)
+        private Task OnDisconnect(Exception IncludedException)
         {
             BotLogger.Log("Client has disconnected from the gateway! Reason: " + IncludedException.Message, LogSeverity.Warning);
 
             return Task.CompletedTask;
         }
 
-        public async void RotateStatus(object State)
+        private async void RotateStatus(object State)
         {
             BotStatus ChosenStatus = Settings.Instance.LoadedConfig.StatusList.PickRandom();
 
@@ -118,7 +118,7 @@ namespace SammBotNET.Services
             await SocketClient.SetGameAsync(ChosenStatus.Content, GameUrl, (ActivityType)ChosenStatus.Type);
         }
 
-        public async void RotateAvatar(object State)
+        private async void RotateAvatar(object State)
         {
             List<string> AvatarList = Directory.EnumerateFiles(Path.Combine(Settings.Instance.BotDataDirectory, "Avatars")).ToList();
             if (AvatarList.Count < 2) return;
