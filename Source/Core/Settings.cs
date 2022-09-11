@@ -91,8 +91,6 @@ namespace SammBotNET.Core
     {
         public string BotVersion { get; set; } = "v0.1";
         public string BotPrefix { get; set; } = "s.";
-
-        public int Rule34Threshold { get; set; } = 30;
         public int TagDistance { get; set; } = 3;
 
         public List<string> MagicBallAnswers { get; set; } = null;
