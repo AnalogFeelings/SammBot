@@ -119,7 +119,7 @@ namespace SammBotNET.Modules
 
             Logger.Log($"{Settings.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
 
-            Settings.Instance.RestartBot();
+            Settings.RestartBot();
 
             return ExecutionResult.Succesful();
         }
@@ -231,7 +231,7 @@ namespace SammBotNET.Modules
             if (RestartBot)
             {
                 await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
-                Settings.Instance.RestartBot();
+                Settings.RestartBot();
             }
 
             AdminService.ChangingConfig = false;

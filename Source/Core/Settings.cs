@@ -54,7 +54,7 @@ namespace SammBotNET.Core
             return true;
         }
 
-        public void RestartBot()
+        public static void RestartBot()
         {
             string TimeoutCommand = $"/C timeout 3 && {Environment.ProcessPath}";
             string ExecutableCommand = "cmd.exe";
