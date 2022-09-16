@@ -46,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="3.8.0" />
+    <PackageReference Include="Discord.Net" Version="3.8.1" />
     <PackageReference Include="Figgle" Version="0.4.0" />
     <PackageReference Include="MatchaLogger" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
