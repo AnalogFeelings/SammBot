@@ -59,21 +59,17 @@ namespace SammBotNET.Extensions
                 List<Pronoun> PronounList = await BotDatabase.Pronouns.ToListAsync();
                 Pronoun ChosenPronoun = PronounList.SingleOrDefault(y => y.UserId == User.Id);
 
-                //Check for both null and default, .NET can be pretty fucky sometimes.
-                if (ChosenPronoun != null && ChosenPronoun != default(Pronoun))
+                if (ChosenPronoun != default(Pronoun)) return ChosenPronoun;
+                
+                return new Pronoun()
                 {
-                    return ChosenPronoun;
-                }
-                else
-                    return new Pronoun()
-                    {
-                        Subject = "they",
-                        Object = "them",
-                        DependentPossessive = "their",
-                        IndependentPossessive = "theirs",
-                        ReflexiveSingular = "themself",
-                        ReflexivePlural = "themselves"
-                    };
+                    Subject = "they",
+                    Object = "them",
+                    DependentPossessive = "their",
+                    IndependentPossessive = "theirs",
+                    ReflexiveSingular = "themself",
+                    ReflexivePlural = "themselves"
+                };
             }
         }
     }
