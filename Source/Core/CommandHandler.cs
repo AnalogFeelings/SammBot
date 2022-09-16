@@ -16,8 +16,6 @@ namespace SammBotNET.Core
         private AdminService AdminService { get; set; }
         private CommandService CommandsService { get; set; }
 
-        //private List<MessageHook> HookList = new List<MessageHook>();
-
         public CommandHandler(DiscordSocketClient Client, CommandService Commands, IServiceProvider Services, Logger Logger)
         {
             CommandsService = Commands;
@@ -29,9 +27,6 @@ namespace SammBotNET.Core
             CommandsService.CommandExecuted += OnCommandExecutedAsync;
 
             AdminService = Services.GetRequiredService<AdminService>();
-
-            //HookList = ReflectionEnumerator.GetChildrenOfType<MessageHook>()
-            //	.Where(x => x.GetType().GetCustomAttribute(typeof(RegisterHook), false) != null).ToList();
         }
 
         public async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
@@ -108,19 +103,6 @@ namespace SammBotNET.Core
 
                 await CommandsService.ExecuteAsync(Context, ArgumentPosition, ServiceProvider);
             }
-
-            //if (!TargetMessage.Content.StartsWith(Settings.Instance.LoadedConfig.BotPrefix))
-            //{
-            //	foreach (MessageHook Hook in HookList)
-            //	{
-            //		Hook.Message = TargetMessage;
-            //		Hook.Context = Context;
-            //		Hook.BotLogger = BotLogger;
-            //		Hook.Client = DiscordClient;
-
-            //		_ = Task.Run(() => Hook.ExecuteHook());
-            //	}
-            //}
         }
     }
 }

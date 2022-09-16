@@ -76,13 +76,12 @@ namespace SammBotNET.Core
             Environment.Exit(0);
         }
 
-        private static Settings PrivateInstance;
+        private static Settings _PrivateInstance;
         public static Settings Instance
         {
             get
             {
-                if (PrivateInstance == null) PrivateInstance = new Settings();
-                return PrivateInstance;
+                return _PrivateInstance ??= new Settings();
             }
         }
     }
