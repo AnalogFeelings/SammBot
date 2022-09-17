@@ -128,7 +128,7 @@ namespace SammBotNET.Services
             string ChosenAvatar = FilteredList.PickRandom();
             BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogSeverity.Debug);
 
-            using (FileStream AvatarStream = new(ChosenAvatar, FileMode.Open))
+            using (FileStream AvatarStream = new FileStream(ChosenAvatar, FileMode.Open))
             {
                 Image LoadedAvatar = new Image(AvatarStream);
 
