@@ -71,6 +71,10 @@ namespace SammBotNET.Services
 
             BotLogger.Log($"{Settings.BOT_NAME} took" +
                 $" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
+            
+#if DEBUG
+            BotLogger.Log($"{Settings.BOT_NAME} has been built on Debug configuration. Extra logging will be available.", LogSeverity.Warning);
+#endif
         }
 
         private Task OnConnected()
