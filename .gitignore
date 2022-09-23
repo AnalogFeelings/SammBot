@@ -413,6 +413,9 @@ cmake-build-*/
 # Discord Plugin
 .idea/**/discord.xml
 
+# SSH Config
+.idea/**/sshConfigs.xml
+
 # File-based project format
 *.iws
 
