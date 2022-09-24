@@ -35,7 +35,7 @@ You may group a statement (i.e. an `if` statement) group if it makes sense to do
 
 ## Variable/Class Naming
 
-Use `CamelCase` and avoid using abbreviations when possible. Variable and class names must be descriptive.  
+Use `PascalCase` for class names, variables and parameters, but use `camelCase` for local variables.
 Use `SCREAMING_SNAKE_CASE` for const variables.
 
 ## Strings
