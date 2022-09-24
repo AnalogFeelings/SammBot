@@ -29,6 +29,7 @@ This README file is not updated often, so sometimes it's possible for new comman
 * :wrench: **Utils Module**: Allows you to view RGB or HEX colors, get a user's avatar, or the weather forecast of your city.
  
 <div align="center"><h2>Packages & NuGet</h2></div>
+
 Visual Studio/dotnet should already detect the packages you need and install them.
 Building should be straightforward.
 
@@ -61,10 +62,12 @@ This will apply the latest migration to the database.
 Please read the [style guidelines](STYLE_GUIDELINES.md) before creating a pull request.
 
 <div align="center"><h1>License</h1></div>
+
 © Copyright 2022 AestheticalZ.  
 Licensed under the [GPL v3.0 license](LICENSE)
 
 <div align="center"><h1>Special Thanks</h1></div>
+
 | Logo | Message |
 | ---- | ------- |
 | <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains" width="128"/> | Thanks to **JetBrains** for providing an OSS license for their products! |
