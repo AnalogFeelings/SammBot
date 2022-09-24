@@ -68,6 +68,9 @@ Licensed under the [GPL v3.0 license](LICENSE)
 
 <div align="center"><h1>Special Thanks</h1></div>
 
-| Logo | Message |
-| ---- | ------- |
-| <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains" width="128"/> | Thanks to **JetBrains** for providing an OSS license for their products! |
+<div align="center">
+  
+  | Logo | Message |
+  | ---- | ------- |
+  | <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains" width="128"/> | Thanks to **JetBrains** for providing   an OSS license for their products! |
+</div>
