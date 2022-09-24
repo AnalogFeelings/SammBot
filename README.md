@@ -1,4 +1,4 @@
-![sammbot](SammBot.png)
+![sammbot](SammBot.svg)
 # Samm-Bot
 Samm-Bot rewritten for the fourth time, but in C# and [Discord.Net](https://github.com/discord-net/Discord.Net) instead of TypeScript and [discord.js](https://github.com/discordjs/discord.js). In constant evolution!  
 It uses [Matcha](https://github.com/AestheticalZ/Matcha) for event logging!
