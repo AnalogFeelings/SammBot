@@ -4,12 +4,11 @@
   
   ![Lines of code](https://img.shields.io/tokei/lines/github/aestheticalz/sammbot?label=Lines%20Of%20Code&style=flat-square)
   ![.NET Version](https://img.shields.io/badge/.NET%20Version-6.0-brightgreen?style=flat-square)
-  ![GitHub issues](https://img.shields.io/github/issues/aestheticalz/sammbot?label=Issues&style=flat-square)
-  ![GitHub pull requests](https://img.shields.io/github/issues-pr/aestheticalz/sammbot?label=Pull%20Requests&style=flat-square)
+  ![GitHub issues by-label](https://img.shields.io/github/issues/aestheticalz/sammbot/master?label=Bot%20Issues&style=flat-square)
+  ![GitHub pull requests by-label](https://img.shields.io/github/issues-pr/aestheticalz/sammbot/master?label=Bot%20Pull%20Requests&style=flat-square)
   ![GitHub](https://img.shields.io/github/license/aestheticalz/sammbot?label=License&style=flat-square)
-  ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/aestheticalz/sammbot?label=Commit%20Activity&style=flat-square)
+  ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/aestheticalz/sammbot/master?label=Commit%20Activity&style=flat-square)
   ![GitHub Repo stars](https://img.shields.io/github/stars/aestheticalz/sammbot?label=Stargazers&style=flat-square)
-  ![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Website%20Status&style=flat-square&up_message=Online&url=https%3A%2F%2Faestheticalz.github.io%2FProjects%2FSammBot%2F)
 </div>
 
 Samm-Bot rewritten for the fourth time, but in C# and [Discord.Net](https://github.com/discord-net/Discord.Net) instead of TypeScript and [discord.js](https://github.com/discordjs/discord.js). In constant evolution!  
