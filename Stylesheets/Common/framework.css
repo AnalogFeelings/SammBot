@@ -93,14 +93,6 @@ body {
 
 .contentSection {
     width: 100%;
-
-    text-align: center;
-}
-
-.contentSection > ul {
-    display: inline-block;
-
-    text-align: left;
 }
 
 .contentSection > p {
