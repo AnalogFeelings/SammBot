@@ -28,20 +28,20 @@
 
 /*GITHUB ICON*/
 .footerSocialMediaIcon.github {
-    background-image: url("/Resources/SocialMedia/githublight.svg");
+    background-image: url("../../Resources/Social/githublight.svg");
 }
 
 /*HIDEOUT ICON*/
 .footerSocialMediaIcon.hideout {
-    background-image: url("/Resources/favicon.png");
+    background-image: url("../../Resources/Social/hideout.png");
 }
 
 /*TWITTER ICON*/
 .footerSocialMediaIcon.twitter {
-    background-image: url("/Resources/SocialMedia/twitter.svg");
+    background-image: url("../../Resources/Social/twitter.svg");
 }
 
 /*YOUTUBE ICON*/
 .footerSocialMediaIcon.youtube {
-    background-image: url("/Resources/SocialMedia/youtube.svg");
+    background-image: url("../../Resources/Social/youtube.svg");
 }
