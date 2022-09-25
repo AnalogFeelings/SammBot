@@ -1,0 +1,159 @@
+a:link {
+    color: #c287bc;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #e8a1e1;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #654c65;
+}
+
+li::marker {
+    color: #755072;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+
+    font-family: 'JetBrains-Mono';
+    color: white;
+
+    background-color: black;
+}
+
+.headerDiv {
+    width: 100%;
+    height: 100vh;
+
+    background-image: url("../../Resources/backdropBlurred.png");
+    background-size: cover;
+    background-position: center center;
+}
+
+.headerOverlayDiv {
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.headerOverlayDiv > img {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.headerOverlayDiv > h1 {
+    font-family: "JetBrains-Mono-Bold";
+
+    margin: 0;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    text-align: center;
+}
+
+.headerOverlayDiv > h2 {
+    font-size: 1em;
+    font-family: "JetBrains-Mono-Bold";
+
+    margin: 0;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    text-align: center;
+}
+
+.acrylicSurface {
+    /*It's 2022 and backdrop-filter is still slow as shit. Why??? Prerendering an image every time I want to make a tiny change is annoying.*/
+    background-color: rgba(64, 64, 64, 0.1);
+}
+
+.separatorDiv {
+    background-color: #291c28;
+
+    height: 10px;
+    min-height: 10px;
+}
+
+.bodyDiv {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #412c40;
+}
+
+.contentSection {
+    width: 100%;
+
+    text-align: center;
+}
+
+.contentSection > ul {
+    display: inline-block;
+
+    text-align: left;
+}
+
+.contentSection > p {
+    margin: 0;
+}
+
+.footerDiv {
+    background-color: #362535;
+
+    border-top: 5px solid;
+    border-color: #291c28;
+
+    display: flex;
+    flex: 0 1 auto;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.featuresDiv {
+    display: flex;
+
+    justify-content: center;
+    align-items: stretch;
+    align-content: center;
+
+    flex-wrap: wrap;
+    gap: 12px;
+
+    width: 100%;
+}
+
+.featuresDiv > div {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+    background-color: #4f364d;
+
+    padding: 0 5px 0 5px;
+
+    border-radius: 8px;
+    border-color: #755072;
+    border-width: 2px;
+    border-style: solid;
+
+    box-shadow: 0 5px 5px 0 rgb(0 0 0 / 35%);
+}
+
+.featuresDiv > div > h1 {
+    font-size: 4em;
+    margin: 0;
+}
+
+.featuresDiv > div > h2 {
+    margin: 0;
+}

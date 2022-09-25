@@ -1,0 +1,47 @@
+.footerSocialMediaIcon {
+    -webkit-user-select: none;
+    user-select: none;
+
+    width: 40px;
+    height: 40px;
+
+    color: white;
+
+    background-color: rgba(0, 0, 0, 0);
+    background-repeat: no-repeat;
+    background-size: 32px 32px;
+    background-position: center center;
+
+    border-radius: 50%;
+
+    transition-duration: 0.3s;
+    border: none;
+}
+
+.footerSocialMediaIcon:hover {
+    background-color: #4f364d;
+}
+
+.footerSocialMediaIcon:active {
+    background-color: #5c3d58;
+}
+
+/*GITHUB ICON*/
+.footerSocialMediaIcon.github {
+    background-image: url("/Resources/SocialMedia/githublight.svg");
+}
+
+/*HIDEOUT ICON*/
+.footerSocialMediaIcon.hideout {
+    background-image: url("/Resources/favicon.png");
+}
+
+/*TWITTER ICON*/
+.footerSocialMediaIcon.twitter {
+    background-image: url("/Resources/SocialMedia/twitter.svg");
+}
+
+/*YOUTUBE ICON*/
+.footerSocialMediaIcon.youtube {
+    background-image: url("/Resources/SocialMedia/youtube.svg");
+}

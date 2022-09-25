@@ -1,0 +1,59 @@
+@media only screen and (min-width: 950px) {
+	body {
+		font-size: 1em;
+	}
+
+	.headerDiv {
+		min-height: 640px;
+	}
+
+	.headerOverlayDiv > img {
+		width: 256px;
+		height: 256px;
+	}
+
+	.headerOverlayDiv > h1 {
+		font-size: 8em;
+	}
+
+	.bodyContent {
+		margin-left: 50px;
+		margin-right: 50px;
+	}
+
+	.contentSection {
+		margin-bottom: 20px;
+	}
+
+	.contentSection > h1 {
+		margin-top: 30px;
+		margin-bottom: 25px;
+	}
+
+	.footerDiv {
+		padding-left: 20px;
+		padding-right: 20px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+
+		flex-wrap: nowrap;
+		flex: 0 1 auto;
+	}
+
+	.footerText {
+		width: auto;
+		margin-right: auto;
+	}
+}
+
+@media only screen and (min-width: 1200px) {
+	.featuresDiv {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+
+	.featuresDiv > div {
+		max-width: 32%;
+		width: 32%;
+	}
+}

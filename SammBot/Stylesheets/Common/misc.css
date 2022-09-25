@@ -1,0 +1,54 @@
+@font-face {
+	font-family: JetBrains-Mono;
+	src: url(https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/fonts/webfonts/JetBrainsMono-Regular.woff2);
+}
+
+@font-face {
+	font-family: JetBrains-Mono-Bold;
+	src: url(https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/fonts/webfonts/JetBrainsMono-Bold.woff2);
+}
+
+@font-face {
+	font-family: JetBrains-Mono-Thin;
+	src: url(https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/fonts/webfonts/JetBrainsMono-Thin.woff2);
+}
+
+.boldText {
+	font-family: 'JetBrains-Mono-Bold';
+}
+
+.thinText {
+	font-family: 'JetBrains-Mono-Thin';
+}
+
+.field-row {
+	display: flex;
+	align-items: center;
+	column-gap: 6px;
+}
+
+[class^=field-row]+[class^=field-row] {
+	margin-top: 6px
+}
+
+.filterDisabled {
+	image-rendering: pixelated;
+}
+
+.horizontalCenter {
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+img.emoji {
+	height: 1em;
+	width: 1em;
+	margin: 0 .05em 0 .1em;
+	vertical-align: -0.1em;
+
+	-webkit-user-select: none;
+	user-select: none;
+}

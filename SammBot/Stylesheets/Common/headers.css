@@ -1,0 +1,38 @@
+.headlineClassSingle {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.headlineClassSingle:before, .headlineClassSingle:after {
+    content: '';
+    border-top: 2px solid;
+    margin: 0 20px 0 0;
+    flex: 1 0 20px;
+    color: rgb(117, 80, 114);
+}
+
+.headlineClassSingle:after {
+    margin: 0 0 0 20px;
+}
+
+.headlineClassDouble {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.headlineClassDouble:before, .headlineClassDouble:after {
+    content: '';
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    height: 3px;
+    margin: 0 20px 0 20px;
+    flex: 1 0 20px;
+    color: rgb(117, 80, 114);
+    display: block;
+}

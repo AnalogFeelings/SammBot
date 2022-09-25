@@ -1,0 +1,40 @@
+@media only screen and (min-width: 950px) {
+    /*NAVIGATION BAR (LOGO, BUTTONS)*/
+    .navigationBarDiv {
+        height: 85px;
+        min-height: 85px;
+    }
+
+    .navigationBarLogo {
+        margin: 0 auto 0 10px;
+    }
+
+    .navigationBarLogo > img {
+        margin-right: 15px;
+
+        width: 64px;
+        height: 64px;
+    }
+
+    .navigationBarLogo > p {
+        font-size: 1.5em;
+    }
+
+    /*NAVBAR BUTTONS*/
+    .navigationBarButtons {
+        display: block;
+    }
+
+    /*NAVBAR BURGER MENU ICON*/
+    .navigationBarBurger {
+        display: none;
+    }
+
+    .navigationBarBurgerMenu {
+        display: none;
+    }
+
+    .navigationBarBurgerMenu.shown {
+        display: none;
+    }
+}

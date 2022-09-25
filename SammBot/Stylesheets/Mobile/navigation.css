@@ -1,0 +1,34 @@
+/*NAVIGATION BAR (LOGO, BUTTONS)*/
+.navigationBarDiv {
+    height: 25%;
+    min-height: 25%;
+}
+
+.navigationBarLogo {
+    margin: 10px auto 10px 10px;
+}
+
+.navigationBarLogo > img {
+    margin-right: 5px;
+
+    width: 32px;
+    height: 32px;
+}
+
+.navigationBarLogo > p {
+    font-size: 1.2em;
+}
+
+/*NAVBAR BUTTONS*/
+.navigationBarButtons {
+    display: none;
+}
+
+/*NAVBAR BURGER MENU ICON*/
+.navigationBarBurger {
+    display: flex;
+}
+
+.navigationBarBurgerMenu.shown {
+    display: flex;
+}

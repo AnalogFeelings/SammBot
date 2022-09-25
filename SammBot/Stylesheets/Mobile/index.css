@@ -1,0 +1,54 @@
+body {
+	font-size: 0.8em;
+}
+
+.headerDiv {
+	min-height: 280px;
+}
+
+.headerOverlayDiv > img {
+	width: 180px;
+	height: 180px;
+}
+
+.headerOverlayDiv > h1 {
+	font-size: 6em;
+}
+
+.bodyContent {
+	margin-right: 8px;
+	margin-left: 8px;
+}
+
+.contentSection {
+	margin-bottom: 15px;
+}
+
+.contentSection > h1 {
+	margin-top: 25px;
+	margin-bottom: 20px;
+}
+
+.footerDiv {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 10px;
+
+	flex-wrap: wrap;
+}
+
+.footerText {
+	width: 100%;
+	margin-right: 0;
+}
+
+.featuresDiv {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.featuresDiv > div {
+	max-width: 100%;
+	width: 100%;
+}
