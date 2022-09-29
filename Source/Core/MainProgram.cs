@@ -102,11 +102,7 @@ namespace SammBotNET.Core
             });
             CommandService = new CommandService(new CommandServiceConfig
             {
-#if DEBUG
-                LogLevel = Discord.LogSeverity.Debug,
-#else
                 LogLevel = Discord.LogSeverity.Info,
-#endif
                 DefaultRunMode = RunMode.Async,
             });
 
