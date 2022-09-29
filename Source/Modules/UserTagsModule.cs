@@ -28,26 +28,26 @@ namespace SammBotNET.Modules
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> DeleteTagAsync([Summary("Self-explanatory.")] string Name)
         {
-            using (BotDatabase BotDatabase = new BotDatabase())
+            using (BotDatabase botDatabase = new BotDatabase())
             {
-                List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
-                UserTag RetrievedTag = null;
+                List<UserTag> tagList = await botDatabase.UserTags.ToListAsync();
+                UserTag retrievedTag = null;
 
                 if ((Context.User as SocketGuildUser).GuildPermissions.Has(GuildPermission.ManageMessages))
-                    RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.GuildId == Context.Guild.Id);
+                    retrievedTag = tagList.SingleOrDefault(x => x.Name == Name && x.GuildId == Context.Guild.Id);
                 else
-                    RetrievedTag = TagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id && x.GuildId == Context.Guild.Id);
+                    retrievedTag = tagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id && x.GuildId == Context.Guild.Id);
 
-                if (RetrievedTag == null)
+                if (retrievedTag == null)
                     return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
 
-                BotDatabase.UserTags.Remove(RetrievedTag);
-                await BotDatabase.SaveChangesAsync();
+                botDatabase.UserTags.Remove(retrievedTag);
+                await botDatabase.SaveChangesAsync();
             }
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync("Success!", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync("Success!", allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -60,17 +60,17 @@ namespace SammBotNET.Modules
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> GetTagAsync([Summary("Self-explanatory.")] string Name)
         {
-            using (BotDatabase BotDatabase = new BotDatabase())
+            using (BotDatabase botDatabase = new BotDatabase())
             {
-                List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
-                UserTag RetrievedTag = TagList.SingleOrDefault(x => x.GuildId == Context.Guild.Id && x.Name == Name);
+                List<UserTag> tagList = await botDatabase.UserTags.ToListAsync();
+                UserTag retrievedTag = tagList.SingleOrDefault(x => x.GuildId == Context.Guild.Id && x.Name == Name);
 
-                if (RetrievedTag == null)
+                if (retrievedTag == null)
                     return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
 
-                MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await ReplyAsync(RetrievedTag.Reply, allowedMentions: AllowedMentions, messageReference: Reference);
+                MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                await ReplyAsync(retrievedTag.Reply, allowedMentions: allowedMentions, messageReference: messageReference);
             }
 
             return ExecutionResult.Succesful();
@@ -84,29 +84,29 @@ namespace SammBotNET.Modules
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> SearchTagsAsync([Summary("The search term.")] string Name)
         {
-            using (BotDatabase BotDatabase = new BotDatabase())
+            using (BotDatabase botDatabase = new BotDatabase())
             {
-                List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
-                List<UserTag> FilteredTags = TagList.Where(x => x.GuildId == Context.Guild.Id &&
+                List<UserTag> tagList = await botDatabase.UserTags.ToListAsync();
+                List<UserTag> filteredTags = tagList.Where(x => x.GuildId == Context.Guild.Id &&
                             Name.DamerauLevenshteinDistance(x.Name, Settings.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
-                if (!FilteredTags.Any())
+                if (!filteredTags.Any())
                     return ExecutionResult.FromError($"No tags found with a name similar to \"{Name}\".");
 
-                EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"All of the tags similar to \"{Name}\".")
+                EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"All of the tags similar to \"{Name}\".")
                     .ChangeTitle("TAG RESULTS");
 
-                foreach (UserTag Tag in FilteredTags)
+                foreach (UserTag tag in filteredTags)
                 {
-                    RestUser GlobalAuthor = await Context.Client.Rest.GetUserAsync(Tag.AuthorId);
-                    string userName = GlobalAuthor != null ? GlobalAuthor.GetFullUsername() : "Unknown";
+                    RestUser globalAuthor = await Context.Client.Rest.GetUserAsync(tag.AuthorId);
+                    string userName = globalAuthor != null ? globalAuthor.GetFullUsername() : "Unknown";
 
-                    ReplyEmbed.AddField($"`{Tag.Name}`", $"By: **{userName}**");
+                    replyEmbed.AddField($"`{tag.Name}`", $"By: **{userName}**");
                 }
 
-                MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+                MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
             }
 
             return ExecutionResult.Succesful();
@@ -130,31 +130,31 @@ namespace SammBotNET.Modules
             else if (Name.Contains(' '))
                 return ExecutionResult.FromError("Tag names cannot contain spaces!");
 
-            using (BotDatabase BotDatabase = new BotDatabase())
+            using (BotDatabase botDatabase = new BotDatabase())
             {
-                List<UserTag> TagList = await BotDatabase.UserTags.ToListAsync();
-                TagList = TagList.Where(x => x.GuildId == Context.Guild.Id).ToList();
+                List<UserTag> tagList = await botDatabase.UserTags.ToListAsync();
+                tagList = tagList.Where(x => x.GuildId == Context.Guild.Id).ToList();
 
-                if (TagList.Any(x => x.Name == Name))
+                if (tagList.Any(x => x.Name == Name))
                     return ExecutionResult.FromError($"There's already a tag called **\"{Name}\"**!");
 
-                Guid NewId = Guid.NewGuid();
+                Guid newGuid = Guid.NewGuid();
 
-                await BotDatabase.UserTags.AddAsync(new UserTag
+                await botDatabase.UserTags.AddAsync(new UserTag
                 {
-                    Id = NewId.ToString(),
+                    Id = newGuid.ToString(),
                     Name = Name,
                     AuthorId = Context.Message.Author.Id,
                     GuildId = Context.Guild.Id,
                     Reply = Reply,
                     CreatedAt = Context.Message.Timestamp.ToUnixTimeSeconds()
                 });
-                await BotDatabase.SaveChangesAsync();
+                await botDatabase.SaveChangesAsync();
             }
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"Tag created succesfully! Use `{Settings.Instance.LoadedConfig.BotPrefix}tags get {Name}` to use it!", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"Tag created succesfully! Use `{Settings.Instance.LoadedConfig.BotPrefix}tags get {Name}` to use it!", allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }

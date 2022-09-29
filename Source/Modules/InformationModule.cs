@@ -22,33 +22,33 @@ namespace SammBotNET.Modules
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> InformationFullAsync()
         {
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All of the public information about the bot.");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All of the public information about the bot.");
 
-            string ElapsedUptime = string.Format("{0:00}d{1:00}h{2:00}m",
+            string elapsedUptime = string.Format("{0:00}d{1:00}h{2:00}m",
                 Settings.Instance.RuntimeStopwatch.Elapsed.Days,
                 Settings.Instance.RuntimeStopwatch.Elapsed.Hours,
                 Settings.Instance.RuntimeStopwatch.Elapsed.Minutes);
 
-            string ReleaseConfig = "Unknown";
+            string releaseConfig = "Unknown";
 #if DEBUG
-            ReleaseConfig = "Debug";
+            releaseConfig = "Debug";
 #elif RELEASE
-            ReleaseConfig = "Release";
+            releaseConfig = "Release";
 #endif
 
-            ReplyEmbed.AddField("Bot Version", $"`{Settings.Instance.LoadedConfig.BotVersion}`", true);
-            ReplyEmbed.AddField("Target Config", $"`{ReleaseConfig}`", true);
-            ReplyEmbed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
+            replyEmbed.AddField("Bot Version", $"`{Settings.Instance.LoadedConfig.BotVersion}`", true);
+            replyEmbed.AddField("Target Config", $"`{releaseConfig}`", true);
+            replyEmbed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
 
-            ReplyEmbed.AddField("Ping", $"`{Context.Client.Latency}ms`", true);
-            ReplyEmbed.AddField("Server Count", $"`{Context.Client.Guilds.Count} server(s)`", true);
-            ReplyEmbed.AddField("Bot Uptime", $"`{ElapsedUptime}`", true);
+            replyEmbed.AddField("Ping", $"`{Context.Client.Latency}ms`", true);
+            replyEmbed.AddField("Server Count", $"`{Context.Client.Guilds.Count} server(s)`", true);
+            replyEmbed.AddField("Bot Uptime", $"`{elapsedUptime}`", true);
 
-            ReplyEmbed.AddField("Host OS", $"`{FriendlyOSName()}`", true);
+            replyEmbed.AddField("Host OS", $"`{FriendlyOSName()}`", true);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -61,38 +61,38 @@ namespace SammBotNET.Modules
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> ServerInfoAsync()
         {
-            RestUser ServerOwner = await Context.Client.Rest.GetUserAsync(Context.Guild.OwnerId);
+            RestUser serverOwner = await Context.Client.Rest.GetUserAsync(Context.Guild.OwnerId);
 
-            string ServerBanner = Context.Guild.BannerUrl != null ? $"[Banner URL]({Context.Guild.BannerUrl})" : "None";
-            string DiscoverySplash = Context.Guild.DiscoverySplashUrl != null ? $"[Splash URL]({Context.Guild.DiscoverySplashId})" : "None";
-            int ChannelCount = Context.Guild.Channels.Count;
-            int EmoteCount = Context.Guild.Emotes.Count;
-            int MemberCount = Context.Guild.MemberCount;
-            int BoostTier = (int)Context.Guild.PremiumTier;
-            int RoleCount = Context.Guild.Roles.Count;
-            string BoostCount = Context.Guild.PremiumSubscriptionCount != 0 ? Context.Guild.PremiumSubscriptionCount.ToString() : "No Boosts";
-            string CreationDate = $"<t:{Context.Guild.CreatedAt.ToUnixTimeSeconds()}>";
-            string ServerName = Context.Guild.Name;
-            string ServerOwnerName = $"{ServerOwner.Username}#{ServerOwner.Discriminator}";
+            string serverBanner = Context.Guild.BannerUrl != null ? $"[Banner URL]({Context.Guild.BannerUrl})" : "None";
+            string discoverySplash = Context.Guild.DiscoverySplashUrl != null ? $"[Splash URL]({Context.Guild.DiscoverySplashId})" : "None";
+            int channelCount = Context.Guild.Channels.Count;
+            int emoteCount = Context.Guild.Emotes.Count;
+            int memberCount = Context.Guild.MemberCount;
+            int boostTier = (int)Context.Guild.PremiumTier;
+            int roleCount = Context.Guild.Roles.Count;
+            string boostCount = Context.Guild.PremiumSubscriptionCount != 0 ? Context.Guild.PremiumSubscriptionCount.ToString() : "No Boosts";
+            string creationDate = $"<t:{Context.Guild.CreatedAt.ToUnixTimeSeconds()}>";
+            string serverName = Context.Guild.Name;
+            string serverOwnerName = $"{serverOwner.Username}#{serverOwner.Discriminator}";
 
-            EmbedBuilder embed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("GUILD INFORMATION");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("GUILD INFORMATION");
 
-            if (Context.Guild.IconUrl != null) embed.WithThumbnailUrl(Context.Guild.IconUrl);
-            embed.AddField("Name", ServerName, true);
-            embed.AddField("Owner", ServerOwnerName, true);
-            embed.AddField("Banner", ServerBanner, true);
-            embed.AddField("Discovery Splash", DiscoverySplash, true);
-            embed.AddField("Nitro Boosts", BoostCount, true);
-            embed.AddField("Nitro Tier", BoostTier, true);
-            embed.AddField("Created At", CreationDate, true);
-            embed.AddField("Channel Count", ChannelCount, true);
-            embed.AddField("Emote Count", EmoteCount, true);
-            embed.AddField("Member Count", MemberCount, true);
-            embed.AddField("Role Count", RoleCount, true);
+            if (Context.Guild.IconUrl != null) replyEmbed.WithThumbnailUrl(Context.Guild.IconUrl);
+            replyEmbed.AddField("Name", serverName, true);
+            replyEmbed.AddField("Owner", serverOwnerName, true);
+            replyEmbed.AddField("Banner", serverBanner, true);
+            replyEmbed.AddField("Discovery Splash", discoverySplash, true);
+            replyEmbed.AddField("Nitro Boosts", boostCount, true);
+            replyEmbed.AddField("Nitro Tier", boostTier, true);
+            replyEmbed.AddField("Created At", creationDate, true);
+            replyEmbed.AddField("Channel Count", channelCount, true);
+            replyEmbed.AddField("Emote Count", emoteCount, true);
+            replyEmbed.AddField("Member Count", memberCount, true);
+            replyEmbed.AddField("Role Count", roleCount, true);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, embed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -105,54 +105,54 @@ namespace SammBotNET.Modules
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> UserInfoAsync([Summary("The user you want to get the information from.")] SocketGuildUser User = null)
         {
-            SocketGuildUser TargetUser = User ?? Context.Message.Author as SocketGuildUser;
+            SocketGuildUser targetUser = User ?? Context.Message.Author as SocketGuildUser;
 
-            string UserAvatar = TargetUser.GetAvatarOrDefault(2048);
-            string UserName = $"{TargetUser.Username}";
-            string UserDiscriminator = $"#{TargetUser.Discriminator}";
-            string UserNickname = TargetUser.Nickname ?? "None";
-            string IsBot = TargetUser.IsBot.ToYesNo();
-            string IsWebhook = TargetUser.IsWebhook.ToYesNo();
-            string JoinDate = $"<t:{TargetUser.JoinedAt.Value.ToUnixTimeSeconds()}>";
-            string SignUpDate = $"<t:{TargetUser.CreatedAt.ToUnixTimeSeconds()}>";
-            string BoostingSince = TargetUser.PremiumSince != null ? $"<t:{TargetUser.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
-            string Roles = TargetUser.Roles.Count > 1 ?
-                string.Join(", ", TargetUser.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
+            string userAvatar = targetUser.GetAvatarOrDefault(2048);
+            string userName = $"{targetUser.Username}";
+            string userDiscriminator = $"#{targetUser.Discriminator}";
+            string userNickname = targetUser.Nickname ?? "None";
+            string isBot = targetUser.IsBot.ToYesNo();
+            string isWebhook = targetUser.IsWebhook.ToYesNo();
+            string joinDate = $"<t:{targetUser.JoinedAt.Value.ToUnixTimeSeconds()}>";
+            string signUpDate = $"<t:{targetUser.CreatedAt.ToUnixTimeSeconds()}>";
+            string boostingSince = targetUser.PremiumSince != null ? $"<t:{targetUser.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
+            string roles = targetUser.Roles.Count > 1 ?
+                string.Join(", ", targetUser.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
                 : "None";
-            string OnlineStatus = TargetUser.GetStatusString();
+            string onlineStatus = targetUser.GetStatusString();
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("USER INFORMATION");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("USER INFORMATION");
 
-            ReplyEmbed.WithThumbnailUrl(UserAvatar);
-            ReplyEmbed.AddField("Username", UserName, true);
-            ReplyEmbed.AddField("Nickname", UserNickname, true);
-            ReplyEmbed.AddField("Discriminator", UserDiscriminator, true);
-            ReplyEmbed.AddField("Status", OnlineStatus, true);
-            ReplyEmbed.AddField("Is Bot", IsBot, true);
-            ReplyEmbed.AddField("Is Webhook", IsWebhook, true);
-            ReplyEmbed.AddField("Join Date", JoinDate, true);
-            ReplyEmbed.AddField("Create Date", SignUpDate, true);
-            ReplyEmbed.AddField("Booster Since", BoostingSince, true);
-            ReplyEmbed.AddField("Roles", Roles, false);
+            replyEmbed.WithThumbnailUrl(userAvatar);
+            replyEmbed.AddField("Username", userName, true);
+            replyEmbed.AddField("Nickname", userNickname, true);
+            replyEmbed.AddField("Discriminator", userDiscriminator, true);
+            replyEmbed.AddField("Status", onlineStatus, true);
+            replyEmbed.AddField("Is Bot", isBot, true);
+            replyEmbed.AddField("Is Webhook", isWebhook, true);
+            replyEmbed.AddField("Join Date", joinDate, true);
+            replyEmbed.AddField("Create Date", signUpDate, true);
+            replyEmbed.AddField("Booster Since", boostingSince, true);
+            replyEmbed.AddField("Roles", roles, false);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
 
         public string FriendlyOSName()
         {
-            string OsName = string.Empty;
-            Version Version = Environment.OSVersion.Version;
+            string osName = string.Empty;
+            Version version = Environment.OSVersion.Version;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                switch (Version.Major)
+                switch (version.Major)
                 {
                     case 6:
-                        OsName = Version.Minor switch
+                        osName = version.Minor switch
                         {
                             1 => "Windows 7",
                             2 => "Windows 8",
@@ -161,63 +161,63 @@ namespace SammBotNET.Modules
                         };
                         break;
                     case 10:
-                        switch (Version.Minor)
+                        switch (version.Minor)
                         {
                             case 0:
-                                if (Version.Build >= 22000) OsName = "Windows 11";
-                                else OsName = "Windows 10";
+                                if (version.Build >= 22000) osName = "Windows 11";
+                                else osName = "Windows 10";
 
                                 break;
-                            default: OsName = "Unknown Windows"; break;
+                            default: osName = "Unknown Windows"; break;
                         }
                         break;
                     default:
-                        OsName = "Unknown Windows";
+                        osName = "Unknown Windows";
                         break;
                 }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                switch (Version.Major)
+                switch (version.Major)
                 {
                     case 10:
-                        switch (Version.Minor)
+                        switch (version.Minor)
                         {
                             case 15:
-                                OsName = "macOS Catalina";
+                                osName = "macOS Catalina";
                                 break;
                             default:
-                                OsName = "Unknown macOS";
+                                osName = "Unknown macOS";
                                 break;
                         }
                         break;
                     case 11:
-                        OsName = "macOS Big Sur";
+                        osName = "macOS Big Sur";
                         break;
                     case 12:
-                        OsName = "macOS Monterey";
+                        osName = "macOS Monterey";
                         break;
                     case 13:
-                        OsName = "macOS Ventura";
+                        osName = "macOS Ventura";
                         break;
                     default:
-                        OsName = "Unknown macOS";
+                        osName = "Unknown macOS";
                         break;
                 }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 if (File.Exists("/etc/issue.net"))
-                    OsName = File.ReadAllText("/etc/issue.net");
+                    osName = File.ReadAllText("/etc/issue.net");
                 else
-                    OsName = "Linux";
+                    osName = "Linux";
             }
             else
             {
-                OsName = "Unknown OS";
+                osName = "Unknown OS";
             }
 
-            return OsName;
+            return osName;
         }
     }
 }

@@ -27,19 +27,19 @@ namespace SammBotNET.Modules
                                                       [Summary("The amount of days the bot will delete.")] int PruneDays,
                                                       [Summary("The reason of the ban.")] string Reason = null)
         {
-            string BanReason = Reason ?? "No reason specified.";
+            string banReason = Reason ?? "No reason specified.";
 
-            await Context.Guild.AddBanAsync(TargetUser, PruneDays, BanReason);
+            await Context.Guild.AddBanAsync(TargetUser, PruneDays, banReason);
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
                 .WithTitle($"🔨 Banned user {TargetUser.Username}.").WithColor(new Color(255, 0, 0));
 
-            ReplyEmbed.Description = $"**Reason**: {BanReason}\n";
-            ReplyEmbed.Description += $"**Prune Days**: {PruneDays} day(s).";
+            replyEmbed.Description = $"**Reason**: {banReason}\n";
+            replyEmbed.Description += $"**Prune Days**: {PruneDays} day(s).";
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -55,18 +55,18 @@ namespace SammBotNET.Modules
         public async Task<RuntimeResult> KickUserAsync([Summary("The user you want to kick.")] SocketGuildUser TargetUser,
                                                        [Summary("The reason of the kick.")] string Reason = null)
         {
-            string KickReason = Reason ?? "No reason specified.";
+            string kickReason = Reason ?? "No reason specified.";
 
-            await TargetUser.KickAsync(KickReason);
+            await TargetUser.KickAsync(kickReason);
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
                     .WithTitle($"👢 Kicked user {TargetUser.Username}.").WithColor(new Color(255, 255, 0));
 
-            ReplyEmbed.Description = $"**Reason**: {KickReason}";
+            replyEmbed.Description = $"**Reason**: {kickReason}";
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -83,50 +83,50 @@ namespace SammBotNET.Modules
             if (Reason.Length > 512)
                 return ExecutionResult.FromError("Warning reason must not exceed 512 characters.");
 
-            using (BotDatabase BotDatabase = new BotDatabase())
+            using (BotDatabase botDatabase = new BotDatabase())
             {
-                Guid NewId = Guid.NewGuid();
+                Guid newGuid = Guid.NewGuid();
 
-                await BotDatabase.UserWarnings.AddAsync(new UserWarning
+                await botDatabase.UserWarnings.AddAsync(new UserWarning
                 {
-                    Id = NewId.ToString(),
+                    Id = newGuid.ToString(),
                     UserId = TargetUser.Id,
                     GuildId = Context.Guild.Id,
                     Reason = Reason,
                     Date = Context.Message.Timestamp.ToUnixTimeSeconds()
                 });
 
-                await BotDatabase.SaveChangesAsync();
+                await botDatabase.SaveChangesAsync();
 
-                EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+                EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
                     .WithTitle($"⚠️ Warning Issued").WithColor(new Color(255, 205, 77));
 
-                ReplyEmbed.Description = $"User <@{TargetUser.Id}> has been warned successfully. Details below.\n\n";
+                replyEmbed.Description = $"User <@{TargetUser.Id}> has been warned successfully. Details below.\n\n";
 
-                ReplyEmbed.Description += $"**Reason**: {Reason}\n";
-                ReplyEmbed.Description += $"**Warn ID**: {NewId}\n\n";
+                replyEmbed.Description += $"**Reason**: {Reason}\n";
+                replyEmbed.Description += $"**Warn ID**: {newGuid}\n\n";
 
-                MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
                 //DM the user about it.
                 try
                 {
-                    EmbedBuilder DirectMessageEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+                    EmbedBuilder directMessageEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
                         .WithTitle($"⚠️ You have been warned in \"{Context.Guild.Name}\".").WithColor(new Color(255, 205, 77));
 
-                    DirectMessageEmbed.Description = $"**Reason**: {Reason}\n";
-                    DirectMessageEmbed.Description += $"**Warn ID**: {NewId}\n\n";
-                    DirectMessageEmbed.Description += $"You may see all of your warnings with the `{Settings.Instance.LoadedConfig.BotPrefix}mod warns` command.";
+                    directMessageEmbed.Description = $"**Reason**: {Reason}\n";
+                    directMessageEmbed.Description += $"**Warn ID**: {newGuid}\n\n";
+                    directMessageEmbed.Description += $"You may see all of your warnings with the `{Settings.Instance.LoadedConfig.BotPrefix}mod warns` command.";
 
-                    await TargetUser.SendMessageAsync(null, embed: DirectMessageEmbed.Build());
+                    await TargetUser.SendMessageAsync(null, embed: directMessageEmbed.Build());
                 }
                 catch (Exception)
                 {
-                    ReplyEmbed.Description += "I could not DM the user about this warning.";
+                    replyEmbed.Description += "I could not DM the user about this warning.";
                 }
 
-                await ReplyAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+                await ReplyAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
             }
 
             return ExecutionResult.Succesful();
@@ -139,21 +139,21 @@ namespace SammBotNET.Modules
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> RemoveWarnAsync([Summary("The ID of the warn you want to remove.")] [Remainder] string WarningId)
         {
-            using (BotDatabase BotDatabase = new BotDatabase())
+            using (BotDatabase botDatabase = new BotDatabase())
             {
-                List<UserWarning> Warnings = await BotDatabase.UserWarnings.ToListAsync();
-                UserWarning SpecificWarning = Warnings.SingleOrDefault(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
+                List<UserWarning> userWarnings = await botDatabase.UserWarnings.ToListAsync();
+                UserWarning specificWarning = userWarnings.SingleOrDefault(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
 
-                if (SpecificWarning == default(UserWarning))
+                if (specificWarning == default(UserWarning))
                     return ExecutionResult.FromError("There are no warnings with the specified ID.");
 
-                BotDatabase.UserWarnings.Remove(SpecificWarning);
+                botDatabase.UserWarnings.Remove(specificWarning);
 
-                await BotDatabase.SaveChangesAsync();
+                await botDatabase.SaveChangesAsync();
 
-                MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await ReplyAsync($":white_check_mark: Removed warning \"{WarningId}\" from user <@{SpecificWarning.UserId}>.", allowedMentions: AllowedMentions, messageReference: Reference);
+                MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                await ReplyAsync($":white_check_mark: Removed warning \"{WarningId}\" from user <@{specificWarning.UserId}>.", allowedMentions: allowedMentions, messageReference: messageReference);
             }
 
             return ExecutionResult.Succesful();
@@ -167,28 +167,28 @@ namespace SammBotNET.Modules
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> ListWarnsAsync([Summary("The user you want to list the warns for.")] SocketGuildUser TargetUser)
         {
-            using (BotDatabase BotDatabase = new BotDatabase())
+            using (BotDatabase botDatabase = new BotDatabase())
             {
-                List<UserWarning> Warnings = await BotDatabase.UserWarnings.ToListAsync();
-                List<UserWarning> FilteredWarnings = Warnings.Where(x => x.UserId == TargetUser.Id && x.GuildId == Context.Guild.Id).ToList();
+                List<UserWarning> userWarnings = await botDatabase.UserWarnings.ToListAsync();
+                List<UserWarning> filteredWarnings = userWarnings.Where(x => x.UserId == TargetUser.Id && x.GuildId == Context.Guild.Id).ToList();
 
-                if (!FilteredWarnings.Any())
+                if (!filteredWarnings.Any())
                     return ExecutionResult.FromError("This user has no warnings.");
 
-                EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("📃 List of Warnings");
+                EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("📃 List of Warnings");
 
-                ReplyEmbed.Description = "Reasons longer than 48 characters will be truncated.\n\n";
+                replyEmbed.Description = "Reasons longer than 48 characters will be truncated.\n\n";
 
-                foreach (UserWarning Warning in FilteredWarnings)
+                foreach (UserWarning warning in filteredWarnings)
                 {
-                    ReplyEmbed.Description += $"⚠️ **ID**: `{Warning.Id}`\n";
-                    ReplyEmbed.Description += $"**· Creation Date**: <t:{Warning.Date}:F>\n";
-                    ReplyEmbed.Description += $"**· Reason**: {Warning.Reason.Truncate(48)}\n\n";
+                    replyEmbed.Description += $"⚠️ **ID**: `{warning.Id}`\n";
+                    replyEmbed.Description += $"**· Creation Date**: <t:{warning.Date}:F>\n";
+                    replyEmbed.Description += $"**· Reason**: {warning.Reason.Truncate(48)}\n\n";
                 }
 
-                MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await ReplyAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+                MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                await ReplyAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
             }
 
             return ExecutionResult.Succesful();
@@ -202,25 +202,25 @@ namespace SammBotNET.Modules
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> ListWarnAsync([Summary("The ID of the warn you want to view.")] [Remainder] string WarningId)
         {
-            using (BotDatabase BotDatabase = new BotDatabase())
+            using (BotDatabase botDatabase = new BotDatabase())
             {
-                List<UserWarning> Warnings = await BotDatabase.UserWarnings.ToListAsync();
-                UserWarning SpecificWarning = Warnings.SingleOrDefault(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
+                List<UserWarning> userWarnings = await botDatabase.UserWarnings.ToListAsync();
+                UserWarning specificWarning = userWarnings.SingleOrDefault(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
 
-                if (SpecificWarning == default(UserWarning))
+                if (specificWarning == default(UserWarning))
                     return ExecutionResult.FromError("There are no warnings with the specified ID.");
 
-                EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Warning Details");
+                EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Warning Details");
 
-                ReplyEmbed.Description = $"Details for the warning \"{SpecificWarning.Id}\".\n";
+                replyEmbed.Description = $"Details for the warning \"{specificWarning.Id}\".\n";
 
-                ReplyEmbed.AddField("User", $"<@{SpecificWarning.UserId}> (ID: {SpecificWarning.UserId})");
-                ReplyEmbed.AddField("Date", $"<t:{SpecificWarning.Date}:F>");
-                ReplyEmbed.AddField("Reason", SpecificWarning.Reason);
+                replyEmbed.AddField("User", $"<@{specificWarning.UserId}> (ID: {specificWarning.UserId})");
+                replyEmbed.AddField("Date", $"<t:{specificWarning.Date}:F>");
+                replyEmbed.AddField("Reason", specificWarning.Reason);
 
-                MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await ReplyAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+                MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                await ReplyAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
             }
 
             return ExecutionResult.Succesful();
@@ -238,30 +238,30 @@ namespace SammBotNET.Modules
                                                        [Summary("The duration of the mute.")] TimeSpan Duration,
                                                        [Summary("The reason of the mute.")] string Reason = null)
         {
-            string MuteReason = Reason ?? "No reason specified.";
+            string muteReason = Reason ?? "No reason specified.";
 
             if (Duration < TimeSpan.Zero)
                 return ExecutionResult.FromError("Mute duration must not be negative.");
 
-            await TargetUser.SetTimeOutAsync(Duration, new RequestOptions() { AuditLogReason = MuteReason });
+            await TargetUser.SetTimeOutAsync(Duration, new RequestOptions() { AuditLogReason = muteReason });
 
-            string Days = Format.Bold(Duration.ToString("%d"));
-            string Hours = Format.Bold(Duration.ToString("%h"));
-            string Minutes = Format.Bold(Duration.ToString("%m"));
-            string Seconds = Format.Bold(Duration.ToString("%s"));
+            string days = Format.Bold(Duration.ToString("%d"));
+            string hours = Format.Bold(Duration.ToString("%h"));
+            string minutes = Format.Bold(Duration.ToString("%m"));
+            string seconds = Format.Bold(Duration.ToString("%s"));
 
-            long UntilDate = (DateTimeOffset.Now + Duration).ToUnixTimeSeconds();
+            long untilDate = (DateTimeOffset.Now + Duration).ToUnixTimeSeconds();
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
                     .WithTitle($"⏱️ Timed out user {TargetUser.Username}.").WithColor(Color.LightGrey);
 
-            ReplyEmbed.Description = $"**Reason**: {Reason}\n";
-            ReplyEmbed.Description += $"**Duration**: {Days} day(s), {Hours} hour(s), {Minutes} minute(s) and {Seconds} second(s).\n";
-            ReplyEmbed.Description += $"**Expires in**: <t:{UntilDate}:F>";
+            replyEmbed.Description = $"**Reason**: {Reason}\n";
+            replyEmbed.Description += $"**Duration**: {days} day(s), {hours} hour(s), {minutes} minute(s) and {seconds} second(s).\n";
+            replyEmbed.Description += $"**Expires in**: <t:{untilDate}:F>";
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -275,16 +275,16 @@ namespace SammBotNET.Modules
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task<RuntimeResult> PurgeMessagesAsync([Summary("The amount of messages you want to purge.")] int Count)
         {
-            IEnumerable<IMessage> RetrievedMessages = await Context.Message.Channel.GetMessagesAsync(Count + 1).FlattenAsync();
+            IEnumerable<IMessage> retrievedMessages = await Context.Message.Channel.GetMessagesAsync(Count + 1).FlattenAsync();
 
-            await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(RetrievedMessages);
+            await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(retrievedMessages);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            IUserMessage SuccessMessage = await ReplyAsync($":white_check_mark: Cleared `{Count}` message/s.", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            IUserMessage successMessage = await ReplyAsync($":white_check_mark: Cleared `{Count}` message/s.", allowedMentions: allowedMentions, messageReference: messageReference);
 
             await Task.Delay(3000);
-            await SuccessMessage.DeleteAsync();
+            await successMessage.DeleteAsync();
 
             return ExecutionResult.Succesful();
         }

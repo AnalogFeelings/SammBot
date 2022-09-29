@@ -26,7 +26,7 @@ namespace SammBotNET.Modules
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetCatAsync()
         {
-            CatImageSearchParams SearchParameters = new CatImageSearchParams()
+            CatImageSearchParams searchParameters = new CatImageSearchParams()
             {
                 has_breeds = true,
                 mime_types = "jpg,png,gif",
@@ -34,16 +34,16 @@ namespace SammBotNET.Modules
                 limit = 1
             };
 
-            List<CatImage> RetrievedImages = await RandomService.CatRequester.GetImageAsync(SearchParameters);
+            List<CatImage> retrievedImages = await RandomService.CatRequester.GetImageAsync(searchParameters);
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: ":warning: **The breed information has been " +
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: ":warning: **The breed information has been " +
                 "temporarily removed due to a bug in the Cat API.**").ChangeTitle("Random Cat");
 
-            ReplyEmbed.ImageUrl = RetrievedImages[0].Url;
+            replyEmbed.ImageUrl = retrievedImages[0].Url;
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -55,7 +55,7 @@ namespace SammBotNET.Modules
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetDogAsync()
         {
-            DogImageSearchParams SearchParameters = new DogImageSearchParams()
+            DogImageSearchParams searchParameters = new DogImageSearchParams()
             {
                 has_breeds = true,
                 mime_types = "jpg,png,gif",
@@ -64,16 +64,16 @@ namespace SammBotNET.Modules
                 limit = 1
             };
 
-            List<DogImage> RetrievedImages = await RandomService.DogRequester.GetImageAsync(SearchParameters);
+            List<DogImage> retrievedImages = await RandomService.DogRequester.GetImageAsync(searchParameters);
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"**__Breed__**: {RetrievedImages[0].Breeds[0].Name}" +
-                    $"\n**__Temperament__**: {RetrievedImages[0].Breeds[0].Temperament}").ChangeTitle("Random Dog");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"**__Breed__**: {retrievedImages[0].Breeds[0].Name}" +
+                    $"\n**__Temperament__**: {retrievedImages[0].Breeds[0].Temperament}").ChangeTitle("Random Dog");
 
-            ReplyEmbed.ImageUrl = RetrievedImages[0].Url;
+            replyEmbed.ImageUrl = retrievedImages[0].Url;
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -84,21 +84,21 @@ namespace SammBotNET.Modules
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetFoxAsync()
         {
-            string JsonReply = string.Empty;
+            string jsonReply = string.Empty;
 
-            using (HttpResponseMessage HttpResponse = await RandomService.RandomClient.GetAsync("https://randomfox.ca/floof/"))
+            using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://randomfox.ca/floof/"))
             {
-                JsonReply = await HttpResponse.Content.ReadAsStringAsync();
+                jsonReply = await responseMessage.Content.ReadAsStringAsync();
             }
 
-            FoxImage RepliedImage = JsonConvert.DeserializeObject<FoxImage>(JsonReply);
+            FoxImage repliedImage = JsonConvert.DeserializeObject<FoxImage>(jsonReply);
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Fox");
-            ReplyEmbed.ImageUrl = RepliedImage.ImageUrl;
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Fox");
+            replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -109,21 +109,21 @@ namespace SammBotNET.Modules
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetDuckAsync()
         {
-            string JsonReply = string.Empty;
+            string jsonReply = string.Empty;
 
-            using (HttpResponseMessage HttpResponse = await RandomService.RandomClient.GetAsync("https://random-d.uk/api/v2/random"))
+            using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://random-d.uk/api/v2/random"))
             {
-                JsonReply = await HttpResponse.Content.ReadAsStringAsync();
+                jsonReply = await responseMessage.Content.ReadAsStringAsync();
             }
 
-            DuckImage RepliedImage = JsonConvert.DeserializeObject<DuckImage>(JsonReply);
+            DuckImage repliedImage = JsonConvert.DeserializeObject<DuckImage>(jsonReply);
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Duck");
-            ReplyEmbed.ImageUrl = RepliedImage.ImageUrl;
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Duck");
+            replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -134,15 +134,15 @@ namespace SammBotNET.Modules
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetSCPAsync()
         {
-            int MaxNumber = 6999;
-            int ChosenNumber = Random.Shared.Next(MaxNumber + 1);
+            int maxNumber = 6999;
+            int chosenNumber = Random.Shared.Next(maxNumber + 1);
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: "https://scp-wiki.wikidot.com/scp-" + ChosenNumber.ToString("D3"))
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: "https://scp-wiki.wikidot.com/scp-" + chosenNumber.ToString("D3"))
                                                         .ChangeTitle("Random SCP");
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }

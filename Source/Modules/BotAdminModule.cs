@@ -32,9 +32,9 @@ namespace SammBotNET.Modules
             if (AdminService.ChannelId == 0 || AdminService.GuildId == 0)
                 return ExecutionResult.FromError("Please set a guild and channel ID beforehand!");
 
-            SocketTextChannel TargetChannel = Context.Client.GetGuild(AdminService.GuildId).GetTextChannel(AdminService.ChannelId);
+            SocketTextChannel targetChannel = Context.Client.GetGuild(AdminService.GuildId).GetTextChannel(AdminService.ChannelId);
 
-            using (TargetChannel.EnterTypingState()) await TargetChannel.SendMessageAsync(Message);
+            using (targetChannel.EnterTypingState()) await targetChannel.SendMessageAsync(Message);
 
             return ExecutionResult.Succesful();
         }
@@ -53,11 +53,11 @@ namespace SammBotNET.Modules
             AdminService.ChannelId = Channel;
             AdminService.GuildId = Guild;
 
-            SocketGuild TargetGuild = Context.Client.GetGuild(Guild);
+            SocketGuild targetGuild = Context.Client.GetGuild(Guild);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"Success. Set guild to `{TargetGuild.Name}` and channel to `{TargetGuild.GetTextChannel(Channel).Name}`.", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"Success. Set guild to `{targetGuild.Name}` and channel to `{targetGuild.GetTextChannel(Channel).Name}`.", allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -69,21 +69,21 @@ namespace SammBotNET.Modules
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> ServersAsync()
         {
-            string BuiltMessage = "I am invited in the following servers:\n";
-            string CodeBlock = string.Empty;
+            string builtMessage = "I am invited in the following servers:\n";
+            string codeBlock = string.Empty;
 
             int i = 1;
-            foreach (SocketGuild TargetGuild in Context.Client.Guilds)
+            foreach (SocketGuild targetGuild in Context.Client.Guilds)
             {
-                CodeBlock += $"{i}. {TargetGuild.Name} (ID {TargetGuild.Id})\n";
+                codeBlock += $"{i}. {targetGuild.Name} (ID {targetGuild.Id})\n";
                 i++;
             }
 
-            BuiltMessage += Format.Code(CodeBlock);
+            builtMessage += Format.Code(codeBlock);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(BuiltMessage, allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(builtMessage, allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -95,9 +95,9 @@ namespace SammBotNET.Modules
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> ShutdownAsync()
         {
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"{Settings.BOT_NAME} will shut down.", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"{Settings.BOT_NAME} will shut down.", allowedMentions: allowedMentions, messageReference: messageReference);
 
             Logger.Log($"{Settings.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
 
@@ -113,9 +113,9 @@ namespace SammBotNET.Modules
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> RestartAsync()
         {
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: allowedMentions, messageReference: messageReference);
 
             Logger.Log($"{Settings.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
 
@@ -131,16 +131,16 @@ namespace SammBotNET.Modules
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> LeaveAsync([Summary("The ID of the guild you want the bot to leave.")] ulong ServerId)
         {
-            SocketGuild TargetGuild = Context.Client.GetGuild(ServerId);
-            if (TargetGuild == null)
+            SocketGuild targetGuild = Context.Client.GetGuild(ServerId);
+            if (targetGuild == null)
                 return ExecutionResult.FromError("I am not currently in this guild!");
 
-            string GuildName = TargetGuild.Name;
-            await TargetGuild.LeaveAsync();
+            string targetGuildName = targetGuild.Name;
+            await targetGuild.LeaveAsync();
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"Left the server \"{GuildName}\".", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"Left the server \"{targetGuildName}\".", allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -153,13 +153,13 @@ namespace SammBotNET.Modules
                                                         [Summary("The command you want to execute.")] [Remainder] string Command)
         {
             //LORD HAVE MERCY
-            SocketMessage SourceMessage = Context.Message as SocketMessage;
-            FieldInfo AuthorField = typeof(SocketMessage).GetField("<Author>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-            FieldInfo ContentField = typeof(SocketMessage).GetField("<Content>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-            AuthorField.SetValue(SourceMessage, User);
-            ContentField.SetValue(SourceMessage, Command);
+            SocketMessage sourceMessage = Context.Message as SocketMessage;
+            FieldInfo authorField = typeof(SocketMessage).GetField("<Author>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo contentField = typeof(SocketMessage).GetField("<Content>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
+            authorField.SetValue(sourceMessage, User);
+            contentField.SetValue(sourceMessage, Command);
 
-            await CommandHandler.HandleCommandAsync(SourceMessage);
+            await CommandHandler.HandleCommandAsync(sourceMessage);
 
             return ExecutionResult.Succesful();
         }
@@ -171,24 +171,24 @@ namespace SammBotNET.Modules
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> ListConfigAsync([Summary("Set to **true** to list non-modifiable settings.")] bool Override = false)
         {
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
 
-            List<PropertyInfo> Properties = typeof(JsonConfig).GetProperties()
+            List<PropertyInfo> properties = typeof(JsonConfig).GetProperties()
                 .Where(x => !x.PropertyType.IsGenericType &&
                         x.Name != "UrlRegex" &&
                         x.Name != "BotToken").ToList();
 
             if (!Override)
-                Properties = Properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
+                properties = properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
 
-            foreach (PropertyInfo Property in Properties)
+            foreach (PropertyInfo property in properties)
             {
-                ReplyEmbed.AddField(Property.Name, Property.GetValue(Settings.Instance.LoadedConfig, null));
+                replyEmbed.AddField(property.Name, property.GetValue(Settings.Instance.LoadedConfig, null));
             }
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -202,35 +202,35 @@ namespace SammBotNET.Modules
                                                         [Summary("The new value of the setting.")] string VarValue,
                                                         [Summary("Set to **true** to restart the bot afterwards. Needed for non-modifiable settings.")] bool RestartBot = false)
         {
-            PropertyInfo RetrievedVariable = typeof(JsonConfig).GetProperty(VarName);
+            PropertyInfo retrievedVariable = typeof(JsonConfig).GetProperty(VarName);
 
-            if (RetrievedVariable == null)
+            if (retrievedVariable == null)
                 return ExecutionResult.FromError($"{VarName} does not exist!");
 
-            if (RetrievedVariable.PropertyType is IList)
+            if (retrievedVariable.PropertyType is IList)
                 return ExecutionResult.FromError($"{VarName} is a list variable!");
 
-            if (RetrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
+            if (retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
                 return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
                     $"Please pass `true` to the `RestartBot` parameter.");
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
             AdminService.ChangingConfig = true;
 
-            RetrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, RetrievedVariable.PropertyType));
+            retrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
 
-            object NewValue = RetrievedVariable.GetValue(Settings.Instance.LoadedConfig);
+            object newValue = retrievedVariable.GetValue(Settings.Instance.LoadedConfig);
 
-            await ReplyAsync($"Set variable \"{VarName}\" to `{NewValue.ToString().Truncate(128)}` succesfully.", allowedMentions: AllowedMentions, messageReference: Reference);
+            await ReplyAsync($"Set variable \"{VarName}\" to `{newValue.ToString().Truncate(128)}` succesfully.", allowedMentions: allowedMentions, messageReference: messageReference);
 
             await File.WriteAllTextAsync(Settings.CONFIG_FILE,
                 JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
             if (RestartBot)
             {
-                await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: AllowedMentions, messageReference: Reference);
+                await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: allowedMentions, messageReference: messageReference);
                 Settings.RestartBot();
             }
 

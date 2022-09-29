@@ -21,12 +21,12 @@ namespace SammBotNET.Modules
         public Logger Logger { get; set; }
         public FunService FunService { get; set; }
 
-        private readonly int[] ShipSegments = new int[10]
+        private readonly int[] _ShipSegments = new int[10]
         {
             10, 20, 30, 40, 50, 60, 70, 80, 90, 100
         };
 
-        private const string TWEMOJI_ASSETS = "https://raw.githubusercontent.com/twitter/twemoji/ad3d3d669bb3697946577247ebb15818f09c6c91/assets/72x72/";
+        private const string _TWEMOJI_ASSETS = "https://raw.githubusercontent.com/twitter/twemoji/ad3d3d669bb3697946577247ebb15818f09c6c91/assets/72x72/";
 
         [Command("8ball")]
         [Alias("ask", "8")]
@@ -35,15 +35,15 @@ namespace SammBotNET.Modules
         [RateLimit(2, 1)]
         public async Task<RuntimeResult> MagicBallAsync([Summary("The question you want to ask to the magic 8-ball.")] [Remainder] string Question)
         {
-            string ChosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
+            string chosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            IUserMessage ReplyMessage = await ReplyAsync(":8ball: Asking the magic 8-ball...", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            IUserMessage replyMessage = await ReplyAsync(":8ball: Asking the magic 8-ball...", allowedMentions: allowedMentions, messageReference: messageReference);
 
             using (Context.Channel.EnterTypingState()) await Task.Delay(2000);
 
-            await ReplyMessage.ModifyAsync(x => x.Content = $"The magic 8-ball has answered!\n`{ChosenAnswer}`");
+            await replyMessage.ModifyAsync(x => x.Content = $"The magic 8-ball has answered!\n`{chosenAnswer}`");
 
             return ExecutionResult.Succesful();
         }
@@ -59,16 +59,16 @@ namespace SammBotNET.Modules
         [RateLimit(6, 1)]
         public async Task<RuntimeResult> CreateActivityAsync([Summary("The name of the activity you want to start.")] DefaultApplications ActivityType)
         {
-            SocketGuildUser Author = Context.User as SocketGuildUser;
-            if (Author.VoiceChannel == null)
+            SocketGuildUser author = Context.User as SocketGuildUser;
+            if (author.VoiceChannel == null)
                 return ExecutionResult.FromError("You must be in a voice channel to create an activity!");
 
-            IInviteMetadata Invite = await Author.VoiceChannel.CreateInviteToApplicationAsync(ActivityType);
+            IInviteMetadata invite = await author.VoiceChannel.CreateInviteToApplicationAsync(ActivityType);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
             await ReplyAsync($":warning: **Most activities only work if the server has a Nitro Boost level of at least 1.**\n\n" +
-                $"{Invite.Url}", allowedMentions: AllowedMentions, messageReference: Reference);
+                $"{invite.Url}", allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -83,15 +83,15 @@ namespace SammBotNET.Modules
             if (FaceCount < 3)
                 return ExecutionResult.FromError("The dice must have at least 3 faces!");
 
-            int ChosenNumber = Random.Shared.Next(1, FaceCount + 1);
+            int chosenNumber = Random.Shared.Next(1, FaceCount + 1);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            IUserMessage ReplyMessage = await ReplyAsync(":game_die: Rolling the dice...", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            IUserMessage replyMessage = await ReplyAsync(":game_die: Rolling the dice...", allowedMentions: allowedMentions, messageReference: messageReference);
 
             using (Context.Channel.EnterTypingState()) await Task.Delay(1500);
 
-            await ReplyMessage.ModifyAsync(x => x.Content = $"The dice landed on **{ChosenNumber}**!");
+            await replyMessage.ModifyAsync(x => x.Content = $"The dice landed on **{chosenNumber}**!");
 
             return ExecutionResult.Succesful();
         }
@@ -104,13 +104,13 @@ namespace SammBotNET.Modules
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> HugUserAsync([Summary("The user you want to hug.")] IUser User)
         {
-            string ChosenKaomoji = Settings.Instance.LoadedConfig.HugKaomojis.PickRandom();
+            string chosenKaomoji = Settings.Instance.LoadedConfig.HugKaomojis.PickRandom();
 
-            SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
+            SocketGuildUser authorGuildUser = Context.Message.Author as SocketGuildUser;
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"Warm hugs from **{AuthorGuildUser.GetUsernameOrNick()}**!\n{ChosenKaomoji} <@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"Warm hugs from **{authorGuildUser.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>", allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -122,11 +122,11 @@ namespace SammBotNET.Modules
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> PatUserAsync([Summary("The user you want to pat.")] IUser User)
         {
-            SocketGuildUser AuthorGuildUser = Context.Message.Author as SocketGuildUser;
+            SocketGuildUser authorGuildUser = Context.Message.Author as SocketGuildUser;
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"Pats from **{AuthorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"Pats from **{authorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -139,14 +139,14 @@ namespace SammBotNET.Modules
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> DoxUserAsync([Summary("The user you want to \"dox\".")] SocketGuildUser User)
         {
-            int FirstSegment = Random.Shared.Next(0, 256);
-            int SecondSegment = Random.Shared.Next(0, 256);
-            int ThirdSegment = Random.Shared.Next(0, 256);
-            int FourthSegment = Random.Shared.Next(0, 256);
+            int firstSegment = Random.Shared.Next(0, 256);
+            int secondSegment = Random.Shared.Next(0, 256);
+            int thirdSegment = Random.Shared.Next(0, 256);
+            int fourthSegment = Random.Shared.Next(0, 256);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"**{User.GetUsernameOrNick()}**'s IPv4 address: `{FirstSegment}.{SecondSegment}.{ThirdSegment}.{FourthSegment}`", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"**{User.GetUsernameOrNick()}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`", allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -159,31 +159,31 @@ namespace SammBotNET.Modules
         [RateLimit(4, 1)]
         public async Task<RuntimeResult> FirstDegreeMurderAsync([Summary("The user you want to kill.")] SocketGuildUser TargetUser)
         {
-            SocketGuildUser AuthorUser = Context.Message.Author as SocketGuildUser;
+            SocketGuildUser authorUser = Context.Message.Author as SocketGuildUser;
 
-            Pronoun AuthorPronouns = await AuthorUser.GetUserPronouns();
-            Pronoun TargetPronouns = await TargetUser.GetUserPronouns();
+            Pronoun authorPronouns = await authorUser.GetUserPronouns();
+            Pronoun targetPronouns = await TargetUser.GetUserPronouns();
 
-            string ChosenMessage = Settings.Instance.LoadedConfig.KillMessages.PickRandom();
-            ChosenMessage = ChosenMessage.Replace("{Murderer}", $"**{AuthorUser.GetUsernameOrNick()}**");
-            ChosenMessage = ChosenMessage.Replace("{mPrnSub}", AuthorPronouns.Subject);
-            ChosenMessage = ChosenMessage.Replace("{mPrnObj}", AuthorPronouns.Object);
-            ChosenMessage = ChosenMessage.Replace("{mPrnDepPos}", AuthorPronouns.DependentPossessive);
-            ChosenMessage = ChosenMessage.Replace("{mPrnIndepPos}", AuthorPronouns.IndependentPossessive);
-            ChosenMessage = ChosenMessage.Replace("{mPrnRefSing}", AuthorPronouns.ReflexiveSingular);
-            ChosenMessage = ChosenMessage.Replace("{mPrnRefPlur}", AuthorPronouns.ReflexivePlural);
+            string chosenMessage = Settings.Instance.LoadedConfig.KillMessages.PickRandom();
+            chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorUser.GetUsernameOrNick()}**");
+            chosenMessage = chosenMessage.Replace("{mPrnSub}", authorPronouns.Subject);
+            chosenMessage = chosenMessage.Replace("{mPrnObj}", authorPronouns.Object);
+            chosenMessage = chosenMessage.Replace("{mPrnDepPos}", authorPronouns.DependentPossessive);
+            chosenMessage = chosenMessage.Replace("{mPrnIndepPos}", authorPronouns.IndependentPossessive);
+            chosenMessage = chosenMessage.Replace("{mPrnRefSing}", authorPronouns.ReflexiveSingular);
+            chosenMessage = chosenMessage.Replace("{mPrnRefPlur}", authorPronouns.ReflexivePlural);
 
-            ChosenMessage = ChosenMessage.Replace("{Victim}", $"**{TargetUser.GetUsernameOrNick()}**");
-            ChosenMessage = ChosenMessage.Replace("{vPrnSub}", TargetPronouns.Subject);
-            ChosenMessage = ChosenMessage.Replace("{vPrnObj}", TargetPronouns.Object);
-            ChosenMessage = ChosenMessage.Replace("{vPrnDepPos}", TargetPronouns.DependentPossessive);
-            ChosenMessage = ChosenMessage.Replace("{vPrnIndepPos}", TargetPronouns.IndependentPossessive);
-            ChosenMessage = ChosenMessage.Replace("{vPrnRefSing}", TargetPronouns.ReflexiveSingular);
-            ChosenMessage = ChosenMessage.Replace("{vPrnRefPlur}", TargetPronouns.ReflexivePlural);
+            chosenMessage = chosenMessage.Replace("{Victim}", $"**{TargetUser.GetUsernameOrNick()}**");
+            chosenMessage = chosenMessage.Replace("{vPrnSub}", targetPronouns.Subject);
+            chosenMessage = chosenMessage.Replace("{vPrnObj}", targetPronouns.Object);
+            chosenMessage = chosenMessage.Replace("{vPrnDepPos}", targetPronouns.DependentPossessive);
+            chosenMessage = chosenMessage.Replace("{vPrnIndepPos}", targetPronouns.IndependentPossessive);
+            chosenMessage = chosenMessage.Replace("{vPrnRefSing}", targetPronouns.ReflexiveSingular);
+            chosenMessage = chosenMessage.Replace("{vPrnRefPlur}", targetPronouns.ReflexivePlural);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(ChosenMessage, allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(chosenMessage, allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -209,172 +209,172 @@ namespace SammBotNET.Modules
                 return ExecutionResult.FromError("You can't ship yourself!");
 
             //Get random ship percentage and text.
-            int Percentage = Random.Shared.Next(0, 101);
-            string PercentageText = string.Empty;
-            string PercentageEmoji = string.Empty;
+            int percentage = Random.Shared.Next(0, 101);
+            string percentageText = string.Empty;
+            string percentageEmoji = string.Empty;
 
-            switch (Percentage)
+            switch (percentage)
             {
                 case 0:
-                    PercentageText = "Incompatible!";
-                    PercentageEmoji = "❌";
+                    percentageText = "Incompatible!";
+                    percentageEmoji = "❌";
                     break;
                 case > 0 and < 25:
-                    PercentageText = "Awful!";
-                    PercentageEmoji = "💔";
+                    percentageText = "Awful!";
+                    percentageEmoji = "💔";
                     break;
                 case >= 25 and < 50:
-                    PercentageText = "Not Bad!";
-                    PercentageEmoji = "❤";
+                    percentageText = "Not Bad!";
+                    percentageEmoji = "❤";
                     break;
                 case >= 50 and < 75:
-                    PercentageText = "Decent!";
-                    PercentageEmoji = "💝";
+                    percentageText = "Decent!";
+                    percentageEmoji = "💝";
                     break;
                 case >= 75 and < 85:
-                    PercentageText = "True Love!";
-                    PercentageEmoji = "💖";
+                    percentageText = "True Love!";
+                    percentageEmoji = "💖";
                     break;
                 case >= 85 and < 100:
-                    PercentageText = "AMAZING!";
-                    PercentageEmoji = "💛";
+                    percentageText = "AMAZING!";
+                    percentageEmoji = "💛";
                     break;
                 case 100:
-                    PercentageText = "INSANE!";
-                    PercentageEmoji = "💗";
+                    percentageText = "INSANE!";
+                    percentageEmoji = "💗";
                     break;
             }
 
             //Split usernames into halves, then sanitize them.
-            string FirstUserName = FirstUser.GetUsernameOrNick();
-            string SecondUserName = SecondUser.GetUsernameOrNick();
+            string firstUserName = FirstUser.GetUsernameOrNick();
+            string secondUserName = SecondUser.GetUsernameOrNick();
 
-            string NameFirstHalf = string.Empty;
-            string NameSecondHalf = string.Empty;
+            string nameFirstHalf = string.Empty;
+            string nameSecondHalf = string.Empty;
 
             //Do the actual splitting.
-            if (FirstUserName.Length != 1)
-                NameFirstHalf = FirstUserName.Substring(0, FirstUserName.Length / 2);
-            if (SecondUserName.Length != 1)
-                NameSecondHalf = SecondUserName.Substring(SecondUserName.Length / 2, (int)Math.Ceiling(SecondUserName.Length / 2f));
+            if (firstUserName.Length != 1)
+                nameFirstHalf = firstUserName.Substring(0, firstUserName.Length / 2);
+            if (secondUserName.Length != 1)
+                nameSecondHalf = secondUserName.Substring(secondUserName.Length / 2, (int)Math.Ceiling(secondUserName.Length / 2f));
 
             //Sanitize splitted halves.
-            NameFirstHalf = Format.Sanitize(NameFirstHalf);
-            NameSecondHalf = Format.Sanitize(NameSecondHalf);
+            nameFirstHalf = Format.Sanitize(nameFirstHalf);
+            nameSecondHalf = Format.Sanitize(nameSecondHalf);
 
             //Sanitize usernames now, if we do it earlier, it would mess up the splitting code.
-            FirstUserName = Format.Sanitize(FirstUserName);
-            SecondUserName = Format.Sanitize(SecondUserName);
+            firstUserName = Format.Sanitize(firstUserName);
+            secondUserName = Format.Sanitize(secondUserName);
 
             //Fill up ship progress bar.
-            string ProgressBar = string.Empty;
-            for (int i = 0; i < ShipSegments.Length; i++)
+            string progressBar = string.Empty;
+            for (int i = 0; i < _ShipSegments.Length; i++)
             {
-                if (Percentage < ShipSegments[i])
+                if (percentage < _ShipSegments[i])
                 {
                     if (i == 0)
-                        ProgressBar += Settings.Instance.LoadedConfig.ShipBarStartEmpty;
-                    else if (i == ShipSegments.Length - 1)
-                        ProgressBar += Settings.Instance.LoadedConfig.ShipBarEndEmpty;
+                        progressBar += Settings.Instance.LoadedConfig.ShipBarStartEmpty;
+                    else if (i == _ShipSegments.Length - 1)
+                        progressBar += Settings.Instance.LoadedConfig.ShipBarEndEmpty;
                     else
-                        ProgressBar += Settings.Instance.LoadedConfig.ShipBarHalfEmpty;
+                        progressBar += Settings.Instance.LoadedConfig.ShipBarHalfEmpty;
                 }
                 else
                 {
                     if (i == 0)
-                        ProgressBar += Settings.Instance.LoadedConfig.ShipBarStartFull;
-                    else if (i == ShipSegments.Length - 1)
-                        ProgressBar += Settings.Instance.LoadedConfig.ShipBarEndFull;
+                        progressBar += Settings.Instance.LoadedConfig.ShipBarStartFull;
+                    else if (i == _ShipSegments.Length - 1)
+                        progressBar += Settings.Instance.LoadedConfig.ShipBarEndFull;
                     else
-                        ProgressBar += Settings.Instance.LoadedConfig.ShipBarHalfFull;
+                        progressBar += Settings.Instance.LoadedConfig.ShipBarHalfFull;
                 }
             }
 
             //Twemoji's repository expects filenames in big endian UTF-32, with no leading zeroes AND in PNG format.
-            Encoding EmojiEncoding = new UTF32Encoding(true, false);
-            string EmojiUrl = TWEMOJI_ASSETS + Convert.ToHexString(EmojiEncoding.GetBytes(PercentageEmoji)).TrimStart('0').ToLower() + ".png";
+            Encoding emojiEncoding = new UTF32Encoding(true, false);
+            string emojiUrl = _TWEMOJI_ASSETS + Convert.ToHexString(emojiEncoding.GetBytes(percentageEmoji)).TrimStart('0').ToLower() + ".png";
 
             //Image generation code is so fucking ugly.
             //Buckle up, this is a bumpy ride.
 
             //Create image resolution information.
-            SKImageInfo ImageInfo = new SKImageInfo(384, 192);
+            SKImageInfo imageInfo = new SKImageInfo(384, 192);
 
             //Download their profile pictures and store into memory stream.
             //Also download the emoji from Twemoji's GitHub.
-            using (MemoryStream FirstUserAvatarStream = await DownloadToMemoryStream(FirstUser.GetGuildGlobalOrDefaultAvatar(2048)))
-            using (MemoryStream SecondUserAvatarStream = await DownloadToMemoryStream(SecondUser.GetGuildGlobalOrDefaultAvatar(2048)))
-            using (MemoryStream EmojiStream = await DownloadToMemoryStream(EmojiUrl))
+            using (MemoryStream firstUserAvatarStream = await DownloadToMemoryStream(FirstUser.GetGuildGlobalOrDefaultAvatar(2048)))
+            using (MemoryStream secondUserAvatarStream = await DownloadToMemoryStream(SecondUser.GetGuildGlobalOrDefaultAvatar(2048)))
+            using (MemoryStream emojiStream = await DownloadToMemoryStream(emojiUrl))
 
             //Create the actual drawing surface.
-            using (SKSurface Surface = SKSurface.Create(ImageInfo))
+            using (SKSurface surface = SKSurface.Create(imageInfo))
             {
-                Surface.Canvas.Clear(SKColors.Transparent);
+                surface.Canvas.Clear(SKColors.Transparent);
 
-                using (SKBitmap FirstUserAvatar = SKBitmap.Decode(FirstUserAvatarStream))
-                using (SKBitmap SecondUserAvatar = SKBitmap.Decode(SecondUserAvatarStream))
-                using (SKBitmap EmojiBitmap = SKBitmap.Decode(EmojiStream))
-                using (SKPath LoversClipPath = new SKPath())
+                using (SKBitmap firstUserAvatar = SKBitmap.Decode(firstUserAvatarStream))
+                using (SKBitmap secondUserAvatar = SKBitmap.Decode(secondUserAvatarStream))
+                using (SKBitmap emojiBitmap = SKBitmap.Decode(emojiStream))
+                using (SKPath loversClipPath = new SKPath())
                 {
                     //Add the two "Windows" to the clip path. They have their origin in the center, not the top left corner.
-                    LoversClipPath.AddCircle(ImageInfo.Width / 4, ImageInfo.Height / 2, ImageInfo.Height / 2);
-                    LoversClipPath.AddCircle((int)(ImageInfo.Width / 1.3333f), ImageInfo.Height / 2, ImageInfo.Height / 2);
+                    loversClipPath.AddCircle(imageInfo.Width / 4, imageInfo.Height / 2, imageInfo.Height / 2);
+                    loversClipPath.AddCircle((int)(imageInfo.Width / 1.3333f), imageInfo.Height / 2, imageInfo.Height / 2);
 
                     //Save canvas state.
-                    Surface.Canvas.Save();
+                    surface.Canvas.Save();
 
                     //Set clip path and draw the 2 profile pictures.
-                    Surface.Canvas.ClipPath(LoversClipPath, SKClipOperation.Intersect, true);
-                    Surface.Canvas.DrawBitmap(FirstUserAvatar, new SKRect(0, 0, ImageInfo.Width / 2, ImageInfo.Height));
-                    Surface.Canvas.DrawBitmap(SecondUserAvatar, new SKRect(ImageInfo.Width / 2, 0, ImageInfo.Width, ImageInfo.Height));
+                    surface.Canvas.ClipPath(loversClipPath, SKClipOperation.Intersect, true);
+                    surface.Canvas.DrawBitmap(firstUserAvatar, new SKRect(0, 0, imageInfo.Width / 2, imageInfo.Height));
+                    surface.Canvas.DrawBitmap(secondUserAvatar, new SKRect(imageInfo.Width / 2, 0, imageInfo.Width, imageInfo.Height));
 
                     //Restore the canvas state, currently the only way to remove a clip path.
-                    Surface.Canvas.Restore();
+                    surface.Canvas.Restore();
 
                     //Use a custom filter with a drop shadow effect.
-                    using (SKPaint EmojiPaint = new SKPaint())
+                    using (SKPaint emojiPaint = new SKPaint())
                     {
-                        EmojiPaint.IsAntialias = true;
-                        EmojiPaint.FilterQuality = SKFilterQuality.High;
-                        EmojiPaint.ImageFilter = SKImageFilter.CreateDropShadow(0, 0, 5, 5, SKColors.Black.WithAlpha(192));
+                        emojiPaint.IsAntialias = true;
+                        emojiPaint.FilterQuality = SKFilterQuality.High;
+                        emojiPaint.ImageFilter = SKImageFilter.CreateDropShadow(0, 0, 5, 5, SKColors.Black.WithAlpha(192));
 
                         //Draw the emoji in the middle of the image, do some math trickery to get it perfectly centered
                         //since bitmaps have their origin in their top left corner.
-                        int EmojiSize = 32;
-                        Surface.Canvas.DrawBitmap(EmojiBitmap, new SKRect(ImageInfo.Width / 2 - EmojiSize, ImageInfo.Height / 2 - EmojiSize,
-                            ImageInfo.Width / 2 + EmojiSize, ImageInfo.Height / 2 + EmojiSize), EmojiPaint);
+                        int emojiSize = 32;
+                        surface.Canvas.DrawBitmap(emojiBitmap, new SKRect(imageInfo.Width / 2 - emojiSize, imageInfo.Height / 2 - emojiSize,
+                            imageInfo.Width / 2 + emojiSize, imageInfo.Height / 2 + emojiSize), emojiPaint);
                     }
                 }
 
                 //Take snapshot, encode it into PNG, store it into MemoryStream to be uploaded to Discord.
-                using (SKImage SurfaceSnapshot = Surface.Snapshot())
-                using (SKData ImageData = SurfaceSnapshot.Encode(SKEncodedImageFormat.Png, 100))
-                using (MemoryStream FinalImageStream = new MemoryStream((int)ImageData.Size))
+                using (SKImage surfaceSnapshot = surface.Snapshot())
+                using (SKData imageData = surfaceSnapshot.Encode(SKEncodedImageFormat.Png, 100))
+                using (MemoryStream finalImageStream = new MemoryStream((int)imageData.Size))
                 {
                     //Save the actual image into the stream.
-                    ImageData.SaveTo(FinalImageStream);
+                    imageData.SaveTo(finalImageStream);
 
                     //Build the message itself.
                     //Start by creating an embed with no title and the color of the red heart emoji.
-                    EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).WithTitle(string.Empty).WithColor(new Color(221, 46, 68));
+                    EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).WithTitle(string.Empty).WithColor(new Color(221, 46, 68));
 
                     //Tell Discord that the image will be uploaded from the local storage.
-                    ReplyEmbed.ImageUrl = $"attachment://shipImage.png";
+                    replyEmbed.ImageUrl = $"attachment://shipImage.png";
 
-                    ReplyEmbed.Description += $":twisted_rightwards_arrows:  **Ship Name**: {NameFirstHalf}{NameSecondHalf}\n";
-                    ReplyEmbed.Description += $"{ProgressBar} **{Percentage}%** - {PercentageEmoji} {PercentageText}";
+                    replyEmbed.Description += $":twisted_rightwards_arrows:  **Ship Name**: {nameFirstHalf}{nameSecondHalf}\n";
+                    replyEmbed.Description += $"{progressBar} **{percentage}%** - {percentageEmoji} {percentageText}";
 
                     //Set the raw text outisde the embed.
-                    string PreEmbedText = ":cupid: **THE SHIP-O-MATIC 5000** :cupid:\n";
-                    PreEmbedText += $":small_blue_diamond: {FirstUserName}\n";
-                    PreEmbedText += $":small_blue_diamond: {SecondUserName}\n";
+                    string preEmbedText = ":cupid: **THE SHIP-O-MATIC 5000** :cupid:\n";
+                    preEmbedText += $":small_blue_diamond: {firstUserName}\n";
+                    preEmbedText += $":small_blue_diamond: {secondUserName}\n";
 
-                    MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                    AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                    MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                    AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
                     //Use SendFileAsync to be able to upload the stream to Discord's servers. The file name has to be the same as the one set in ImageUrl.
-                    await Context.Channel.SendFileAsync(FinalImageStream, "shipImage.png", PreEmbedText,
-                        embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+                    await Context.Channel.SendFileAsync(finalImageStream, "shipImage.png", preEmbedText,
+                        embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
                 }
             }
 
@@ -383,9 +383,9 @@ namespace SammBotNET.Modules
 
         public async Task<MemoryStream> DownloadToMemoryStream(string Url)
         {
-            byte[] RawData = await FunService.FunHttpClient.GetByteArrayAsync(Url);
+            byte[] rawData = await FunService.FunHttpClient.GetByteArrayAsync(Url);
 
-            return new MemoryStream(RawData);
+            return new MemoryStream(rawData);
         }
 
         [Command("urban")]
@@ -394,49 +394,49 @@ namespace SammBotNET.Modules
         [RateLimit(6, 1)]
         public async Task<RuntimeResult> UrbanAsync([Summary("The term you want to search.")] [Remainder] string Term)
         {
-            UrbanSearchParams SearchParameters = new()
+            UrbanSearchParams searchParameters = new()
             {
                 term = Term
             };
 
-            UrbanDefinitionList UrbanDefinitions = null;
-            using (Context.Channel.EnterTypingState()) UrbanDefinitions = await GetUrbanDefinitionAsync(SearchParameters);
+            UrbanDefinitionList urbanDefinitions = null;
+            using (Context.Channel.EnterTypingState()) urbanDefinitions = await GetUrbanDefinitionAsync(searchParameters);
 
-            if (UrbanDefinitions == null || UrbanDefinitions.List.Count == 0)
+            if (urbanDefinitions == null || urbanDefinitions.List.Count == 0)
                 return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{Term}\"!");
 
-            UrbanDefinition ChosenDefinition = UrbanDefinitions.List.First();
+            UrbanDefinition chosenDefinition = urbanDefinitions.List.First();
 
-            string EmbedDescription = $"**Definition** : *{ChosenDefinition.Definition.Truncate(1024)}*\n\n";
-            EmbedDescription += $"**Example** : {(string.IsNullOrEmpty(ChosenDefinition.Example) ? "No Example" : ChosenDefinition.Example)}\n\n";
-            EmbedDescription += $"**Author** : {ChosenDefinition.Author}\n";
-            EmbedDescription += $"**Thumbs Up** : {ChosenDefinition.ThumbsUp}\n";
-            EmbedDescription += $"**Thumbs Down** : {ChosenDefinition.ThumbsDown}\n";
+            string embedDescription = $"**Definition** : *{chosenDefinition.Definition.Truncate(1024)}*\n\n";
+            embedDescription += $"**Example** : {(string.IsNullOrEmpty(chosenDefinition.Example) ? "No Example" : chosenDefinition.Example)}\n\n";
+            embedDescription += $"**Author** : {chosenDefinition.Author}\n";
+            embedDescription += $"**Thumbs Up** : {chosenDefinition.ThumbsUp}\n";
+            embedDescription += $"**Thumbs Down** : {chosenDefinition.ThumbsDown}\n";
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: EmbedDescription);
-            ReplyEmbed.ChangeTitle($"URBAN DEFINITION OF \"{ChosenDefinition.Word}\"");
-            ReplyEmbed.WithUrl(ChosenDefinition.Permalink);
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: embedDescription);
+            replyEmbed.ChangeTitle($"URBAN DEFINITION OF \"{chosenDefinition.Word}\"");
+            replyEmbed.WithUrl(chosenDefinition.Permalink);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
 
         public async Task<UrbanDefinitionList> GetUrbanDefinitionAsync(UrbanSearchParams searchParams)
         {
-            string QueryString = searchParams.ToQueryString();
-            string JsonReply = string.Empty;
+            string queryString = searchParams.ToQueryString();
+            string jsonReply = string.Empty;
 
-            using (HttpResponseMessage Response = await FunService.FunHttpClient.GetAsync($"https://api.urbandictionary.com/v0/define?{QueryString}"))
+            using (HttpResponseMessage responseMessage = await FunService.FunHttpClient.GetAsync($"https://api.urbandictionary.com/v0/define?{queryString}"))
             {
-                JsonReply = await Response.Content.ReadAsStringAsync();
+                jsonReply = await responseMessage.Content.ReadAsStringAsync();
             }
 
-            UrbanDefinitionList DefinitionReply = JsonConvert.DeserializeObject<UrbanDefinitionList>(JsonReply);
+            UrbanDefinitionList definitionReply = JsonConvert.DeserializeObject<UrbanDefinitionList>(jsonReply);
 
-            return DefinitionReply;
+            return definitionReply;
         }
     }
 }

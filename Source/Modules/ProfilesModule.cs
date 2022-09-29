@@ -40,23 +40,24 @@ namespace SammBotNET.Modules
 
             using (Context.Channel.EnterTypingState())
             {
-                using (BotDatabase BotDatabase = new BotDatabase())
+                using (BotDatabase botDatabase = new BotDatabase())
                 {
-                    List<Pronoun> AllPronouns = await BotDatabase.Pronouns.ToListAsync();
+                    List<Pronoun> allPronouns = await botDatabase.Pronouns.ToListAsync();
 
-                    if (AllPronouns.Any(x => x.UserId == Context.Message.Author.Id))
+                    if (allPronouns.Any(x => x.UserId == Context.Message.Author.Id))
                     {
-                        Pronoun ExistingPronouns = AllPronouns.Single(y => y.UserId == Context.Message.Author.Id);
-                        ExistingPronouns.Subject = Subject;
-                        ExistingPronouns.Object = Object;
-                        ExistingPronouns.DependentPossessive = DependentPossessive;
-                        ExistingPronouns.IndependentPossessive = IndependentPossessive;
-                        ExistingPronouns.ReflexiveSingular = ReflexiveSingular;
-                        ExistingPronouns.ReflexivePlural = ReflexivePlural;
+                        Pronoun existingPronouns = allPronouns.Single(y => y.UserId == Context.Message.Author.Id);
+                        
+                        existingPronouns.Subject = Subject;
+                        existingPronouns.Object = Object;
+                        existingPronouns.DependentPossessive = DependentPossessive;
+                        existingPronouns.IndependentPossessive = IndependentPossessive;
+                        existingPronouns.ReflexiveSingular = ReflexiveSingular;
+                        existingPronouns.ReflexivePlural = ReflexivePlural;
                     }
                     else
                     {
-                        await BotDatabase.Pronouns.AddAsync(new Pronoun
+                        await botDatabase.Pronouns.AddAsync(new Pronoun
                         {
                             UserId = Context.Message.Author.Id,
                             Subject = Subject,
@@ -68,13 +69,13 @@ namespace SammBotNET.Modules
                         });
                     }
 
-                    await BotDatabase.SaveChangesAsync();
+                    await botDatabase.SaveChangesAsync();
                 }
             }
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.", allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.", allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -85,25 +86,25 @@ namespace SammBotNET.Modules
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetPronounsAsync([Summary("The user you want to get the pronouns of.")] SocketGuildUser User = null)
         {
-            SocketGuildUser TargetUser = User ?? Context.Message.Author as SocketGuildUser;
+            SocketGuildUser targetUser = User ?? Context.Message.Author as SocketGuildUser;
 
             using (Context.Channel.EnterTypingState())
             {
-                using (BotDatabase BotDatabase = new BotDatabase())
+                using (BotDatabase botDatabase = new BotDatabase())
                 {
-                    List<Pronoun> AllPronouns = await BotDatabase.Pronouns.ToListAsync();
+                    List<Pronoun> allPronouns = await botDatabase.Pronouns.ToListAsync();
 
-                    if (AllPronouns.Any(x => x.UserId == TargetUser.Id))
+                    if (allPronouns.Any(x => x.UserId == targetUser.Id))
                     {
-                        Pronoun ExistingPronouns = AllPronouns.Single(y => y.UserId == TargetUser.Id);
-                        string FormattedPronouns = $"{ExistingPronouns.Subject}/{ExistingPronouns.Object}";
+                        Pronoun existingPronouns = allPronouns.Single(y => y.UserId == targetUser.Id);
+                        string formattedPronouns = $"{existingPronouns.Subject}/{existingPronouns.Object}";
 
-                        MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                        AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                        await ReplyAsync($"**{TargetUser.GetUsernameOrNick()}**'s pronouns are: `{FormattedPronouns}`.", allowedMentions: AllowedMentions, messageReference: Reference);
+                        MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                        AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                        await ReplyAsync($"**{targetUser.GetUsernameOrNick()}**'s pronouns are: `{formattedPronouns}`.", allowedMentions: allowedMentions, messageReference: messageReference);
                     }
                     else
-                        return ExecutionResult.FromError($"The user **{TargetUser.GetUsernameOrNick()}** does not have any pronouns set!");
+                        return ExecutionResult.FromError($"The user **{targetUser.GetUsernameOrNick()}** does not have any pronouns set!");
                 }
             }
 

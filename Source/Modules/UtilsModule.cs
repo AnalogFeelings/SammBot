@@ -27,63 +27,63 @@ namespace SammBotNET.Modules
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> VisualizeColorHex([Summary("The color you want to visualize, in hexadecimal format.")] [Remainder] string HexColor)
         {
-            string Filename = "colorView.png";
-            SKColor ParsedColor;
+            string fileName = "colorView.png";
+            SKColor parsedColor;
 
-            SKImageInfo ImageInfo = new SKImageInfo(512, 512);
-            using (SKSurface Surface = SKSurface.Create(ImageInfo))
+            SKImageInfo imageInfo = new SKImageInfo(512, 512);
+            using (SKSurface surface = SKSurface.Create(imageInfo))
             {
-                ParsedColor = SKColor.Parse(HexColor);
+                parsedColor = SKColor.Parse(HexColor);
 
-                Surface.Canvas.Clear(ParsedColor);
+                surface.Canvas.Clear(parsedColor);
 
-                using (SKPaint Paint = new SKPaint())
+                using (SKPaint paint = new SKPaint())
                 {
-                    Paint.TextSize = 48;
-                    Paint.IsAntialias = true;
-                    Paint.TextAlign = SKTextAlign.Center;
+                    paint.TextSize = 48;
+                    paint.IsAntialias = true;
+                    paint.TextAlign = SKTextAlign.Center;
 
                     //Use black or white depending on background color.
-                    if ((ParsedColor.Red * 0.299f + ParsedColor.Green * 0.587f + ParsedColor.Blue * 0.114f) > 149)
-                        Paint.Color = SKColors.Black;
+                    if ((parsedColor.Red * 0.299f + parsedColor.Green * 0.587f + parsedColor.Blue * 0.114f) > 149)
+                        paint.Color = SKColors.Black;
                     else
-                        Paint.Color = SKColors.White;
+                        paint.Color = SKColors.White;
 
                     //thanks stack overflow lol
-                    int TextPosVertical = ImageInfo.Height / 2;
-                    float TextY = TextPosVertical + (((-Paint.FontMetrics.Ascent + Paint.FontMetrics.Descent) / 2) - Paint.FontMetrics.Descent);
+                    int textPosVertical = imageInfo.Height / 2;
+                    float textY = textPosVertical + (((-paint.FontMetrics.Ascent + paint.FontMetrics.Descent) / 2) - paint.FontMetrics.Descent);
 
-                    Surface.Canvas.DrawText(ParsedColor.ToHexString().ToUpper(), ImageInfo.Width / 2f, TextY,
-                        new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48), Paint);
+                    surface.Canvas.DrawText(parsedColor.ToHexString().ToUpper(), imageInfo.Width / 2f, textY,
+                        new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48), paint);
                 }
 
-                using (SKImage Image = Surface.Snapshot())
-                using (SKData Data = Image.Encode(SKEncodedImageFormat.Png, 100))
-                using (MemoryStream Stream = new MemoryStream((int)Data.Size))
+                using (SKImage image = surface.Snapshot())
+                using (SKData imageData = image.Encode(SKEncodedImageFormat.Png, 100))
+                using (MemoryStream stream = new MemoryStream((int)imageData.Size))
                 {
-                    Data.SaveTo(Stream);
+                    imageData.SaveTo(stream);
 
                     try
                     {
-                        EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-                            .ChangeTitle($"Color Visualization Of {ParsedColor.ToHexString()}");
+                        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+                            .ChangeTitle($"Color Visualization Of {parsedColor.ToHexString()}");
 
-                        ReplyEmbed.ImageUrl = $"attachment://{Filename}";
-                        ReplyEmbed.Color = new Color(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
+                        replyEmbed.ImageUrl = $"attachment://{fileName}";
+                        replyEmbed.Color = new Color(parsedColor.Red, parsedColor.Green, parsedColor.Blue);
 
-                        ReplyEmbed.Description += $"**__RGB__**: {ParsedColor.ToRgbString()}\n";
-                        ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
-                        ReplyEmbed.Description += $"**__HSV__**: {ParsedColor.ToHsvString()}\n";
-                        ReplyEmbed.Description += $"**__HSL__**: {ParsedColor.ToHslString()}\n";
+                        replyEmbed.Description += $"**__RGB__**: {parsedColor.ToRgbString()}\n";
+                        replyEmbed.Description += $"**__CMYK__**: {parsedColor.ToCmykString()}\n";
+                        replyEmbed.Description += $"**__HSV__**: {parsedColor.ToHsvString()}\n";
+                        replyEmbed.Description += $"**__HSL__**: {parsedColor.ToHslString()}\n";
 
-                        MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                        AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                        MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                        AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
-                        await Context.Channel.SendFileAsync(Stream, Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+                        await Context.Channel.SendFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
                     }
                     finally
                     {
-                        File.Delete(Filename);
+                        File.Delete(fileName);
                     }
                 }
             }
@@ -101,61 +101,62 @@ namespace SammBotNET.Modules
                                                            [Summary("The amount of green. Ranges between 0 to 255.")] byte Green,
                                                            [Summary("The amount of blue. Ranges between 0 to 255.")] byte Blue)
         {
-            string Filename = "colorView.png";
-            SKColor ParsedColor;
-            SKImageInfo ImageInfo = new SKImageInfo(512, 512);
-            using (SKSurface Surface = SKSurface.Create(ImageInfo))
+            string fileName = "colorView.png";
+            SKColor parsedColor;
+            SKImageInfo imageInfo = new SKImageInfo(512, 512);
+            
+            using (SKSurface surface = SKSurface.Create(imageInfo))
             {
-                ParsedColor = new SKColor(Red, Green, Blue);
-                Surface.Canvas.Clear(ParsedColor);
+                parsedColor = new SKColor(Red, Green, Blue);
+                surface.Canvas.Clear(parsedColor);
 
-                using (SKPaint Paint = new SKPaint())
+                using (SKPaint paint = new SKPaint())
                 {
-                    Paint.TextSize = 48;
-                    Paint.IsAntialias = true;
-                    Paint.TextAlign = SKTextAlign.Center;
+                    paint.TextSize = 48;
+                    paint.IsAntialias = true;
+                    paint.TextAlign = SKTextAlign.Center;
 
                     //Use black or white depending on background color.
-                    if ((ParsedColor.Red * 0.299f + ParsedColor.Green * 0.587f + ParsedColor.Blue * 0.114f) > 149)
-                        Paint.Color = SKColors.Black;
+                    if ((parsedColor.Red * 0.299f + parsedColor.Green * 0.587f + parsedColor.Blue * 0.114f) > 149)
+                        paint.Color = SKColors.Black;
                     else
-                        Paint.Color = SKColors.White;
+                        paint.Color = SKColors.White;
 
                     //thanks stack overflow lol
-                    int TextPosVertical = ImageInfo.Height / 2;
-                    float TextY = TextPosVertical + (((-Paint.FontMetrics.Ascent + Paint.FontMetrics.Descent) / 2) - Paint.FontMetrics.Descent);
+                    int textPosVertical = imageInfo.Height / 2;
+                    float textY = textPosVertical + (((-paint.FontMetrics.Ascent + paint.FontMetrics.Descent) / 2) - paint.FontMetrics.Descent);
 
-                    Surface.Canvas.DrawText(ParsedColor.ToRgbString().ToUpper(), ImageInfo.Width / 2f, TextY,
-                        new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48), Paint);
+                    surface.Canvas.DrawText(parsedColor.ToRgbString().ToUpper(), imageInfo.Width / 2f, textY,
+                        new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48), paint);
                 }
 
-                using (SKImage Image = Surface.Snapshot())
-                using (SKData Data = Image.Encode(SKEncodedImageFormat.Png, 100))
-                using (MemoryStream Stream = new MemoryStream((int)Data.Size))
+                using (SKImage image = surface.Snapshot())
+                using (SKData imageData = image.Encode(SKEncodedImageFormat.Png, 100))
+                using (MemoryStream stream = new MemoryStream((int)imageData.Size))
                 {
-                    Data.SaveTo(Stream);
+                    imageData.SaveTo(stream);
 
                     try
                     {
-                        EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-                            .ChangeTitle($"Color Visualization Of {ParsedColor.ToRgbString()}");
+                        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+                            .ChangeTitle($"Color Visualization Of {parsedColor.ToRgbString()}");
 
-                        ReplyEmbed.ImageUrl = $"attachment://{Filename}";
-                        ReplyEmbed.Color = new Color(ParsedColor.Red, ParsedColor.Green, ParsedColor.Blue);
+                        replyEmbed.ImageUrl = $"attachment://{fileName}";
+                        replyEmbed.Color = new Color(parsedColor.Red, parsedColor.Green, parsedColor.Blue);
 
-                        ReplyEmbed.Description += $"**__HEX__**: {ParsedColor.ToHexString()}\n";
-                        ReplyEmbed.Description += $"**__CMYK__**: {ParsedColor.ToCmykString()}\n";
-                        ReplyEmbed.Description += $"**__HSV__**: {ParsedColor.ToHsvString()}\n";
-                        ReplyEmbed.Description += $"**__HSL__**: {ParsedColor.ToHslString()}\n";
+                        replyEmbed.Description += $"**__HEX__**: {parsedColor.ToHexString()}\n";
+                        replyEmbed.Description += $"**__CMYK__**: {parsedColor.ToCmykString()}\n";
+                        replyEmbed.Description += $"**__HSV__**: {parsedColor.ToHsvString()}\n";
+                        replyEmbed.Description += $"**__HSL__**: {parsedColor.ToHslString()}\n";
 
-                        MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-                        AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                        MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+                        AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
-                        await Context.Channel.SendFileAsync(Stream, Filename, embed: ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+                        await Context.Channel.SendFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
                     }
                     finally
                     {
-                        File.Delete(Filename);
+                        File.Delete(fileName);
                     }
                 }
             }
@@ -171,43 +172,43 @@ namespace SammBotNET.Modules
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetProfilePicAsync([Summary("The user you want to get the profile picture from.")] IUser User)
         {
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-            ReplyEmbed.ChangeTitle($"{User.Username}'s Profile Picture");
+            replyEmbed.ChangeTitle($"{User.Username}'s Profile Picture");
 
-            string UserAvatar = User.GetAvatarUrl(size: 2048);
+            string userAvatar = User.GetAvatarUrl(size: 2048);
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
             if (Context.User is SocketGuildUser)
             {
-                SocketGuildUser Target = User as SocketGuildUser;
+                SocketGuildUser targetUser = User as SocketGuildUser;
 
-                string ServerAvatar = Target.GetGuildAvatarUrl(size: 2048);
-                if (ServerAvatar != null)
+                string serverAvatar = targetUser.GetGuildAvatarUrl(size: 2048);
+                if (serverAvatar != null)
                 {
                     //The user doesnt have a global avatar? Thats fine, we still have the server-specific one.
-                    if (UserAvatar != null)
+                    if (userAvatar != null)
                     {
-                        ReplyEmbed.Description = $"[Global Profile Picture]({UserAvatar})";
+                        replyEmbed.Description = $"[Global Profile Picture]({userAvatar})";
                     }
 
-                    ReplyEmbed.ImageUrl = ServerAvatar;
+                    replyEmbed.ImageUrl = serverAvatar;
 
-                    await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+                    await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
                     return ExecutionResult.Succesful();
                 }
             }
 
             //The user doesnt have a server-specific avatar, and doesnt have a global avatar either. Exit!
-            if (UserAvatar == null)
+            if (userAvatar == null)
                 return ExecutionResult.FromError("This user does not have an avatar!");
 
-            ReplyEmbed.ImageUrl = UserAvatar;
+            replyEmbed.ImageUrl = userAvatar;
 
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
@@ -218,20 +219,20 @@ namespace SammBotNET.Modules
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetWeatherAsync([Summary("The name of the city you want to get the weather forecast for.")] [Remainder] string City)
         {
-            List<Location> RetrievedLocations = await GetWeatherLocationsAsync(City);
-            if (RetrievedLocations.Count == 0)
+            List<Location> retrievedLocations = await GetWeatherLocationsAsync(City);
+            if (retrievedLocations.Count == 0)
                 return ExecutionResult.FromError("That location does not exist.");
 
-            Location FinalLocation = RetrievedLocations.First();
-            CurrentWeather RetrievedWeather = await GetCurrentWeatherAsync(FinalLocation);
-            Weather ActualWeather = RetrievedWeather.Weather[0];
+            Location finalLocation = retrievedLocations.First();
+            CurrentWeather retrievedWeather = await GetCurrentWeatherAsync(finalLocation);
+            Weather actualWeather = retrievedWeather.Weather[0];
 
             //Fucking christ. https://openweathermap.org/weather-conditions
             //Good luck.
-            string ConditionEmoji = ActualWeather.Id switch
+            string conditionEmoji = actualWeather.Id switch
             {
                 //2XX Thunderbolt group.
-                (>= 200 and <= 202) or (>= 230 and <= 232) => "⛈️",
+                (>= 200 and <= 202) or (>= 230 and <= 232) => "⛈",
                 >= 210 and <= 221 => "🌩",
 
                 //3XX Drizzle group.
@@ -250,109 +251,109 @@ namespace SammBotNET.Modules
                 >= 781 and < 782 => "🌪",
 
                 //800 Clear group.
-                >= 800 and < 801 => "☀️",
+                >= 800 and < 801 => "☀",
 
                 //8XX Clouds group.
                 >= 801 and < 802 => "🌤",
                 >= 802 and < 803 => "⛅",
                 >= 803 and < 804 => "🌥",
-                >= 804 and < 805 => "☁️",
+                >= 804 and < 805 => "☁",
 
                 //Unknown group id.
                 _ => "❔"
             };
 
-            float Cloudiness = RetrievedWeather.Clouds.Cloudiness;
+            float cloudiness = retrievedWeather.Clouds.Cloudiness;
 
-            float Temperature = RetrievedWeather.Information.Temperature.RoundTo(1);
-            float TemperatureMax = RetrievedWeather.Information.MaximumTemperature.RoundTo(1);
-            float TemperatureMin = RetrievedWeather.Information.MinimumTemperature.RoundTo(1);
-            float FeelsLike = RetrievedWeather.Information.FeelsLike.RoundTo(1);
+            float temperature = retrievedWeather.Information.Temperature.RoundTo(1);
+            float temperatureMax = retrievedWeather.Information.MaximumTemperature.RoundTo(1);
+            float temperatureMin = retrievedWeather.Information.MinimumTemperature.RoundTo(1);
+            float feelsLike = retrievedWeather.Information.FeelsLike.RoundTo(1);
 
-            float Pressure = RetrievedWeather.Information.Pressure.RoundTo(2);
-            float Humidity = RetrievedWeather.Information.Humidity;
+            float pressure = retrievedWeather.Information.Pressure.RoundTo(2);
+            float humidity = retrievedWeather.Information.Humidity;
 
-            float WindSpeed = RetrievedWeather.Wind.Speed.MpsToKmh();
-            float WindDirection = RetrievedWeather.Wind.Degrees;
-            float WindGust = RetrievedWeather.Wind.Gust.MpsToKmh();
+            float windSpeed = retrievedWeather.Wind.Speed.MpsToKmh();
+            float windDirection = retrievedWeather.Wind.Degrees;
+            float windGust = retrievedWeather.Wind.Gust.MpsToKmh();
 
-            long Sunrise = RetrievedWeather.System.Sunrise;
-            long Sunset = RetrievedWeather.System.Sunset;
+            long sunrise = retrievedWeather.System.Sunrise;
+            long sunset = retrievedWeather.System.Sunset;
 
-            string EmbedDescription = $"⚠️ Some data may be missing due to an API limitation.\n\n";
+            string embedDescription = $"⚠️ Some data may be missing due to an API limitation.\n\n";
 
-            EmbedDescription += $"{ConditionEmoji} **{ActualWeather.Description.CapitalizeFirst()}**\n";
-            EmbedDescription += $"☁️ Cloudiness: **{Cloudiness}**%\n\n";
+            embedDescription += $"{conditionEmoji} **{actualWeather.Description.CapitalizeFirst()}**\n";
+            embedDescription += $"☁️ Cloudiness: **{cloudiness}**%\n\n";
 
-            EmbedDescription += $"🌡 Temperature: **{Temperature}**°C, **{Temperature.ToFahrenheit()}**°F\n";
-            EmbedDescription += $"⬆ Temperature Max: **{TemperatureMax}**°C, **{TemperatureMax.ToFahrenheit()}**°F\n";
-            EmbedDescription += $"⬇ Temperature Min: **{TemperatureMin}**°C, **{TemperatureMin.ToFahrenheit()}**°F\n";
-            EmbedDescription += $"👤 Feels like: **{FeelsLike}**°C, **{FeelsLike.ToFahrenheit()}**°F\n\n";
+            embedDescription += $"🌡 Temperature: **{temperature}**°C, **{temperature.ToFahrenheit()}**°F\n";
+            embedDescription += $"⬆ Temperature Max: **{temperatureMax}**°C, **{temperatureMax.ToFahrenheit()}**°F\n";
+            embedDescription += $"⬇ Temperature Min: **{temperatureMin}**°C, **{temperatureMin.ToFahrenheit()}**°F\n";
+            embedDescription += $"👤 Feels like: **{feelsLike}**°C, **{feelsLike.ToFahrenheit()}**°F\n\n";
 
-            EmbedDescription += $"🌍 Atmospheric pressure: **{Pressure}**hPa, **{Pressure.ToPsi()}**psi\n";
-            EmbedDescription += $"💧 Humidity: **{Humidity}**%\n\n";
+            embedDescription += $"🌍 Atmospheric pressure: **{pressure}**hPa, **{pressure.ToPsi()}**psi\n";
+            embedDescription += $"💧 Humidity: **{humidity}**%\n\n";
 
-            EmbedDescription += $"💨 Wind speed: **{WindSpeed}**km/h, **{WindSpeed.KmhToMph()}mph**\n";
-            EmbedDescription += $"🧭 Wind direction: **{WindDirection}**°\n";
-            EmbedDescription += $"🌬 Wind gust: **{WindGust}**km/h, **{WindGust.KmhToMph()}**mph\n\n";
+            embedDescription += $"💨 Wind speed: **{windSpeed}**km/h, **{windSpeed.KmhToMph()}mph**\n";
+            embedDescription += $"🧭 Wind direction: **{windDirection}**°\n";
+            embedDescription += $"🌬 Wind gust: **{windGust}**km/h, **{windGust.KmhToMph()}**mph\n\n";
 
-            EmbedDescription += "⚠️ Sunrise and sunset times are adjusted to your computer's timezone.\n";
-            EmbedDescription += $"🌅 Sunrise: <t:{Sunrise}:t>\n";
-            EmbedDescription += $"🌇 Sunset: <t:{Sunset}:t>\n";
+            embedDescription += "⚠️ Sunrise and sunset times are adjusted to your computer's timezone.\n";
+            embedDescription += $"🌅 Sunrise: <t:{sunrise}:t>\n";
+            embedDescription += $"🌇 Sunset: <t:{sunset}:t>\n";
 
             //============================EMBED BUILDING============================
 
-            EmbedBuilder ReplyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-                .ChangeTitle($"Weather for {RetrievedWeather.Name}, {RetrievedWeather.System.Country.CountryCodeToFlag()}");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
+                .ChangeTitle($"Weather for {retrievedWeather.Name}, {retrievedWeather.System.Country.CountryCodeToFlag()}");
 
-            ReplyEmbed.Description = EmbedDescription;
+            replyEmbed.Description = embedDescription;
 
-            MessageReference Reference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions AllowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, ReplyEmbed.Build(), allowedMentions: AllowedMentions, messageReference: Reference);
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             return ExecutionResult.Succesful();
         }
 
         public async Task<List<Location>> GetWeatherLocationsAsync(string City)
         {
-            string LocationReply = string.Empty;
-            GeolocationParams GeolocationParameters = new GeolocationParams()
+            string locationReply = string.Empty;
+            GeolocationParams geolocationParameters = new GeolocationParams()
             {
                 q = City,
                 appid = Settings.Instance.LoadedConfig.OpenWeatherKey,
                 limit = 1,
             };
-            string LocationQuery = GeolocationParameters.ToQueryString();
+            string locationQuery = geolocationParameters.ToQueryString();
 
-            using (HttpResponseMessage HttpResponse = await UtilsService.WeatherClient.GetAsync($"geo/1.0/direct?{LocationQuery}"))
+            using (HttpResponseMessage responseMessage = await UtilsService.WeatherClient.GetAsync($"geo/1.0/direct?{locationQuery}"))
             {
-                LocationReply = await HttpResponse.Content.ReadAsStringAsync();
+                locationReply = await responseMessage.Content.ReadAsStringAsync();
             }
-            List<Location> RetrievedLocations = JsonConvert.DeserializeObject<List<Location>>(LocationReply);
+            List<Location> retrievedLocations = JsonConvert.DeserializeObject<List<Location>>(locationReply);
 
-            return RetrievedLocations;
+            return retrievedLocations;
         }
 
         public async Task<CurrentWeather> GetCurrentWeatherAsync(Location Location)
         {
-            string WeatherReply = string.Empty;
-            WeatherParams WeatherParams = new WeatherParams()
+            string weatherReply = string.Empty;
+            WeatherParams weatherParams = new WeatherParams()
             {
                 lat = Location.Latitude,
                 lon = Location.Longitude,
                 appid = Settings.Instance.LoadedConfig.OpenWeatherKey,
                 units = "metric"
             };
-            string WeatherQuery = WeatherParams.ToQueryString();
+            string weatherQuery = weatherParams.ToQueryString();
 
-            using (HttpResponseMessage HttpResponse = await UtilsService.WeatherClient.GetAsync($"data/2.5/weather?{WeatherQuery}"))
+            using (HttpResponseMessage responseMessage = await UtilsService.WeatherClient.GetAsync($"data/2.5/weather?{weatherQuery}"))
             {
-                WeatherReply = await HttpResponse.Content.ReadAsStringAsync();
+                weatherReply = await responseMessage.Content.ReadAsStringAsync();
             }
-            CurrentWeather RetrievedWeather = JsonConvert.DeserializeObject<CurrentWeather>(WeatherReply);
+            CurrentWeather retrievedWeather = JsonConvert.DeserializeObject<CurrentWeather>(weatherReply);
 
-            return RetrievedWeather;
+            return retrievedWeather;
         }
     }
 }
