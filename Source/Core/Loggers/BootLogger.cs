@@ -15,40 +15,40 @@ namespace SammBotNET.Core
         {
             lock (LogLock)
             {
-                string AssembledMessage = "[".Pastel(Color.White);
+                string assembledMessage = "[".Pastel(Color.White);
 
-                Color MessageColor = Color.LightBlue;
+                Color messageColor = Color.LightBlue;
                 switch (Severity)
                 {
                     case LogSeverity.Debug:
-                        AssembledMessage += "DBG".Pastel(Color.Teal);
-                        MessageColor = Color.LightSeaGreen;
+                        assembledMessage += "DBG".Pastel(Color.Teal);
+                        messageColor = Color.LightSeaGreen;
                         break;
                     case LogSeverity.Information:
-                        AssembledMessage += "MSG".Pastel(Color.Cyan);
+                        assembledMessage += "MSG".Pastel(Color.Cyan);
                         break;
                     case LogSeverity.Success:
-                        AssembledMessage += "SUC".Pastel(Color.Green);
-                        MessageColor = Color.LightGreen;
+                        assembledMessage += "SUC".Pastel(Color.Green);
+                        messageColor = Color.LightGreen;
                         break;
                     case LogSeverity.Warning:
-                        AssembledMessage += "WRN".Pastel(Color.Yellow);
-                        MessageColor = Color.Gold;
+                        assembledMessage += "WRN".Pastel(Color.Yellow);
+                        messageColor = Color.Gold;
                         break;
                     case LogSeverity.Error:
-                        AssembledMessage += "ERR".Pastel(Color.Red);
-                        MessageColor = Color.IndianRed;
+                        assembledMessage += "ERR".Pastel(Color.Red);
+                        messageColor = Color.IndianRed;
                         break;
                     case LogSeverity.Fatal:
-                        AssembledMessage += "FTL".Pastel(Color.DarkRed);
-                        MessageColor = Color.DarkRed;
+                        assembledMessage += "FTL".Pastel(Color.DarkRed);
+                        messageColor = Color.DarkRed;
                         break;
                 }
 
-                AssembledMessage += "] ".Pastel(Color.White);
-                AssembledMessage += Message.Pastel(MessageColor);
+                assembledMessage += "] ".Pastel(Color.White);
+                assembledMessage += Message.Pastel(messageColor);
 
-                Console.WriteLine(AssembledMessage);
+                Console.WriteLine(assembledMessage);
             }
         }
     }

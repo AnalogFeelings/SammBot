@@ -28,50 +28,50 @@ namespace SammBotNET.Core
 
         private Settings()
         {
-            string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            BotDataDirectory = Path.Combine(AppData, BOT_NAME);
+            BotDataDirectory = Path.Combine(appData, BOT_NAME);
         }
 
         public bool LoadConfiguration()
         {
-            string ConfigFilePath = Path.Combine(BotDataDirectory, CONFIG_FILE);
+            string configFilePath = Path.Combine(BotDataDirectory, CONFIG_FILE);
 
             try
             {
-                DirectoryInfo BotDirectory = Directory.CreateDirectory(BotDataDirectory);
+                DirectoryInfo botDirectory = Directory.CreateDirectory(BotDataDirectory);
 
-                if (!File.Exists(ConfigFilePath)) return false;
+                if (!File.Exists(configFilePath)) return false;
             }
             catch (Exception)
             {
                 return false;
             }
 
-            string ConfigContent = File.ReadAllText(ConfigFilePath);
-            LoadedConfig = JsonConvert.DeserializeObject<JsonConfig>(ConfigContent);
+            string configContent = File.ReadAllText(configFilePath);
+            LoadedConfig = JsonConvert.DeserializeObject<JsonConfig>(configContent);
 
             return true;
         }
 
         public static void RestartBot()
         {
-            string TimeoutCommand = $"/C timeout 3 && {Environment.ProcessPath}";
-            string ExecutableCommand = "cmd.exe";
+            string timeoutCommand = $"/C timeout 3 && {Environment.ProcessPath}";
+            string executableCommand = "cmd.exe";
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                TimeoutCommand = $"-c \"sleep 3s && {Environment.ProcessPath}\"";
-                ExecutableCommand = "bash";
+                timeoutCommand = $"-c \"sleep 3s && {Environment.ProcessPath}\"";
+                executableCommand = "bash";
             }
 
-            ProcessStartInfo StartInfo = new ProcessStartInfo()
+            ProcessStartInfo startInfo = new ProcessStartInfo()
             {
-                Arguments = TimeoutCommand,
-                FileName = ExecutableCommand,
+                Arguments = timeoutCommand,
+                FileName = executableCommand,
                 CreateNoWindow = true
             };
-            Process.Start(StartInfo);
+            Process.Start(startInfo);
 
             Environment.Exit(0);
         }

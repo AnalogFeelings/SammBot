@@ -10,12 +10,12 @@ namespace SammBotNET.Core
 {
     public class Logger
     {
-        private readonly MatchaLogger LoggerInstance;
+        private readonly MatchaLogger _LoggerInstance;
 
         public Logger(DiscordSocketClient Client, CommandService CommandService)
         {
             //Default settings.
-            MatchaLoggerSettings LoggerSettings = new MatchaLoggerSettings()
+            MatchaLoggerSettings loggerSettings = new MatchaLoggerSettings()
             {
                 LogFilePath = Path.Combine(Settings.Instance.BotDataDirectory, "Logs"), 
 #if !DEBUG
@@ -23,14 +23,14 @@ namespace SammBotNET.Core
 #endif
             };
 
-            LoggerInstance = new MatchaLogger(LoggerSettings);
+            _LoggerInstance = new MatchaLogger(loggerSettings);
 
             Client.Log += LogAsync;
             CommandService.Log += LogAsync;
         }
 
         public void Log(string Message, LogSeverity Severity) =>
-            LoggerInstance.Log(Message, Severity);
+            _LoggerInstance.Log(Message, Severity);
 
         public void LogException(Exception TargetException) =>
             Log(TargetException.ToString(), LogSeverity.Error);
@@ -46,20 +46,20 @@ namespace SammBotNET.Core
                 case Discord.LogSeverity.Critical:
                     if (Message.Exception is CommandException CriticalException)
                     {
-                        string FormattedException = string.Format("Critical exception in command \"{0}{1}\", at channel #{2}.\n{3}",
+                        string formattedException = string.Format("Critical exception in command \"{0}{1}\", at channel #{2}.\n{3}",
                                 Settings.Instance.LoadedConfig.BotPrefix, CriticalException.Command.Aliases[0], CriticalException.Context.Channel, CriticalException);
 
-                        Log(FormattedException, LogSeverity.Fatal);
+                        Log(formattedException, LogSeverity.Fatal);
                     }
                     else Log(Message.Message, LogSeverity.Fatal);
                     break;
                 case Discord.LogSeverity.Error:
                     if (Message.Exception is CommandException ErrorException)
                     {
-                        string FormattedException = string.Format("Exception in command \"{0}{1}\", at channel #{2}.\n{3}",
+                        string formattedException = string.Format("Exception in command \"{0}{1}\", at channel #{2}.\n{3}",
                                 Settings.Instance.LoadedConfig.BotPrefix, ErrorException.Command.Aliases[0], ErrorException.Context.Channel, ErrorException);
 
-                        Log(FormattedException, LogSeverity.Error);
+                        Log(formattedException, LogSeverity.Error);
                     }
                     else Log(Message.Message, LogSeverity.Error);
                     break;

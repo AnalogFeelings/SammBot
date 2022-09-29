@@ -22,74 +22,74 @@ namespace SammBotNET.Core
         {
             Settings.Instance.StartupStopwatch.Start();
 
-            BootLogger BootLogger = new BootLogger();
+            BootLogger bootLogger = new BootLogger();
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
-            BootLogger.Log($"Loading {Settings.CONFIG_FILE}...", LogSeverity.Information);
+            bootLogger.Log($"Loading {Settings.CONFIG_FILE}...", LogSeverity.Information);
             if (!Settings.Instance.LoadConfiguration())
             {
-                string FullPath = Settings.Instance.BotDataDirectory;
+                string fullPath = Settings.Instance.BotDataDirectory;
 
-                BootLogger.Log($"Could not load {Settings.CONFIG_FILE} correctly! Make sure the path \"{FullPath}\" exists.\n" +
+                bootLogger.Log($"Could not load {Settings.CONFIG_FILE} correctly! Make sure the path \"{fullPath}\" exists.\n" +
                     $"Either way, the program has attempted to write the default {Settings.CONFIG_FILE} file to that path.", LogSeverity.Fatal);
 
-                File.WriteAllText(Path.Combine(FullPath, Settings.CONFIG_FILE),
+                File.WriteAllText(Path.Combine(fullPath, Settings.CONFIG_FILE),
                     JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
-                BootLogger.Log("Press any key to exit...", LogSeverity.Information);
+                bootLogger.Log("Press any key to exit...", LogSeverity.Information);
                 Console.ReadKey();
 
                 Environment.Exit(1);
             }
 
-            BootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
+            bootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
 
-            string LogsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Logs");
+            string logsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Logs");
 
-            if (!Directory.Exists(LogsDirectory))
+            if (!Directory.Exists(logsDirectory))
             {
-                BootLogger.Log("Logs folder did not exist. Creating...", LogSeverity.Warning);
+                bootLogger.Log("Logs folder did not exist. Creating...", LogSeverity.Warning);
 
                 try
                 {
-                    Directory.CreateDirectory(LogsDirectory);
-                    BootLogger.Log("Created Logs folder successfully.", LogSeverity.Success);
+                    Directory.CreateDirectory(logsDirectory);
+                    bootLogger.Log("Created Logs folder successfully.", LogSeverity.Success);
                 }
                 catch (Exception ex)
                 {
-                    BootLogger.Log("Could not create Logs folder. Running the bot without file logging has yet to be implemented.\n" +
+                    bootLogger.Log("Could not create Logs folder. Running the bot without file logging has yet to be implemented.\n" +
                         $"Exception Message: {ex.Message}", LogSeverity.Error);
 
-                    BootLogger.Log("Press any key to exit...", LogSeverity.Information);
+                    bootLogger.Log("Press any key to exit...", LogSeverity.Information);
                     Console.ReadKey();
 
                     Environment.Exit(1);
                 }
             }
 
-            string AvatarsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Avatars");
+            string avatarsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Avatars");
 
-            if (!Directory.Exists(AvatarsDirectory))
+            if (!Directory.Exists(avatarsDirectory))
             {
-                BootLogger.Log("Avatars folder did not exist. Creating...", LogSeverity.Warning);
+                bootLogger.Log("Avatars folder did not exist. Creating...", LogSeverity.Warning);
 
                 try
                 {
-                    Directory.CreateDirectory(AvatarsDirectory);
-                    BootLogger.Log("Created Avatars folder successfully.", LogSeverity.Success);
+                    Directory.CreateDirectory(avatarsDirectory);
+                    bootLogger.Log("Created Avatars folder successfully.", LogSeverity.Success);
                 }
                 catch (Exception ex)
                 {
-                    BootLogger.Log("Could not create Avatars folder. Rotating avatars will not be available.\n" +
+                    bootLogger.Log("Could not create Avatars folder. Rotating avatars will not be available.\n" +
                         $"Exception Message: {ex.Message}", LogSeverity.Error);
 
-                    BootLogger.Log("Press any key to continue...", LogSeverity.Information);
+                    bootLogger.Log("Press any key to continue...", LogSeverity.Information);
                     Console.ReadKey();
                 }
             }
 
-            BootLogger.Log("Creating Discord client...", LogSeverity.Information);
+            bootLogger.Log("Creating Discord client...", LogSeverity.Information);
 
             SocketClient = new DiscordSocketClient(new DiscordSocketConfig
             {
@@ -105,25 +105,25 @@ namespace SammBotNET.Core
                 DefaultRunMode = RunMode.Async,
             });
 
-            BootLogger.Log("Created Discord client successfully.", LogSeverity.Success);
+            bootLogger.Log("Created Discord client successfully.", LogSeverity.Success);
 
-            BootLogger.Log("Configuring service provider...", LogSeverity.Information);
+            bootLogger.Log("Configuring service provider...", LogSeverity.Information);
 
-            ServiceCollection Services = new ServiceCollection();
-            ConfigureServices(Services);
+            ServiceCollection serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
 
-            ServiceProvider Provider = Services.BuildServiceProvider();
-            Provider.GetRequiredService<Logger>();
-            Provider.GetRequiredService<CommandHandler>();
-            Provider.GetRequiredService<RandomService>();
-            Provider.GetRequiredService<AdminService>();
-            Provider.GetRequiredService<FunService>();
-            Provider.GetRequiredService<UtilsService>();
+            ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+            serviceProvider.GetRequiredService<Logger>();
+            serviceProvider.GetRequiredService<CommandHandler>();
+            serviceProvider.GetRequiredService<RandomService>();
+            serviceProvider.GetRequiredService<AdminService>();
+            serviceProvider.GetRequiredService<FunService>();
+            serviceProvider.GetRequiredService<UtilsService>();
 
-            BootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
+            bootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
 
-            BootLogger.Log("Starting the startup service...", LogSeverity.Information);
-            await Provider.GetRequiredService<StartupService>().StartAsync();
+            bootLogger.Log("Starting the startup service...", LogSeverity.Information);
+            await serviceProvider.GetRequiredService<StartupService>().StartAsync();
 
             await Task.Delay(-1);
         }
