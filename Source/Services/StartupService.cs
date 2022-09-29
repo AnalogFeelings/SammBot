@@ -22,19 +22,19 @@ namespace SammBotNET.Services
         private CommandService CommandsService { get; set; }
         private Logger BotLogger { get; set; }
 
-        private Timer StatusTimer;
-        private Timer AvatarTimer;
+        private Timer _StatusTimer;
+        private Timer _AvatarTimer;
 
         private AutoDequeueList<string> RecentAvatars;
 
-        private bool FirstTimeConnection = true;
+        private bool _FirstTimeConnection = true;
 
-        public StartupService(IServiceProvider provider, DiscordSocketClient client, CommandService command, Logger logger)
+        public StartupService(IServiceProvider ServiceProvider, DiscordSocketClient SocketClient, CommandService CommandsService, Logger Logger)
         {
-            ServiceProvider = provider;
-            SocketClient = client;
-            CommandsService = command;
-            BotLogger = logger;
+            this.ServiceProvider = ServiceProvider;
+            this.SocketClient = SocketClient;
+            this.CommandsService = CommandsService;
+            BotLogger = Logger;
 
             RecentAvatars = new AutoDequeueList<string>(Settings.Instance.LoadedConfig.AvatarRecentQueueSize);
         }
@@ -56,18 +56,18 @@ namespace SammBotNET.Services
 
             Console.Title = $"{Settings.BOT_NAME} {Settings.Instance.LoadedConfig.BotVersion}";
 
-            string DiscordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
-            string MatchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
+            string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
+            string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
 
             Console.Write(FiggleFonts.Slant.Render(Settings.BOT_NAME).Pastel(Color.SkyBlue));
             Console.Write("===========".Pastel(Color.CadetBlue));
-            Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {DiscordNetVersion}".Pastel(Color.LightCyan));
+            Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
             Console.WriteLine("===========".Pastel(Color.CadetBlue));
             Console.WriteLine();
 
             Settings.Instance.RuntimeStopwatch.Start();
 
-            BotLogger.Log($"Using MatchaLogger {MatchaVersion}.", LogSeverity.Information);
+            BotLogger.Log($"Using MatchaLogger {matchaVersion}.", LogSeverity.Information);
 
             BotLogger.Log($"{Settings.BOT_NAME} took" +
                 $" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
@@ -79,10 +79,10 @@ namespace SammBotNET.Services
 
         private Task OnConnected()
         {
-            if (FirstTimeConnection)
+            if (_FirstTimeConnection)
             {
                 BotLogger.Log("Connected to gateway.", LogSeverity.Success);
-                FirstTimeConnection = false;
+                _FirstTimeConnection = false;
             }
             else BotLogger.Log("Reconnected to gateway.", LogSeverity.Success);
 
@@ -92,13 +92,13 @@ namespace SammBotNET.Services
         private Task OnReady()
         {
             if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
-                StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
+                _StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 
             if (Settings.Instance.LoadedConfig.RotatingAvatar)
             {
-                TimeSpan AvatarDelay = TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime);
+                TimeSpan avatarDelay = TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime);
 
-                AvatarTimer = new Timer(RotateAvatar, null, AvatarDelay, AvatarDelay);
+                _AvatarTimer = new Timer(RotateAvatar, null, avatarDelay, avatarDelay);
             }
 
             BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
@@ -115,31 +115,31 @@ namespace SammBotNET.Services
 
         private async void RotateStatus(object State)
         {
-            BotStatus ChosenStatus = Settings.Instance.LoadedConfig.StatusList.PickRandom();
+            BotStatus chosenStatus = Settings.Instance.LoadedConfig.StatusList.PickRandom();
 
-            string GameUrl = ChosenStatus.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null;
+            string gameUrl = chosenStatus.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null;
 
-            await SocketClient.SetGameAsync(ChosenStatus.Content, GameUrl, (ActivityType)ChosenStatus.Type);
+            await SocketClient.SetGameAsync(chosenStatus.Content, gameUrl, (ActivityType)chosenStatus.Type);
         }
 
         private async void RotateAvatar(object State)
         {
-            List<string> AvatarList = Directory.EnumerateFiles(Path.Combine(Settings.Instance.BotDataDirectory, "Avatars")).ToList();
-            if (AvatarList.Count < 2) return;
+            List<string> avatarList = Directory.EnumerateFiles(Path.Combine(Settings.Instance.BotDataDirectory, "Avatars")).ToList();
+            if (avatarList.Count < 2) return;
 
-            List<string> FilteredList = AvatarList.Except(RecentAvatars).ToList();
+            List<string> filteredList = avatarList.Except(RecentAvatars).ToList();
 
-            string ChosenAvatar = FilteredList.PickRandom();
-            BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(ChosenAvatar)}\".", LogSeverity.Debug);
+            string chosenAvatar = filteredList.PickRandom();
+            BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(chosenAvatar)}\".", LogSeverity.Debug);
 
-            using (FileStream AvatarStream = new FileStream(ChosenAvatar, FileMode.Open))
+            using (FileStream avatarStream = new FileStream(chosenAvatar, FileMode.Open))
             {
-                Image LoadedAvatar = new Image(AvatarStream);
+                Image loadedAvatar = new Image(avatarStream);
 
-                await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = LoadedAvatar);
+                await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = loadedAvatar);
             }
 
-            RecentAvatars.Push(ChosenAvatar);
+            RecentAvatars.Push(chosenAvatar);
         }
     }
 }
