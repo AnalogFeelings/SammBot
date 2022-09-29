@@ -114,6 +114,7 @@ namespace SammBotNET.Core
         [NotModifiable] public string CommandLogFormat { get; set; } = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
         [NotModifiable] public int AvatarRotationTime { get; set; } = 1;
         [NotModifiable] public int AvatarRecentQueueSize { get; set; } = 10;
+        [NotModifiable] public int MessageCacheSize { get; set; } = 2000;
     }
 
     public class BotStatus

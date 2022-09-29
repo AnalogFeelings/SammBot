@@ -95,7 +95,7 @@ namespace SammBotNET.Core
             SocketClient = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = Discord.LogSeverity.Warning,
-                MessageCacheSize = 2000,
+                MessageCacheSize = Settings.Instance.LoadedConfig.MessageCacheSize,
                 AlwaysDownloadUsers = true,
                 GatewayIntents = GatewayIntents.All,
                 LogGatewayIntentWarnings = false
