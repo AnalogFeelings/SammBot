@@ -49,7 +49,6 @@ namespace SammBotNET.Services
             SocketClient.Connected += OnConnected;
             SocketClient.Ready += OnReady;
             SocketClient.Disconnected += OnDisconnect;
-            Console.Clear();
 
             await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
             Settings.Instance.StartupStopwatch.Stop();
@@ -58,6 +57,8 @@ namespace SammBotNET.Services
 
             string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
             string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
+            
+            Console.Clear();
 
             Console.Write(FiggleFonts.Slant.Render(Settings.BOT_NAME).Pastel(Color.SkyBlue));
             Console.Write("===========".Pastel(Color.CadetBlue));
