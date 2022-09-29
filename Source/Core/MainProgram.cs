@@ -30,12 +30,13 @@ namespace SammBotNET.Core
             if (!Settings.Instance.LoadConfiguration())
             {
                 string fullPath = Settings.Instance.BotDataDirectory;
+                Task writeTask = File.WriteAllTextAsync(Path.Combine(fullPath, Settings.CONFIG_FILE),
+                    JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
                 bootLogger.Log($"Could not load {Settings.CONFIG_FILE} correctly! Make sure the path \"{fullPath}\" exists.\n" +
-                    $"Either way, the program has attempted to write the default {Settings.CONFIG_FILE} file to that path.", LogSeverity.Fatal);
+                    $"{Settings.BOT_NAME} has attempted to write the default {Settings.CONFIG_FILE} file to that path.", LogSeverity.Fatal);
 
-                File.WriteAllText(Path.Combine(fullPath, Settings.CONFIG_FILE),
-                    JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
+                await writeTask;
 
                 bootLogger.Log("Press any key to exit...", LogSeverity.Information);
                 Console.ReadKey();
