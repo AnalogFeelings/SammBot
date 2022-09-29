@@ -28,7 +28,8 @@ namespace SammBotNET.Services
         private AutoDequeueList<string> RecentAvatars;
 
         private bool _FirstTimeConnection = true;
-
+        private bool _EventsSetUp = false;
+        
         public StartupService(IServiceProvider ServiceProvider, DiscordSocketClient SocketClient, CommandService CommandsService, Logger Logger)
         {
             this.ServiceProvider = ServiceProvider;
@@ -92,17 +93,22 @@ namespace SammBotNET.Services
 
         private Task OnReady()
         {
-            if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
-                _StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
-
-            if (Settings.Instance.LoadedConfig.RotatingAvatar)
+            if (!_EventsSetUp)
             {
-                TimeSpan avatarDelay = TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime);
+                if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
+                    _StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 
-                _AvatarTimer = new Timer(RotateAvatar, null, avatarDelay, avatarDelay);
+                if (Settings.Instance.LoadedConfig.RotatingAvatar)
+                {
+                    TimeSpan avatarDelay = TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime);
+
+                    _AvatarTimer = new Timer(RotateAvatar, null, avatarDelay, avatarDelay);
+                }
+
+                BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
+
+                _EventsSetUp = true;
             }
-
-            BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
 
             return Task.CompletedTask;
         }
