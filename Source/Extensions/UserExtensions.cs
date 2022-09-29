@@ -21,8 +21,8 @@ namespace SammBotNET.Extensions
 
         public static string GetGuildGlobalOrDefaultAvatar(this SocketUser User, ushort Size)
         {
-            if (User is SocketGuildUser Target)
-                return Target.GetGuildAvatarUrl(size: Size) ?? Target.GetAvatarOrDefault(Size);
+            if (User is SocketGuildUser targetUser)
+                return targetUser.GetGuildAvatarUrl(size: Size) ?? targetUser.GetAvatarOrDefault(Size);
 
             return User.GetAvatarOrDefault(Size);
         }
@@ -39,27 +39,27 @@ namespace SammBotNET.Extensions
 
         public static string GetStatusString(this SocketUser User)
         {
-            string OnlineStatus = "Unknown";
+            string onlineStatus = "Unknown";
 
             switch (User.Status)
             {
-                case UserStatus.DoNotDisturb: OnlineStatus = "Do Not Disturb"; break;
-                case UserStatus.Idle: OnlineStatus = "Idle"; break;
-                case UserStatus.Offline: OnlineStatus = "Offline"; break;
-                case UserStatus.Online: OnlineStatus = "Online"; break;
+                case UserStatus.DoNotDisturb: onlineStatus = "Do Not Disturb"; break;
+                case UserStatus.Idle: onlineStatus = "Idle"; break;
+                case UserStatus.Offline: onlineStatus = "Offline"; break;
+                case UserStatus.Online: onlineStatus = "Online"; break;
             }
 
-            return OnlineStatus;
+            return onlineStatus;
         }
 
         public static async Task<Pronoun> GetUserPronouns(this SocketUser User)
         {
-            using (BotDatabase BotDatabase = new BotDatabase())
+            using (BotDatabase botDatabase = new BotDatabase())
             {
-                List<Pronoun> PronounList = await BotDatabase.Pronouns.ToListAsync();
-                Pronoun ChosenPronoun = PronounList.SingleOrDefault(y => y.UserId == User.Id);
+                List<Pronoun> pronounList = await botDatabase.Pronouns.ToListAsync();
+                Pronoun chosenPronoun = pronounList.SingleOrDefault(y => y.UserId == User.Id);
 
-                if (ChosenPronoun != default(Pronoun)) return ChosenPronoun;
+                if (chosenPronoun != default(Pronoun)) return chosenPronoun;
                 
                 return new Pronoun()
                 {

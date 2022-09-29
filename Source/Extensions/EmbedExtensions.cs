@@ -11,10 +11,10 @@ namespace SammBotNET.Extensions
             if (Context == null)
                 throw new ArgumentNullException(nameof(Context));
 
-            string BotName = Settings.BOT_NAME;
+            string botName = Settings.BOT_NAME;
 
             Builder.Color = Color.DarkPurple;
-            Builder.Title = $"{BotName.ToUpper()} {Title.ToUpper()}";
+            Builder.Title = $"{botName.ToUpper()} {Title.ToUpper()}";
             Builder.Description = Description;
 
             Builder.WithFooter(footer => { footer.Text = $"Requested by {Context.Message.Author.GetFullUsername()}"; footer.IconUrl = Context.Message.Author.GetGuildGlobalOrDefaultAvatar(128); });
@@ -25,9 +25,9 @@ namespace SammBotNET.Extensions
 
         public static EmbedBuilder ChangeTitle(this EmbedBuilder Builder, string Title, bool IncludeName = false)
         {
-            string BotName = Settings.BOT_NAME;
+            string botName = Settings.BOT_NAME;
 
-            if (IncludeName) Builder.WithTitle($"{BotName.ToUpper()} {Title.ToUpper()}");
+            if (IncludeName) Builder.WithTitle($"{botName.ToUpper()} {Title.ToUpper()}");
             else Builder.WithTitle(Title.ToUpper());
 
             return Builder;

@@ -8,11 +8,11 @@ namespace SammBotNET.Extensions
     {
         public static string ToQueryString(this object TargetObject)
         {
-            IEnumerable<string> FormattedProperties = from p in TargetObject.GetType().GetProperties()
+            IEnumerable<string> formattedProperties = from p in TargetObject.GetType().GetProperties()
                                                       where p.GetValue(TargetObject, null) != null
                                                       select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
 
-            return string.Join("&", FormattedProperties.ToArray());
+            return string.Join("&", formattedProperties.ToArray());
         }
     }
 }

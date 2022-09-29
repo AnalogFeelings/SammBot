@@ -18,88 +18,88 @@ namespace SammBotNET.Extensions
         public static string ToCmykString(this SKColor Color)
         {
             //Convert 0 to 255 to 0 to 1
-            float R = Color.Red / 255f;
-            float G = Color.Green / 255f;
-            float B = Color.Blue / 255f;
+            float red = Color.Red / 255f;
+            float green = Color.Green / 255f;
+            float blue = Color.Blue / 255f;
 
-            double Kf = 1 - Math.Max(R, Math.Max(G, B));
-            double Cf = (1 - R - Kf) / (1 - Kf);
-            double Mf = (1 - G - Kf) / (1 - Kf);
-            double Yf = (1 - B - Kf) / (1 - Kf);
+            double kf = 1 - Math.Max(red, Math.Max(green, blue));
+            double cf = (1 - red - kf) / (1 - kf);
+            double mf = (1 - green - kf) / (1 - kf);
+            double yf = (1 - blue - kf) / (1 - kf);
 
             //Use 0 to 100 instead of 0 to 1
-            int Ki = (int)Math.Round(Kf * 100, 0);
-            int Ci = (int)Math.Round(Cf * 100, 0);
-            int Mi = (int)Math.Round(Mf * 100, 0);
-            int Yi = (int)Math.Round(Yf * 100, 0);
+            int ki = (int)Math.Round(kf * 100, 0);
+            int ci = (int)Math.Round(cf * 100, 0);
+            int mi = (int)Math.Round(mf * 100, 0);
+            int yi = (int)Math.Round(yf * 100, 0);
 
-            return $"cmyk({Ci}%, {Mi}%, {Yi}%, {Ki})";
+            return $"cmyk({ci}%, {mi}%, {yi}%, {ki})";
         }
 
         public static string ToHsvString(this SKColor Color)
         {
             //Convert 0 to 255 to 0 to 1
-            float R = Color.Red / 255f;
-            float G = Color.Green / 255f;
-            float B = Color.Blue / 255f;
+            float red = Color.Red / 255f;
+            float green = Color.Green / 255f;
+            float blue = Color.Blue / 255f;
 
-            double CMax = Math.Max(R, Math.Max(G, B));
-            double CMin = Math.Min(R, Math.Min(G, B));
-            double CDifference = CMax - CMin;
+            double cMax = Math.Max(red, Math.Max(green, blue));
+            double cMin = Math.Min(red, Math.Min(green, blue));
+            double cDifference = cMax - cMin;
 
-            double H = -1;
-            double S = -1;
-            double V = 0;
+            double h = -1;
+            double s = -1;
+            double v = 0;
 
-            if (CMax == CMin) H = 0;
-            else if (CMax == R) H = (60 * ((G - B) / CDifference) + 360) % 360;
-            else if (CMax == G) H = (60 * ((B - R) / CDifference) + 120) % 360;
-            else if (CMax == B) H = (60 * ((R - G) / CDifference) + 240) % 360;
+            if (cMax == cMin) h = 0;
+            else if (cMax == red) h = (60 * ((green - blue) / cDifference) + 360) % 360;
+            else if (cMax == green) h = (60 * ((blue - red) / cDifference) + 120) % 360;
+            else if (cMax == blue) h = (60 * ((red - green) / cDifference) + 240) % 360;
 
-            if (CMax == 0) S = 0;
-            else S = (CDifference / CMax) * 100;
+            if (cMax == 0) s = 0;
+            else s = (cDifference / cMax) * 100;
 
-            V = CMax * 100;
+            v = cMax * 100;
 
-            H = Math.Round(H, 0);
-            S = Math.Round(S, 0);
-            V = Math.Round(V, 0);
+            h = Math.Round(h, 0);
+            s = Math.Round(s, 0);
+            v = Math.Round(v, 0);
 
-            return $"hsv({H}, {S}%, {V}%)";
+            return $"hsv({h}, {s}%, {v}%)";
         }
 
         public static string ToHslString(this SKColor Color)
         {
             //Convert 0 to 255 to 0 to 1
-            float R = Color.Red / 255f;
-            float G = Color.Green / 255f;
-            float B = Color.Blue / 255f;
+            float red = Color.Red / 255f;
+            float green = Color.Green / 255f;
+            float blue = Color.Blue / 255f;
 
-            double CMax = Math.Max(R, Math.Max(G, B));
-            double CMin = Math.Min(R, Math.Min(G, B));
-            double CDifference = CMax - CMin;
+            double cMax = Math.Max(red, Math.Max(green, blue));
+            double cMin = Math.Min(red, Math.Min(green, blue));
+            double cDifference = cMax - cMin;
 
-            double H = 0;
-            double S = 0;
-            double L = (CMax + CMin) / 2f;
+            double h = 0;
+            double s = 0;
+            double l = (cMax + cMin) / 2f;
 
-            if (CDifference != 0)
+            if (cDifference != 0)
             {
-                if (L <= 0.5f) S = CDifference / (CMax + CMin);
-                else S = CDifference / (2f - CDifference);
+                if (l <= 0.5f) s = cDifference / (cMax + cMin);
+                else s = cDifference / (2f - cDifference);
 
-                if (CMax == R) H = (G - B) / CDifference + (G < B ? 6 : 0);
-                else if (CMax == G) H = 2f + (B - R) / CDifference;
-                else if (CMax == B) H = 4f + (R - G) / CDifference;
+                if (cMax == red) h = (green - blue) / cDifference + (green < blue ? 6 : 0);
+                else if (cMax == green) h = 2f + (blue - red) / cDifference;
+                else if (cMax == blue) h = 4f + (red - green) / cDifference;
 
-                H /= 6;
+                h /= 6;
             }
 
-            H *= 360; H = Math.Round(H, 0);
-            S *= 100; S = Math.Round(S, 0);
-            L *= 100; L = Math.Round(L, 0);
+            h *= 360; h = Math.Round(h, 0);
+            s *= 100; s = Math.Round(s, 0);
+            l *= 100; l = Math.Round(l, 0);
 
-            return $"hsl({H}, {S}%, {L}%)";
+            return $"hsl({h}, {s}%, {l}%)";
         }
     }
 }

@@ -19,9 +19,9 @@ namespace SammBotNET.Extensions
         {
             if (string.IsNullOrEmpty(Target)) throw new ArgumentException("Target string is null or empty.");
 
-            string Result = char.ToUpper(Target.First()) + Target.Substring(1).ToLower();
+            string resultString = char.ToUpper(Target.First()) + Target.Substring(1).ToLower();
 
-            return Result;
+            return resultString;
         }
 
         //Thanks Joshua Honig from StackOverflow :)
@@ -29,37 +29,35 @@ namespace SammBotNET.Extensions
         {
             void Swap<T>(ref T Arg1, ref T Arg2)
             {
-                T Temp = Arg1;
-                Arg1 = Arg2;
-                Arg2 = Temp;
+                (Arg1, Arg2) = (Arg2, Arg1);
             }
 
-            int SourceLength = Source.Length;
-            int TargetLength = Target.Length;
+            int sourceLength = Source.Length;
+            int targetLength = Target.Length;
 
             // Return trivial case - difference in string lengths exceeds threshhold
-            if (Math.Abs(SourceLength - TargetLength) > Threshold) { return int.MaxValue; }
+            if (Math.Abs(sourceLength - targetLength) > Threshold) { return int.MaxValue; }
 
             // Ensure arrays [i] / length1 use shorter length 
-            if (SourceLength > TargetLength)
+            if (sourceLength > targetLength)
             {
                 Swap(ref Target, ref Source);
-                Swap(ref SourceLength, ref TargetLength);
+                Swap(ref sourceLength, ref targetLength);
             }
 
-            int MaxI = SourceLength;
-            int MaxJ = TargetLength;
+            int maxI = sourceLength;
+            int maxJ = targetLength;
 
-            int[] dCurrent = new int[MaxI + 1];
-            int[] dMinus1 = new int[MaxI + 1];
-            int[] dMinus2 = new int[MaxI + 1];
+            int[] dCurrent = new int[maxI + 1];
+            int[] dMinus1 = new int[maxI + 1];
+            int[] dMinus2 = new int[maxI + 1];
             int[] dSwap;
 
-            for (int i = 0; i <= MaxI; i++) { dCurrent[i] = i; }
+            for (int i = 0; i <= maxI; i++) { dCurrent[i] = i; }
 
             int jm1 = 0, im1 = 0, im2 = -1;
 
-            for (int j = 1; j <= MaxJ; j++)
+            for (int j = 1; j <= maxJ; j++)
             {
                 // Rotate
                 dSwap = dMinus2;
@@ -68,36 +66,36 @@ namespace SammBotNET.Extensions
                 dCurrent = dSwap;
 
                 // Initialize
-                int MinDistance = int.MaxValue;
+                int minDistance = int.MaxValue;
                 dCurrent[0] = j;
                 im1 = 0;
                 im2 = -1;
 
-                for (int i = 1; i <= MaxI; i++)
+                for (int i = 1; i <= maxI; i++)
                 {
-                    int Cost = Source[im1] == Target[jm1] ? 0 : 1;
+                    int cost = Source[im1] == Target[jm1] ? 0 : 1;
 
                     int del = dCurrent[im1] + 1;
                     int ins = dMinus1[i] + 1;
-                    int sub = dMinus1[im1] + Cost;
+                    int sub = dMinus1[im1] + cost;
 
                     //Fastest execution for min value of 3 integers
-                    int Min = (del > ins) ? (ins > sub ? sub : ins) : (del > sub ? sub : del);
+                    int min = (del > ins) ? (ins > sub ? sub : ins) : (del > sub ? sub : del);
 
                     if (i > 1 && j > 1 && Source[im2] == Target[jm1] && Source[im1] == Target[j - 2])
-                        Min = Math.Min(Min, dMinus2[im2] + Cost);
+                        min = Math.Min(min, dMinus2[im2] + cost);
 
-                    dCurrent[i] = Min;
-                    if (Min < MinDistance) { MinDistance = Min; }
+                    dCurrent[i] = min;
+                    if (min < minDistance) { minDistance = min; }
                     im1++;
                     im2++;
                 }
                 jm1++;
-                if (MinDistance > Threshold) { return int.MaxValue; }
+                if (minDistance > Threshold) { return int.MaxValue; }
             }
 
-            int Result = dCurrent[MaxI];
-            return (Result > Threshold) ? int.MaxValue : Result;
+            int result = dCurrent[maxI];
+            return (result > Threshold) ? int.MaxValue : result;
         }
     }
 }
