@@ -13,12 +13,12 @@ namespace SammBotNET.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder OptionsBuilder)
         {
-            string DatabaseFile = Path.Combine(Settings.Instance.BotDataDirectory, "bot.db");
+            string databaseFile = Path.Combine(Settings.Instance.BotDataDirectory, "bot.db");
 
-            SqliteConnectionStringBuilder ConnectionStringBuilder = new SqliteConnectionStringBuilder() { DataSource = DatabaseFile };
-            SqliteConnection Connection = new SqliteConnection(ConnectionStringBuilder.ToString());
+            SqliteConnectionStringBuilder connectionStringBuilder = new SqliteConnectionStringBuilder() { DataSource = databaseFile };
+            SqliteConnection connection = new SqliteConnection(connectionStringBuilder.ToString());
 
-            OptionsBuilder.UseSqlite(Connection);
+            OptionsBuilder.UseSqlite(connection);
         }
     }
 }
