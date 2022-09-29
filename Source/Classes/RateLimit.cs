@@ -17,8 +17,8 @@ namespace SammBotNET.Classes
 {
     public class RateLimit : PreconditionAttribute
     {
-        private static ConcurrentDictionary<ulong, List<RateLimitItem>> Items = new ConcurrentDictionary<ulong, List<RateLimitItem>>();
-        private readonly RateLimitType? LimitType;
+        private static ConcurrentDictionary<ulong, List<RateLimitItem>> _Items = new ConcurrentDictionary<ulong, List<RateLimitItem>>();
+        private readonly RateLimitType? _LimitType;
         public readonly int Requests;
         public readonly int Seconds;
 
@@ -30,16 +30,16 @@ namespace SammBotNET.Classes
         /// <param name="Context">The context of the rate limit.</param>
         public RateLimit(int Seconds, int Requests, RateLimitType Context = RateLimitType.User)
         {
-            this.LimitType = Context;
+            this._LimitType = Context;
             this.Requests = Requests;
             this.Seconds = Seconds;
         }
 
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext Context, CommandInfo CommandInfo, IServiceProvider Services)
         {
-            string Command = CommandInfo.Module.Name + " " + CommandInfo.Name;
-            DateTime DateNow = DateTime.UtcNow;
-            ulong ContextId = LimitType.Value switch
+            string command = CommandInfo.Module.Name + " " + CommandInfo.Name;
+            DateTime dateNow = DateTime.UtcNow;
+            ulong contextId = _LimitType.Value switch
             {
                 RateLimitType.User => Context.User.Id,
                 RateLimitType.Channel => Context.Channel.Id,
@@ -48,27 +48,27 @@ namespace SammBotNET.Classes
                 _ => 0
             };
 
-            List<RateLimitItem> TargetItem = Items.GetOrAdd(ContextId, new List<RateLimitItem>());
-            List<RateLimitItem> RateLimitItems = TargetItem.Where(x => x.Command == Command).ToList();
+            List<RateLimitItem> targetItem = _Items.GetOrAdd(contextId, new List<RateLimitItem>());
+            List<RateLimitItem> rateLimitItems = targetItem.Where(x => x.Command == command).ToList();
 
-            foreach (RateLimitItem Item in RateLimitItems)
+            foreach (RateLimitItem item in rateLimitItems)
             {
-                if (DateNow >= Item.ExpiresAt)
-                    TargetItem.Remove(Item);
+                if (dateNow >= item.ExpiresAt)
+                    targetItem.Remove(item);
             }
 
-            if (RateLimitItems.Count >= Requests)
+            if (rateLimitItems.Count >= Requests)
             {
-                int SecondsLeft = (RateLimitItems.Last().ExpiresAt - DateNow).Seconds;
+                int secondsLeft = (rateLimitItems.Last().ExpiresAt - dateNow).Seconds;
 
-                return PreconditionResult.FromError($"This command is in cooldown! You can use it again in **{SecondsLeft}** second(s).\n\n" +
+                return PreconditionResult.FromError($"This command is in cooldown! You can use it again in **{secondsLeft}** second(s).\n\n" +
                     $"The default cooldown for this command is **{Seconds}** second(s).\n" +
                     $"You can run this command **{Requests}** time(s) before hitting cooldown.");
             }
 
-            TargetItem.Add(new RateLimitItem()
+            targetItem.Add(new RateLimitItem()
             {
-                Command = Command,
+                Command = command,
                 ExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(Seconds)
             });
 

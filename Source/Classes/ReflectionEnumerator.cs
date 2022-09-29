@@ -9,15 +9,15 @@ namespace SammBotNET.Classes
     {
         public static IEnumerable<T> GetChildrenOfType<T>() where T : class
         {
-            List<T> FoundClasses = new List<T>();
+            List<T> foundClasses = new List<T>();
 
-            foreach (Type Type in Assembly.GetAssembly(typeof(T)).GetTypes()
+            foreach (Type type in Assembly.GetAssembly(typeof(T)).GetTypes()
                 .Where(ClassType => ClassType.IsClass && !ClassType.IsAbstract && ClassType.IsSubclassOf(typeof(T))))
             {
-                FoundClasses.Add((T)Activator.CreateInstance(Type));
+                foundClasses.Add((T)Activator.CreateInstance(type));
             }
 
-            return FoundClasses;
+            return foundClasses;
         }
     }
 }

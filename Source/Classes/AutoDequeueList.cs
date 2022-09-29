@@ -4,15 +4,15 @@ namespace SammBotNET.Classes
 {
     public class AutoDequeueList<T> : LinkedList<T>
     {
-        private readonly int MaxSize;
+        private readonly int _MaxSize;
 
-        public AutoDequeueList(int MaxSize) => this.MaxSize = MaxSize;
+        public AutoDequeueList(int MaxSize) => this._MaxSize = MaxSize;
 
         public void Push(T Item)
         {
             this.AddFirst(Item);
 
-            if (this.Count > MaxSize) this.RemoveLast();
+            if (this.Count > _MaxSize) this.RemoveLast();
         }
     }
 }
