@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -16,6 +17,8 @@ namespace SammBotNET.Modules
     [ModuleEmoji("\u2139")]
     public class InformationModule : ModuleBase<SocketCommandContext>
     {
+        public DiscordShardedClient ShardedClient { get; set; }
+        
         [Command("full")]
         [Summary("Shows the FULL information of the bot.")]
         [FullDescription("Shows version, uptime, ping, etc...")]
@@ -28,6 +31,7 @@ namespace SammBotNET.Modules
                 Settings.Instance.RuntimeStopwatch.Elapsed.Days,
                 Settings.Instance.RuntimeStopwatch.Elapsed.Hours,
                 Settings.Instance.RuntimeStopwatch.Elapsed.Minutes);
+            long memoryUsage = Process.GetCurrentProcess().PrivateMemorySize64 / 1000000;
 
             string releaseConfig = "Unknown";
 #if DEBUG
@@ -42,9 +46,11 @@ namespace SammBotNET.Modules
 
             replyEmbed.AddField("Ping", $"`{Context.Client.Latency}ms`", true);
             replyEmbed.AddField("Server Count", $"`{Context.Client.Guilds.Count} server(s)`", true);
+            replyEmbed.AddField("Shard Count", $"`{ShardedClient.Shards.Count} shard(s)`", true);
+            
             replyEmbed.AddField("Bot Uptime", $"`{elapsedUptime}`", true);
-
             replyEmbed.AddField("Host OS", $"`{FriendlyOSName()}`", true);
+            replyEmbed.AddField("Working Set", $"`{memoryUsage}MB`", true);
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
