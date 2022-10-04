@@ -16,10 +16,6 @@ namespace SammBotNET.Modules
     [ModuleEmoji("\U0001f3f7\uFE0F")]
     public class UserTagsModule : ModuleBase<SocketCommandContext>
     {
-        public StartupService StartupService { get; set; }
-        public DiscordShardedClient Client { get; set; }
-        public CommandService CommandService { get; set; }
-
         [Command("delete")]
         [Alias("remove", "destroy")]
         [Summary("Deletes a user tag.")]
