@@ -12,8 +12,8 @@ namespace SammBotNET.Core
 {
     public class MainProgram
     {
-        private DiscordSocketClient SocketClient;
-        private CommandService CommandService;
+        private DiscordShardedClient _ShardedClient;
+        private CommandService _CommandService;
 
         public static void Main()
             => new MainProgram().MainAsync().GetAwaiter().GetResult();
@@ -92,7 +92,7 @@ namespace SammBotNET.Core
 
             bootLogger.Log("Creating Discord client...", LogSeverity.Information);
 
-            SocketClient = new DiscordSocketClient(new DiscordSocketConfig
+            _ShardedClient = new DiscordShardedClient(new DiscordSocketConfig
             {
                 LogLevel = Discord.LogSeverity.Warning,
                 MessageCacheSize = Settings.Instance.LoadedConfig.MessageCacheSize,
@@ -100,7 +100,7 @@ namespace SammBotNET.Core
                 GatewayIntents = GatewayIntents.All,
                 LogGatewayIntentWarnings = false
             });
-            CommandService = new CommandService(new CommandServiceConfig
+            _CommandService = new CommandService(new CommandServiceConfig
             {
                 LogLevel = Discord.LogSeverity.Info,
                 DefaultRunMode = RunMode.Async,
@@ -131,8 +131,8 @@ namespace SammBotNET.Core
 
         private void ConfigureServices(IServiceCollection Services)
         {
-            Services.AddSingleton(SocketClient)
-                .AddSingleton(CommandService)
+            Services.AddSingleton(_ShardedClient)
+                .AddSingleton(_CommandService)
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<StartupService>()
                 .AddSingleton<Logger>()

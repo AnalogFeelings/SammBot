@@ -17,7 +17,7 @@ namespace SammBotNET.Modules
     public class UserTagsModule : ModuleBase<SocketCommandContext>
     {
         public StartupService StartupService { get; set; }
-        public DiscordSocketClient Client { get; set; }
+        public DiscordShardedClient Client { get; set; }
         public CommandService CommandService { get; set; }
 
         [Command("delete")]

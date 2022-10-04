@@ -18,7 +18,7 @@ namespace SammBotNET.Services
     public class StartupService
     {
         private IServiceProvider ServiceProvider;
-        private DiscordSocketClient SocketClient { get; set; }
+        private DiscordShardedClient ShardedClient { get; set; }
         private CommandService CommandsService { get; set; }
         private Logger BotLogger { get; set; }
 
@@ -27,13 +27,13 @@ namespace SammBotNET.Services
 
         private AutoDequeueList<string> RecentAvatars;
 
-        private bool _FirstTimeConnection = true;
         private bool _EventsSetUp = false;
+        private int _ShardsReady = 0;
         
-        public StartupService(IServiceProvider ServiceProvider, DiscordSocketClient SocketClient, CommandService CommandsService, Logger Logger)
+        public StartupService(IServiceProvider ServiceProvider, DiscordShardedClient ShardedClient, CommandService CommandsService, Logger Logger)
         {
             this.ServiceProvider = ServiceProvider;
-            this.SocketClient = SocketClient;
+            this.ShardedClient = ShardedClient;
             this.CommandsService = CommandsService;
             BotLogger = Logger;
 
@@ -43,13 +43,13 @@ namespace SammBotNET.Services
         public async Task StartAsync()
         {
             BotLogger.Log("Logging in as a bot...", LogSeverity.Information);
-            await SocketClient.LoginAsync(TokenType.Bot, Settings.Instance.LoadedConfig.BotToken);
-            await SocketClient.StartAsync();
+            await ShardedClient.LoginAsync(TokenType.Bot, Settings.Instance.LoadedConfig.BotToken);
+            await ShardedClient.StartAsync();
             BotLogger.Log("Succesfully connected to web socket.", LogSeverity.Success);
 
-            SocketClient.Connected += OnConnected;
-            SocketClient.Ready += OnReady;
-            SocketClient.Disconnected += OnDisconnect;
+            ShardedClient.ShardConnected += OnShardConnected;
+            ShardedClient.ShardReady += OnShardReady;
+            ShardedClient.ShardDisconnected += OnShardDisconnect;
 
             await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
             Settings.Instance.StartupStopwatch.Stop();
@@ -79,21 +79,20 @@ namespace SammBotNET.Services
 #endif
         }
 
-        private Task OnConnected()
+        private Task OnShardConnected(DiscordSocketClient ShardClient)
         {
-            if (_FirstTimeConnection)
-            {
-                BotLogger.Log("Connected to gateway.", LogSeverity.Success);
-                _FirstTimeConnection = false;
-            }
-            else BotLogger.Log("Reconnected to gateway.", LogSeverity.Success);
+            BotLogger.Log($"Shard #{ShardClient.ShardId} has connected to the gateway.", LogSeverity.Debug);
 
             return Task.CompletedTask;
         }
 
-        private Task OnReady()
+        private Task OnShardReady(DiscordSocketClient ShardClient)
         {
-            if (!_EventsSetUp)
+            _ShardsReady++;
+            
+            BotLogger.Log($"Shard #{ShardClient.ShardId} is ready to run.", LogSeverity.Debug);
+            
+            if (!_EventsSetUp && _ShardsReady == ShardedClient.Shards.Count)
             {
                 if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
                     _StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
@@ -113,9 +112,9 @@ namespace SammBotNET.Services
             return Task.CompletedTask;
         }
 
-        private Task OnDisconnect(Exception IncludedException)
+        private Task OnShardDisconnect(Exception IncludedException, DiscordSocketClient ShardClient)
         {
-            BotLogger.Log("Client has disconnected from the gateway! Reason: " + IncludedException.Message, LogSeverity.Warning);
+            BotLogger.Log($"Shard #{ShardClient.ShardId} has disconnected from the gateway! Reason: " + IncludedException.Message, LogSeverity.Warning);
 
             return Task.CompletedTask;
         }
@@ -126,7 +125,7 @@ namespace SammBotNET.Services
 
             string gameUrl = chosenStatus.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null;
 
-            await SocketClient.SetGameAsync(chosenStatus.Content, gameUrl, (ActivityType)chosenStatus.Type);
+            await ShardedClient.SetGameAsync(chosenStatus.Content, gameUrl, (ActivityType)chosenStatus.Type);
         }
 
         private async void RotateAvatar(object State)
@@ -143,7 +142,7 @@ namespace SammBotNET.Services
             {
                 Image loadedAvatar = new Image(avatarStream);
 
-                await SocketClient.CurrentUser.ModifyAsync(x => x.Avatar = loadedAvatar);
+                await ShardedClient.CurrentUser.ModifyAsync(x => x.Avatar = loadedAvatar);
             }
 
             RecentAvatars.Push(chosenAvatar);

@@ -12,7 +12,7 @@ namespace SammBotNET.Core
     {
         private readonly MatchaLogger _LoggerInstance;
 
-        public Logger(DiscordSocketClient Client, CommandService CommandService)
+        public Logger(DiscordShardedClient Client, CommandService CommandService)
         {
             //Default settings.
             MatchaLoggerSettings loggerSettings = new MatchaLoggerSettings()

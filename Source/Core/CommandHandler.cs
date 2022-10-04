@@ -9,21 +9,21 @@ namespace SammBotNET.Core
 {
     public class CommandHandler
     {
-        private DiscordSocketClient DiscordClient { get; set; }
+        private DiscordShardedClient ShardedClient { get; set; }
         private IServiceProvider ServiceProvider { get; set; }
         private Logger BotLogger { get; set; }
 
         private AdminService AdminService { get; set; }
         private CommandService CommandsService { get; set; }
 
-        public CommandHandler(DiscordSocketClient Client, CommandService Commands, IServiceProvider Services, Logger Logger)
+        public CommandHandler(DiscordShardedClient Client, CommandService Commands, IServiceProvider Services, Logger Logger)
         {
             CommandsService = Commands;
-            DiscordClient = Client;
+            ShardedClient = Client;
             ServiceProvider = Services;
             BotLogger = Logger;
 
-            DiscordClient.MessageReceived += HandleCommandAsync;
+            ShardedClient.MessageReceived += HandleCommandAsync;
             CommandsService.CommandExecuted += OnCommandExecutedAsync;
 
             AdminService = Services.GetRequiredService<AdminService>();
@@ -81,10 +81,10 @@ namespace SammBotNET.Core
             if (targetMessage == null) return;
             if (targetMessage.Author.IsBot) return;
 
-            SocketCommandContext context = new SocketCommandContext(DiscordClient, targetMessage);
+            ShardedCommandContext context = new ShardedCommandContext(ShardedClient, targetMessage);
 
             int argumentPosition = 0;
-            if (targetMessage.Content.StartsWith($"<@{DiscordClient.CurrentUser.Id}>"))
+            if (targetMessage.Content.StartsWith($"<@{ShardedClient.CurrentUser.Id}>"))
             {
                 MessageReference messageReference = new MessageReference(context.Message.Id, context.Channel.Id, null, false);
                 AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
