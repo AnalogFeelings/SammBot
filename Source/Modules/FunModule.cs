@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
 using SkiaSharp;
+using Svg.Skia;
 using System;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace SammBotNET.Modules
             10, 20, 30, 40, 50, 60, 70, 80, 90, 100
         };
 
-        private const string _TWEMOJI_ASSETS = "https://raw.githubusercontent.com/twitter/twemoji/ad3d3d669bb3697946577247ebb15818f09c6c91/assets/72x72/";
+        private const string _TWEMOJI_ASSETS = "https://raw.githubusercontent.com/twitter/twemoji/ad3d3d669bb3697946577247ebb15818f09c6c91/assets/svg/";
 
         [Command("8ball")]
         [Alias("ask", "8")]
@@ -292,57 +293,88 @@ namespace SammBotNET.Modules
 
             //Twemoji's repository expects filenames in big endian UTF-32, with no leading zeroes AND in PNG format.
             Encoding emojiEncoding = new UTF32Encoding(true, false);
-            string emojiUrl = _TWEMOJI_ASSETS + Convert.ToHexString(emojiEncoding.GetBytes(percentageEmoji)).TrimStart('0').ToLower() + ".png";
+            byte[] emojiBytes = emojiEncoding.GetBytes(percentageEmoji);
+            string hexString = Convert.ToHexString(emojiBytes);
+            string emojiUrl = _TWEMOJI_ASSETS + hexString.TrimStart('0').ToLower() + ".svg";
 
             //Image generation code is so fucking ugly.
             //Buckle up, this is a bumpy ride.
 
             //Create image resolution information.
-            SKImageInfo imageInfo = new SKImageInfo(384, 192);
+            SKImageInfo imageInfo = new SKImageInfo(1024, 512);
 
             //Download their profile pictures and store into memory stream.
             //Also download the emoji from Twemoji's GitHub.
             using (MemoryStream firstUserAvatarStream = await DownloadToMemoryStream(FirstUser.GetGuildGlobalOrDefaultAvatar(2048)))
             using (MemoryStream secondUserAvatarStream = await DownloadToMemoryStream(SecondUser.GetGuildGlobalOrDefaultAvatar(2048)))
-            using (MemoryStream emojiStream = await DownloadToMemoryStream(emojiUrl))
-
             //Create the actual drawing surface.
             using (SKSurface surface = SKSurface.Create(imageInfo))
             {
+                string emojiData = await DownloadToString(emojiUrl);
+                
                 surface.Canvas.Clear(SKColors.Transparent);
 
                 using (SKBitmap firstUserAvatar = SKBitmap.Decode(firstUserAvatarStream))
                 using (SKBitmap secondUserAvatar = SKBitmap.Decode(secondUserAvatarStream))
-                using (SKBitmap emojiBitmap = SKBitmap.Decode(emojiStream))
+                using (SKSvg emojiSvg = new SKSvg())
                 using (SKPath loversClipPath = new SKPath())
                 {
-                    //Add the two "Windows" to the clip path. They have their origin in the center, not the top left corner.
-                    loversClipPath.AddCircle(imageInfo.Width / 4, imageInfo.Height / 2, imageInfo.Height / 2);
-                    loversClipPath.AddCircle((int)(imageInfo.Width / 1.3333f), imageInfo.Height / 2, imageInfo.Height / 2);
-
-                    //Save canvas state.
-                    surface.Canvas.Save();
-
-                    //Set clip path and draw the 2 profile pictures.
-                    surface.Canvas.ClipPath(loversClipPath, SKClipOperation.Intersect, true);
-                    surface.Canvas.DrawBitmap(firstUserAvatar, new SKRect(0, 0, imageInfo.Width / 2, imageInfo.Height));
-                    surface.Canvas.DrawBitmap(secondUserAvatar, new SKRect(imageInfo.Width / 2, 0, imageInfo.Width, imageInfo.Height));
-
-                    //Restore the canvas state, currently the only way to remove a clip path.
-                    surface.Canvas.Restore();
-
-                    //Use a custom filter with a drop shadow effect.
-                    using (SKPaint emojiPaint = new SKPaint())
+                    emojiSvg.FromSvg(emojiData);
+                    
+                    const int emojiSize = 96;
+                    using (SKBitmap emojiBitmap = emojiSvg.Picture.ToBitmap(SKColor.Empty, emojiSize, emojiSize,
+                               SKColorType.Rgba8888, SKAlphaType.Unpremul, SKColorSpace.CreateSrgb()))
                     {
-                        emojiPaint.IsAntialias = true;
-                        emojiPaint.FilterQuality = SKFilterQuality.High;
-                        emojiPaint.ImageFilter = SKImageFilter.CreateDropShadow(0, 0, 5, 5, SKColors.Black.WithAlpha(192));
+                        //Add the two "Windows" to the clip path. They have their origin in the center, not the top left corner.
+                        loversClipPath.AddCircle(imageInfo.Width / 4, imageInfo.Height / 2, imageInfo.Height / 2);
+                        loversClipPath.AddCircle((int)(imageInfo.Width / 1.3333f), imageInfo.Height / 2, imageInfo.Height / 2);
 
-                        //Draw the emoji in the middle of the image, do some math trickery to get it perfectly centered
-                        //since bitmaps have their origin in their top left corner.
-                        int emojiSize = 32;
-                        surface.Canvas.DrawBitmap(emojiBitmap, new SKRect(imageInfo.Width / 2 - emojiSize, imageInfo.Height / 2 - emojiSize,
-                            imageInfo.Width / 2 + emojiSize, imageInfo.Height / 2 + emojiSize), emojiPaint);
+                        //Save canvas state.
+                        surface.Canvas.Save();
+                        
+                        //Create the target rects for the profile pictures.
+                        SKRect firstUserRect = new SKRect()
+                        {
+                            Left = 0,
+                            Top = 0,
+                            Right = imageInfo.Width / 2,
+                            Bottom = imageInfo.Height
+                        };
+                        SKRect secondUserRect = new SKRect()
+                        {
+                            Left = imageInfo.Width / 2,
+                            Top = 0,
+                            Right = imageInfo.Width,
+                            Bottom = imageInfo.Height
+                        };
+
+                        //Set clip path and draw the 2 profile pictures.
+                        surface.Canvas.ClipPath(loversClipPath, SKClipOperation.Intersect, true);
+                        surface.Canvas.DrawBitmap(firstUserAvatar, firstUserRect);
+                        surface.Canvas.DrawBitmap(secondUserAvatar, secondUserRect);
+
+                        //Restore the canvas state, currently the only way to remove a clip path.
+                        surface.Canvas.Restore();
+
+                        //Use a custom filter with a drop shadow effect.
+                        using (SKPaint emojiPaint = new SKPaint())
+                        {
+                            emojiPaint.IsAntialias = true;
+                            emojiPaint.FilterQuality = SKFilterQuality.High;
+                            emojiPaint.ImageFilter = SKImageFilter.CreateDropShadow(0, 0, 5, 5, SKColors.Black.WithAlpha(220));
+                            
+                            //Do some math trickery to get it centered since bitmaps have their origin in the top left corner.
+                            SKRect emojiRect = new SKRect()
+                            {
+                                Left = imageInfo.Width / 2 - emojiSize,
+                                Top = imageInfo.Height / 2 - emojiSize,
+                                Right = imageInfo.Width / 2 + emojiSize,
+                                Bottom = imageInfo.Height / 2 + emojiSize
+                            };
+
+                            //Draw the emoji.
+                            surface.Canvas.DrawBitmap(emojiBitmap, emojiRect, emojiPaint);
+                        }
                     }
                 }
 
@@ -381,11 +413,18 @@ namespace SammBotNET.Modules
             return ExecutionResult.Succesful();
         }
 
-        public async Task<MemoryStream> DownloadToMemoryStream(string Url)
+        private async Task<MemoryStream> DownloadToMemoryStream(string Url)
         {
             byte[] rawData = await FunService.FunHttpClient.GetByteArrayAsync(Url);
 
             return new MemoryStream(rawData);
+        }
+
+        private async Task<string> DownloadToString(string Url)
+        {
+            string downloadedData = await FunService.FunHttpClient.GetStringAsync(Url);
+
+            return downloadedData;
         }
 
         [Command("urban")]

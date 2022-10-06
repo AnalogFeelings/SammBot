@@ -62,6 +62,7 @@
     <PackageReference Include="SharpCat" Version="1.0.0" />
     <PackageReference Include="SkiaSharp" Version="2.88.2" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.2" />
+    <PackageReference Include="Svg.Skia" Version="0.5.16" />
   </ItemGroup>
 
   <ItemGroup>
