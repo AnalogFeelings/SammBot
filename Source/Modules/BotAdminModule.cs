@@ -15,7 +15,7 @@ namespace SammBotNET.Modules
     [Name("Bot Administration")]
     [Group("badmin")]
     [Summary("Bot management commands. Bot owner only.")]
-    [ModuleEmoji("\u2699")]
+    [ModuleEmoji("\U0001f4be")]
     [RequireOwner]
     public class BotAdminModule : ModuleBase<SocketCommandContext>
     {
