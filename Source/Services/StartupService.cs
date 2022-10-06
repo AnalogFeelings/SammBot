@@ -88,25 +88,28 @@ namespace SammBotNET.Services
 
         private Task OnShardReady(DiscordSocketClient ShardClient)
         {
-            _ShardsReady++;
-            
             BotLogger.Log($"Shard #{ShardClient.ShardId} is ready to run.", LogSeverity.Debug);
             
-            if (!_EventsSetUp && _ShardsReady == ShardedClient.Shards.Count)
+            if (!_EventsSetUp)
             {
-                if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
-                    _StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
-
-                if (Settings.Instance.LoadedConfig.RotatingAvatar)
+                _ShardsReady++;
+                
+                if (_ShardsReady == ShardedClient.Shards.Count)
                 {
-                    TimeSpan avatarDelay = TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime);
+                    if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
+                        _StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 
-                    _AvatarTimer = new Timer(RotateAvatar, null, avatarDelay, avatarDelay);
+                    if (Settings.Instance.LoadedConfig.RotatingAvatar)
+                    {
+                        TimeSpan avatarDelay = TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime);
+
+                        _AvatarTimer = new Timer(RotateAvatar, null, avatarDelay, avatarDelay);
+                    }
+
+                    BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
+
+                    _EventsSetUp = true;
                 }
-
-                BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
-
-                _EventsSetUp = true;
             }
 
             return Task.CompletedTask;
