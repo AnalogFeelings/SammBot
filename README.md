@@ -18,7 +18,7 @@ This README file is not updated often, so sometimes it's possible for new comman
 
 <div align="center"><h2>Features</h2></div>
 
-* :gear: **Bot Administration Module**: Allows the bot's owner to manage the bot remotely.
+* :floppy_disk: **Bot Administration Module**: Allows the bot's owner to manage the bot remotely.
 * :judge: **Moderation Module**: Allows you to kick, ban, mute, or bulk delete messages.
 * :label: **Tags Module**: Allows users to create tags that make Samm-Bot reply with a custom message when used with the "tags get" command.
 * :game_die: **Fun Module**: Hugging, patting, asking the magic 8-ball, and more!
