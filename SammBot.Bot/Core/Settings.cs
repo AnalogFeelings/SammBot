@@ -107,6 +107,7 @@ namespace SammBot.Bot.Core
 
         [NotModifiable] public bool RotatingStatus { get; set; } = true;
         [NotModifiable] public bool RotatingAvatar { get; set; } = true;
+        [NotModifiable] public bool WaitForDebugger { get; set; } = false;
         [NotModifiable] public string BotToken { get; set; } = "";
         [NotModifiable] public string CatKey { get; set; } = "";
         [NotModifiable] public string DogKey { get; set; } = "";
