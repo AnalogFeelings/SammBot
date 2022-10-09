@@ -7,16 +7,16 @@ using SammBotNET.Database;
 
 #nullable disable
 
-namespace SammBotNET.Migrations
+namespace SammBot.Bot.Source.Migrations
 {
     [DbContext(typeof(BotDatabase))]
-    [Migration("20220818012733_AddGuildConfig")]
-    partial class AddGuildConfig
+    [Migration("20221009171828_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
 
             modelBuilder.Entity("SammBotNET.Database.GuildConfig", b =>
                 {
@@ -33,16 +33,6 @@ namespace SammBotNET.Migrations
                     b.HasKey("GuildId");
 
                     b.ToTable("GuildConfigs");
-                });
-
-            modelBuilder.Entity("SammBotNET.Database.PeoneImage", b =>
-                {
-                    b.Property<string>("TwitterUrl")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("TwitterUrl");
-
-                    b.ToTable("PeoneImages");
                 });
 
             modelBuilder.Entity("SammBotNET.Database.Pronoun", b =>
