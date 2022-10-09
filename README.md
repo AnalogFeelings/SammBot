@@ -3,7 +3,7 @@
   <h1>Samm-Bot</h1>
   
   ![Lines of code](https://img.shields.io/tokei/lines/github/aestheticalz/sammbot?label=Lines%20Of%20Code&style=flat-square)
-  ![.NET Version](https://img.shields.io/badge/.NET%20Version-6.0-brightgreen?style=flat-square)
+  ![.NET Version](https://img.shields.io/badge/.NET%20Version-6.0.9-brightgreen?style=flat-square)
   ![GitHub issues by-label](https://img.shields.io/github/issues/aestheticalz/sammbot/master?label=Bot%20Issues&style=flat-square)
   ![GitHub pull requests by-label](https://img.shields.io/github/issues-pr/aestheticalz/sammbot/master?label=Bot%20Pull%20Requests&style=flat-square)
   ![GitHub](https://img.shields.io/github/license/aestheticalz/sammbot?label=License&style=flat-square)
@@ -39,19 +39,19 @@ Building should be straightforward.
 <div align="center"><h2>Handling Databases</h2></div>
 
 ### Creating Migrations
-Grab the command line, cd to the Source folder, and execute this command:
+Grab the command line, cd to the SammBot.Bot/Source folder, and execute this command:
 
 ```
-dotnet ef migrations add <MigrationName> --project ../SammBotNET.csproj
+dotnet ef migrations add <MigrationName> --project ../SammBot.Bot.csproj --output-dir Source/Migrations
 ```
 
 This will let you add columns to existing databases.
 
 ### Applying Migrations
-Grab the command line, cd to the Source folder, and execute this command:
+Grab the command line, cd to the SammBot.Bot/Source folder, and execute this command:
 
 ```
-dotnet ef database update --project ../SammBotNET.csproj
+dotnet ef database update --project ../SammBot.Bot.csproj
 ```
 
 This will apply the latest migration to the database.
