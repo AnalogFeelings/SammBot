@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace SammBot.Bot.Source.Migrations
+namespace SammBot.Bot.Migrations
 {
     public partial class InitialCreate : Migration
     {
