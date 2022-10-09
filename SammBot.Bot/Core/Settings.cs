@@ -22,6 +22,7 @@ namespace SammBot.Bot.Core
         public JsonConfig LoadedConfig = new JsonConfig();
 
         public const string BOT_NAME = "Samm-Bot";
+        public const string BOT_CONFIG_FOLDER = "Bot";
         public const string CONFIG_FILE = "config.json";
 
         public readonly string BotDataDirectory;
@@ -30,7 +31,7 @@ namespace SammBot.Bot.Core
         {
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            BotDataDirectory = Path.Combine(appData, BOT_NAME);
+            BotDataDirectory = Path.Combine(appData, BOT_NAME, BOT_CONFIG_FOLDER);
         }
 
         public bool LoadConfiguration()
