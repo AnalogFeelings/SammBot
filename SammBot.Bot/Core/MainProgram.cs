@@ -27,6 +27,20 @@ namespace SammBot.Bot.Core
             BootLogger bootLogger = new BootLogger();
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            
+#if DEBUG
+            if (!Debugger.IsAttached)
+            {
+                bootLogger.Log("Waiting for debugger to attach...", LogSeverity.Information);
+                    
+                while (!Debugger.IsAttached)
+                {
+                    Thread.Sleep(100);
+                }
+                
+                bootLogger.Log("Debugger has been attached!", LogSeverity.Success);
+            }
+#endif
 
             bootLogger.Log($"Loading {Settings.CONFIG_FILE}...", LogSeverity.Information);
             if (!Settings.Instance.LoadConfiguration())
@@ -47,20 +61,6 @@ namespace SammBot.Bot.Core
             }
 
             bootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
-            
-#if DEBUG
-            if (!Debugger.IsAttached)
-            {
-                bootLogger.Log("Waiting for debugger to attach...", LogSeverity.Information);
-                    
-                while (!Debugger.IsAttached)
-                {
-                    Thread.Sleep(100);
-                }
-                
-                bootLogger.Log("Debugger has been attached!", LogSeverity.Success);
-            }
-#endif
 
             string logsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Logs");
 
