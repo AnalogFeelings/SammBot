@@ -39,19 +39,19 @@ Building should be straightforward.
 <div align="center"><h2>Handling Databases</h2></div>
 
 ### Creating Migrations
-Grab the command line, cd to the SammBot.Bot/Source folder, and execute this command:
+Grab the command line, cd to the SammBot.Bot folder, and execute this command:
 
 ```
-dotnet ef migrations add <MigrationName> --project ../SammBot.Bot.csproj --output-dir Source/Migrations
+dotnet ef migrations add <MigrationName>
 ```
 
 This will let you add columns to existing databases.
 
 ### Applying Migrations
-Grab the command line, cd to the SammBot.Bot/Source folder, and execute this command:
+Grab the command line, cd to the SammBot.Bot folder, and execute this command:
 
 ```
-dotnet ef database update --project ../SammBot.Bot.csproj
+dotnet ef database update
 ```
 
 This will apply the latest migration to the database.
