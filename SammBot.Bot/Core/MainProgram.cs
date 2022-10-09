@@ -4,8 +4,10 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SammBot.Bot.Core
@@ -45,6 +47,20 @@ namespace SammBot.Bot.Core
             }
 
             bootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
+            
+#if DEBUG
+            if (Settings.Instance.LoadedConfig.WaitForDebugger && !Debugger.IsAttached)
+            {
+                bootLogger.Log("Waiting for debugger to attach...", LogSeverity.Information);
+                    
+                while (!Debugger.IsAttached)
+                {
+                    Thread.Sleep(100);
+                }
+                
+                bootLogger.Log("Debugger has been attached!", LogSeverity.Success);
+            }
+#endif
 
             string logsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Logs");
 
