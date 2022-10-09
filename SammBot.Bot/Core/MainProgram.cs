@@ -49,7 +49,7 @@ namespace SammBot.Bot.Core
             bootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
             
 #if DEBUG
-            if (Settings.Instance.LoadedConfig.WaitForDebugger && !Debugger.IsAttached)
+            if (!Debugger.IsAttached)
             {
                 bootLogger.Log("Waiting for debugger to attach...", LogSeverity.Information);
                     
