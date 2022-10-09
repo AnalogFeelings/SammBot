@@ -1,8 +1,9 @@
-﻿using SharpCat.Requester.Cat;
+﻿using SammBot.Bot.Core;
+using SharpCat.Requester.Cat;
 using SharpCat.Requester.Dog;
 using System.Net.Http;
 
-namespace SammBotNET.Services
+namespace SammBot.Bot.Services
 {
     public class RandomService
     {

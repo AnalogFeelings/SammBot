@@ -2,6 +2,11 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
+using SammBot.Bot.Classes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Database;
+using SammBot.Bot.RestDefinitions;
+using SammBot.Bot.Services;
 using SkiaSharp;
 using Svg.Skia;
 using System;
@@ -11,7 +16,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Modules
+namespace SammBot.Bot.Modules
 {
     [Name("Fun")]
     [Group("fun")]

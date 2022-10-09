@@ -1,10 +1,12 @@
 ﻿using Discord;
 using Discord.Commands;
+using SammBot.Bot.Classes;
+using SammBot.Bot.Core;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Modules
+namespace SammBot.Bot.Modules
 {
     [Name("Help")]
     public class HelpModule : ModuleBase<SocketCommandContext>

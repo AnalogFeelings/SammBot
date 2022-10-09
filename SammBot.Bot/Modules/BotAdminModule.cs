@@ -2,6 +2,9 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
+using SammBot.Bot.Classes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +13,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Modules
+namespace SammBot.Bot.Modules
 {
     [Name("Bot Administration")]
     [Group("badmin")]

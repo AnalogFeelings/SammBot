@@ -1,6 +1,6 @@
 ﻿using Discord.Commands;
 
-namespace SammBotNET.Classes
+namespace SammBot.Bot.Classes
 {
     public class ExecutionResult : RuntimeResult
     {

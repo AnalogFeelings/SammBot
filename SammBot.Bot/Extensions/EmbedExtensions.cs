@@ -1,8 +1,9 @@
 ﻿using Discord;
 using Discord.Commands;
+using SammBot.Bot.Core;
 using System;
 
-namespace SammBotNET.Extensions
+namespace SammBot.Bot.Extensions
 {
     public static class EmbedExtensions
     {

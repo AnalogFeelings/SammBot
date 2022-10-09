@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Core
+namespace SammBot.Bot.Core
 {
     public class Logger
     {

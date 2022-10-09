@@ -1,18 +1,18 @@
-﻿global using SammBotNET.Classes;
-global using SammBotNET.Core;
-global using SammBotNET.Database;
-global using SammBotNET.Extensions;
-global using SammBotNET.RestDefinitions;
-global using SammBotNET.Services;
+﻿global using SammBot.Bot.Core;
+global using SammBot.Bot.Database;
+global using SammBot.Bot.Extensions;
+global using SammBot.Bot.RestDefinitions;
+global using SammBot.Bot.Services;
 global using LogSeverity = Matcha.LogSeverity;
 using Newtonsoft.Json;
+using SammBot.Bot.Classes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace SammBotNET.Core
+namespace SammBot.Bot.Core
 {
     public class Settings
     {

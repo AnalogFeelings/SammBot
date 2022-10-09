@@ -2,6 +2,8 @@
 using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
+using SammBot.Bot.Classes;
+using SammBot.Bot.Core;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -9,7 +11,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Modules
+namespace SammBot.Bot.Modules
 {
     [Name("Information")]
     [Group("info")]

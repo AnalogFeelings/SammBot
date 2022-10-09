@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SammBotNET.Database
+namespace SammBot.Bot.Database
 {
     public class UserTag
     {

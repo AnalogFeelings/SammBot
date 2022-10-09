@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace SammBotNET.Services
+namespace SammBot.Bot.Services
 {
     public class UtilsService
     {

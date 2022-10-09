@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SammBotNET.Classes
+namespace SammBot.Bot.Classes
 {
     public class AutoDequeueList<T> : LinkedList<T>
     {

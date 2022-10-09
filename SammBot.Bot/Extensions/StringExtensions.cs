@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SammBotNET.Extensions
+namespace SammBot.Bot.Extensions
 {
     public static class StringExtensions
     {

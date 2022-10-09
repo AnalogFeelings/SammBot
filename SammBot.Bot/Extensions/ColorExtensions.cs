@@ -1,7 +1,7 @@
 ﻿using SkiaSharp;
 using System;
 
-namespace SammBotNET.Extensions
+namespace SammBot.Bot.Extensions
 {
     public static class ColorExtensions
     {

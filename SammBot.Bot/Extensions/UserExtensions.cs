@@ -1,11 +1,12 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using SammBot.Bot.Database;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Extensions
+namespace SammBot.Bot.Extensions
 {
     public static class UserExtensions
     {

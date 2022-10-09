@@ -4,6 +4,8 @@ using Discord.WebSocket;
 using Figgle;
 using Matcha;
 using Pastel;
+using SammBot.Bot.Classes;
+using SammBot.Bot.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Color = System.Drawing.Color;
 
-namespace SammBotNET.Services
+namespace SammBot.Bot.Services
 {
     public class StartupService
     {

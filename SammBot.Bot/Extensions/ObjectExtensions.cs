@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web;
 
-namespace SammBotNET.Extensions
+namespace SammBot.Bot.Extensions
 {
     public static class ObjectExtensions
     {

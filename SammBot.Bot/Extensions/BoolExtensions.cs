@@ -1,4 +1,4 @@
-﻿namespace SammBotNET.Extensions
+﻿namespace SammBot.Bot.Extensions
 {
     public static class BoolExtensions
     {

@@ -2,6 +2,10 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
+using SammBot.Bot.Classes;
+using SammBot.Bot.Core;
+using SammBot.Bot.RestDefinitions;
+using SammBot.Bot.Services;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +13,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Modules
+namespace SammBot.Bot.Modules
 {
     [Name("Utilities")]
     [Group("utils")]

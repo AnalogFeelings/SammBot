@@ -1,8 +1,9 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using SammBot.Bot.Core;
 using System.IO;
 
-namespace SammBotNET.Database
+namespace SammBot.Bot.Database
 {
     public class BotDatabase : DbContext
     {

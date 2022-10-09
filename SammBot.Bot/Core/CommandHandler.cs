@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Core
+namespace SammBot.Bot.Core
 {
     public class CommandHandler
     {

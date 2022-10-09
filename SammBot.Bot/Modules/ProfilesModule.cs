@@ -2,11 +2,13 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using SammBot.Bot.Classes;
+using SammBot.Bot.Database;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Modules
+namespace SammBot.Bot.Modules
 {
     [Name("User Profiles")]
     [Group("profiles")]

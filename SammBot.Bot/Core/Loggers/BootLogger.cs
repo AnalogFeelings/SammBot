@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 
-namespace SammBotNET.Core
+namespace SammBot.Bot.Core
 {
     /// <summary>
     /// Simple logger for the pre-StartupService state of the bot for when Matcha isn't available.

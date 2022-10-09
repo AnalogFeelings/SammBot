@@ -1,4 +1,4 @@
-﻿namespace SammBotNET.Services
+﻿namespace SammBot.Bot.Services
 {
     public class AdminService
     {

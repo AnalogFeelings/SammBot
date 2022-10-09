@@ -8,7 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Core
+namespace SammBot.Bot.Core
 {
     public class MainProgram
     {

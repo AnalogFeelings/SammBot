@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Classes
+namespace SammBot.Bot.Classes
 {
     public class RateLimit : PreconditionAttribute
     {

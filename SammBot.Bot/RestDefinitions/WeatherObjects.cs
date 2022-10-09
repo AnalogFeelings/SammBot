@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace SammBotNET.RestDefinitions
+namespace SammBot.Bot.RestDefinitions
 {
     public class GeolocationParams
     {

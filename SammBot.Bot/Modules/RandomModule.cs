@@ -2,6 +2,9 @@
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using SammBot.Bot.Classes;
+using SammBot.Bot.RestDefinitions;
+using SammBot.Bot.Services;
 using SharpCat.Types.Cat;
 using SharpCat.Types.Dog;
 using System;
@@ -9,7 +12,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace SammBotNET.Modules
+namespace SammBot.Bot.Modules
 {
     [Name("Random")]
     [Group("random")]
