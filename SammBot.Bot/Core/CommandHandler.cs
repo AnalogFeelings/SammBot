@@ -29,7 +29,7 @@ namespace SammBot.Bot.Core
             AdminService = Services.GetRequiredService<AdminService>();
         }
 
-        public async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
+        private async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
         {
             try
             {
