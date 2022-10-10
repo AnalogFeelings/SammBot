@@ -29,8 +29,10 @@ This README file is not updated often, so sometimes it's possible for new comman
  
 <div align="center"><h2>Packages & NuGet</h2></div>
 
-Visual Studio/dotnet should already detect the packages you need and install them.
-Building should be straightforward.
+Any IDE should already detect the packages you need and install them, if you're not using an IDE, .NET itself will take charge of it.   
+Building should be very straightforward.
+
+For Linux/macOS users, this [tiny script](https://gist.github.com/AestheticalZ/7969c2af2f87d606b3fd8b72cd8c6432) should make it easier for you.
 
 :warning: **The file config.json must be filled in manually! Run the bot, and it will create an empty config.json file for you.**
 
