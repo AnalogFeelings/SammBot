@@ -79,6 +79,9 @@ namespace SammBot.Bot.Services
 #if DEBUG
             BotLogger.Log($"{Settings.BOT_NAME} has been built on Debug configuration. Extra logging will be available.", LogSeverity.Warning);
 #endif
+            
+            if(Settings.Instance.LoadedConfig.OnlyOwnerMode)
+                BotLogger.Log($"Only Owner Mode is active. {Settings.BOT_NAME} will only handle commands sent by the bot account owner.", LogSeverity.Warning);
         }
 
         private Task OnShardConnected(DiscordSocketClient ShardClient)

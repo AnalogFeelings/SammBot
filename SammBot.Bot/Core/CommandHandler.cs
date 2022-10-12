@@ -81,6 +81,13 @@ namespace SammBot.Bot.Core
             if (targetMessage == null) return;
             if (targetMessage.Author.IsBot) return;
 
+            if (Settings.Instance.LoadedConfig.OnlyOwnerMode)
+            {
+                IApplication botApplication = await ShardedClient.GetApplicationInfoAsync();
+
+                if (targetMessage.Author.Id != botApplication.Owner.Id) return;
+            }
+
             ShardedCommandContext context = new ShardedCommandContext(ShardedClient, targetMessage);
 
             int argumentPosition = 0;

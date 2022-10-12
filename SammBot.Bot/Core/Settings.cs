@@ -98,6 +98,8 @@ namespace SammBot.Bot.Core
         public List<string> KillMessages { get; set; } = null;
         public List<BotStatus> StatusList { get; set; } = null;
 
+        public bool OnlyOwnerMode { get; set; } = false; // Makes the bot ignore any command not sent by the bot owner.
+
         public string ShipBarStartEmpty { get; set; } = null;
         public string ShipBarStartFull { get; set; } = null;
         public string ShipBarHalfEmpty { get; set; } = null;
