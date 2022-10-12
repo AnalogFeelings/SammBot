@@ -4,6 +4,7 @@
   "RotatingStatus": true,
   "RotatingAvatar": false,
   "WaitForDebugger": false,
+  "OnlyOwnerMode": false,
   "BotToken": null,
   "CatKey": null,
   "DogKey": null,
