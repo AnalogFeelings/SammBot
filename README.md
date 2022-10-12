@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="SammBot.svg">
+  <img src="Branding/SammBot.svg">
   <h1>Samm-Bot</h1>
   
   ![Lines of code](https://img.shields.io/tokei/lines/github/aestheticalz/sammbot?label=Lines%20Of%20Code&style=flat-square)

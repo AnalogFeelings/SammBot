@@ -9,17 +9,22 @@
    id="svg5"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title5078">Samm-Bot Testing Logo</title>
   <defs
      id="defs2">
     <linearGradient
        id="linearGradient16099">
       <stop
-         style="stop-color:#ffff00;stop-opacity:1;"
+         style="stop-color:#cbd0ff;stop-opacity:1;"
          offset="0.38390806"
          id="stop16095" />
       <stop
-         style="stop-color:#ffd202;stop-opacity:1;"
+         style="stop-color:#8080ff;stop-opacity:1;"
          offset="1"
          id="stop16097" />
     </linearGradient>
@@ -34,15 +39,15 @@
        gradientTransform="matrix(1,0,0,0.99436197,0,0.18104275)"
        gradientUnits="userSpaceOnUse" />
     <filter
-       style="color-interpolation-filters:sRGB"
+       style="color-interpolation-filters:sRGB;"
        id="filter23378"
        x="-0.84173352"
-       y="-0.84639794"
+       y="-0.84639796"
        width="2.6771584"
        height="2.6864204">
       <feFlood
          flood-opacity="1"
-         flood-color="rgb(255,162,0)"
+         flood-color="rgb(153,193,241)"
          result="flood"
          id="feFlood23368" />
       <feComposite
@@ -68,11 +73,81 @@
          result="composite2"
          id="feComposite23376" />
     </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter23378-6"
+       x="-0.82848587"
+       y="-0.83305796"
+       width="2.6548688"
+       height="2.6639907">
+      <feFlood
+         flood-opacity="1"
+         flood-color="rgb(255,162,0)"
+         result="flood"
+         id="feFlood23368-5" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite23370-9" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="10"
+         result="blur"
+         id="feGaussianBlur23372-9" />
+      <feOffset
+         dx="-1.38778e-16"
+         dy="-6.38378e-16"
+         result="offset"
+         id="feOffset23374-3" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite23376-2" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter23378-2"
+       x="-0.84173352"
+       y="-0.84639796"
+       width="2.6771584"
+       height="2.6864204">
+      <feFlood
+         flood-opacity="1"
+         flood-color="rgb(255,162,0)"
+         result="flood"
+         id="feFlood23368-7" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite23370-97" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="10"
+         result="blur"
+         id="feGaussianBlur23372-5" />
+      <feOffset
+         dx="-1.38778e-16"
+         dy="-6.38378e-16"
+         result="offset"
+         id="feOffset23374-6" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite23376-1" />
+    </filter>
   </defs>
   <g
      id="layer1">
     <circle
-       style="fill:#412c40;fill-opacity:1;stroke:#ffffff;stroke-width:1.32762;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#261649;fill-opacity:1;stroke:#ffffff;stroke-width:1.32762;stroke-dasharray:none;stroke-opacity:1"
        id="path3536"
        cx="33.866665"
        cy="33.866669"
@@ -90,11 +165,7 @@
        d="M 17.63049,17.619633 45.298097,45.073995"
        id="path23519" />
     <path
-       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.529167;stroke-dasharray:none;stroke-opacity:1"
-       d="m 21.54958,28.541803 c 0,0 3.747834,-0.844842 4.941667,-2.195232 1.119983,-1.266856 1.475507,-4.8535 1.475507,-4.8535"
-       id="path23981" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.529167;stroke-dasharray:none;stroke-opacity:1"
+       style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.529167;stroke-dasharray:none;stroke-opacity:1"
        d="m 21.54958,28.541803 c 0,0 3.754331,-0.839126 4.941667,-2.195232 1.150271,-1.313773 1.475507,-5.02643 1.475507,-5.02643"
        id="path24195" />
     <path
@@ -114,4 +185,23 @@
        d="m 34.152216,45.314754 c 0,0 6.085024,-1.230791 8.035877,-3.385486 2.054475,-2.269143 2.70949,-8.774255 2.70949,-8.774255"
        id="path24617" />
   </g>
+  <metadata
+     id="metadata5076">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Samm-Bot Testing Logo</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>AestheticalZ</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Copyright AestheticalZ 2022</dc:title>
+          </cc:Agent>
+        </dc:rights>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
 </svg>
