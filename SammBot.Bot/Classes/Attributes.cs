@@ -16,12 +16,20 @@ namespace SammBot.Bot.Classes
         public ModuleEmoji(string Emoji) => this.Emoji = Emoji;
     }
 
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
     public class FullDescription : Attribute
     {
         public string Description;
 
         public FullDescription(string Description) => this.Description = Description;
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class FullName : Attribute
+    {
+        public string Name;
+
+        public FullName(string Name) => this.Name = Name;
     }
 
     [AttributeUsage(AttributeTargets.Property)]
