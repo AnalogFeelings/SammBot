@@ -24,12 +24,6 @@ namespace SammBot.Bot.Classes
         public FullDescription(string Description) => this.Description = Description;
     }
 
-    [AttributeUsage(AttributeTargets.Class)]
-    public class RegisterHook : Attribute
-    {
-        public RegisterHook() { }
-    }
-
     [AttributeUsage(AttributeTargets.Property)]
     public class NotModifiable : Attribute
     {
