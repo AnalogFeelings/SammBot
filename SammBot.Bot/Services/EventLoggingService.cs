@@ -281,6 +281,8 @@ namespace SammBot.Bot.Services
         
         public async Task OnRoleUpdated(SocketRole OutdatedRole, SocketRole UpdatedRole)
         {
+            if (OutdatedRole.Name == UpdatedRole.Name && OutdatedRole.Color == UpdatedRole.Color) return;
+            
             SocketGuild currentGuild = UpdatedRole.Guild;
             
             using (BotDatabase botDatabase = new BotDatabase())
@@ -300,9 +302,16 @@ namespace SammBot.Bot.Services
                         replyEmbed.Title = "\U0001f4e6 Role Updated";
                         replyEmbed.Description = "A role has been updated.";
                         replyEmbed.WithColor(255, 205, 77);
-                        
-                        replyEmbed.AddField("\U0001f4e4 Old Name", OutdatedRole.Name);
-                        replyEmbed.AddField("\U0001f4e5 New Name", UpdatedRole.Name);
+
+                        if (OutdatedRole.Name != UpdatedRole.Name)
+                        {
+                            replyEmbed.AddField("\U0001f4e4 Old Name", OutdatedRole.Name);
+                            replyEmbed.AddField("\U0001f4e5 New Name", UpdatedRole.Name);
+                        }
+                        else
+                        {
+                            replyEmbed.AddField("\U0001f465 Role", UpdatedRole.Mention);
+                        }
 
                         if (OutdatedRole.Color != UpdatedRole.Color)
                         {
