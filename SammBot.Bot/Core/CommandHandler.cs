@@ -31,6 +31,7 @@ namespace SammBot.Bot.Core
             EventLoggingService = Services.GetRequiredService<EventLoggingService>();
             
             ShardedClient.UserJoined += EventLoggingService.OnUserJoinedAsync;
+            ShardedClient.UserLeft += EventLoggingService.OnUserLeftAsync;
         }
 
         private async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
