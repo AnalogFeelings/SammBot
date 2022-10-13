@@ -264,11 +264,62 @@ namespace SammBot.Bot.Services
                         
                         replyEmbed.AddField("\U0001f465 Role", NewRole.Mention);
                         replyEmbed.AddField("\U0001faaa Role ID", NewRole.Id);
+                        replyEmbed.AddField("\U0001f3a8 Role Color", $"RGB({NewRole.Color.R}, {NewRole.Color.G}, {NewRole.Color.B})");
 
                         replyEmbed.WithFooter(x =>
                         {
                             x.Text = $"Server ID: {NewRole.Guild.Id}";
                             x.IconUrl = NewRole.Guild.IconUrl;
+                        });
+                        replyEmbed.WithCurrentTimestamp();
+
+                        await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
+                    }
+                }
+            }
+        }
+        
+        public async Task OnRoleUpdated(SocketRole OutdatedRole, SocketRole UpdatedRole)
+        {
+            SocketGuild currentGuild = UpdatedRole.Guild;
+            
+            using (BotDatabase botDatabase = new BotDatabase())
+            {
+                GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
+
+                if (serverConfig == default(GuildConfig)) return;
+
+                if (serverConfig.EnableLogging)
+                {
+                    ISocketMessageChannel loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+
+                    if (loggingChannel != null)
+                    {
+                        EmbedBuilder replyEmbed = new EmbedBuilder();
+
+                        replyEmbed.Title = "\U0001f4e6 Role Updated";
+                        replyEmbed.Description = "A role has been updated.";
+                        replyEmbed.WithColor(255, 205, 77);
+                        
+                        replyEmbed.AddField("\U0001f4e4 Old Name", OutdatedRole.Name);
+                        replyEmbed.AddField("\U0001f4e5 New Name", UpdatedRole.Name);
+
+                        if (OutdatedRole.Color != UpdatedRole.Color)
+                        {
+                            replyEmbed.AddField("\U0001f3a8 Old Color", $"RGB({OutdatedRole.Color.R}, {OutdatedRole.Color.G}, {OutdatedRole.Color.B})", true);
+                            replyEmbed.AddField("\U0001f3a8 New Color", $"RGB({UpdatedRole.Color.R}, {UpdatedRole.Color.G}, {UpdatedRole.Color.B})", true);
+                        }
+                        else
+                        {
+                            replyEmbed.AddField("\U0001f3a8 Role Color", $"RGB({UpdatedRole.Color.R}, {UpdatedRole.Color.G}, {UpdatedRole.Color.B})");
+                        }
+                        
+                        replyEmbed.AddField("\U0001faaa Role ID", UpdatedRole.Id);
+
+                        replyEmbed.WithFooter(x =>
+                        {
+                            x.Text = $"Server ID: {currentGuild.Id}";
+                            x.IconUrl = currentGuild.IconUrl;
                         });
                         replyEmbed.WithCurrentTimestamp();
 
