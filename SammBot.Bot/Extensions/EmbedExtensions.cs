@@ -18,7 +18,11 @@ namespace SammBot.Bot.Extensions
             Builder.Title = $"{botName.ToUpper()} {Title.ToUpper()}";
             Builder.Description = Description;
 
-            Builder.WithFooter(footer => { footer.Text = $"Requested by {Context.Message.Author.GetFullUsername()}"; footer.IconUrl = Context.Message.Author.GetGuildGlobalOrDefaultAvatar(128); });
+            Builder.WithFooter(x =>
+            {
+                x.Text = $"Requested by {Context.Message.Author.GetFullUsername()}"; 
+                x.IconUrl = Context.Message.Author.GetGuildGlobalOrDefaultAvatar(128);
+            });
             Builder.WithCurrentTimestamp();
 
             return Builder;
@@ -36,7 +40,11 @@ namespace SammBot.Bot.Extensions
 
         public static EmbedBuilder ChangeFooter(this EmbedBuilder Builder, SocketCommandContext Context, string Text)
         {
-            Builder.WithFooter(footer => { footer.Text = Text; footer.IconUrl = Context.Client.CurrentUser.GetAvatarUrl(); });
+            Builder.WithFooter(x =>
+            {
+                x.Text = Text; 
+                x.IconUrl = Context.Client.CurrentUser.GetAvatarUrl();
+            });
 
             return Builder;
         }
