@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -99,6 +100,7 @@ namespace SammBot.Bot.Services
         {
             if (!CachedMessage.HasValue || !CachedChannel.HasValue) return; // ??? why, if the message should contain a channel already?
             if (CachedChannel.Value is not SocketGuildChannel) return;
+            if (CachedMessage.Value.Author.IsBot) return;
             
             SocketGuildChannel targetChannel = CachedChannel.Value as SocketGuildChannel;
 
@@ -126,7 +128,49 @@ namespace SammBot.Bot.Services
                         replyEmbed.AddField("\U0001f464 Author", CachedMessage.Value.Author.Mention, true);
                         replyEmbed.AddField("\U0001faaa Author ID", CachedMessage.Value.Author.Id, true);
                         replyEmbed.AddField("\u2709\uFE0F Message Content", trimmedContent);
+                        replyEmbed.AddField("\U0001f4e2 Message Channel", $"<#{CachedChannel.Value.Id}>");
                         replyEmbed.AddField("\U0001f4c5 Send Date", CachedMessage.Value.CreatedAt.ToString());
+
+                        replyEmbed.WithFooter(x =>
+                        {
+                            x.Text = $"Server ID: {targetChannel.Guild.Id}";
+                            x.IconUrl = targetChannel.Guild.IconUrl;
+                        });
+                        replyEmbed.WithCurrentTimestamp();
+
+                        await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
+                    }
+                }
+            }
+        }
+        
+        public async Task OnMessagesBulkDeleted(IReadOnlyCollection<Cacheable<IMessage, ulong>> CachedMessages, Cacheable<IMessageChannel, ulong> CachedChannel)
+        {
+            if (!CachedChannel.HasValue) return; // ??? why, if the message should contain a channel already?
+            if (CachedChannel.Value is not SocketGuildChannel) return;
+            
+            SocketGuildChannel targetChannel = CachedChannel.Value as SocketGuildChannel;
+
+            using (BotDatabase botDatabase = new BotDatabase())
+            {
+                GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel.Guild.Id);
+
+                if (serverConfig == default(GuildConfig)) return;
+
+                if (serverConfig.EnableLogging)
+                {
+                    ISocketMessageChannel loggingChannel = targetChannel.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+
+                    if (loggingChannel != null)
+                    {
+                        EmbedBuilder replyEmbed = new EmbedBuilder();
+
+                        replyEmbed.Title = "\u274C Messages Bulk Deleted";
+                        replyEmbed.Description = "Multiple messages have been deleted at once.";
+                        replyEmbed.WithColor(221, 46, 68);
+
+                        replyEmbed.AddField("\U0001f4e8 Message Count", CachedMessages.Count);
+                        replyEmbed.AddField("\U0001f4e2 Channel", $"<#{CachedChannel.Value.Id}>");
 
                         replyEmbed.WithFooter(x =>
                         {

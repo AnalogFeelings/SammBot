@@ -34,6 +34,7 @@ namespace SammBot.Bot.Core
             ShardedClient.UserLeft += EventLoggingService.OnUserLeftAsync;
             
             ShardedClient.MessageDeleted += EventLoggingService.OnMessageDeleted;
+            ShardedClient.MessagesBulkDeleted += EventLoggingService.OnMessagesBulkDeleted;
         }
 
         private async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
