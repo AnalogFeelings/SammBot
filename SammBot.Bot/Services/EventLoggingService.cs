@@ -94,5 +94,51 @@ namespace SammBot.Bot.Services
                 }
             }
         }
+        
+        public async Task OnMessageDeleted(Cacheable<IMessage, ulong> CachedMessage, Cacheable<IMessageChannel, ulong> CachedChannel)
+        {
+            if (!CachedMessage.HasValue || !CachedChannel.HasValue) return; // ??? why, if the message should contain a channel already?
+            if (CachedChannel.Value is not SocketGuildChannel) return;
+            
+            SocketGuildChannel targetChannel = CachedChannel.Value as SocketGuildChannel;
+
+            using (BotDatabase botDatabase = new BotDatabase())
+            {
+                GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel.Guild.Id);
+
+                if (serverConfig == default(GuildConfig)) return;
+
+                if (serverConfig.EnableLogging)
+                {
+                    ISocketMessageChannel loggingChannel = targetChannel.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+
+                    if (loggingChannel != null)
+                    {
+                        EmbedBuilder replyEmbed = new EmbedBuilder();
+
+                        replyEmbed.Title = "\u274C Message Deleted";
+                        replyEmbed.Description = "A message has been deleted.";
+                        replyEmbed.WithColor(221, 46, 68);
+
+                        string sanitizedContent = Format.Sanitize(CachedMessage.Value.Content);
+                        string trimmedContent = sanitizedContent.Truncate(1021); // TODO: Make Truncate take in account the final "..." when using substring.
+
+                        replyEmbed.AddField("\U0001f464 Author", CachedMessage.Value.Author.Mention, true);
+                        replyEmbed.AddField("\U0001faaa Author ID", CachedMessage.Value.Author.Id, true);
+                        replyEmbed.AddField("\u2709\uFE0F Message Content", trimmedContent);
+                        replyEmbed.AddField("\U0001f4c5 Send Date", CachedMessage.Value.CreatedAt.ToString());
+
+                        replyEmbed.WithFooter(x =>
+                        {
+                            x.Text = $"Server ID: {targetChannel.Guild.Id}";
+                            x.IconUrl = targetChannel.Guild.IconUrl;
+                        });
+                        replyEmbed.WithCurrentTimestamp();
+
+                        await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
+                    }
+                }
+            }
+        }
     }
 }
