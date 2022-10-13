@@ -120,13 +120,15 @@ namespace SammBot.Bot.Modules
         public async Task<RuntimeResult> CreateTagAsync([Summary("Self-explanatory.")] string Name, 
                                                         [Summary("The text the bot will reply with when retrieving the tag.")] string Reply)
         {
-            if (Name.Length > 15)
+            if (Name.Length >= 15)
                 return ExecutionResult.FromError("Please make the tag name shorter than 15 characters!");
-            else if (Name.StartsWith(Settings.Instance.LoadedConfig.BotPrefix))
+            if (Reply.Length >= 128)
+                return ExecutionResult.FromError("Please make the tag reply shorter than 128 characters!");
+            if (Name.StartsWith(Settings.Instance.LoadedConfig.BotPrefix))
                 return ExecutionResult.FromError("Tag names can't begin with my prefix!");
-            else if (Context.Message.MentionedUsers.Count > 0)
+            if (Context.Message.MentionedUsers.Count > 0)
                 return ExecutionResult.FromError("Tag names or replies cannot contain mentions!");
-            else if (Name.Contains(' '))
+            if (Name.Contains(' '))
                 return ExecutionResult.FromError("Tag names cannot contain spaces!");
 
             using (BotDatabase botDatabase = new BotDatabase())
