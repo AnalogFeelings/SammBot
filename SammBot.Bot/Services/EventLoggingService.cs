@@ -241,5 +241,41 @@ namespace SammBot.Bot.Services
                 }
             }
         }
+        
+        public async Task OnRoleCreated(SocketRole NewRole)
+        {
+            using (BotDatabase botDatabase = new BotDatabase())
+            {
+                GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == NewRole.Guild.Id);
+
+                if (serverConfig == default(GuildConfig)) return;
+
+                if (serverConfig.EnableLogging)
+                {
+                    ISocketMessageChannel loggingChannel = NewRole.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+
+                    if (loggingChannel != null)
+                    {
+                        EmbedBuilder replyEmbed = new EmbedBuilder();
+
+                        replyEmbed.Title = "\U0001f4e6 Role Created";
+                        replyEmbed.Description = "A new role has been created.";
+                        replyEmbed.WithColor(119, 178, 85);
+                        
+                        replyEmbed.AddField("\U0001f465 Role", NewRole.Mention);
+                        replyEmbed.AddField("\U0001faaa Role ID", NewRole.Id);
+
+                        replyEmbed.WithFooter(x =>
+                        {
+                            x.Text = $"Server ID: {NewRole.Guild.Id}";
+                            x.IconUrl = NewRole.Guild.IconUrl;
+                        });
+                        replyEmbed.WithCurrentTimestamp();
+
+                        await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
+                    }
+                }
+            }
+        }
     }
 }
