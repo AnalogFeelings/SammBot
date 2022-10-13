@@ -128,8 +128,8 @@ namespace SammBot.Bot.Services
                         replyEmbed.AddField("\U0001f464 Author", CachedMessage.Value.Author.Mention, true);
                         replyEmbed.AddField("\U0001faaa Author ID", CachedMessage.Value.Author.Id, true);
                         replyEmbed.AddField("\u2709\uFE0F Message Content", trimmedContent);
-                        replyEmbed.AddField("\U0001f4e2 Message Channel", $"<#{CachedChannel.Value.Id}>");
-                        replyEmbed.AddField("\U0001f4c5 Send Date", CachedMessage.Value.CreatedAt.ToString());
+                        replyEmbed.AddField("\U0001f4e2 Message Channel", $"<#{CachedChannel.Value.Id}>", true);
+                        replyEmbed.AddField("\U0001f4c5 Send Date", CachedMessage.Value.CreatedAt.ToString(), true);
 
                         replyEmbed.WithFooter(x =>
                         {
@@ -169,8 +169,8 @@ namespace SammBot.Bot.Services
                         replyEmbed.Description = "Multiple messages have been deleted at once.";
                         replyEmbed.WithColor(221, 46, 68);
 
-                        replyEmbed.AddField("\U0001f4e8 Message Count", CachedMessages.Count);
-                        replyEmbed.AddField("\U0001f4e2 Channel", $"<#{CachedChannel.Value.Id}>");
+                        replyEmbed.AddField("\U0001f4e8 Message Count", CachedMessages.Count, true);
+                        replyEmbed.AddField("\U0001f4e2 Channel", $"<#{CachedChannel.Value.Id}>", true);
 
                         replyEmbed.WithFooter(x =>
                         {
