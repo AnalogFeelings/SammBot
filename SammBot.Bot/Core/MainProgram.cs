@@ -136,6 +136,7 @@ namespace SammBot.Bot.Core
             serviceProvider.GetRequiredService<AdminService>();
             serviceProvider.GetRequiredService<FunService>();
             serviceProvider.GetRequiredService<UtilsService>();
+            serviceProvider.GetRequiredService<EventLoggingService>();
 
             bootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
 
@@ -155,7 +156,8 @@ namespace SammBot.Bot.Core
                 .AddSingleton<RandomService>()
                 .AddSingleton<AdminService>()
                 .AddSingleton<FunService>()
-                .AddSingleton<UtilsService>();
+                .AddSingleton<UtilsService>()
+                .AddSingleton<EventLoggingService>();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace SammBot.Bot.Core
 
         private AdminService AdminService { get; set; }
         private CommandService CommandsService { get; set; }
+        private EventLoggingService EventLoggingService { get; set; }
 
         public CommandHandler(DiscordShardedClient Client, CommandService Commands, IServiceProvider Services, Logger Logger)
         {
@@ -27,6 +28,9 @@ namespace SammBot.Bot.Core
             CommandsService.CommandExecuted += OnCommandExecutedAsync;
 
             AdminService = Services.GetRequiredService<AdminService>();
+            EventLoggingService = Services.GetRequiredService<EventLoggingService>();
+            
+            ShardedClient.UserJoined += EventLoggingService.OnUserJoinedAsync;
         }
 
         private async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
