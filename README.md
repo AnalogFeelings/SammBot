@@ -24,7 +24,7 @@ This README file is not updated often, so sometimes it's possible for new comman
 * :label: **Tags Module**: Allows users to create tags that make Samm-Bot reply with a custom message when used with the "tags get" command.
 * :game_die: **Fun Module**: Hugging, patting, asking the magic 8-ball, and more!
 * :information_source: **Information Module**: Shows information about the bot and can also show information about a user or server.
-* :slot_machine: **Random Module**: Allows users to retrieve random content from the cat, dog, fox or duck APIs, or a random SCP.
+* :slot_machine: **Random Module**: Retrieve random content from the cat, dog, fox or duck APIs, or a random SCP.
 * :busts_in_silhouette: **Profiles Module**: User profiles (only pronouns for now).
 * :wrench: **Utils Module**: Allows you to view RGB or HEX colors, get a user's avatar, or the weather forecast of your city.
  
@@ -35,7 +35,7 @@ Building should be very straightforward.
 
 For Linux/macOS users, this [tiny script](https://gist.github.com/AestheticalZ/7969c2af2f87d606b3fd8b72cd8c6432) should make it easier for you.
 
-:warning: **The file config.json must be filled in manually! Run the bot, and it will create an empty config.json file for you.**
+:warning: **The file config.json must be filled in manually! Run the bot, and it will create a template config.json file for you.**
 
 :warning: **JetBrains Mono Regular is needed for the `viewhex` and `viewrgb` commands in the Utils module to work!**
 
