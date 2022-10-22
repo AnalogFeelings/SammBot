@@ -220,6 +220,8 @@ namespace SammBot.Bot.Services
 
                         if (CachedMessage.HasValue)
                         {
+                            if (CachedMessage.Value.Content == NewMessage.Content) return;
+                            
                             string oldSanitizedContent = Format.Sanitize(CachedMessage.Value.Content);
                             string oldTrimmedContent = oldSanitizedContent.Truncate(512);
                             
