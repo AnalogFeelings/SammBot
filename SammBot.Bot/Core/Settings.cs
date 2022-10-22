@@ -60,7 +60,7 @@ namespace SammBot.Bot.Core
             string timeoutCommand = $"/C timeout 3 && {Environment.ProcessPath}";
             string executableCommand = "cmd.exe";
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 timeoutCommand = $"-c \"sleep 3s && {Environment.ProcessPath}\"";
                 executableCommand = "bash";
