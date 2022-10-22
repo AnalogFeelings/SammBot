@@ -39,6 +39,9 @@ namespace SammBot.Bot.Core
             
             ShardedClient.RoleCreated += EventLoggingService.OnRoleCreated;
             ShardedClient.RoleUpdated += EventLoggingService.OnRoleUpdated;
+
+            ShardedClient.UserBanned += EventLoggingService.OnUserBanned;
+            ShardedClient.UserUnbanned += EventLoggingService.OnUserUnbanned;
         }
 
         private async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)

@@ -8,6 +8,10 @@ namespace SammBot.Bot.Services
 {
     public class EventLoggingService
     {
+        private readonly Color GoodColor = new Color(119, 178, 85); // Green
+        private readonly Color BadColor = new Color(255, 205, 77); // Yellow
+        private readonly Color VeryBadColor = new Color(221, 46, 68); // Red
+        
         public async Task OnUserJoinedAsync(SocketGuildUser NewUser)
         {
             using (BotDatabase botDatabase = new BotDatabase())
@@ -329,6 +333,80 @@ namespace SammBot.Bot.Services
                         {
                             x.Text = $"Server ID: {currentGuild.Id}";
                             x.IconUrl = currentGuild.IconUrl;
+                        });
+                        replyEmbed.WithCurrentTimestamp();
+
+                        await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
+                    }
+                }
+            }
+        }
+
+        public async Task OnUserBanned(SocketUser BannedUser, SocketGuild SourceGuild)
+        {
+            using (BotDatabase botDatabase = new BotDatabase())
+            {
+                GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == SourceGuild.Id);
+
+                if (serverConfig == default(GuildConfig)) return;
+
+                if (serverConfig.EnableLogging)
+                {
+                    ISocketMessageChannel loggingChannel = SourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+
+                    if (loggingChannel != null)
+                    {
+                        EmbedBuilder replyEmbed = new EmbedBuilder();
+
+                        replyEmbed.Title = "\U0001f528 User Banned";
+                        replyEmbed.Description = "A user has been banned from the server.";
+                        replyEmbed.WithColor(VeryBadColor);
+                        
+                        replyEmbed.AddField("\U0001f464 User", BannedUser.GetFullUsername());
+                        replyEmbed.AddField("\U0001faaa User ID", BannedUser.Id);
+                        replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{BannedUser.CreatedAt.ToUnixTimeSeconds()}:F>");
+
+                        replyEmbed.WithFooter(x =>
+                        {
+                            x.Text = $"Server ID: {SourceGuild.Id}";
+                            x.IconUrl = SourceGuild.IconUrl;
+                        });
+                        replyEmbed.WithCurrentTimestamp();
+
+                        await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
+                    }
+                }
+            }
+        }
+        
+        public async Task OnUserUnbanned(SocketUser UnbannedUser, SocketGuild SourceGuild)
+        {
+            using (BotDatabase botDatabase = new BotDatabase())
+            {
+                GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == SourceGuild.Id);
+
+                if (serverConfig == default(GuildConfig)) return;
+
+                if (serverConfig.EnableLogging)
+                {
+                    ISocketMessageChannel loggingChannel = SourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+
+                    if (loggingChannel != null)
+                    {
+                        EmbedBuilder replyEmbed = new EmbedBuilder();
+
+                        replyEmbed.Title = "\u2705 User Unbanned";
+                        replyEmbed.Description = "A user has been unbanned from the server.";
+                        replyEmbed.WithColor(GoodColor);
+                        
+                        replyEmbed.AddField("\U0001f464 User", UnbannedUser.GetFullUsername());
+                        replyEmbed.AddField("\U0001faaa User ID", UnbannedUser.Id);
+                        replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{UnbannedUser.CreatedAt.ToUnixTimeSeconds()}:F>");
+
+                        replyEmbed.WithFooter(x =>
+                        {
+                            x.Text = $"Server ID: {SourceGuild.Id}";
+                            x.IconUrl = SourceGuild.IconUrl;
                         });
                         replyEmbed.WithCurrentTimestamp();
 
