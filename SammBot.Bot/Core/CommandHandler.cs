@@ -29,19 +29,8 @@ namespace SammBot.Bot.Core
 
             AdminService = Services.GetRequiredService<AdminService>();
             EventLoggingService = Services.GetRequiredService<EventLoggingService>();
-            
-            ShardedClient.UserJoined += EventLoggingService.OnUserJoinedAsync;
-            ShardedClient.UserLeft += EventLoggingService.OnUserLeftAsync;
-            
-            ShardedClient.MessageDeleted += EventLoggingService.OnMessageDeleted;
-            ShardedClient.MessagesBulkDeleted += EventLoggingService.OnMessagesBulkDeleted;
-            ShardedClient.MessageUpdated += EventLoggingService.OnMessageUpdated;
-            
-            ShardedClient.RoleCreated += EventLoggingService.OnRoleCreated;
-            ShardedClient.RoleUpdated += EventLoggingService.OnRoleUpdated;
 
-            ShardedClient.UserBanned += EventLoggingService.OnUserBanned;
-            ShardedClient.UserUnbanned += EventLoggingService.OnUserUnbanned;
+            AddEventHandlersAsync();
         }
 
         private async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
@@ -125,6 +114,22 @@ namespace SammBot.Bot.Core
 
                 await CommandsService.ExecuteAsync(context, argumentPosition, ServiceProvider);
             }
+        }
+        
+        private void AddEventHandlersAsync()
+        {
+            ShardedClient.UserJoined += EventLoggingService.OnUserJoinedAsync;
+            ShardedClient.UserLeft += EventLoggingService.OnUserLeftAsync;
+            
+            ShardedClient.MessageDeleted += EventLoggingService.OnMessageDeleted;
+            ShardedClient.MessagesBulkDeleted += EventLoggingService.OnMessagesBulkDeleted;
+            ShardedClient.MessageUpdated += EventLoggingService.OnMessageUpdated;
+            
+            ShardedClient.RoleCreated += EventLoggingService.OnRoleCreated;
+            ShardedClient.RoleUpdated += EventLoggingService.OnRoleUpdated;
+
+            ShardedClient.UserBanned += EventLoggingService.OnUserBanned;
+            ShardedClient.UserUnbanned += EventLoggingService.OnUserUnbanned;
         }
     }
 }
