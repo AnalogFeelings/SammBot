@@ -36,7 +36,7 @@ namespace SammBot.Bot.Core
                     JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
                 bootLogger.Log($"Could not load {Settings.CONFIG_FILE} correctly! Make sure the path \"{fullPath}\" exists.\n" +
-                    $"{Settings.BOT_NAME} has attempted to write the default {Settings.CONFIG_FILE} file to that path.", LogSeverity.Fatal);
+                    $"{Settings.BOT_NAME} has attempted to write an empty template {Settings.CONFIG_FILE} file to that path.", LogSeverity.Fatal);
 
                 await writeTask;
 
