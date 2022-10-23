@@ -109,8 +109,10 @@ namespace SammBot.Bot.Core
             {
                 if (targetMessage.Content.Length == Settings.Instance.LoadedConfig.BotPrefix.Length) return;
 
+#if DEBUG
                 BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
-                                targetMessage.Content, targetMessage.Channel.Name, targetMessage.Author.Username), LogSeverity.Information);
+                    targetMessage.Content, targetMessage.Channel.Name, targetMessage.Author.Username), LogSeverity.Information);
+#endif
 
                 await CommandsService.ExecuteAsync(context, argumentPosition, ServiceProvider);
             }
