@@ -57,7 +57,7 @@ namespace SammBot.Bot.Services
             await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
             Settings.Instance.StartupStopwatch.Stop();
 
-            Console.Title = $"{Settings.BOT_NAME} {Settings.Instance.LoadedConfig.BotVersion}";
+            Console.Title = $"{Settings.BOT_NAME} v{Settings.GetBotVersion()}";
 
             string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
             string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
@@ -66,7 +66,7 @@ namespace SammBot.Bot.Services
 
             Console.Write(FiggleFonts.Slant.Render(Settings.BOT_NAME).Pastel(Color.SkyBlue));
             Console.Write("===========".Pastel(Color.CadetBlue));
-            Console.Write($"Source code {Settings.Instance.LoadedConfig.BotVersion}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
+            Console.Write($"Source code v{Settings.GetBotVersion()}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
             Console.WriteLine("===========".Pastel(Color.CadetBlue));
             Console.WriteLine();
 

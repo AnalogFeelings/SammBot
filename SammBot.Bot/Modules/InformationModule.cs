@@ -42,7 +42,7 @@ namespace SammBot.Bot.Modules
             releaseConfig = "Release";
 #endif
 
-            replyEmbed.AddField("Bot Version", $"`{Settings.Instance.LoadedConfig.BotVersion}`", true);
+            replyEmbed.AddField("Bot Version", $"`{Settings.GetBotVersion()}`", true);
             replyEmbed.AddField("Target Config", $"`{releaseConfig}`", true);
             replyEmbed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
 
