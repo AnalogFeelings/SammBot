@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Color = System.Drawing.Color;
 
 namespace SammBot.Bot.Services
@@ -82,6 +83,29 @@ namespace SammBot.Bot.Services
             
             if(Settings.Instance.LoadedConfig.OnlyOwnerMode)
                 BotLogger.Log($"Only Owner Mode is active. {Settings.BOT_NAME} will only handle commands sent by the bot account owner.", LogSeverity.Warning);
+            
+            BotLogger.Log("Warming up the bot database...", LogSeverity.Information);
+            _ = Task.Run(() => WarmUpDatabase());
+        }
+
+        private Task WarmUpDatabase()
+        {
+            try
+            {
+                using (BotDatabase botDatabase = new BotDatabase())
+                {
+                    // Hack to force EF to load the database.
+                    IModel model = botDatabase.Model;
+                }
+            
+                BotLogger.Log("Database has been warmed up!", LogSeverity.Success);
+            }
+            catch (Exception ex)
+            {
+                BotLogger.Log($"Database could not be warmed up: {ex.Message}", LogSeverity.Error);
+            }
+            
+            return Task.CompletedTask;
         }
 
         private Task OnShardConnected(DiscordSocketClient ShardClient)
