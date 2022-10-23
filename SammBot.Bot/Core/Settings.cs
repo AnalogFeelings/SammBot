@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace SammBot.Bot.Core
@@ -77,6 +78,13 @@ namespace SammBot.Bot.Core
             Environment.Exit(0);
         }
 
+        public static string GetBotVersion()
+        {
+            Version botVersion = Assembly.GetEntryAssembly().GetName().Version;
+
+            return botVersion.ToString(2);
+        }
+
         private static Settings _PrivateInstance;
         public static Settings Instance
         {
@@ -89,7 +97,6 @@ namespace SammBot.Bot.Core
 
     public class JsonConfig
     {
-        public string BotVersion { get; set; } = "v0.1";
         public string BotPrefix { get; set; } = "s.";
         public int TagDistance { get; set; } = 3;
 
