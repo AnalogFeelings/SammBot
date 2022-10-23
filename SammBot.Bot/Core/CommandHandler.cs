@@ -51,7 +51,10 @@ namespace SammBot.Bot.Core
                     switch (Result.ErrorReason)
                     {
                         case "Unknown command.":
-                            finalMessage = $"Unknown command! Use the `{Settings.Instance.LoadedConfig.BotPrefix}help` command for a command list.";
+                            replyEmbed.Title = "\u2139\uFE0F I didn't quite understand that...";
+                            replyEmbed.Color = new Color(59, 136, 195);
+                            
+                            finalMessage = $"There is no command named like that!\nUse the `{Settings.Instance.LoadedConfig.BotPrefix}help` command for a command list.";
                             break;
                         case "The input text has too few parameters.":
                             finalMessage = $"You didn't provide enough required parameters!\nUse the `{Settings.Instance.LoadedConfig.BotPrefix}help " +
