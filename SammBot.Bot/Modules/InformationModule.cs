@@ -27,9 +27,9 @@ namespace SammBot.Bot.Modules
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> InformationFullAsync()
         {
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information", "All of the public information about the bot.");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information");
 
-            string elapsedUptime = string.Format("{0:00}d{1:00}h{2:00}m",
+            string elapsedUptime = string.Format("{0:00} days,\n{1:00} hours,\n{2:00} minutes",
                 Settings.Instance.RuntimeStopwatch.Elapsed.Days,
                 Settings.Instance.RuntimeStopwatch.Elapsed.Hours,
                 Settings.Instance.RuntimeStopwatch.Elapsed.Minutes);
@@ -41,18 +41,28 @@ namespace SammBot.Bot.Modules
 #elif RELEASE
             releaseConfig = "Release";
 #endif
-
-            replyEmbed.AddField("Bot Version", $"`{Settings.GetBotVersion()}`", true);
-            replyEmbed.AddField("Target Config", $"`{releaseConfig}`", true);
-            replyEmbed.AddField(".NET Version", $"`{RuntimeInformation.FrameworkDescription}`", true);
-
-            replyEmbed.AddField("Ping", $"`{Context.Client.Latency}ms`", true);
-            replyEmbed.AddField("Server Count", $"`{Context.Client.Guilds.Count} server(s)`", true);
-            replyEmbed.AddField("Shard Count", $"`{ShardedClient.Shards.Count} shard(s)`", true);
             
-            replyEmbed.AddField("Bot Uptime", $"`{elapsedUptime}`", true);
-            replyEmbed.AddField("Host OS", $"`{FriendlyOSName()}`", true);
-            replyEmbed.AddField("Working Set", $"`{memoryUsage}MB`", true);
+            string formattedWebsite = Format.Url("website", "https://aestheticalz.github.io/SammBot/");
+            string formattedGithub = Format.Url("repository", "https://github.com/AestheticalZ/SammBot");
+
+            replyEmbed.Title = "\u2139\uFE0F Bot Information";
+            replyEmbed.WithColor(59, 136, 195);
+
+            replyEmbed.Description += $"Here's some public information about {Settings.BOT_NAME}!\n\n";
+            replyEmbed.Description += $":globe_with_meridians: Check out the bot's {formattedWebsite}!\n";
+            replyEmbed.Description += $":open_file_folder: Also check out the GitHub {formattedGithub}!";
+
+            replyEmbed.AddField("\U0001faaa Bot Version", $"Version {Settings.GetBotVersion()}", true);
+            replyEmbed.AddField("\u2699\uFE0F Target Config", $"{releaseConfig} Configuration", true);
+            replyEmbed.AddField("\U0001f4e6 .NET Version", $"{RuntimeInformation.FrameworkDescription}", true);
+
+            replyEmbed.AddField("\U0001f4e1 Ping", $"{Context.Client.Latency} milliseconds", true);
+            replyEmbed.AddField("\U0001f5c2\uFE0F Server Count", $"{Context.Client.Guilds.Count} server(s)", true);
+            replyEmbed.AddField("\U0001f9f1 Shard Count", $"{ShardedClient.Shards.Count} shard(s)", true);
+            
+            replyEmbed.AddField("\u23F1\uFE0F Bot Uptime", elapsedUptime, true);
+            replyEmbed.AddField("\U0001f5a5\uFE0F Host System", FriendlyOSName(), true);
+            replyEmbed.AddField("\U0001f4ca Working Set", $"{memoryUsage} megabytes", true);
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
