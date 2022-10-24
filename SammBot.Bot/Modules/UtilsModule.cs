@@ -245,35 +245,35 @@ namespace SammBot.Bot.Modules
             string conditionEmoji = actualWeather.Id switch
             {
                 //2XX Thunderbolt group.
-                (>= 200 and <= 202) or (>= 230 and <= 232) => "⛈",
-                >= 210 and <= 221 => "🌩",
+                (>= 200 and <= 202) or (>= 230 and <= 232) => "\u26C8\uFE0F",
+                >= 210 and <= 221 => "\U0001f329\uFE0F",
 
                 //3XX Drizzle group.
-                >= 300 and <= 321 => "🌧",
+                >= 300 and <= 321 => "\U0001f327\uFE0F",
 
                 //5XX Rain group.
-                >= 500 and <= 501 => "🌦",
-                (>= 502 and <= 504) or (>= 520 and <= 531) => "🌧",
-                >= 511 and < 520 => "❄️",
+                >= 500 and <= 501 => "\U0001f326\uFE0F",
+                (>= 502 and <= 504) or (>= 520 and <= 531) => "\U0001f327\uFE0F",
+                >= 511 and < 520 => "\u2744\uFE0F",
 
                 //6XX Snow group.
-                >= 600 and <= 622 => "🌨",
+                >= 600 and <= 622 => "\U0001f328\uFE0F",
 
                 //7XX Atmosphere group.
-                >= 701 and <= 711 => "🌫",
-                >= 781 and < 782 => "🌪",
+                >= 701 and <= 711 => "\U0001f32b\uFE0F",
+                >= 781 and < 782 => "\U0001f32a\uFE0F",
 
                 //800 Clear group.
-                >= 800 and < 801 => "☀",
+                >= 800 and < 801 => "\u2600\uFE0F",
 
                 //8XX Clouds group.
-                >= 801 and < 802 => "🌤",
-                >= 802 and < 803 => "⛅",
-                >= 803 and < 804 => "🌥",
-                >= 804 and < 805 => "☁",
+                >= 801 and < 802 => "\U0001f324\uFE0F",
+                >= 802 and < 803 => "\u26C5",
+                >= 803 and < 804 => "\U0001f325\uFE0F",
+                >= 804 and < 805 => "\u2601\uFE0F",
 
                 //Unknown group id.
-                _ => "❔"
+                _ => "\u2754"
             };
 
             float cloudiness = retrievedWeather.Clouds.Cloudiness;
@@ -293,31 +293,37 @@ namespace SammBot.Bot.Modules
             long sunrise = retrievedWeather.System.Sunrise;
             long sunset = retrievedWeather.System.Sunset;
 
-            string embedDescription = $"⚠️ Some data may be missing due to an API limitation.\n\n";
+            string embedDescription = $"\u26A0\uFE0F Some data may be missing due to an API limitation.\n";
+            
+            embedDescription += $"\u26A0\uFE0F The location may be inaccurate due to an API limitation as well.\n\n";
+
+            embedDescription += $"\U0001f4cd Location: {retrievedWeather.Name}, {retrievedWeather.System.Country.CountryCodeToFlag()}.\n\n";
 
             embedDescription += $"{conditionEmoji} **{actualWeather.Description.CapitalizeFirst()}**\n";
-            embedDescription += $"☁️ Cloudiness: **{cloudiness}**%\n\n";
+            embedDescription += $"\u2601\uFE0F Cloudiness: **{cloudiness}**%\n\n";
 
-            embedDescription += $"🌡 Temperature: **{temperature}**°C, **{temperature.ToFahrenheit()}**°F\n";
-            embedDescription += $"⬆ Temperature Max: **{temperatureMax}**°C, **{temperatureMax.ToFahrenheit()}**°F\n";
-            embedDescription += $"⬇ Temperature Min: **{temperatureMin}**°C, **{temperatureMin.ToFahrenheit()}**°F\n";
-            embedDescription += $"👤 Feels like: **{feelsLike}**°C, **{feelsLike.ToFahrenheit()}**°F\n\n";
+            embedDescription += $"\U0001f321\uFE0F Temperature: **{temperature}**°C, **{temperature.ToFahrenheit()}**°F\n";
+            embedDescription += $"\u2B06\uFE0F Temperature Max: **{temperatureMax}**°C, **{temperatureMax.ToFahrenheit()}**°F\n";
+            embedDescription += $"\u2B07\uFE0F Temperature Min: **{temperatureMin}**°C, **{temperatureMin.ToFahrenheit()}**°F\n";
+            embedDescription += $"\U0001f464 Feels like: **{feelsLike}**°C, **{feelsLike.ToFahrenheit()}**°F\n\n";
 
-            embedDescription += $"🌍 Atmospheric pressure: **{pressure}**hPa, **{pressure.ToPsi()}**psi\n";
-            embedDescription += $"💧 Humidity: **{humidity}**%\n\n";
+            embedDescription += $"\U0001f30d Atmospheric pressure: **{pressure}**hPa, **{pressure.ToPsi()}**psi\n";
+            embedDescription += $"\U0001f4a7 Humidity: **{humidity}**%\n\n";
 
-            embedDescription += $"💨 Wind speed: **{windSpeed}**km/h, **{windSpeed.KmhToMph()}mph**\n";
-            embedDescription += $"🧭 Wind direction: **{windDirection}**°\n";
-            embedDescription += $"🌬 Wind gust: **{windGust}**km/h, **{windGust.KmhToMph()}**mph\n\n";
+            embedDescription += $"\U0001f4a8 Wind speed: **{windSpeed}**km/h, **{windSpeed.KmhToMph()}mph**\n";
+            embedDescription += $"\U0001f9ed Wind direction: **{windDirection}**°\n";
+            embedDescription += $"\U0001f32c\uFE0F Wind gust: **{windGust}**km/h, **{windGust.KmhToMph()}**mph\n\n";
 
-            embedDescription += "⚠️ Sunrise and sunset times are adjusted to your computer's timezone.\n";
-            embedDescription += $"🌅 Sunrise: <t:{sunrise}:t>\n";
-            embedDescription += $"🌇 Sunset: <t:{sunset}:t>\n";
+            embedDescription += "\u26A0\uFE0F Sunrise and sunset times are adjusted to your computer's timezone.\n";
+            embedDescription += $"\U0001f305 Sunrise: <t:{sunrise}:t>\n";
+            embedDescription += $"\U0001f307 Sunset: <t:{sunset}:t>\n";
 
             //============================EMBED BUILDING============================
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-                .ChangeTitle($"Weather for {retrievedWeather.Name}, {retrievedWeather.System.Country.CountryCodeToFlag()}");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+
+            replyEmbed.Title = "\U0001f6f0\uFE0F Weather Forecast";
+            replyEmbed.Color = new Color(85, 172, 238);
 
             replyEmbed.Description = embedDescription;
 
