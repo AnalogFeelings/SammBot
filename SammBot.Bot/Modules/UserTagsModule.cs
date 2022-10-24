@@ -92,8 +92,11 @@ namespace SammBot.Bot.Modules
                 if (!filteredTags.Any())
                     return ExecutionResult.FromError($"No tags found with a name similar to \"{Name}\".");
 
-                EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"All of the tags similar to \"{Name}\".")
-                    .ChangeTitle("TAG RESULTS");
+                EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+
+                replyEmbed.Title = "\U0001f50d Search Results";
+                replyEmbed.Description = $"All of the tags similar to \"{Name}\".";
+                replyEmbed.Color = new Color(187, 221, 245);
 
                 foreach (UserTag tag in filteredTags)
                 {
