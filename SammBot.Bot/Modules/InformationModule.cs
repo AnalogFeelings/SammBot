@@ -85,6 +85,7 @@ namespace SammBot.Bot.Modules
             string discoverySplash = Context.Guild.DiscoverySplashUrl != null ? $"[Splash URL]({Context.Guild.DiscoverySplashId})" : "None";
             int channelCount = Context.Guild.Channels.Count;
             int emoteCount = Context.Guild.Emotes.Count;
+            int stickerCount = Context.Guild.Stickers.Count;
             int memberCount = Context.Guild.MemberCount;
             int boostTier = (int)Context.Guild.PremiumTier;
             int roleCount = Context.Guild.Roles.Count;
@@ -95,18 +96,23 @@ namespace SammBot.Bot.Modules
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("GUILD INFORMATION");
 
+            replyEmbed.Title = "\u2139\uFE0F Server Information";
+            replyEmbed.Description = "Here's some information about the current server.";
+            replyEmbed.WithColor(59, 136, 195);
+
             if (Context.Guild.IconUrl != null) replyEmbed.WithThumbnailUrl(Context.Guild.IconUrl);
-            replyEmbed.AddField("Name", serverName, true);
-            replyEmbed.AddField("Owner", serverOwnerName, true);
-            replyEmbed.AddField("Banner", serverBanner, true);
-            replyEmbed.AddField("Discovery Splash", discoverySplash, true);
-            replyEmbed.AddField("Nitro Boosts", boostCount, true);
-            replyEmbed.AddField("Nitro Tier", boostTier, true);
-            replyEmbed.AddField("Created At", creationDate, true);
-            replyEmbed.AddField("Channel Count", channelCount, true);
-            replyEmbed.AddField("Emote Count", emoteCount, true);
-            replyEmbed.AddField("Member Count", memberCount, true);
-            replyEmbed.AddField("Role Count", roleCount, true);
+            replyEmbed.AddField("\U0001faaa Name", serverName, true);
+            replyEmbed.AddField("\U0001fac5 Owner", serverOwnerName, true);
+            replyEmbed.AddField("\U0001f5bc\uFE0F Banner", serverBanner, true);
+            replyEmbed.AddField("\U0001faa7 Discovery Splash", discoverySplash, true);
+            replyEmbed.AddField("\U0001f680 Nitro Boosts", boostCount, true);
+            replyEmbed.AddField("\U0001f3c6 Nitro Tier", boostTier, true);
+            replyEmbed.AddField("\U0001f4c6 Created At", creationDate, true);
+            replyEmbed.AddField("\U0001f4e2 Channel Count", channelCount, true);
+            replyEmbed.AddField("\U0001f642 Emote Count", emoteCount, true);
+            replyEmbed.AddField("\U0001f5fd Sticker Count", stickerCount, true);
+            replyEmbed.AddField("\U0001f465 Member Count", memberCount, true);
+            replyEmbed.AddField("\U0001f4e6 Role Count", roleCount, true);
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
