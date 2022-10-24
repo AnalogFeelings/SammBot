@@ -60,10 +60,10 @@ namespace SammBot.Bot.Modules
         [Summary("Creates an invite for a voice channel activity!")]
         [FullDescription("Creates an activity invite for your current voice channel. Read [this](https://discordnet.dev/api/Discord.DefaultApplications.html) for" +
                          " a list of the available activities.")]
+        [RateLimit(6, 1)]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(GuildPermission.CreateInstantInvite)]
         [RequireUserPermission(GuildPermission.CreateInstantInvite)]
-        [RateLimit(6, 1)]
         public async Task<RuntimeResult> CreateActivityAsync([Summary("The name of the activity you want to start.")] DefaultApplications ActivityType)
         {
             SocketGuildUser author = Context.User as SocketGuildUser;
@@ -107,8 +107,8 @@ namespace SammBot.Bot.Modules
         [Alias("cuddle")]
         [Summary("Hug a user!")]
         [FullDescription("Hugs are good for everyone! Spread the joy with this command.")]
-        [RequireContext(ContextType.Guild)]
         [RateLimit(3, 1)]
+        [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> HugUserAsync([Summary("The user you want to hug.")] IUser User)
         {
             string chosenKaomoji = Settings.Instance.LoadedConfig.HugKaomojis.PickRandom();
@@ -125,8 +125,8 @@ namespace SammBot.Bot.Modules
         [Command("pat")]
         [Summary("Pats a user!")]
         [FullDescription("Pets are ALSO good for everyone! Spread the joy with this command.")]
-        [RequireContext(ContextType.Guild)]
         [RateLimit(3, 1)]
+        [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> PatUserAsync([Summary("The user you want to pat.")] IUser User)
         {
             SocketGuildUser authorGuildUser = Context.Message.Author as SocketGuildUser;
@@ -142,8 +142,8 @@ namespace SammBot.Bot.Modules
         [Alias("doxx")]
         [Summary("Leak someone's (fake) IP address!")]
         [FullDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
-        [RequireContext(ContextType.Guild)]
         [RateLimit(3, 1)]
+        [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> DoxUserAsync([Summary("The user you want to \"dox\".")] SocketGuildUser User)
         {
             int firstSegment = Random.Shared.Next(0, 256);
@@ -162,8 +162,8 @@ namespace SammBot.Bot.Modules
         [Alias("murder")]
         [Summary("Commit first degree murder, fuck it.")]
         [FullDescription("Commit first degree murder! Don't worry, its fictional, the police isn't after you.")]
-        [RequireContext(ContextType.Guild)]
         [RateLimit(4, 1)]
+        [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> FirstDegreeMurderAsync([Summary("The user you want to kill.")] SocketGuildUser TargetUser)
         {
             SocketGuildUser authorUser = Context.Message.Author as SocketGuildUser;
@@ -200,8 +200,8 @@ namespace SammBot.Bot.Modules
         [Summary("Ship 2 users together! Awww!")]
         [FullDescription("The Ship-O-Matic 5000 is here! If **SecondUser** is left empty, you will be shipped with **FirstUser**. If both are empty, " +
                          "you will be shipped with a random user from the server.")]
-        [RequireContext(ContextType.Guild)]
         [RateLimit(5, 1)]
+        [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> ShipUsersAsync([Summary("The first user you want to ship.")] SocketGuildUser FirstUser = null,
                                                         [Summary("The second user you want to ship.")] SocketGuildUser SecondUser = null)
         {
