@@ -176,28 +176,35 @@ namespace SammBot.Bot.Modules
         [FullDescription("Gets the avatar of a user. If **User** is a server user, it will display the per-guild avatar (if they have any), and send a link to the global one in " +
             "the embed description.")]
         [RateLimit(3, 2)]
-        public async Task<RuntimeResult> GetProfilePicAsync([Summary("The user you want to get the profile picture from.")] IUser User)
+        public async Task<RuntimeResult> GetProfilePicAsync([Summary("The user you want to get the profile picture from. " +
+                                                                     "Leave empty to get your own profile picture.")] SocketUser User = null)
         {
+            SocketUser targetUser = User ?? Context.Message.Author;
+            
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-            replyEmbed.ChangeTitle($"{User.Username}'s Profile Picture");
+            replyEmbed.Title = "\U0001f464 User Profile Picture";
+            replyEmbed.Color = new Color(34, 102, 153);
 
-            string userAvatar = User.GetAvatarUrl(size: 2048);
+            replyEmbed.Description = $"This is the profile picture of {targetUser.Mention}.";
+
+            string userAvatar = targetUser.GetAvatarUrl(size: 2048);
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
             if (Context.User is SocketGuildUser)
             {
-                SocketGuildUser targetUser = User as SocketGuildUser;
+                SocketGuildUser guildUser = targetUser as SocketGuildUser;
 
-                string serverAvatar = targetUser.GetGuildAvatarUrl(size: 2048);
+                string serverAvatar = guildUser.GetGuildAvatarUrl(size: 2048);
                 if (serverAvatar != null)
                 {
                     //The user doesnt have a global avatar? Thats fine, we still have the server-specific one.
                     if (userAvatar != null)
                     {
-                        replyEmbed.Description = $"[Global Profile Picture]({userAvatar})";
+                        replyEmbed.Description = $"This is the server profile picture of {guildUser.Mention}.\n" +
+                                                 $"[Global Profile Picture]({userAvatar})";
                     }
 
                     replyEmbed.ImageUrl = serverAvatar;
