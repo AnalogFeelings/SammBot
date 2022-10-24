@@ -449,16 +449,28 @@ namespace SammBot.Bot.Modules
             if (urbanDefinitions == null || urbanDefinitions.List.Count == 0)
                 return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{Term}\"!");
 
-            UrbanDefinition chosenDefinition = urbanDefinitions.List.First();
+            UrbanDefinition chosenDefinition = urbanDefinitions.List.PickRandom();
 
-            string embedDescription = $"**Definition** : *{chosenDefinition.Definition.Truncate(1024)}*\n\n";
-            embedDescription += $"**Example** : {(string.IsNullOrEmpty(chosenDefinition.Example) ? "No Example" : chosenDefinition.Example)}\n\n";
-            embedDescription += $"**Author** : {chosenDefinition.Author}\n";
-            embedDescription += $"**Thumbs Up** : {chosenDefinition.ThumbsUp}\n";
-            embedDescription += $"**Thumbs Down** : {chosenDefinition.ThumbsDown}\n";
+            chosenDefinition.Definition = chosenDefinition.Definition.Replace("[", "");
+            chosenDefinition.Definition = chosenDefinition.Definition.Replace("]", "");
+
+            if (!string.IsNullOrEmpty(chosenDefinition.Example))
+            {
+                chosenDefinition.Example = chosenDefinition.Example.Replace("[", "");
+                chosenDefinition.Example = chosenDefinition.Example.Replace("]", "");
+            }
+
+            string embedDescription = $"\U0001f4c4 **Definition** : *{chosenDefinition.Definition.Truncate(1024)}*\n\n";
+            embedDescription += $"\U0001f4dd **Example** : {(string.IsNullOrEmpty(chosenDefinition.Example) ? "No Example" : chosenDefinition.Example)}\n\n";
+            embedDescription += $"\U0001f464 **Author** : {chosenDefinition.Author}\n";
+            embedDescription += $"\U0001f44d **Thumbs Up** : {chosenDefinition.ThumbsUp}\n";
+            embedDescription += $"\U0001f44e **Thumbs Down** : {chosenDefinition.ThumbsDown}\n";
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: embedDescription);
-            replyEmbed.ChangeTitle($"URBAN DEFINITION OF \"{chosenDefinition.Word}\"");
+            
+            replyEmbed.Title = $"\U0001f4d6 Urban Definition Of \"{chosenDefinition.Word}\"";
+            replyEmbed.Color = new Color(34, 102, 153);
+            
             replyEmbed.WithUrl(chosenDefinition.Permalink);
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
