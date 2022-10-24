@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -126,12 +127,28 @@ namespace SammBot.Bot.Services
                         replyEmbed.Description = "A message has been deleted.";
                         replyEmbed.WithColor(VeryBadColor);
 
-                        string sanitizedContent = Format.Sanitize(CachedMessage.Value.Content);
-                        string trimmedContent = sanitizedContent.Truncate(1021); // TODO: Make Truncate take in account the final "..." when using substring.
+                        string messageContent = string.Empty;
+                        string attachments = string.Empty;
+
+                        if (CachedMessage.Value.Attachments.Count > 0)
+                        {
+                            attachments = "\n";
+                            
+                            foreach (IAttachment attachment in CachedMessage.Value.Attachments)
+                            {
+                                attachments += attachment.Url + "\n";
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(CachedMessage.Value.Content))
+                        {
+                            string sanitizedContent = Format.Sanitize(CachedMessage.Value.Content);
+                            
+                            messageContent = sanitizedContent.Truncate(1021); // TODO: Make Truncate take in account the final "..." when using substring.
+                        }
 
                         replyEmbed.AddField("\U0001f464 Author", CachedMessage.Value.Author.Mention, true);
                         replyEmbed.AddField("\U0001faaa Author ID", CachedMessage.Value.Author.Id, true);
-                        replyEmbed.AddField("\u2709\uFE0F Message Content", trimmedContent);
+                        replyEmbed.AddField("\u2709\uFE0F Message Content", messageContent + attachments);
                         replyEmbed.AddField("\U0001f4e2 Message Channel", $"<#{CachedChannel.Value.Id}>", true);
                         replyEmbed.AddField("\U0001f4c5 Send Date", CachedMessage.Value.CreatedAt.ToString(), true);
 
