@@ -132,11 +132,11 @@ namespace SammBot.Bot.Modules
             SocketGuildUser targetUser = User ?? Context.Message.Author as SocketGuildUser;
 
             string userAvatar = targetUser.GetAvatarOrDefault(2048);
-            string userName = $"{targetUser.Username}";
-            string userDiscriminator = $"#{targetUser.Discriminator}";
+            string userName = targetUser.GetFullUsername();
+            string userId = targetUser.Id.ToString();
             string userNickname = targetUser.Nickname ?? "None";
             string isBot = targetUser.IsBot.ToYesNo();
-            string isWebhook = targetUser.IsWebhook.ToYesNo();
+            string isOwner = (Context.Guild.Owner.Id == targetUser.Id).ToYesNo();
             string joinDate = $"<t:{targetUser.JoinedAt.Value.ToUnixTimeSeconds()}>";
             string signUpDate = $"<t:{targetUser.CreatedAt.ToUnixTimeSeconds()}>";
             string boostingSince = targetUser.PremiumSince != null ? $"<t:{targetUser.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
@@ -146,19 +146,23 @@ namespace SammBot.Bot.Modules
             string onlineStatus = targetUser.GetStatusString();
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("USER INFORMATION");
+            
+            replyEmbed.Title = "\u2139\uFE0F User Information";
+            replyEmbed.Description = $"Here's some information about {targetUser.Mention}.";
+            replyEmbed.WithColor(59, 136, 195);
 
             replyEmbed.WithThumbnailUrl(userAvatar);
-            replyEmbed.AddField("Username", userName, true);
-            replyEmbed.AddField("Nickname", userNickname, true);
-            replyEmbed.AddField("Discriminator", userDiscriminator, true);
-            replyEmbed.AddField("Status", onlineStatus, true);
-            replyEmbed.AddField("Is Bot", isBot, true);
-            replyEmbed.AddField("Is Webhook", isWebhook, true);
-            replyEmbed.AddField("Join Date", joinDate, true);
-            replyEmbed.AddField("Create Date", signUpDate, true);
-            replyEmbed.AddField("Booster Since", boostingSince, true);
-            replyEmbed.AddField("Roles", roles, false);
-
+            replyEmbed.AddField("\U0001faaa Username", userName, true);
+            replyEmbed.AddField("\U0001f3ad Nickname", userNickname, true);
+            replyEmbed.AddField("\U0001f6c2 User ID", userId, true);
+            replyEmbed.AddField("\U0001f518 Status", onlineStatus, true);
+            replyEmbed.AddField("\U0001fac5 Is Owner", isOwner, true);
+            replyEmbed.AddField("\U0001f916 Is Bot", isBot, true);
+            replyEmbed.AddField("\U0001f44b Join Date", joinDate, true);
+            replyEmbed.AddField("\U0001f382 Creation Date", signUpDate, true);
+            replyEmbed.AddField("\U0001f680 Booster Since", boostingSince, true);
+            replyEmbed.AddField("\U0001f4e6 Roles", roles, false);
+            
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
             await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
