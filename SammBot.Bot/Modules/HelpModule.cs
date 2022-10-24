@@ -52,6 +52,9 @@ namespace SammBot.Bot.Modules
 
                     replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Module Help", moduleHeader);
 
+                    replyEmbed.Title = "\U0001f4c2 Module Help";
+                    replyEmbed.Color = new Color(85, 172, 238);
+
                     // Check permissions of containing commands. If the command doesn't pass the check, the command
                     // doesn't get added to the output embed.
                     bool foundCommand = false;
@@ -96,6 +99,9 @@ namespace SammBot.Bot.Modules
                     }
 
                     replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Command Help");
+
+                    replyEmbed.Title = "\U0001f4c4 Command Help";
+                    replyEmbed.Color = new Color(204, 214, 221);
 
                     // Get command description, if any.
                     FullDescription commandDescription = command.Attributes.FirstOrDefault(x => x is FullDescription) as FullDescription;
@@ -155,6 +161,9 @@ namespace SammBot.Bot.Modules
                                           $"Use `{botPrefix}help <Group Name>` to see its commands.";
                 
                 replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Module List", replyDescription);
+
+                replyEmbed.Title = "\U0001f4c1 Module List";
+                replyEmbed.Color = new Color(85, 172, 238);
 
                 foreach (ModuleInfo moduleInfo in CommandService.Modules)
                 {
