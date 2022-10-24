@@ -21,6 +21,8 @@ namespace SammBot.Bot.Extensions
             float red = Color.Red / 255f;
             float green = Color.Green / 255f;
             float blue = Color.Blue / 255f;
+            
+            if(red == 0 && green == 0 && blue == 0) return $"cmyk(0%, 0%, 0%, 100)";
 
             double kf = 1 - Math.Max(red, Math.Max(green, blue));
             double cf = (1 - red - kf) / (1 - kf);

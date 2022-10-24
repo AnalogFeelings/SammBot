@@ -69,16 +69,17 @@ namespace SammBot.Bot.Modules
 
                     try
                     {
-                        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-                            .ChangeTitle($"Color Visualization Of {parsedColor.ToHexString()}");
+                        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+
+                        replyEmbed.Title = $"\U0001f3a8 Visualization Of {parsedColor.ToHexString()}";
 
                         replyEmbed.ImageUrl = $"attachment://{fileName}";
                         replyEmbed.Color = new Color(parsedColor.Red, parsedColor.Green, parsedColor.Blue);
 
-                        replyEmbed.Description += $"**__RGB__**: {parsedColor.ToRgbString()}\n";
-                        replyEmbed.Description += $"**__CMYK__**: {parsedColor.ToCmykString()}\n";
-                        replyEmbed.Description += $"**__HSV__**: {parsedColor.ToHsvString()}\n";
-                        replyEmbed.Description += $"**__HSL__**: {parsedColor.ToHslString()}\n";
+                        replyEmbed.Description += $"• **RGB**: {parsedColor.ToRgbString()}\n";
+                        replyEmbed.Description += $"• **CMYK**: {parsedColor.ToCmykString()}\n";
+                        replyEmbed.Description += $"• **HSV**: {parsedColor.ToHsvString()}\n";
+                        replyEmbed.Description += $"• **HSL**: {parsedColor.ToHslString()}\n";
 
                         MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
                         AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
@@ -116,7 +117,7 @@ namespace SammBot.Bot.Modules
 
                 using (SKPaint paint = new SKPaint())
                 {
-                    paint.TextSize = 48;
+                    paint.TextSize = 42;
                     paint.IsAntialias = true;
                     paint.TextAlign = SKTextAlign.Center;
 
@@ -131,7 +132,7 @@ namespace SammBot.Bot.Modules
                     float textY = textPosVertical + (((-paint.FontMetrics.Ascent + paint.FontMetrics.Descent) / 2) - paint.FontMetrics.Descent);
 
                     surface.Canvas.DrawText(parsedColor.ToRgbString().ToUpper(), imageInfo.Width / 2f, textY,
-                        new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48), paint);
+                        new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 42), paint);
                 }
 
                 using (SKImage image = surface.Snapshot())
@@ -142,16 +143,17 @@ namespace SammBot.Bot.Modules
 
                     try
                     {
-                        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-                            .ChangeTitle($"Color Visualization Of {parsedColor.ToRgbString()}");
+                        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+
+                        replyEmbed.Title = $"\U0001f3a8 Visualization Of {parsedColor.ToRgbString()}";
 
                         replyEmbed.ImageUrl = $"attachment://{fileName}";
                         replyEmbed.Color = new Color(parsedColor.Red, parsedColor.Green, parsedColor.Blue);
 
-                        replyEmbed.Description += $"**__HEX__**: {parsedColor.ToHexString()}\n";
-                        replyEmbed.Description += $"**__CMYK__**: {parsedColor.ToCmykString()}\n";
-                        replyEmbed.Description += $"**__HSV__**: {parsedColor.ToHsvString()}\n";
-                        replyEmbed.Description += $"**__HSL__**: {parsedColor.ToHslString()}\n";
+                        replyEmbed.Description += $"• **HEX**: {parsedColor.ToHexString()}\n";
+                        replyEmbed.Description += $"• **CMYK**: {parsedColor.ToCmykString()}\n";
+                        replyEmbed.Description += $"• **HSV**: {parsedColor.ToHsvString()}\n";
+                        replyEmbed.Description += $"• **HSL**: {parsedColor.ToHslString()}\n";
 
                         MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
                         AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
