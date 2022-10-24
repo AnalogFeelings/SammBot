@@ -26,8 +26,13 @@ namespace SammBot.Bot.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task<RuntimeResult> ListSettingsAsync()
         {
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Server Settings", "These are all the server settings available.\n" +
-                                                                                                       "Their real names and current values will also be listed.");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Server Settings");
+
+            replyEmbed.Title = "\u2699\uFE0F Server Settings";
+            replyEmbed.Description = "These are all the server settings available.\n" +
+                                     "Their real names and current values will also be listed.";
+            replyEmbed.Color = new Color(102, 117, 127);
+            
             List<PropertyInfo> propertyList = typeof(GuildConfig).GetProperties().Where(x => x.Name != "GuildId").ToList();
             
             using (BotDatabase botDatabase = new BotDatabase())
