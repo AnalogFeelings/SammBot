@@ -10,6 +10,7 @@ using SammBot.Bot.Services;
 using SkiaSharp;
 using Svg.Skia;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -195,16 +196,26 @@ namespace SammBot.Bot.Modules
         }
 
         [Command("ship")]
-        [Alias("loverating, shiprating")]
+        [Alias("loverating", "shiprating")]
         [Summary("Ship 2 users together! Awww!")]
-        [FullDescription("The Ship-O-Matic 5000 is here! If **SecondUser** is left empty, you will be shipped with **FirstUser**.")]
+        [FullDescription("The Ship-O-Matic 5000 is here! If **SecondUser** is left empty, you will be shipped with **FirstUser**. If both are empty, " +
+                         "you will be shipped with a random user from the server.")]
         [RequireContext(ContextType.Guild)]
         [RateLimit(5, 1)]
-        public async Task<RuntimeResult> ShipUsersAsync([Summary("The first user you want to ship.")] SocketGuildUser FirstUser,
+        public async Task<RuntimeResult> ShipUsersAsync([Summary("The first user you want to ship.")] SocketGuildUser FirstUser = null,
                                                         [Summary("The second user you want to ship.")] SocketGuildUser SecondUser = null)
         {
-            //If the second user is null, ship the author with the first user.
-            if (SecondUser == null)
+            //If both users are null, ship the author with a random user.
+            if(FirstUser == null && SecondUser == null)
+            {
+                if(Context.Guild.Users.Count != Context.Guild.MemberCount) await Context.Guild.DownloadUsersAsync();
+
+                SocketGuildUser chosenUser = Context.Guild.Users.Where(x => x.Id != Context.Message.Author.Id).ToList().PickRandom();
+
+                SecondUser = chosenUser;
+                FirstUser = Context.Message.Author as SocketGuildUser;
+            }
+            else if (FirstUser != null && SecondUser == null) //If only the second user is null, ship the author with the first user.
             {
                 SecondUser = FirstUser;
                 FirstUser = Context.Message.Author as SocketGuildUser;
