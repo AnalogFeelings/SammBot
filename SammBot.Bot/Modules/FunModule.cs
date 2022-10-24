@@ -202,6 +202,7 @@ namespace SammBot.Bot.Modules
                          "you will be shipped with a random user from the server.")]
         [RateLimit(5, 1)]
         [RequireContext(ContextType.Guild)]
+        [RequireBotPermission(GuildPermission.UseExternalEmojis)]
         public async Task<RuntimeResult> ShipUsersAsync([Summary("The first user you want to ship.")] SocketGuildUser FirstUser = null,
                                                         [Summary("The second user you want to ship.")] SocketGuildUser SecondUser = null)
         {
