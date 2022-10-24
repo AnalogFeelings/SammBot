@@ -111,11 +111,9 @@ namespace SammBot.Bot.Core
             else if (targetMessage.HasStringPrefix(Settings.Instance.LoadedConfig.BotPrefix, ref argumentPosition))
             {
                 if (targetMessage.Content.Length == Settings.Instance.LoadedConfig.BotPrefix.Length) return;
-
-#if DEBUG
+                
                 BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
-                    targetMessage.Content, targetMessage.Channel.Name, targetMessage.Author.Username), LogSeverity.Information);
-#endif
+                    targetMessage.Content, targetMessage.Channel.Name, targetMessage.Author.Username), LogSeverity.Debug);
 
                 await CommandsService.ExecuteAsync(context, argumentPosition, ServiceProvider);
             }
