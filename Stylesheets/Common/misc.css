@@ -1,24 +1,16 @@
 @font-face {
-	font-family: JetBrains-Mono;
-	src: url(https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/fonts/webfonts/JetBrainsMono-Regular.woff2);
+	font-family: Nunito-Regular;
+	src: url("../../Resources/Fonts/Nunito/Nunito-Regular.ttf");
 }
 
 @font-face {
-	font-family: JetBrains-Mono-Bold;
-	src: url(https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/fonts/webfonts/JetBrainsMono-Bold.woff2);
+	font-family: Nunito-Bold;
+	src: url("../../Resources/Fonts/Nunito/Nunito-Bold.ttf");
 }
 
 @font-face {
-	font-family: JetBrains-Mono-Thin;
-	src: url(https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/fonts/webfonts/JetBrainsMono-Thin.woff2);
-}
-
-.boldText {
-	font-family: 'JetBrains-Mono-Bold';
-}
-
-.thinText {
-	font-family: 'JetBrains-Mono-Thin';
+	font-family: Nunito-Light;
+	src: url("../../Resources/Fonts/Nunito/Nunito-Light.ttf");
 }
 
 .field-row {

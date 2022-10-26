@@ -16,11 +16,19 @@ li::marker {
     color: #755072;
 }
 
+b {
+    font-family: 'Nunito-Bold';
+}
+
+thin {
+    font-family: 'Nunito-Light';
+}
+
 body {
     padding: 0;
     margin: 0;
 
-    font-family: 'JetBrains-Mono';
+    font-family: 'Nunito-Regular';
     color: white;
 
     background-color: black;
@@ -51,7 +59,7 @@ body {
 }
 
 .headerOverlayDiv > h1 {
-    font-family: "JetBrains-Mono-Bold";
+    font-family: "Nunito-Bold";
 
     margin: 0;
 
@@ -63,7 +71,7 @@ body {
 
 .headerOverlayDiv > h2 {
     font-size: 1em;
-    font-family: "JetBrains-Mono-Bold";
+    font-family: "Nunito-Bold";
 
     margin: 0;
 

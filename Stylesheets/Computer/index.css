@@ -48,9 +48,9 @@
 
 		font-size: 4em;
 
-		background: linear-gradient(90deg, rgba(160,155,255,1) 0%, rgba(229,163,255,1) 25%, rgba(192,0,209,1) 50%, rgba(113,0,194,1) 75%, rgba(168,162,173,1) 100%);
+		background: linear-gradient(90deg, rgba(176,172,255,1) 0%, rgba(201,64,255,1) 33%, rgba(210,161,255,1) 66%, rgba(255,118,201,1) 100%);
 		background-size: 200% 200%;
-		animation: gradientText 10s linear infinite alternate;
+		animation: gradientText 8s ease infinite alternate;
 
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
