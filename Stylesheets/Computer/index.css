@@ -17,49 +17,36 @@
 	}
 
 	.bodyContent:nth-child(1) {
-		margin-top: 10%;
-		width: 100%;
+		margin-top: 100px;
 	}
 
 	.contentSection {
-		display: flex;
-
-		align-items: center;
-		justify-content: center;
-
-		margin-bottom: 10%;
+		flex-direction: row;
 	}
 
 	.contentSection > img {
-		width: auto;
-		height: auto;
-
 		max-width: 512px;
 		max-height: 512px;
 	}
 
 	.contentSection > div {
-		max-width: 50%;
+		width: 50%;
 	}
 
 	.contentSection > div > h1 {
 		margin-top: 0;
 		margin-left: 30px;
 
+		text-align: left;
+
 		font-size: 4em;
-
-		background: linear-gradient(90deg, rgba(176,172,255,1) 0%, rgba(201,64,255,1) 33%, rgba(210,161,255,1) 66%, rgba(255,118,201,1) 100%);
-		background-size: 200% 200%;
-		animation: gradientText 8s ease infinite alternate;
-
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
 	}
 
 	.contentSection > div > p {
-		margin-left: 30px;
+		text-align: left;
 
-		font-size: 1.2em;
+		margin-left: 30px;
+		margin-right: 0;
 	}
 
 	.contentSection:nth-child(2n) {
@@ -76,15 +63,6 @@
 		margin-right: 30px;
 
 		text-align: right;
-	}
-
-	@keyframes gradientText {
-		0% {
-			background-position: 0% 50%;
-		}
-		100% {
-			background-position: 100% 50%;
-		}
 	}
 
 	.footerDiv {

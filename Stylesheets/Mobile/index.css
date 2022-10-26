@@ -15,18 +15,52 @@ body {
 	font-size: 5em;
 }
 
-.bodyContent {
-	margin-right: 8px;
-	margin-left: 8px;
+.bodyContent:nth-child(1) {
+	margin-top: 50px;
+
+	width: 100%;
 }
 
 .contentSection {
-	margin-bottom: 15px;
+	display: flex;
+
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	margin-bottom: 10%;
 }
 
-.contentSection > h1 {
-	margin-top: 25px;
-	margin-bottom: 20px;
+.contentSection > img {
+	width: auto;
+	height: auto;
+
+	max-width: 384px;
+	max-height: 384px;
+}
+
+.contentSection > div > h1 {
+	margin-top: 20px;
+
+	font-size: 3em;
+
+	background: linear-gradient(90deg, rgba(176,172,255,1) 0%, rgba(201,64,255,1) 33%, rgba(210,161,255,1) 66%, rgba(255,118,201,1) 100%);
+	background-size: 200% 200%;
+	animation: gradientText 8s ease infinite alternate;
+
+	text-align: center;
+
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.contentSection > div > p {
+	text-align: center;
+
+	font-size: 1.2em;
+
+	margin-right: 10px;
+	margin-left: 10px;
 }
 
 .footerDiv {
