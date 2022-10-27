@@ -37,6 +37,8 @@ body {
 
 	max-width: 384px;
 	max-height: 384px;
+
+	user-select: none;
 }
 
 .contentSection > div > h1 {
@@ -52,6 +54,8 @@ body {
 
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
+
+	user-select: none;
 }
 
 .contentSection > div {
