@@ -25,6 +25,8 @@
 
 		<!--Uses twemoji by Twitter https://twemoji.twitter.com/-->
 		<script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+		<script src="common.js"></script>
 		<script src="index.js"></script>
 
 		<meta name="og:title" content="Samm-Bot">
@@ -45,51 +47,7 @@
 			</div>
 		</div>
 
-		<div id="stickyBanner" class="stickyBar">
-			<div id="navBar" class="navigationBarDiv field-row">
-				<div id="bannerLogo" class="navigationBarLogo field-row">
-					<img alt="" src="Resources/SammBot.svg">
-					<p>
-						Samm-Bot
-						<span style="color: lightgrey;">
-							<thin> by AestheticalZ</thin>
-						</span>
-					</p>
-				</div>
-				<div class="navigationBarButtons field-row">
-					<button type="button" onclick="window.location.hash='About'">
-						HOME
-					</button>
-					<button type="button" onclick="window.location.hash='Features'">
-						FEATURES
-					</button>
-					<button type="button" onclick="window.location.hash='Install'">
-						FAQ
-					</button>
-					<button type="button" onclick="window.location.hash='Documentation'">
-						ABOUT
-					</button>
-				</div>
-				<div class="navigationBarBurger">
-					<button id="burgerButton" type="button" onclick="OpenBurger()"></button>
-				</div>
-			</div>
-
-			<div id="burgerMenu" class="navigationBarBurgerMenu">
-				<button type="button" onclick="GoToTag('About')">
-					HOME
-				</button>
-				<button type="button" onclick="GoToTag('Features')">
-					FEATURES
-				</button>
-				<button type="button" onclick="GoToTag('Install')">
-					FAQ
-				</button>
-				<button type="button" onclick="GoToTag('Documentation')">
-					ABOUT
-				</button>
-			</div>
-		</div>
+		<div data-include="navbar"></div>
 		
 		<div class="bodyDiv horizontalCenter">
 			<div class="bodyContent">
@@ -144,21 +102,6 @@
 			</div>
 		</div>
 
-		<div class="footerDiv field-row">
-			<p class="footerText">
-				<b>Samm-Bot</b> and this website are licensed under the GPL v3.0 license.
-				<br>
-				<span style="color: gray;">
-					<thin>
-						Website made by <b>AestheticalZ</b>. You can find me on GitHub.
-					</thin>
-				</span>
-			</p>
-
-			<a class="footerSocialMediaIcon github" href="https://github.com/AestheticalZ/SammBot" title="Samm-Bot's GitHub Repository"></a>
-			<a class="footerSocialMediaIcon hideout" href="https://aestheticalz.github.io" title="Nora's Hideout"></a>
-			<a class="footerSocialMediaIcon twitter" href="https://twitter.com/z_aesthetical" title="AestheticalZ's Twitter"></a>
-			<a class="footerSocialMediaIcon youtube" href="https://www.youtube.com/channel/UC0DyFqMDghAeL9trXMcItig" title="AestheticalZ's YouTube Channel"></a>
-		</div>
+		<div data-include="footer"></div>
 	</body>
 </html>
