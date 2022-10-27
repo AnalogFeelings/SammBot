@@ -45,7 +45,7 @@ body {
 	font-size: 3em;
 
 	background: linear-gradient(90deg, rgba(176,172,255,1) 0%, rgba(201,64,255,1) 33%, rgba(210,161,255,1) 66%, rgba(255,118,201,1) 100%);
-	background-size: 200% 200%;
+	background-size: 150% 150%;
 	animation: gradientText 8s ease infinite alternate;
 
 	text-align: center;
@@ -54,10 +54,15 @@ body {
 	-webkit-text-fill-color: transparent;
 }
 
+.contentSection > div {
+	display: flex;
+	flex-direction: column;
+}
+
 .contentSection > div > p {
 	text-align: center;
 
-	font-size: 1.2em;
+	font-size: 1.3em;
 
 	margin-right: 10px;
 	margin-left: 10px;

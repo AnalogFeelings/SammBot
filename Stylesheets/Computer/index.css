@@ -45,12 +45,18 @@
 	.contentSection > div > p {
 		text-align: left;
 
+		width: 575px;
+
 		margin-left: 30px;
 		margin-right: 0;
 	}
 
 	.contentSection:nth-child(2n) {
 		flex-direction: row-reverse;
+	}
+
+	.contentSection:nth-child(2n) > div {
+		align-items: flex-end;
 	}
 
 	.contentSection:nth-child(2n) > div > h1 {

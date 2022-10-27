@@ -60,8 +60,11 @@
 }
 
 .navigationBarButtons > button {
-    height: 85px;
-    min-height: 85px;
+    height: 76px;
+    min-height: 76px;
+
+    margin-top: 4px;
+    margin-bottom: 4px;
 
     width: 150px;
     min-width: 150px;
@@ -76,6 +79,7 @@
 
     transition-duration: 0.3s;
     border: none;
+    border-radius: 12px;
 }
 
 .navigationBarButtons > button:hover {
