@@ -24,6 +24,10 @@ thin {
     font-family: 'Nunito-Light';
 }
 
+h1 {
+    font-family: 'Nunito-Bold';
+}
+
 body {
     padding: 0;
     margin: 0;
