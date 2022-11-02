@@ -174,19 +174,38 @@ namespace SammBot.Bot.Modules
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> ListConfigAsync([Summary("Set to **true** to list non-modifiable settings.")] bool Override = false)
         {
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Configuration File");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+
+            replyEmbed.Title = "\u2699\uFE0F Configuration File";
+            replyEmbed.Description = "This is a list of all the bot settings that are safe to display publicly.\n" +
+                                     "Properties with an orange diamond next to their name are marked as not modifiable at runtime.";
+            replyEmbed.Color = new Color(102, 117, 127);
 
             List<PropertyInfo> properties = typeof(JsonConfig).GetProperties()
                 .Where(x => !x.PropertyType.IsGenericType &&
-                        x.Name != "UrlRegex" &&
-                        x.Name != "BotToken").ToList();
+                            x.Name != "CatKey" &&
+                            x.Name != "DogKey" &&
+                            x.Name != "OpenWeatherKey" &&
+                            x.Name != "BotToken").ToList();
 
             if (!Override)
+            {
+                replyEmbed.Description = "This is a list of all the bot settings that are safe to display publicly.";
                 properties = properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
+            }
 
             foreach (PropertyInfo property in properties)
             {
-                replyEmbed.AddField(property.Name, property.GetValue(Settings.Instance.LoadedConfig, null));
+                string propertyName = string.Empty;
+                string propertyValue = string.Empty;
+
+                if (property.GetCustomAttribute<NotModifiable>() == null) propertyName = "\U0001f539 ";
+                else propertyName = "\U0001f538 ";
+
+                propertyName += property.Name;
+                propertyValue = $"\n**• Current Value**: `{property.GetValue(Settings.Instance.LoadedConfig, null)}`";
+                
+                replyEmbed.AddField(propertyName, propertyValue);
             }
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
@@ -210,23 +229,29 @@ namespace SammBot.Bot.Modules
             if (retrievedVariable == null)
                 return ExecutionResult.FromError($"{VarName} does not exist!");
 
-            if (retrievedVariable.PropertyType is IList)
-                return ExecutionResult.FromError($"{VarName} is a list variable!");
+            if (typeof(IEnumerable).IsAssignableFrom(retrievedVariable.PropertyType) && retrievedVariable.PropertyType != typeof(string))
+                return ExecutionResult.FromError($"{VarName} is a collection!");
 
             if (retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
-                return ExecutionResult.FromError($"{VarName} cannot be modified at runtime! " +
-                    $"Please pass `true` to the `RestartBot` parameter.");
-
-            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+                return ExecutionResult.FromError($"**{VarName}** cannot be modified at runtime!\n" +
+                    $"Please pass `true` to the **RestartBot** parameter.");
 
             AdminService.ChangingConfig = true;
 
             retrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
 
             object newValue = retrievedVariable.GetValue(Settings.Instance.LoadedConfig);
+            
+            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
+            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+            
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-            await ReplyAsync($"Set variable \"{VarName}\" to `{newValue.ToString().Truncate(128)}` succesfully.", allowedMentions: allowedMentions, messageReference: messageReference);
+            replyEmbed.Title = "\u2705 Success";
+            replyEmbed.Description = $"Successfully set setting **{VarName}** to value `{newValue.ToString().Truncate(128)}`.";
+            replyEmbed.WithColor(119, 178, 85);
+
+            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
 
             await File.WriteAllTextAsync(Settings.CONFIG_FILE,
                 JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
