@@ -24,7 +24,7 @@ This README file is not updated often, so sometimes it's possible for new comman
 * :label: **Tags Module**: Allows users to create tags that make Samm-Bot reply with a custom message when used with the "tags get" command.
 * :game_die: **Fun Module**: Hugging, patting, asking the magic 8-ball, and more!
 * :information_source: **Information Module**: Shows information about the bot and can also show information about a user or server.
-* :slot_machine: **Random Module**: Retrieve random content from the cat, dog, fox or duck APIs, or a random SCP.
+* :slot_machine: **Random Module**: Retrieve random content from the cat, dog, fox or duck APIs.
 * :busts_in_silhouette: **Profiles Module**: User profiles (only pronouns for now).
 * :wrench: **Utils Module**: Allows you to view RGB or HEX colors, get a user's avatar, or the weather forecast of your city.
  
