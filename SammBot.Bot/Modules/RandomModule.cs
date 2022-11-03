@@ -9,6 +9,7 @@ using SharpCat.Types.Cat;
 using SharpCat.Types.Dog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -38,11 +39,20 @@ namespace SammBot.Bot.Modules
             };
 
             List<CatImage> retrievedImages = await RandomService.CatRequester.GetImageAsync(searchParameters);
+            
+            CatImage retrievedImage = retrievedImages.First();
+            CatBreed retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: ":warning: **The breed information has been " +
-                "temporarily removed due to a bug in the Cat API.**").ChangeTitle("Random Cat");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-            replyEmbed.ImageUrl = retrievedImages[0].Url;
+            replyEmbed.Title = "\U0001f431 Random Cat";
+            replyEmbed.Description = retrievedBreed != default(CatBreed) ?
+                $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
+                $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}" 
+                : string.Empty;
+            
+            replyEmbed.Color = new Color(255, 204, 77);
+            replyEmbed.ImageUrl = retrievedImage.Url;
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
@@ -69,10 +79,19 @@ namespace SammBot.Bot.Modules
 
             List<DogImage> retrievedImages = await RandomService.DogRequester.GetImageAsync(searchParameters);
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: $"**__Breed__**: {retrievedImages[0].Breeds[0].Name}" +
-                    $"\n**__Temperament__**: {retrievedImages[0].Breeds[0].Temperament}").ChangeTitle("Random Dog");
+            DogImage retrievedImage = retrievedImages.First();
+            DogBreed retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
 
-            replyEmbed.ImageUrl = retrievedImages[0].Url;
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+
+            replyEmbed.Title = "\U0001f436 Random Dog";
+            replyEmbed.Description = retrievedBreed != default(DogBreed) ?
+                $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
+                $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}" 
+                : string.Empty;
+            
+            replyEmbed.Color = new Color(217, 158, 130);
+            replyEmbed.ImageUrl = retrievedImage.Url;
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
@@ -96,7 +115,10 @@ namespace SammBot.Bot.Modules
 
             FoxImage repliedImage = JsonConvert.DeserializeObject<FoxImage>(jsonReply);
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Fox");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+            
+            replyEmbed.Title = "\U0001f98a Random Fox";
+            replyEmbed.Color = new Color(241, 143, 38);
             replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
@@ -121,27 +143,11 @@ namespace SammBot.Bot.Modules
 
             DuckImage repliedImage = JsonConvert.DeserializeObject<DuckImage>(jsonReply);
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Random Duck");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+            
+            replyEmbed.Title = "\U0001f986 Random Duck";
+            replyEmbed.Color = new Color(62, 114, 29);
             replyEmbed.ImageUrl = repliedImage.ImageUrl;
-
-            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
-
-            return ExecutionResult.Succesful();
-        }
-
-        [Command("scp")]
-        [Summary("Returns a random SCP!")]
-        [FullDescription("Returns a random SCP! The article may not exist.")]
-        [RateLimit(3, 2)]
-        public async Task<RuntimeResult> GetSCPAsync()
-        {
-            int maxNumber = 6999;
-            int chosenNumber = Random.Shared.Next(maxNumber + 1);
-
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: "https://scp-wiki.wikidot.com/scp-" + chosenNumber.ToString("D3"))
-                                                        .ChangeTitle("Random SCP");
 
             MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
