@@ -55,21 +55,17 @@ namespace SammBot.Bot.Core
                     replyEmbed.Title = "\u26A0 An error has occurred.";
                     replyEmbed.Color = new Color(255, 204, 77);
 
-                    switch (Result.ErrorReason)
+                    switch (Result.Error)
                     {
-                        case "Unknown command.":
+                        case InteractionCommandError.UnknownCommand:
                             replyEmbed.Title = "\u2139\uFE0F I didn't quite understand that...";
                             replyEmbed.Color = new Color(59, 136, 195);
                             
                             finalMessage = $"There is no command named like that!\nUse the `/help` command for a command list.";
                             break;
-                        case "The input text has too few parameters.":
-                            finalMessage = $"You didn't provide enough required parameters!\nUse the `/help " +
-                                $"{SlashCommand.Module.Name} {SlashCommand.Name}` command to see all of the required parameters.";
-                            break;
-                        case "The input text has too many parameters.":
-                            finalMessage = $"You provided too many parameters!\nUse the `/help " +
-                                $"{SlashCommand.Module.Name} {SlashCommand.Name}` command to see all of the required parameters.";
+                        case InteractionCommandError.BadArgs:
+                            finalMessage = $"You provided an incorrect number of parameters!\nUse the `/help " +
+                                $"{SlashCommand.Module.Name} {SlashCommand.Name}` command to see all of the parameters.";
                             break;
                         default:
                             finalMessage = Result.ErrorReason;
