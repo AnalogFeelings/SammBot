@@ -25,7 +25,7 @@ namespace SammBot.Bot.Modules
         [SlashCommand("say", "Make the bot say something.")]
         [FullDescription("Makes the bot say something. Use the **setsay** command to set the channel and guild beforehand.")]
         [RateLimit(2, 1)]
-        public async Task<RuntimeResult> SayMessageAsync([Summary("The message text.")] string Message)
+        public async Task<RuntimeResult> SayMessageAsync([Summary(description: "The message text.")] string Message)
         {
             if (AdminService.ChannelId == 0 || AdminService.GuildId == 0)
                 return ExecutionResult.FromError("Please set a guild and channel ID beforehand!");
@@ -40,8 +40,8 @@ namespace SammBot.Bot.Modules
         [SlashCommand("setsay", "Set the channel in which the say command will broadcast.")]
         [FullDescription("Sets the channel and guild where the say command will send messages to.")]
         [RateLimit(2, 1)]
-        public async Task<RuntimeResult> SetSayAsync([Summary("The target channel's ID.")] ulong Channel, 
-                                                     [Summary("The target guild's ID.")] ulong Guild)
+        public async Task<RuntimeResult> SetSayAsync([Summary(description: "The target channel's ID.")] ulong Channel, 
+                                                     [Summary(description: "The target guild's ID.")] ulong Guild)
         {
             if (Context.Client.GetGuild(Guild) == null) return ExecutionResult.FromError("I am not invited in that guild!");
             if (Context.Client.GetGuild(Guild).GetTextChannel(Channel) == null)
@@ -114,7 +114,7 @@ namespace SammBot.Bot.Modules
         [SlashCommand("leaveserver", "Leaves the specified server.")]
         [FullDescription("Forces the bot to leave the specified guild.")]
         [RateLimit(3, 1)]
-        public async Task<RuntimeResult> LeaveAsync([Summary("The ID of the guild you want the bot to leave.")] ulong ServerId)
+        public async Task<RuntimeResult> LeaveAsync([Summary(description: "The ID of the guild you want the bot to leave.")] ulong ServerId)
         {
             SocketGuild targetGuild = Context.Client.GetGuild(ServerId);
             if (targetGuild == null)
@@ -132,7 +132,7 @@ namespace SammBot.Bot.Modules
         [SlashCommand("listcfg", "Lists all of the bot settings available.")]
         [FullDescription("Lists the bot settings. Does NOT list the bot's token or the URL detection regex. Some settings are not modifiable without a restart.")]
         [RateLimit(3, 1)]
-        public async Task<RuntimeResult> ListConfigAsync([Summary("Set to **true** to list non-modifiable settings.")] bool Override = false)
+        public async Task<RuntimeResult> ListConfigAsync([Summary(description: "Set to **true** to list non-modifiable settings.")] bool Override = false)
         {
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
@@ -177,9 +177,9 @@ namespace SammBot.Bot.Modules
         [SlashCommand("setcfg", "Sets a bot setting to the specified value.")]
         [FullDescription("Sets a bot setting to the value specified.")]
         [RateLimit(2, 1)]
-        public async Task<RuntimeResult> SetConfigAsync([Summary("The name of the setting you want to modify.")] string VarName,
-                                                        [Summary("The new value of the setting.")] string VarValue,
-                                                        [Summary("Set to **true** to restart the bot afterwards. Needed for non-modifiable settings.")] bool RestartBot = false)
+        public async Task<RuntimeResult> SetConfigAsync([Summary(description: "The name of the setting you want to modify.")] string VarName,
+                                                        [Summary(description: "The new value of the setting.")] string VarValue,
+                                                        [Summary(description: "Set to **true** to restart the bot afterwards. Needed for non-modifiable settings.")] bool RestartBot = false)
         {
             PropertyInfo retrievedVariable = typeof(JsonConfig).GetProperty(VarName);
 
