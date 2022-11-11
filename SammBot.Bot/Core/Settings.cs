@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Discord;
 
 namespace SammBot.Bot.Core
 {
@@ -19,6 +20,8 @@ namespace SammBot.Bot.Core
     {
         public readonly Stopwatch StartupStopwatch = new Stopwatch();
         public readonly Stopwatch RuntimeStopwatch = new Stopwatch();
+
+        public readonly AllowedMentions AllowOnlyUsers = new AllowedMentions(AllowedMentionTypes.Users);
 
         public JsonConfig LoadedConfig = new JsonConfig();
 
