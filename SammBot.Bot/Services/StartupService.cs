@@ -114,7 +114,7 @@ namespace SammBot.Bot.Services
             return Task.CompletedTask;
         }
 
-        private Task OnShardReady(DiscordSocketClient ShardClient)
+        private async Task OnShardReady(DiscordSocketClient ShardClient)
         {
             BotLogger.Log($"Shard #{ShardClient.ShardId} is ready to run.", LogSeverity.Debug);
             
@@ -134,13 +134,13 @@ namespace SammBot.Bot.Services
                         _AvatarTimer = new Timer(RotateAvatar, null, avatarDelay, avatarDelay);
                     }
 
+                    await InteractionService.RegisterCommandsGloballyAsync(true);
+
                     BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
 
                     _EventsSetUp = true;
                 }
             }
-
-            return Task.CompletedTask;
         }
 
         private Task OnShardDisconnect(Exception IncludedException, DiscordSocketClient ShardClient)
