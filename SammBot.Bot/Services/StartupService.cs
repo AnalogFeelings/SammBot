@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord.Interactions;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.DependencyInjection;
 using Color = System.Drawing.Color;
 
 namespace SammBot.Bot.Services
@@ -52,8 +53,7 @@ namespace SammBot.Bot.Services
             ShardedClient.ShardConnected += OnShardConnected;
             ShardedClient.ShardReady += OnShardReady;
             ShardedClient.ShardDisconnected += OnShardDisconnect;
-
-            await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
+            
             Settings.Instance.StartupStopwatch.Stop();
 
             Console.Title = $"{Settings.BOT_NAME} v{Settings.GetBotVersion()}";
@@ -85,6 +85,10 @@ namespace SammBot.Bot.Services
             
             BotLogger.Log("Warming up the bot database...", LogSeverity.Information);
             _ = Task.Run(() => WarmUpDatabase());
+
+            BotLogger.Log("Initializing command handler...", LogSeverity.Information);
+            await ServiceProvider.GetRequiredService<CommandHandler>().InitializeHandlerAsync();
+            BotLogger.Log("Succesfully initialized command handler.", LogSeverity.Success);
         }
 
         private Task WarmUpDatabase()
