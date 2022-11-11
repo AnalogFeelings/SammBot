@@ -1,10 +1,7 @@
 ﻿using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
 using SammBot.Bot.Classes;
-using SammBot.Bot.Core;
-using SammBot.Bot.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,25 +9,23 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Discord.Interactions;
 
 namespace SammBot.Bot.Modules
 {
-    [Name("Bot Administration")]
-    [Group("badmin")]
-    [Summary("Bot management commands. Bot owner only.")]
+    [FullName("Bot Administration")]
+    [Group("badmin", "Bot management commands. Bot owner only.")]
     [ModuleEmoji("\U0001f4be")]
     [RequireOwner]
-    public class BotAdminModule : ModuleBase<SocketCommandContext>
+    public class BotAdminModule : InteractionModuleBase<SocketInteractionContext>
     {
         public AdminService AdminService { get; set; }
         public Logger Logger { get; set; }
-        public CommandHandler CommandHandler { get; set; }
 
-        [Command("say")]
-        [Summary("Make the bot say something.")]
+        [SlashCommand("say", "Make the bot say something.")]
         [FullDescription("Makes the bot say something. Use the **setsay** command to set the channel and guild beforehand.")]
         [RateLimit(2, 1)]
-        public async Task<RuntimeResult> SayMessageAsync([Summary("The message text.")] [Remainder] string Message)
+        public async Task<RuntimeResult> SayMessageAsync([Summary("The message text.")] string Message)
         {
             if (AdminService.ChannelId == 0 || AdminService.GuildId == 0)
                 return ExecutionResult.FromError("Please set a guild and channel ID beforehand!");
@@ -42,8 +37,7 @@ namespace SammBot.Bot.Modules
             return ExecutionResult.Succesful();
         }
 
-        [Command("setsay")]
-        [Summary("Set the channel in which the say command will broadcast.")]
+        [SlashCommand("setsay", "Set the channel in which the say command will broadcast.")]
         [FullDescription("Sets the channel and guild where the say command will send messages to.")]
         [RateLimit(2, 1)]
         public async Task<RuntimeResult> SetSayAsync([Summary("The target channel's ID.")] ulong Channel, 
@@ -58,16 +52,13 @@ namespace SammBot.Bot.Modules
 
             SocketGuild targetGuild = Context.Client.GetGuild(Guild);
 
-            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"Success. Set guild to `{targetGuild.Name}` and channel to `{targetGuild.GetTextChannel(Channel).Name}`.", allowedMentions: allowedMentions, messageReference: messageReference);
+            await RespondAsync($"Success. Set guild to `{targetGuild.Name}` and channel to `{targetGuild.GetTextChannel(Channel).Name}`.", allowedMentions: allowedMentions);
 
             return ExecutionResult.Succesful();
         }
 
-        [Command("listservers")]
-        [Alias("guilds")]
-        [Summary("Shows a list of all the servers the bot is in.")]
+        [SlashCommand("listservers", "Shows a list of all the servers the bot is in.")]
         [FullDescription("Shows a list of the servers the bot is in, and their corresponding IDs.")]
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> ServersAsync()
@@ -84,23 +75,19 @@ namespace SammBot.Bot.Modules
 
             builtMessage += Format.Code(codeBlock);
 
-            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(builtMessage, allowedMentions: allowedMentions, messageReference: messageReference);
+            await RespondAsync(builtMessage, allowedMentions: allowedMentions);
 
             return ExecutionResult.Succesful();
         }
 
-        [Command("shutdown")]
-        [Alias("kill")]
-        [Summary("Shuts the bot down.")]
+        [SlashCommand("shutdown", "Shuts the bot down.")]
         [FullDescription("Shuts the bot down. That's it.")]
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> ShutdownAsync()
         {
-            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"{Settings.BOT_NAME} will shut down.", allowedMentions: allowedMentions, messageReference: messageReference);
+            await RespondAsync($"{Settings.BOT_NAME} will shut down.", allowedMentions: allowedMentions);
 
             Logger.Log($"{Settings.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
 
@@ -109,16 +96,13 @@ namespace SammBot.Bot.Modules
             return ExecutionResult.Succesful();
         }
 
-        [Command("restart")]
-        [Alias("reboot", "reset")]
-        [Summary("Restarts the bot.")]
+        [SlashCommand("restart", "Restarts the bot.")]
         [FullDescription("Restarts the bot. That's it.")]
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> RestartAsync()
         {
-            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: allowedMentions, messageReference: messageReference);
+            await RespondAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: allowedMentions);
 
             Logger.Log($"{Settings.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
 
@@ -127,9 +111,7 @@ namespace SammBot.Bot.Modules
             return ExecutionResult.Succesful();
         }
 
-        [Command("leaveserver")]
-        [Alias("leave")]
-        [Summary("Leaves the specified server.")]
+        [SlashCommand("leaveserver", "Leaves the specified server.")]
         [FullDescription("Forces the bot to leave the specified guild.")]
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> LeaveAsync([Summary("The ID of the guild you want the bot to leave.")] ulong ServerId)
@@ -141,35 +123,13 @@ namespace SammBot.Bot.Modules
             string targetGuildName = targetGuild.Name;
             await targetGuild.LeaveAsync();
 
-            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync($"Left the server \"{targetGuildName}\".", allowedMentions: allowedMentions, messageReference: messageReference);
+            await RespondAsync($"Left the server \"{targetGuildName}\".", allowedMentions: allowedMentions);
 
             return ExecutionResult.Succesful();
         }
 
-        [Command("mime")]
-        [Alias("mimic, spy")]
-        [Summary("Mimics a user, used for testing.")]
-        [FullDescription("Hacky command to execute a command as someone else.")]
-        public async Task<RuntimeResult> MimicUserAsync([Summary("The user you want to execute the command as.")] SocketGuildUser User, 
-                                                        [Summary("The command you want to execute.")] [Remainder] string Command)
-        {
-            //LORD HAVE MERCY
-            SocketMessage sourceMessage = Context.Message as SocketMessage;
-            FieldInfo authorField = typeof(SocketMessage).GetField("<Author>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-            FieldInfo contentField = typeof(SocketMessage).GetField("<Content>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-            authorField.SetValue(sourceMessage, User);
-            contentField.SetValue(sourceMessage, Command);
-
-            await CommandHandler.HandleCommandAsync(sourceMessage);
-
-            return ExecutionResult.Succesful();
-        }
-
-        [Command("listcfg")]
-        [Alias("lc")]
-        [Summary("Lists all of the bot settings available.")]
+        [SlashCommand("listcfg", "Lists all of the bot settings available.")]
         [FullDescription("Lists the bot settings. Does NOT list the bot's token or the URL detection regex. Some settings are not modifiable without a restart.")]
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> ListConfigAsync([Summary("Set to **true** to list non-modifiable settings.")] bool Override = false)
@@ -208,16 +168,13 @@ namespace SammBot.Bot.Modules
                 replyEmbed.AddField(propertyName, propertyValue);
             }
 
-            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
+            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
 
             return ExecutionResult.Succesful();
         }
 
-        [Command("setcfg")]
-        [Alias("config")]
-        [Summary("Sets a bot setting to the specified value.")]
+        [SlashCommand("setcfg", "Sets a bot setting to the specified value.")]
         [FullDescription("Sets a bot setting to the value specified.")]
         [RateLimit(2, 1)]
         public async Task<RuntimeResult> SetConfigAsync([Summary("The name of the setting you want to modify.")] string VarName,
@@ -242,7 +199,6 @@ namespace SammBot.Bot.Modules
 
             object newValue = retrievedVariable.GetValue(Settings.Instance.LoadedConfig);
             
-            MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
             
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
@@ -251,7 +207,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Description = $"Successfully set setting **{VarName}** to value `{newValue.ToString().Truncate(128)}`.";
             replyEmbed.WithColor(119, 178, 85);
 
-            await ReplyAsync(null, false, replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
+            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
 
             await File.WriteAllTextAsync(Settings.CONFIG_FILE,
                 JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
