@@ -52,9 +52,8 @@ namespace SammBot.Bot.Modules
 
             SocketGuild targetGuild = Context.Client.GetGuild(Guild);
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
             await RespondAsync($"Success. Set guild to `{targetGuild.Name}` and channel to `{targetGuild.GetTextChannel(Channel).Name}`.",
-                ephemeral: true, allowedMentions: allowedMentions);
+                ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -76,8 +75,7 @@ namespace SammBot.Bot.Modules
 
             builtMessage += Format.Code(codeBlock);
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(builtMessage, ephemeral: true, allowedMentions: allowedMentions);
+            await RespondAsync(builtMessage, ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -87,8 +85,7 @@ namespace SammBot.Bot.Modules
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> ShutdownAsync()
         {
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"{Settings.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: allowedMentions);
+            await RespondAsync($"{Settings.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             Logger.Log($"{Settings.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
 
@@ -102,8 +99,7 @@ namespace SammBot.Bot.Modules
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> RestartAsync()
         {
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"{Settings.BOT_NAME} will restart.", ephemeral: true, allowedMentions: allowedMentions);
+            await RespondAsync($"{Settings.BOT_NAME} will restart.", ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             Logger.Log($"{Settings.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
 
@@ -124,8 +120,7 @@ namespace SammBot.Bot.Modules
             string targetGuildName = targetGuild.Name;
             await targetGuild.LeaveAsync();
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"Left the server \"{targetGuildName}\".", ephemeral: true, allowedMentions: allowedMentions);
+            await RespondAsync($"Left the server \"{targetGuildName}\".", ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -169,8 +164,7 @@ namespace SammBot.Bot.Modules
                 replyEmbed.AddField(propertyName, propertyValue);
             }
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
+            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -199,23 +193,21 @@ namespace SammBot.Bot.Modules
             retrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
 
             object newValue = retrievedVariable.GetValue(Settings.Instance.LoadedConfig);
-            
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            
+
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
             replyEmbed.Title = "\u2705 Success";
             replyEmbed.Description = $"Successfully set setting **{VarName}** to value `{newValue.ToString().Truncate(128)}`.";
             replyEmbed.WithColor(119, 178, 85);
 
-            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
+            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             await File.WriteAllTextAsync(Settings.CONFIG_FILE,
                 JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
 
             if (RestartBot)
             {
-                await RespondAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: allowedMentions);
+                await RespondAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: Settings.Instance.AllowOnlyUsers);
                 Settings.RestartBot();
             }
 

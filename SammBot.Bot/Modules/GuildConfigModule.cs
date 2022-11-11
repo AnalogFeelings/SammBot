@@ -72,8 +72,7 @@ namespace SammBot.Bot.Modules
                 }
             }
             
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -128,8 +127,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Description = $"Successfully set setting **{SettingName}** to value `{newValue}`.";
             replyEmbed.WithColor(119, 178, 85);
             
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
             
             return ExecutionResult.Succesful();
         }

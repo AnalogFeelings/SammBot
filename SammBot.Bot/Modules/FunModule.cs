@@ -36,8 +36,7 @@ namespace SammBot.Bot.Modules
         {
             string chosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(":8ball: Asking the magic 8-ball...", allowedMentions: allowedMentions);
+            await RespondAsync(":8ball: Asking the magic 8-ball...", allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             using (Context.Channel.EnterTypingState()) await Task.Delay(2000);
 
@@ -60,9 +59,8 @@ namespace SammBot.Bot.Modules
         
             IInviteMetadata invite = await author.VoiceChannel.CreateInviteToApplicationAsync(ActivityType);
         
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
             await RespondAsync($":warning: **Most activities only work if the server has a Nitro Boost level of at least 1.**\n\n" +
-                $"{invite.Url}", allowedMentions: allowedMentions);
+                $"{invite.Url}", allowedMentions: Settings.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -77,8 +75,7 @@ namespace SammBot.Bot.Modules
         
             int chosenNumber = Random.Shared.Next(1, FaceCount + 1);
         
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(":game_die: Rolling the dice...", allowedMentions: allowedMentions);
+            await RespondAsync(":game_die: Rolling the dice...", allowedMentions: Settings.Instance.AllowOnlyUsers);
         
             using (Context.Channel.EnterTypingState()) await Task.Delay(1500);
         
@@ -97,8 +94,8 @@ namespace SammBot.Bot.Modules
         
             SocketGuildUser authorGuildUser = Context.Interaction.User as SocketGuildUser;
         
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"Warm hugs from **{authorGuildUser.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>", allowedMentions: allowedMentions);
+            await RespondAsync($"Warm hugs from **{authorGuildUser.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>",
+                allowedMentions: Settings.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -111,8 +108,7 @@ namespace SammBot.Bot.Modules
         {
             SocketGuildUser authorGuildUser = Context.Interaction.User as SocketGuildUser;
         
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"Pats from **{authorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: allowedMentions);
+            await RespondAsync($"Pats from **{authorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: Settings.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -128,8 +124,8 @@ namespace SammBot.Bot.Modules
             int thirdSegment = Random.Shared.Next(0, 256);
             int fourthSegment = Random.Shared.Next(0, 256);
         
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"**{User.GetUsernameOrNick()}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`", allowedMentions: allowedMentions);
+            await RespondAsync($"**{User.GetUsernameOrNick()}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`",
+                allowedMentions: Settings.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -162,8 +158,7 @@ namespace SammBot.Bot.Modules
             chosenMessage = chosenMessage.Replace("{vPrnRefSing}", targetPronouns.ReflexiveSingular);
             chosenMessage = chosenMessage.Replace("{vPrnRefPlur}", targetPronouns.ReflexivePlural);
         
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(chosenMessage, allowedMentions: allowedMentions);
+            await RespondAsync(chosenMessage, allowedMentions: Settings.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -391,11 +386,9 @@ namespace SammBot.Bot.Modules
                     preEmbedText += $":small_blue_diamond: {firstUserName}\n";
                     preEmbedText += $":small_blue_diamond: {secondUserName}\n";
         
-                    AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-        
                     //Use SendFileAsync to be able to upload the stream to Discord's servers. The file name has to be the same as the one set in ImageUrl.
                     await FollowupWithFileAsync(finalImageStream, "shipImage.png", preEmbedText,
-                        embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                        embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
                 }
             }
         
@@ -458,8 +451,7 @@ namespace SammBot.Bot.Modules
             
             replyEmbed.WithUrl(chosenDefinition.Permalink);
         
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }

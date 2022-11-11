@@ -22,8 +22,6 @@ namespace SammBot.Bot.Modules
         {
             // Hoh boy, this is QUITE a bumpy ride. Be ready!
             await DeferAsync();
-            
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
             EmbedBuilder replyEmbed = null;
 
@@ -182,7 +180,7 @@ namespace SammBot.Bot.Modules
                 }
             }
             
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }

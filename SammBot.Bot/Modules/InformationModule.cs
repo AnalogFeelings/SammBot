@@ -61,8 +61,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.AddField("\U0001f5a5\uFE0F Host System", FriendlySystemName(), true);
             replyEmbed.AddField("\U0001f4ca Working Set", $"{memoryUsage} megabytes", true);
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -108,8 +107,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.AddField("\U0001f465 Member Count", memberCount, true);
             replyEmbed.AddField("\U0001f4e6 Role Count", roleCount, true);
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -154,8 +152,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.AddField("\U0001f680 Booster Since", boostingSince, true);
             replyEmbed.AddField("\U0001f4e6 Roles", roles, false);
             
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }

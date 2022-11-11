@@ -71,8 +71,7 @@ namespace SammBot.Bot.Modules
                 await botDatabase.SaveChangesAsync();
             }
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await FollowupAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.", allowedMentions: allowedMentions);
+            await FollowupAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.", allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -95,11 +94,13 @@ namespace SammBot.Bot.Modules
                     Pronoun existingPronouns = allPronouns.Single(y => y.UserId == targetUser.Id);
                     string formattedPronouns = $"{existingPronouns.Subject}/{existingPronouns.Object}";
 
-                    AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                    await FollowupAsync($"**{targetUser.GetUsernameOrNick()}**'s pronouns are: `{formattedPronouns}`.", allowedMentions: allowedMentions);
+                    await FollowupAsync($"**{targetUser.GetUsernameOrNick()}**'s pronouns are: `{formattedPronouns}`.",
+                        allowedMentions: Settings.Instance.AllowOnlyUsers);
                 }
                 else
+                {
                     return ExecutionResult.FromError($"The user **{targetUser.GetUsernameOrNick()}** does not have any pronouns set!");
+                }
             }
 
             return ExecutionResult.Succesful();

@@ -41,8 +41,7 @@ namespace SammBot.Bot.Modules
                 await botDatabase.SaveChangesAsync();
             }
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await FollowupAsync("Success!", allowedMentions: allowedMentions);
+            await FollowupAsync("Success!", allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -63,8 +62,7 @@ namespace SammBot.Bot.Modules
                 if (retrievedTag == null)
                     return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
 
-                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await FollowupAsync(retrievedTag.Reply, allowedMentions: allowedMentions);
+                await FollowupAsync(retrievedTag.Reply, allowedMentions: Settings.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -101,8 +99,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.AddField($"`{tag.Name}`", $"By: **{userName}**");
                 }
 
-                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -147,8 +144,7 @@ namespace SammBot.Bot.Modules
                 await botDatabase.SaveChangesAsync();
             }
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await FollowupAsync($"Tag created succesfully! Use `/tags get {Name}` to use it!", allowedMentions: allowedMentions);
+            await FollowupAsync($"Tag created succesfully! Use `/tags get {Name}` to use it!", allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }

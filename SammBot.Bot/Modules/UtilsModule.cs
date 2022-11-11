@@ -73,8 +73,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.Description += $"• **HSV**: {parsedColor.ToHsvString()}\n";
                     replyEmbed.Description += $"• **HSL**: {parsedColor.ToHslString()}\n";
 
-                    AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                    await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                    await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
                 }
             }
 
@@ -136,9 +135,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.Description += $"• **HSV**: {parsedColor.ToHsvString()}\n";
                     replyEmbed.Description += $"• **HSL**: {parsedColor.ToHslString()}\n";
 
-                    AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-
-                    await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                    await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
                 }
             }
 
@@ -162,8 +159,6 @@ namespace SammBot.Bot.Modules
 
             string userAvatar = targetUser.GetAvatarUrl(size: 2048);
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-
             if (Context.User is SocketGuildUser)
             {
                 SocketGuildUser guildUser = targetUser as SocketGuildUser;
@@ -180,7 +175,7 @@ namespace SammBot.Bot.Modules
 
                     replyEmbed.ImageUrl = serverAvatar;
 
-                    await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                    await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
                     return ExecutionResult.Succesful();
                 }
@@ -192,7 +187,7 @@ namespace SammBot.Bot.Modules
 
             replyEmbed.ImageUrl = userAvatar;
 
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -299,8 +294,7 @@ namespace SammBot.Bot.Modules
 
             replyEmbed.Description = embedDescription;
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }

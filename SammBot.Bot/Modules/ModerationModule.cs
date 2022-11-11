@@ -35,8 +35,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Description = $"**Reason**: {banReason}\n";
             replyEmbed.Description += $"**Prune Days**: {PruneDays} day(s).";
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -59,8 +58,7 @@ namespace SammBot.Bot.Modules
 
             replyEmbed.Description = $"**Reason**: {kickReason}";
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -101,8 +99,6 @@ namespace SammBot.Bot.Modules
                 replyEmbed.Description += $"**Reason**: {Reason}\n";
                 replyEmbed.Description += $"**Warn ID**: {newGuid}\n\n";
 
-                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-
                 //DM the user about it.
                 try
                 {
@@ -120,7 +116,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.Description += "I could not DM the user about this warning.";
                 }
 
-                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -146,8 +142,8 @@ namespace SammBot.Bot.Modules
 
                 await botDatabase.SaveChangesAsync();
 
-                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await FollowupAsync($":white_check_mark: Removed warning \"{WarningId}\" from user <@{specificWarning.UserId}>.", allowedMentions: allowedMentions);
+                await FollowupAsync($":white_check_mark: Removed warning \"{WarningId}\" from user <@{specificWarning.UserId}>.",
+                    allowedMentions: Settings.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -180,8 +176,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.Description += $"**· Reason**: {warning.Reason.Truncate(48)}\n\n";
                 }
 
-                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -211,8 +206,7 @@ namespace SammBot.Bot.Modules
                 replyEmbed.AddField("Date", $"<t:{specificWarning.Date}:F>");
                 replyEmbed.AddField("Reason", specificWarning.Reason);
 
-                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -249,8 +243,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Description += $"**Duration**: {days} day(s), {hours} hour(s), {minutes} minute(s) and {seconds} second(s).\n";
             replyEmbed.Description += $"**Expires in**: <t:{untilDate}:F>";
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -266,8 +259,7 @@ namespace SammBot.Bot.Modules
 
             await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(retrievedMessages);
 
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($":white_check_mark: Cleared `{Count}` message/s.", ephemeral: true, allowedMentions: allowedMentions);
+            await RespondAsync($":white_check_mark: Cleared `{Count}` message/s.", ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
