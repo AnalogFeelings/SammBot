@@ -97,7 +97,6 @@ namespace SammBot.Bot.Core
 
     public class JsonConfig
     {
-        public string BotPrefix { get; set; } = "s.";
         public int TagDistance { get; set; } = 3;
 
         public List<string> MagicBallAnswers { get; set; } = null;
