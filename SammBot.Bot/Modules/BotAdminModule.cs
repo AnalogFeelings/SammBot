@@ -214,7 +214,7 @@ namespace SammBot.Bot.Modules
 
             if (RestartBot)
             {
-                await ReplyAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: allowedMentions, messageReference: messageReference);
+                await RespondAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: allowedMentions);
                 Settings.RestartBot();
             }
 
