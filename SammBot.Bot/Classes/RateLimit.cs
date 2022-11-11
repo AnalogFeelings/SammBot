@@ -6,12 +6,13 @@
 //- Made it cleaner.
 //- Adapted it for text-based commands.
 
-using Discord.Commands;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Interactions;
 
 namespace SammBot.Bot.Classes
 {
@@ -31,8 +32,8 @@ namespace SammBot.Bot.Classes
             this.Requests = Requests;
             this.Seconds = Seconds;
         }
-
-        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext Context, CommandInfo CommandInfo, IServiceProvider Services)
+        
+        public override Task<PreconditionResult> CheckRequirementsAsync(IInteractionContext Context, ICommandInfo CommandInfo, IServiceProvider Services)
         {
             string command = CommandInfo.Module.Name + " " + CommandInfo.Name;
             DateTime dateNow = DateTime.UtcNow;
@@ -50,9 +51,9 @@ namespace SammBot.Bot.Classes
             {
                 int secondsLeft = (rateLimitItems.Last().ExpiresAt - dateNow).Seconds;
 
-                return PreconditionResult.FromError($"This command is in cooldown! You can use it again in **{secondsLeft}** second(s).\n\n" +
-                                                    $"The default cooldown for this command is **{Seconds}** second(s).\n" +
-                                                    $"You can run this command **{Requests}** time(s) before hitting cooldown.");
+                return Task.FromResult(PreconditionResult.FromError($"This command is in cooldown! You can use it again in **{secondsLeft}** second(s).\n\n" +
+                                                                    $"The default cooldown for this command is **{Seconds}** second(s).\n" +
+                                                                    $"You can run this command **{Requests}** time(s) before hitting cooldown."));
             }
 
             targetItem.Add(new RateLimitItem()
@@ -61,7 +62,7 @@ namespace SammBot.Bot.Classes
                 ExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(Seconds)
             });
 
-            return PreconditionResult.FromSuccess();
+            return Task.FromResult(PreconditionResult.FromSuccess());
         }
 
         private class RateLimitItem
