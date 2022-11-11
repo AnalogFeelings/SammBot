@@ -36,11 +36,14 @@ namespace SammBot.Bot.Modules
         {
             string chosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
 
-            await RespondAsync(":8ball: Asking the magic 8-ball...", allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync($":8ball: Asking the magic 8-ball...\n" +
+                               $"**• Question**: {Question}", allowedMentions: Settings.Instance.AllowOnlyUsers);
 
             await Task.Delay(2000);
 
-            await ModifyOriginalResponseAsync(x => x.Content = $"The magic 8-ball has answered!\n`{chosenAnswer}`");
+            await ModifyOriginalResponseAsync(x => x.Content = $":8ball: The magic 8-ball has answered!\n" +
+                                                               $"**• Question**: {Question}\n" +
+                                                               $"**• Answer**: {chosenAnswer}");
             
             return ExecutionResult.Succesful();
         }
