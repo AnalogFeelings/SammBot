@@ -17,7 +17,7 @@ namespace SammBot.Bot.Modules
         [FullDescription("Provides a list of all the commands and modules available.")]
         [RateLimit(1, 3)]
         [HideInHelp]
-        public async Task<RuntimeResult> HelpAsync([Summary(description: "The name of the module. Leave empty to list all modules. " +
+        public async Task<RuntimeResult> HelpAsync([Summary(description: "Leave empty to list all modules. " +
                                                                          "Add a command name to list help for that command.")] string ModuleName = null)
         {
             // Hoh boy, this is QUITE a bumpy ride. Be ready!
