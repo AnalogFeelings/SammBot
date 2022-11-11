@@ -47,8 +47,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("activity", "Creates an invite for a voice channel activity!")]
-        [FullDescription("Creates an activity invite for your current voice channel. Read [this](https://discordnet.dev/api/Discord.DefaultApplications.html) for" +
-                         " a list of the available activities.")]
+        [FullDescription("Creates an activity invite for your current voice channel.")]
         [RateLimit(6, 1)]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(GuildPermission.CreateInstantInvite)]
