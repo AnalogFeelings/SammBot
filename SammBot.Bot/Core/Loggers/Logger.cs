@@ -29,8 +29,11 @@ namespace SammBot.Bot.Core
             InteractionService.Log += LogAsync;
         }
 
-        public void Log(string Message, LogSeverity Severity) =>
-            _LoggerInstance.Log(Message, Severity);
+        public void Log(string Message, LogSeverity Severity)
+        {
+            if(Message != null)
+                _LoggerInstance.Log(Message, Severity);
+        }
 
         public void LogException(Exception TargetException) =>
             Log(TargetException.ToString(), LogSeverity.Error);
