@@ -32,7 +32,7 @@ namespace SammBot.Bot.Modules
 
             SocketTextChannel targetChannel = Context.Client.GetGuild(AdminService.GuildId).GetTextChannel(AdminService.ChannelId);
 
-            using (targetChannel.EnterTypingState()) await targetChannel.SendMessageAsync(Message);
+            await targetChannel.SendMessageAsync(Message);
 
             return ExecutionResult.Succesful();
         }

@@ -38,7 +38,7 @@ namespace SammBot.Bot.Modules
 
             await RespondAsync(":8ball: Asking the magic 8-ball...", allowedMentions: Settings.Instance.AllowOnlyUsers);
 
-            using (Context.Channel.EnterTypingState()) await Task.Delay(2000);
+            await Task.Delay(2000);
 
             await ModifyOriginalResponseAsync(x => x.Content = $"The magic 8-ball has answered!\n`{chosenAnswer}`");
             
@@ -77,7 +77,7 @@ namespace SammBot.Bot.Modules
         
             await RespondAsync(":game_die: Rolling the dice...", allowedMentions: Settings.Instance.AllowOnlyUsers);
         
-            using (Context.Channel.EnterTypingState()) await Task.Delay(1500);
+            await Task.Delay(1500);
         
             await ModifyOriginalResponseAsync(x => x.Content = $"The dice landed on **{chosenNumber}**!");
         
@@ -422,7 +422,7 @@ namespace SammBot.Bot.Modules
             await DeferAsync();
         
             UrbanDefinitionList urbanDefinitions = null;
-            using (Context.Channel.EnterTypingState()) urbanDefinitions = await GetUrbanDefinitionAsync(searchParameters);
+            urbanDefinitions = await GetUrbanDefinitionAsync(searchParameters);
         
             if (urbanDefinitions == null || urbanDefinitions.List.Count == 0)
                 return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{Term}\"!");
