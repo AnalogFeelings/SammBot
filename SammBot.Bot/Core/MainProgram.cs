@@ -1,5 +1,4 @@
 ﻿using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -9,13 +8,14 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord.Interactions;
 
 namespace SammBot.Bot.Core
 {
     public class MainProgram
     {
         private DiscordShardedClient _ShardedClient;
-        private CommandService _CommandService;
+        private InteractionService _InteractionService;
 
         public static void Main()
             => new MainProgram().MainAsync().GetAwaiter().GetResult();
@@ -116,7 +116,7 @@ namespace SammBot.Bot.Core
                 GatewayIntents = GatewayIntents.All,
                 LogGatewayIntentWarnings = false
             });
-            _CommandService = new CommandService(new CommandServiceConfig
+            _InteractionService = new InteractionService(_ShardedClient, new InteractionServiceConfig()
             {
                 LogLevel = Discord.LogSeverity.Info,
                 DefaultRunMode = RunMode.Async,
@@ -149,7 +149,7 @@ namespace SammBot.Bot.Core
         private void ConfigureServices(IServiceCollection Services)
         {
             Services.AddSingleton(_ShardedClient)
-                .AddSingleton(_CommandService)
+                .AddSingleton(_InteractionService)
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<StartupService>()
                 .AddSingleton<Logger>()
