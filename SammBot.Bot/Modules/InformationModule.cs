@@ -19,8 +19,8 @@ namespace SammBot.Bot.Modules
     {
         public DiscordShardedClient ShardedClient { get; set; }
         
-        [SlashCommand("full", "Shows the FULL information of the bot.")]
-        [FullDescription("Shows version, uptime, ping, etc...")]
+        [SlashCommand("bot", "Shows information about the bot.")]
+        [FullDescription("Shows information about the bot such as version, uptime, ping, etc...")]
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> InformationFullAsync()
         {
