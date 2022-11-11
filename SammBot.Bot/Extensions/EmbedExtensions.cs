@@ -2,12 +2,13 @@
 using Discord.Commands;
 using SammBot.Bot.Core;
 using System;
+using Discord.Interactions;
 
 namespace SammBot.Bot.Extensions
 {
     public static class EmbedExtensions
     {
-        public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder Builder, SocketCommandContext Context, string Title = "", string Description = "")
+        public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder Builder, SocketInteractionContext Context, string Title = "", string Description = "")
         {
             if (Context == null)
                 throw new ArgumentNullException(nameof(Context));
@@ -20,8 +21,8 @@ namespace SammBot.Bot.Extensions
 
             Builder.WithFooter(x =>
             {
-                x.Text = $"Requested by {Context.Message.Author.GetFullUsername()}"; 
-                x.IconUrl = Context.Message.Author.GetGuildGlobalOrDefaultAvatar(128);
+                x.Text = $"Requested by {Context.Interaction.User.GetFullUsername()}"; 
+                x.IconUrl = Context.Interaction.User.GetGuildGlobalOrDefaultAvatar(256);
             });
             Builder.WithCurrentTimestamp();
 
