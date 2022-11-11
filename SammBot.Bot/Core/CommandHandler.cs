@@ -1,9 +1,10 @@
 ﻿using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
+using Discord.Interactions;
 
 namespace SammBot.Bot.Core
 {
@@ -14,37 +15,43 @@ namespace SammBot.Bot.Core
         private Logger BotLogger { get; set; }
 
         private AdminService AdminService { get; set; }
-        private CommandService CommandsService { get; set; }
+        private InteractionService InteractionService { get; set; }
         private EventLoggingService EventLoggingService { get; set; }
 
-        public CommandHandler(DiscordShardedClient Client, CommandService Commands, IServiceProvider Services, Logger Logger)
+        public CommandHandler(DiscordShardedClient Client, InteractionService InteractionService, IServiceProvider Services, Logger Logger)
         {
-            CommandsService = Commands;
+            this.InteractionService = InteractionService;
             ShardedClient = Client;
             ServiceProvider = Services;
             BotLogger = Logger;
+            
+            AdminService = ServiceProvider.GetRequiredService<AdminService>();
+            EventLoggingService = ServiceProvider.GetRequiredService<EventLoggingService>();
+        }
 
-            ShardedClient.MessageReceived += HandleCommandAsync;
-            CommandsService.CommandExecuted += OnCommandExecutedAsync;
+        public async Task InitializeHandlerAsync()
+        {
+            await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
 
-            AdminService = Services.GetRequiredService<AdminService>();
-            EventLoggingService = Services.GetRequiredService<EventLoggingService>();
+            ShardedClient.MessageReceived += OnMessageReceivedAsync;
+            ShardedClient.InteractionCreated += HandleInteractionAsync;
+            
+            InteractionService.InteractionExecuted += OnInteractionExecutedAsync;
 
             AddEventHandlersAsync();
         }
 
-        private async Task OnCommandExecutedAsync(Optional<CommandInfo> Command, ICommandContext Context, IResult Result)
+        private async Task OnInteractionExecutedAsync(ICommandInfo SlashCommand, IInteractionContext Context, IResult Result)
         {
             try
             {
-                MessageReference messageReference = new MessageReference(Context.Message.Id, Context.Channel.Id, null, false);
                 AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
                 if (!Result.IsSuccess)
                 {
                     string finalMessage = string.Empty;
 
-                    EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed((SocketCommandContext)Context);
+                    EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed((ShardedInteractionContext)Context);
                     replyEmbed.Title = "\u26A0 An error has occurred.";
                     replyEmbed.Color = new Color(255, 204, 77);
 
@@ -54,15 +61,15 @@ namespace SammBot.Bot.Core
                             replyEmbed.Title = "\u2139\uFE0F I didn't quite understand that...";
                             replyEmbed.Color = new Color(59, 136, 195);
                             
-                            finalMessage = $"There is no command named like that!\nUse the `{Settings.Instance.LoadedConfig.BotPrefix}help` command for a command list.";
+                            finalMessage = $"There is no command named like that!\nUse the `/help` command for a command list.";
                             break;
                         case "The input text has too few parameters.":
-                            finalMessage = $"You didn't provide enough required parameters!\nUse the `{Settings.Instance.LoadedConfig.BotPrefix}help " +
-                                $"{Command.Value.Module.Group} {Command.Value.Name}` command to see all of the required parameters.";
+                            finalMessage = $"You didn't provide enough required parameters!\nUse the `/help " +
+                                $"{SlashCommand.Module.Name} {SlashCommand.Name}` command to see all of the required parameters.";
                             break;
                         case "The input text has too many parameters.":
-                            finalMessage = $"You provided too many parameters!\nUse the `{Settings.Instance.LoadedConfig.BotPrefix}help " +
-                                $"{Command.Value.Module.Group} {Command.Value.Name}` command to see all of the required parameters.";
+                            finalMessage = $"You provided too many parameters!\nUse the `/help " +
+                                $"{SlashCommand.Module.Name} {SlashCommand.Name}` command to see all of the required parameters.";
                             break;
                         default:
                             finalMessage = Result.ErrorReason;
@@ -71,7 +78,27 @@ namespace SammBot.Bot.Core
 
                     replyEmbed.Description = finalMessage;
 
-                    await Context.Channel.SendMessageAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions, messageReference: messageReference);
+                    await Context.Interaction.RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                }
+            }
+            catch (Exception ex)
+            {
+                BotLogger.LogException(ex);
+            }
+        }
+        
+        private async Task OnMessageReceivedAsync(SocketMessage ReceivedMessage)
+        {
+            try
+            {
+                if (ReceivedMessage.Content.StartsWith($"<@{ShardedClient.CurrentUser.Id}>"))
+                {
+                    MessageReference messageReference = new MessageReference(ReceivedMessage.Id, ReceivedMessage.Channel.Id, null, false);
+                    AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
+
+                    await ReceivedMessage.Channel.SendMessageAsync($"Hi! I'm **{Settings.BOT_NAME}**!\n" + 
+                                                                   $"You can use `/help` to see a list of my available commands!", 
+                        allowedMentions: allowedMentions, messageReference: messageReference);
                 }
             }
             catch (Exception ex)
@@ -80,43 +107,23 @@ namespace SammBot.Bot.Core
             }
         }
 
-        public async Task HandleCommandAsync(SocketMessage ReceivedMessage)
+        private async Task HandleInteractionAsync(SocketInteraction Interaction)
         {
             if (AdminService.ChangingConfig) return;
 
-            SocketUserMessage targetMessage = ReceivedMessage as SocketUserMessage;
-            if (targetMessage == null) return;
-            if (targetMessage.Author.IsBot) return;
+            ShardedInteractionContext context = new ShardedInteractionContext(ShardedClient, Interaction);
 
             if (Settings.Instance.LoadedConfig.OnlyOwnerMode)
             {
                 IApplication botApplication = await ShardedClient.GetApplicationInfoAsync();
 
-                if (targetMessage.Author.Id != botApplication.Owner.Id) return;
+                if (Interaction.User.Id != botApplication.Owner.Id) return;
             }
+            
+            BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
+                Interaction.User.GetFullUsername(), Interaction.Channel.Name), LogSeverity.Debug);
 
-            ShardedCommandContext context = new ShardedCommandContext(ShardedClient, targetMessage);
-
-            int argumentPosition = 0;
-            if (targetMessage.Content.StartsWith($"<@{ShardedClient.CurrentUser.Id}>"))
-            {
-                MessageReference messageReference = new MessageReference(context.Message.Id, context.Channel.Id, null, false);
-                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-
-                await context.Channel.SendMessageAsync($"Hi! I'm **{Settings.BOT_NAME}**!\n" +
-                        $"My prefix is `{Settings.Instance.LoadedConfig.BotPrefix}`! " +
-                        $"You can use `{Settings.Instance.LoadedConfig.BotPrefix}help` to see a list of my available commands!",
-                        allowedMentions: allowedMentions, messageReference: messageReference);
-            }
-            else if (targetMessage.HasStringPrefix(Settings.Instance.LoadedConfig.BotPrefix, ref argumentPosition))
-            {
-                if (targetMessage.Content.Length == Settings.Instance.LoadedConfig.BotPrefix.Length) return;
-                
-                BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
-                    targetMessage.Content, targetMessage.Channel.Name, targetMessage.Author.Username), LogSeverity.Debug);
-
-                await CommandsService.ExecuteAsync(context, argumentPosition, ServiceProvider);
-            }
+            await InteractionService.ExecuteCommandAsync(context, ServiceProvider);
         }
         
         private void AddEventHandlersAsync()
