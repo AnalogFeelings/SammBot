@@ -1,6 +1,4 @@
 ﻿{
-  "BotVersion": "v5.9",
-  "BotPrefix": "s.",
   "RotatingStatus": true,
   "RotatingAvatar": false,
   "WaitForDebugger": false,
@@ -11,7 +9,7 @@
   "OpenWeatherKey": null,
   "TwitchUrl": null,
   "OwnerUserId": null,
-  "CommandLogFormat": "Executing command \"{0}\". Channel: #{1}. User: @{2}.",
+  "CommandLogFormat": "User @{0} is executing a command at channel #{1}.",
   "AvatarRotationTime": 1,
   "AvatarRecentQueueSize": 10, 
   "MessageCacheSize": 2000,
