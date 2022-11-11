@@ -1,11 +1,9 @@
 ﻿using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using Figgle;
 using Matcha;
 using Pastel;
 using SammBot.Bot.Classes;
-using SammBot.Bot.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord.Interactions;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Color = System.Drawing.Color;
 
@@ -22,7 +21,7 @@ namespace SammBot.Bot.Services
     {
         private IServiceProvider ServiceProvider;
         private DiscordShardedClient ShardedClient { get; set; }
-        private CommandService CommandsService { get; set; }
+        private InteractionService InteractionService { get; set; }
         private Logger BotLogger { get; set; }
 
         private Timer _StatusTimer;
@@ -33,11 +32,11 @@ namespace SammBot.Bot.Services
         private bool _EventsSetUp = false;
         private int _ShardsReady = 0;
         
-        public StartupService(IServiceProvider ServiceProvider, DiscordShardedClient ShardedClient, CommandService CommandsService, Logger Logger)
+        public StartupService(IServiceProvider ServiceProvider, DiscordShardedClient ShardedClient, InteractionService InteractionService, Logger Logger)
         {
             this.ServiceProvider = ServiceProvider;
             this.ShardedClient = ShardedClient;
-            this.CommandsService = CommandsService;
+            this.InteractionService = InteractionService;
             BotLogger = Logger;
 
             RecentAvatars = new AutoDequeueList<string>(Settings.Instance.LoadedConfig.AvatarRecentQueueSize);
@@ -54,7 +53,7 @@ namespace SammBot.Bot.Services
             ShardedClient.ShardReady += OnShardReady;
             ShardedClient.ShardDisconnected += OnShardDisconnect;
 
-            await CommandsService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
+            await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
             Settings.Instance.StartupStopwatch.Stop();
 
             Console.Title = $"{Settings.BOT_NAME} v{Settings.GetBotVersion()}";
