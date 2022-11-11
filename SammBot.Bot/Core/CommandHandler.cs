@@ -78,7 +78,7 @@ namespace SammBot.Bot.Core
 
                     replyEmbed.Description = finalMessage;
 
-                    await Context.Interaction.RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                    await Context.Interaction.FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
                 }
             }
             catch (Exception ex)
