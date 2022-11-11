@@ -8,7 +8,7 @@ namespace SammBot.Bot.Extensions
 {
     public static class EmbedExtensions
     {
-        public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder Builder, SocketInteractionContext Context, string Title = "", string Description = "")
+        public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context, string Title = "", string Description = "")
         {
             if (Context == null)
                 throw new ArgumentNullException(nameof(Context));
