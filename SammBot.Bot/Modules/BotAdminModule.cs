@@ -17,7 +17,7 @@ namespace SammBot.Bot.Modules
     [Group("badmin", "Bot management commands. Bot owner only.")]
     [ModuleEmoji("\U0001f4be")]
     [RequireOwner]
-    public class BotAdminModule : InteractionModuleBase<SocketInteractionContext>
+    public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
     {
         public AdminService AdminService { get; set; }
         public Logger Logger { get; set; }
@@ -53,7 +53,8 @@ namespace SammBot.Bot.Modules
             SocketGuild targetGuild = Context.Client.GetGuild(Guild);
 
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"Success. Set guild to `{targetGuild.Name}` and channel to `{targetGuild.GetTextChannel(Channel).Name}`.", allowedMentions: allowedMentions);
+            await RespondAsync($"Success. Set guild to `{targetGuild.Name}` and channel to `{targetGuild.GetTextChannel(Channel).Name}`.",
+                ephemeral: true, allowedMentions: allowedMentions);
 
             return ExecutionResult.Succesful();
         }
@@ -76,7 +77,7 @@ namespace SammBot.Bot.Modules
             builtMessage += Format.Code(codeBlock);
 
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync(builtMessage, allowedMentions: allowedMentions);
+            await RespondAsync(builtMessage, ephemeral: true, allowedMentions: allowedMentions);
 
             return ExecutionResult.Succesful();
         }
@@ -87,7 +88,7 @@ namespace SammBot.Bot.Modules
         public async Task<RuntimeResult> ShutdownAsync()
         {
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"{Settings.BOT_NAME} will shut down.", allowedMentions: allowedMentions);
+            await RespondAsync($"{Settings.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: allowedMentions);
 
             Logger.Log($"{Settings.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
 
@@ -102,7 +103,7 @@ namespace SammBot.Bot.Modules
         public async Task<RuntimeResult> RestartAsync()
         {
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: allowedMentions);
+            await RespondAsync($"{Settings.BOT_NAME} will restart.", ephemeral: true, allowedMentions: allowedMentions);
 
             Logger.Log($"{Settings.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
 
@@ -124,7 +125,7 @@ namespace SammBot.Bot.Modules
             await targetGuild.LeaveAsync();
 
             AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-            await RespondAsync($"Left the server \"{targetGuildName}\".", allowedMentions: allowedMentions);
+            await RespondAsync($"Left the server \"{targetGuildName}\".", ephemeral: true, allowedMentions: allowedMentions);
 
             return ExecutionResult.Succesful();
         }
