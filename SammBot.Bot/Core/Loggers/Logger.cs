@@ -44,24 +44,10 @@ namespace SammBot.Bot.Core
                     Log(Message.Message, LogSeverity.Debug);
                     break;
                 case Discord.LogSeverity.Critical:
-                    // if (Message.Exception is CommandException CriticalException)
-                    // {
-                    //     string formattedException = string.Format("Critical exception in command \"{0}{1}\", at channel #{2}.\n{3}",
-                    //             Settings.Instance.LoadedConfig.BotPrefix, CriticalException.Command.Aliases[0], CriticalException.Context.Channel, CriticalException);
-                    //
-                    //     Log(formattedException, LogSeverity.Fatal);
-                    // }
-                    /*else*/ Log(Message.Message, LogSeverity.Fatal);
+                    Log(Message.Message, LogSeverity.Fatal);
                     break;
                 case Discord.LogSeverity.Error:
-                    // if (Message.Exception is CommandException ErrorException)
-                    // {
-                    //     string formattedException = string.Format("Exception in command \"{0}{1}\", at channel #{2}.\n{3}",
-                    //             Settings.Instance.LoadedConfig.BotPrefix, ErrorException.Command.Aliases[0], ErrorException.Context.Channel, ErrorException);
-                    //
-                    //     Log(formattedException, LogSeverity.Error);
-                    // }
-                    /*else*/ Log(Message.Message, LogSeverity.Error);
+                    Log(Message.Message, LogSeverity.Error);
                     break;
                 case Discord.LogSeverity.Warning:
                     Log(Message.Message, LogSeverity.Warning);
