@@ -24,7 +24,7 @@ namespace SammBot.Bot.Classes
         public FullDescription(string Description) => this.Description = Description;
     }
 
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
     public class FullName : Attribute
     {
         public string Name;
