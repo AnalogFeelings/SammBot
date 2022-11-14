@@ -44,7 +44,7 @@ namespace SammBot.Bot.Core
 
             try
             {
-                DirectoryInfo botDirectory = Directory.CreateDirectory(BotDataDirectory);
+                Directory.CreateDirectory(BotDataDirectory);
 
                 if (!File.Exists(configFilePath)) return false;
             }
