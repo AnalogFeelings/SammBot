@@ -83,9 +83,9 @@ namespace SammBot.Bot.Core
 
         public static string GetBotVersion()
         {
-            Version botVersion = Assembly.GetEntryAssembly().GetName().Version;
+            Version botVersion = Assembly.GetEntryAssembly()!.GetName().Version;
 
-            return botVersion.ToString(2);
+            return botVersion!.ToString(2);
         }
 
         private static Settings _PrivateInstance;
