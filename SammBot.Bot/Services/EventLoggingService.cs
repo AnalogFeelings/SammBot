@@ -229,7 +229,7 @@ namespace SammBot.Bot.Services
 
                         replyEmbed.Title = "\U0001f4dd Message Edited";
                         replyEmbed.Description = $"A message has been edited.\n" +
-                                                 $"The old content will be listed below if the message has been cached by {Settings.BOT_NAME}.";
+                                                 $"The old content will be listed below if the message has been cached by {SettingsManager.BOT_NAME}.";
                         replyEmbed.WithColor(BadColor);
 
                         replyEmbed.AddField("\U0001f464 Author", NewMessage.Author.Mention, true);

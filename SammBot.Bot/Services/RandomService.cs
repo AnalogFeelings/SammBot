@@ -14,8 +14,8 @@ namespace SammBot.Bot.Services
 
         public RandomService()
         {
-            CatRequester = new SharpCatRequester(Settings.Instance.LoadedConfig.CatKey);
-            DogRequester = new SharpDogRequester(Settings.Instance.LoadedConfig.DogKey);
+            CatRequester = new SharpCatRequester(SettingsManager.Instance.LoadedConfig.CatKey);
+            DogRequester = new SharpDogRequester(SettingsManager.Instance.LoadedConfig.DogKey);
             RandomClient = new HttpClient();
         }
     }

@@ -40,13 +40,13 @@ namespace SammBot.Bot.Services
             this.InteractionService = InteractionService;
             BotLogger = Logger;
 
-            RecentAvatars = new AutoDequeueList<string>(Settings.Instance.LoadedConfig.AvatarRecentQueueSize);
+            RecentAvatars = new AutoDequeueList<string>(SettingsManager.Instance.LoadedConfig.AvatarRecentQueueSize);
         }
 
         public async Task StartAsync()
         {
             BotLogger.Log("Logging in as a bot...", LogSeverity.Information);
-            await ShardedClient.LoginAsync(TokenType.Bot, Settings.Instance.LoadedConfig.BotToken);
+            await ShardedClient.LoginAsync(TokenType.Bot, SettingsManager.Instance.LoadedConfig.BotToken);
             await ShardedClient.StartAsync();
             BotLogger.Log("Succesfully connected to web socket.", LogSeverity.Success);
 
@@ -54,34 +54,34 @@ namespace SammBot.Bot.Services
             ShardedClient.ShardReady += OnShardReady;
             ShardedClient.ShardDisconnected += OnShardDisconnect;
             
-            Settings.Instance.StartupStopwatch.Stop();
+            BotGlobals.Instance.StartupStopwatch.Stop();
 
-            Console.Title = $"{Settings.BOT_NAME} v{Settings.GetBotVersion()}";
+            Console.Title = $"{SettingsManager.BOT_NAME} v{SettingsManager.GetBotVersion()}";
 
             string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
             string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
             
             Console.Clear();
 
-            Console.Write(FiggleFonts.Slant.Render(Settings.BOT_NAME).Pastel(Color.SkyBlue));
+            Console.Write(FiggleFonts.Slant.Render(SettingsManager.BOT_NAME).Pastel(Color.SkyBlue));
             Console.Write("===========".Pastel(Color.CadetBlue));
-            Console.Write($"Source code v{Settings.GetBotVersion()}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
+            Console.Write($"Source code v{SettingsManager.GetBotVersion()}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
             Console.WriteLine("===========".Pastel(Color.CadetBlue));
             Console.WriteLine();
 
-            Settings.Instance.RuntimeStopwatch.Start();
+            BotGlobals.Instance.RuntimeStopwatch.Start();
 
             BotLogger.Log($"Using MatchaLogger {matchaVersion}.", LogSeverity.Information);
 
-            BotLogger.Log($"{Settings.BOT_NAME} took" +
-                $" {Settings.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
+            BotLogger.Log($"{SettingsManager.BOT_NAME} took" +
+                $" {BotGlobals.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
             
 #if DEBUG
-            BotLogger.Log($"{Settings.BOT_NAME} has been built on Debug configuration. Extra logging will be available.", LogSeverity.Warning);
+            BotLogger.Log($"{SettingsManager.BOT_NAME} has been built on Debug configuration. Extra logging will be available.", LogSeverity.Warning);
 #endif
             
-            if(Settings.Instance.LoadedConfig.OnlyOwnerMode)
-                BotLogger.Log($"Only Owner Mode is active. {Settings.BOT_NAME} will only handle commands sent by the bot account owner.", LogSeverity.Warning);
+            if(SettingsManager.Instance.LoadedConfig.OnlyOwnerMode)
+                BotLogger.Log($"Only Owner Mode is active. {SettingsManager.BOT_NAME} will only handle commands sent by the bot account owner.", LogSeverity.Warning);
             
             BotLogger.Log("Warming up the bot database...", LogSeverity.Information);
             _ = Task.Run(() => WarmUpDatabase());
@@ -128,19 +128,19 @@ namespace SammBot.Bot.Services
                 
                 if (_ShardsReady == ShardedClient.Shards.Count)
                 {
-                    if (Settings.Instance.LoadedConfig.StatusList.Count > 0 && Settings.Instance.LoadedConfig.RotatingStatus)
+                    if (SettingsManager.Instance.LoadedConfig.StatusList.Count > 0 && SettingsManager.Instance.LoadedConfig.RotatingStatus)
                         _StatusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 
-                    if (Settings.Instance.LoadedConfig.RotatingAvatar)
+                    if (SettingsManager.Instance.LoadedConfig.RotatingAvatar)
                     {
-                        TimeSpan avatarDelay = TimeSpan.FromHours(Settings.Instance.LoadedConfig.AvatarRotationTime);
+                        TimeSpan avatarDelay = TimeSpan.FromHours(SettingsManager.Instance.LoadedConfig.AvatarRotationTime);
 
                         _AvatarTimer = new Timer(RotateAvatar, null, avatarDelay, avatarDelay);
                     }
 
                     await InteractionService.RegisterCommandsGloballyAsync(true);
 
-                    BotLogger.Log($"{Settings.BOT_NAME} is ready to run.", LogSeverity.Success);
+                    BotLogger.Log($"{SettingsManager.BOT_NAME} is ready to run.", LogSeverity.Success);
 
                     _EventsSetUp = true;
                 }
@@ -156,16 +156,16 @@ namespace SammBot.Bot.Services
 
         private async void RotateStatus(object State)
         {
-            BotStatus chosenStatus = Settings.Instance.LoadedConfig.StatusList.PickRandom();
+            BotStatus chosenStatus = SettingsManager.Instance.LoadedConfig.StatusList.PickRandom();
 
-            string gameUrl = chosenStatus.Type == 1 ? Settings.Instance.LoadedConfig.TwitchUrl : null;
+            string gameUrl = chosenStatus.Type == 1 ? SettingsManager.Instance.LoadedConfig.TwitchUrl : null;
 
             await ShardedClient.SetGameAsync(chosenStatus.Content, gameUrl, (ActivityType)chosenStatus.Type);
         }
 
         private async void RotateAvatar(object State)
         {
-            List<string> avatarList = Directory.EnumerateFiles(Path.Combine(Settings.Instance.BotDataDirectory, "Avatars")).ToList();
+            List<string> avatarList = Directory.EnumerateFiles(Path.Combine(SettingsManager.Instance.BotDataDirectory, "Avatars")).ToList();
             if (avatarList.Count < 2) return;
 
             List<string> filteredList = avatarList.Except(RecentAvatars).ToList();
