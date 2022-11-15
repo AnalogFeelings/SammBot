@@ -19,7 +19,7 @@ namespace SammBot.Bot.Core
 
         public readonly AllowedMentions AllowOnlyUsers = new AllowedMentions(AllowedMentionTypes.Users);
         
-        protected BotGlobals() {}
+        private BotGlobals() {}
         
         public static void RestartBot()
         {
