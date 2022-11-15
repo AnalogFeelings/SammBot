@@ -49,7 +49,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Color = new Color(255, 204, 77);
             replyEmbed.ImageUrl = retrievedImage.Url;
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -85,7 +85,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Color = new Color(217, 158, 130);
             replyEmbed.ImageUrl = retrievedImage.Url;
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -112,7 +112,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Color = new Color(241, 143, 38);
             replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -139,7 +139,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Color = new Color(62, 114, 29);
             replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }

@@ -53,7 +53,7 @@ namespace SammBot.Bot.Modules
             SocketGuild targetGuild = Context.Client.GetGuild(Guild);
 
             await RespondAsync($"Success. Set guild to `{targetGuild.Name}` and channel to `{targetGuild.GetTextChannel(Channel).Name}`.",
-                ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
+                ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -75,7 +75,7 @@ namespace SammBot.Bot.Modules
 
             builtMessage += Format.Code(codeBlock);
 
-            await RespondAsync(builtMessage, ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(builtMessage, ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -85,9 +85,9 @@ namespace SammBot.Bot.Modules
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> ShutdownAsync()
         {
-            await RespondAsync($"{Settings.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync($"{SettingsManager.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
-            Logger.Log($"{Settings.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
+            Logger.Log($"{SettingsManager.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
 
             Environment.Exit(0);
 
@@ -99,11 +99,11 @@ namespace SammBot.Bot.Modules
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> RestartAsync()
         {
-            await RespondAsync($"{Settings.BOT_NAME} will restart.", ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync($"{SettingsManager.BOT_NAME} will restart.", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
-            Logger.Log($"{Settings.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
+            Logger.Log($"{SettingsManager.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
 
-            Settings.RestartBot();
+            BotGlobals.RestartBot();
 
             return ExecutionResult.Succesful();
         }
@@ -120,7 +120,7 @@ namespace SammBot.Bot.Modules
             string targetGuildName = targetGuild.Name;
             await targetGuild.LeaveAsync();
 
-            await RespondAsync($"Left the server \"{targetGuildName}\".", ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync($"Left the server \"{targetGuildName}\".", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -137,7 +137,7 @@ namespace SammBot.Bot.Modules
                                      "Properties with an orange diamond next to their name are marked as not modifiable at runtime.";
             replyEmbed.Color = new Color(102, 117, 127);
 
-            List<PropertyInfo> properties = typeof(JsonConfig).GetProperties()
+            List<PropertyInfo> properties = typeof(BotConfig).GetProperties()
                 .Where(x => !x.PropertyType.IsGenericType &&
                             x.Name != "CatKey" &&
                             x.Name != "DogKey" &&
@@ -147,7 +147,7 @@ namespace SammBot.Bot.Modules
             if (!Override)
             {
                 replyEmbed.Description = "This is a list of all the bot settings that are safe to display publicly.";
-                properties = properties.Where(x => x.GetCustomAttribute<NotModifiable>() == null).ToList();
+                properties = properties.Where(x => x.GetCustomAttribute<NeedsReboot>() == null).ToList();
             }
 
             foreach (PropertyInfo property in properties)
@@ -155,16 +155,16 @@ namespace SammBot.Bot.Modules
                 string propertyName = string.Empty;
                 string propertyValue = string.Empty;
 
-                if (property.GetCustomAttribute<NotModifiable>() == null) propertyName = "\U0001f539 ";
+                if (property.GetCustomAttribute<NeedsReboot>() == null) propertyName = "\U0001f539 ";
                 else propertyName = "\U0001f538 ";
 
                 propertyName += property.Name;
-                propertyValue = $"\n**• Current Value**: `{property.GetValue(Settings.Instance.LoadedConfig, null)}`";
+                propertyValue = $"\n**• Current Value**: `{property.GetValue(SettingsManager.Instance.LoadedConfig, null)}`";
                 
                 replyEmbed.AddField(propertyName, propertyValue);
             }
 
-            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -176,7 +176,7 @@ namespace SammBot.Bot.Modules
                                                         [Summary(description: "The new value of the setting.")] string VarValue,
                                                         [Summary(description: "Set to **true** to restart the bot afterwards. Needed for non-modifiable settings.")] bool RestartBot = false)
         {
-            PropertyInfo retrievedVariable = typeof(JsonConfig).GetProperty(VarName);
+            PropertyInfo retrievedVariable = typeof(BotConfig).GetProperty(VarName);
 
             if (retrievedVariable == null)
                 return ExecutionResult.FromError($"{VarName} does not exist!");
@@ -184,15 +184,15 @@ namespace SammBot.Bot.Modules
             if (typeof(IEnumerable).IsAssignableFrom(retrievedVariable.PropertyType) && retrievedVariable.PropertyType != typeof(string))
                 return ExecutionResult.FromError($"{VarName} is a collection!");
 
-            if (retrievedVariable.GetCustomAttribute<NotModifiable>() != null && !RestartBot)
+            if (retrievedVariable.GetCustomAttribute<NeedsReboot>() != null && !RestartBot)
                 return ExecutionResult.FromError($"**{VarName}** cannot be modified at runtime!\n" +
                     $"Please pass `true` to the **RestartBot** parameter.");
 
             AdminService.ChangingConfig = true;
 
-            retrievedVariable.SetValue(Settings.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
+            retrievedVariable.SetValue(SettingsManager.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
 
-            object newValue = retrievedVariable.GetValue(Settings.Instance.LoadedConfig);
+            object newValue = retrievedVariable.GetValue(SettingsManager.Instance.LoadedConfig);
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
@@ -200,17 +200,17 @@ namespace SammBot.Bot.Modules
             replyEmbed.Description = $"Successfully set setting **{VarName}** to value `{newValue.ToString().Truncate(128)}`.";
             replyEmbed.WithColor(119, 178, 85);
 
-            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
-            string configFilePath = Path.Combine(Settings.Instance.BotDataDirectory, Settings.CONFIG_FILE);
-            string jsonContent = JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented);
+            string configFilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, SettingsManager.CONFIG_FILE);
+            string jsonContent = JsonConvert.SerializeObject(SettingsManager.Instance.LoadedConfig, Formatting.Indented);
 
             await File.WriteAllTextAsync(configFilePath, jsonContent);
 
             if (RestartBot)
             {
-                await RespondAsync($"{Settings.BOT_NAME} will restart.", allowedMentions: Settings.Instance.AllowOnlyUsers);
-                Settings.RestartBot();
+                await RespondAsync($"{SettingsManager.BOT_NAME} will restart.", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                BotGlobals.RestartBot();
             }
 
             AdminService.ChangingConfig = false;

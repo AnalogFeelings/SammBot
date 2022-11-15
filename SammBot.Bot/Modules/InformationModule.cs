@@ -27,9 +27,9 @@ namespace SammBot.Bot.Modules
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information");
 
             string elapsedUptime = string.Format("{0:00} days,\n{1:00} hours,\n{2:00} minutes",
-                Settings.Instance.RuntimeStopwatch.Elapsed.Days,
-                Settings.Instance.RuntimeStopwatch.Elapsed.Hours,
-                Settings.Instance.RuntimeStopwatch.Elapsed.Minutes);
+                BotGlobals.Instance.RuntimeStopwatch.Elapsed.Days,
+                BotGlobals.Instance.RuntimeStopwatch.Elapsed.Hours,
+                BotGlobals.Instance.RuntimeStopwatch.Elapsed.Minutes);
             long memoryUsage = Process.GetCurrentProcess().PrivateMemorySize64 / 1000000;
 
             string releaseConfig = "Unknown";
@@ -45,11 +45,11 @@ namespace SammBot.Bot.Modules
             replyEmbed.Title = "\u2139\uFE0F Bot Information";
             replyEmbed.WithColor(59, 136, 195);
 
-            replyEmbed.Description += $"Here's some public information about {Settings.BOT_NAME}!\n\n";
+            replyEmbed.Description += $"Here's some public information about {SettingsManager.BOT_NAME}!\n\n";
             replyEmbed.Description += $":globe_with_meridians: Check out the bot's {formattedWebsite}!\n";
             replyEmbed.Description += $":open_file_folder: Also check out the GitHub {formattedGithub}!";
 
-            replyEmbed.AddField("\U0001faaa Bot Version", $"Version {Settings.GetBotVersion()}", true);
+            replyEmbed.AddField("\U0001faaa Bot Version", $"Version {SettingsManager.GetBotVersion()}", true);
             replyEmbed.AddField("\u2699\uFE0F Target Config", $"{releaseConfig} Configuration", true);
             replyEmbed.AddField("\U0001f4e6 .NET Version", $"{RuntimeInformation.FrameworkDescription}", true);
 
@@ -61,7 +61,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.AddField("\U0001f5a5\uFE0F Host System", FriendlySystemName(), true);
             replyEmbed.AddField("\U0001f4ca Working Set", $"{memoryUsage} megabytes", true);
 
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -107,7 +107,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.AddField("\U0001f465 Member Count", memberCount, true);
             replyEmbed.AddField("\U0001f4e6 Role Count", roleCount, true);
 
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -152,7 +152,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.AddField("\U0001f680 Booster Since", boostingSince, true);
             replyEmbed.AddField("\U0001f4e6 Roles", roles, false);
             
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }

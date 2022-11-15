@@ -35,7 +35,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Description = $"**Reason**: {banReason}\n";
             replyEmbed.Description += $"**Prune Days**: {PruneDays} day(s).";
 
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -58,7 +58,7 @@ namespace SammBot.Bot.Modules
 
             replyEmbed.Description = $"**Reason**: {kickReason}";
 
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -116,7 +116,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.Description += "I could not DM the user about this warning.";
                 }
 
-                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -143,7 +143,7 @@ namespace SammBot.Bot.Modules
                 await botDatabase.SaveChangesAsync();
 
                 await FollowupAsync($":white_check_mark: Removed warning \"{WarningId}\" from user <@{specificWarning.UserId}>.",
-                    allowedMentions: Settings.Instance.AllowOnlyUsers);
+                    allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -176,7 +176,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.Description += $"**· Reason**: {warning.Reason.Truncate(48)}\n\n";
                 }
 
-                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -206,7 +206,7 @@ namespace SammBot.Bot.Modules
                 replyEmbed.AddField("Date", $"<t:{specificWarning.Date}:F>");
                 replyEmbed.AddField("Reason", specificWarning.Reason);
 
-                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -243,7 +243,7 @@ namespace SammBot.Bot.Modules
             replyEmbed.Description += $"**Duration**: {days} day(s), {hours} hour(s), {minutes} minute(s) and {seconds} second(s).\n";
             replyEmbed.Description += $"**Expires in**: <t:{untilDate}:F>";
 
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -259,7 +259,7 @@ namespace SammBot.Bot.Modules
 
             await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(retrievedMessages);
 
-            await RespondAsync($":white_check_mark: Cleared `{Count}` message/s.", ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync($":white_check_mark: Cleared `{Count}` message/s.", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }

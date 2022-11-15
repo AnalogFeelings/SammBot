@@ -34,10 +34,10 @@ namespace SammBot.Bot.Modules
         [RateLimit(2, 1)]
         public async Task<RuntimeResult> MagicBallAsync([Summary(description: "The question you want to ask to the magic 8-ball.")] string Question)
         {
-            string chosenAnswer = Settings.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
+            string chosenAnswer = SettingsManager.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
 
             await RespondAsync($":8ball: Asking the magic 8-ball...\n" +
-                               $"**• Question**: {Question}", allowedMentions: Settings.Instance.AllowOnlyUsers);
+                               $"**• Question**: {Question}", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             await Task.Delay(2000);
 
@@ -63,7 +63,7 @@ namespace SammBot.Bot.Modules
             IInviteMetadata invite = await author.VoiceChannel.CreateInviteToApplicationAsync(ActivityType);
         
             await RespondAsync($":warning: **Most activities only work if the server has a Nitro Boost level of at least 1.**\n\n" +
-                $"{invite.Url}", allowedMentions: Settings.Instance.AllowOnlyUsers);
+                $"{invite.Url}", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -78,7 +78,7 @@ namespace SammBot.Bot.Modules
         
             int chosenNumber = Random.Shared.Next(1, FaceCount + 1);
         
-            await RespondAsync(":game_die: Rolling the dice...", allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(":game_die: Rolling the dice...", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
             await Task.Delay(1500);
         
@@ -93,12 +93,12 @@ namespace SammBot.Bot.Modules
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> HugUserAsync([Summary(description: "The user you want to hug.")] IUser User)
         {
-            string chosenKaomoji = Settings.Instance.LoadedConfig.HugKaomojis.PickRandom();
+            string chosenKaomoji = SettingsManager.Instance.LoadedConfig.HugKaomojis.PickRandom();
         
             SocketGuildUser authorGuildUser = Context.Interaction.User as SocketGuildUser;
         
             await RespondAsync($"Warm hugs from **{authorGuildUser.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>",
-                allowedMentions: Settings.Instance.AllowOnlyUsers);
+                allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -111,7 +111,7 @@ namespace SammBot.Bot.Modules
         {
             SocketGuildUser authorGuildUser = Context.Interaction.User as SocketGuildUser;
         
-            await RespondAsync($"Pats from **{authorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync($"Pats from **{authorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -128,7 +128,7 @@ namespace SammBot.Bot.Modules
             int fourthSegment = Random.Shared.Next(0, 256);
         
             await RespondAsync($"**{User.GetUsernameOrNick()}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`",
-                allowedMentions: Settings.Instance.AllowOnlyUsers);
+                allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -144,7 +144,7 @@ namespace SammBot.Bot.Modules
             Pronoun authorPronouns = await authorUser.GetUserPronouns();
             Pronoun targetPronouns = await TargetUser.GetUserPronouns();
         
-            string chosenMessage = Settings.Instance.LoadedConfig.KillMessages.PickRandom();
+            string chosenMessage = SettingsManager.Instance.LoadedConfig.KillMessages.PickRandom();
             chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorUser.GetUsernameOrNick()}**");
             chosenMessage = chosenMessage.Replace("{mPrnSub}", authorPronouns.Subject);
             chosenMessage = chosenMessage.Replace("{mPrnObj}", authorPronouns.Object);
@@ -161,7 +161,7 @@ namespace SammBot.Bot.Modules
             chosenMessage = chosenMessage.Replace("{vPrnRefSing}", targetPronouns.ReflexiveSingular);
             chosenMessage = chosenMessage.Replace("{vPrnRefPlur}", targetPronouns.ReflexivePlural);
         
-            await RespondAsync(chosenMessage, allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(chosenMessage, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }
@@ -262,20 +262,20 @@ namespace SammBot.Bot.Modules
                 if (percentage < _ShipSegments[i])
                 {
                     if (i == 0)
-                        progressBar += Settings.Instance.LoadedConfig.ShipBarStartEmpty;
+                        progressBar += SettingsManager.Instance.LoadedConfig.ShipBarStartEmpty;
                     else if (i == _ShipSegments.Length - 1)
-                        progressBar += Settings.Instance.LoadedConfig.ShipBarEndEmpty;
+                        progressBar += SettingsManager.Instance.LoadedConfig.ShipBarEndEmpty;
                     else
-                        progressBar += Settings.Instance.LoadedConfig.ShipBarHalfEmpty;
+                        progressBar += SettingsManager.Instance.LoadedConfig.ShipBarHalfEmpty;
                 }
                 else
                 {
                     if (i == 0)
-                        progressBar += Settings.Instance.LoadedConfig.ShipBarStartFull;
+                        progressBar += SettingsManager.Instance.LoadedConfig.ShipBarStartFull;
                     else if (i == _ShipSegments.Length - 1)
-                        progressBar += Settings.Instance.LoadedConfig.ShipBarEndFull;
+                        progressBar += SettingsManager.Instance.LoadedConfig.ShipBarEndFull;
                     else
-                        progressBar += Settings.Instance.LoadedConfig.ShipBarHalfFull;
+                        progressBar += SettingsManager.Instance.LoadedConfig.ShipBarHalfFull;
                 }
             }
         
@@ -391,7 +391,7 @@ namespace SammBot.Bot.Modules
         
                     //Use SendFileAsync to be able to upload the stream to Discord's servers. The file name has to be the same as the one set in ImageUrl.
                     await FollowupWithFileAsync(finalImageStream, "shipImage.png", preEmbedText,
-                        embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+                        embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
                 }
             }
         
@@ -454,7 +454,7 @@ namespace SammBot.Bot.Modules
             
             replyEmbed.WithUrl(chosenDefinition.Permalink);
         
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
             return ExecutionResult.Succesful();
         }

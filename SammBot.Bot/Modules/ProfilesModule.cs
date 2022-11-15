@@ -71,7 +71,7 @@ namespace SammBot.Bot.Modules
                 await botDatabase.SaveChangesAsync();
             }
 
-            await FollowupAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.", allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await FollowupAsync($"Done! Your new pronouns are: `{Subject}/{Object}`.", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -95,7 +95,7 @@ namespace SammBot.Bot.Modules
                     string formattedPronouns = $"{existingPronouns.Subject}/{existingPronouns.Object}";
 
                     await FollowupAsync($"**{targetUser.GetUsernameOrNick()}**'s pronouns are: `{formattedPronouns}`.",
-                        allowedMentions: Settings.Instance.AllowOnlyUsers);
+                        allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
                 }
                 else
                 {

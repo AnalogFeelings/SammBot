@@ -73,7 +73,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.Description += $"• **HSV**: {parsedColor.ToHsvString()}\n";
                     replyEmbed.Description += $"• **HSL**: {parsedColor.ToHslString()}\n";
 
-                    await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+                    await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
                 }
             }
 
@@ -135,7 +135,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.Description += $"• **HSV**: {parsedColor.ToHsvString()}\n";
                     replyEmbed.Description += $"• **HSL**: {parsedColor.ToHslString()}\n";
 
-                    await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+                    await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
                 }
             }
 
@@ -175,7 +175,7 @@ namespace SammBot.Bot.Modules
 
                     replyEmbed.ImageUrl = serverAvatar;
 
-                    await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+                    await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
                     return ExecutionResult.Succesful();
                 }
@@ -187,7 +187,7 @@ namespace SammBot.Bot.Modules
 
             replyEmbed.ImageUrl = userAvatar;
 
-            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -294,7 +294,7 @@ namespace SammBot.Bot.Modules
 
             replyEmbed.Description = embedDescription;
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -305,7 +305,7 @@ namespace SammBot.Bot.Modules
             GeolocationParams geolocationParameters = new GeolocationParams()
             {
                 q = City,
-                appid = Settings.Instance.LoadedConfig.OpenWeatherKey,
+                appid = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
                 limit = 1,
             };
             string locationQuery = geolocationParameters.ToQueryString();
@@ -326,7 +326,7 @@ namespace SammBot.Bot.Modules
             {
                 lat = Location.Latitude,
                 lon = Location.Longitude,
-                appid = Settings.Instance.LoadedConfig.OpenWeatherKey,
+                appid = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
                 units = "metric"
             };
             string weatherQuery = weatherParams.ToQueryString();

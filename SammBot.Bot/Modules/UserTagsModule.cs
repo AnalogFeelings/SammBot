@@ -41,7 +41,7 @@ namespace SammBot.Bot.Modules
                 await botDatabase.SaveChangesAsync();
             }
 
-            await FollowupAsync("Success!", allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await FollowupAsync("Success!", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
@@ -62,7 +62,7 @@ namespace SammBot.Bot.Modules
                 if (retrievedTag == null)
                     return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
 
-                await FollowupAsync(retrievedTag.Reply, allowedMentions: Settings.Instance.AllowOnlyUsers);
+                await FollowupAsync(retrievedTag.Reply, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -80,7 +80,7 @@ namespace SammBot.Bot.Modules
             {
                 List<UserTag> tagList = await botDatabase.UserTags.ToListAsync();
                 List<UserTag> filteredTags = tagList.Where(x => x.GuildId == Context.Guild.Id &&
-                            Name.DamerauLevenshteinDistance(x.Name, Settings.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
+                            Name.DamerauLevenshteinDistance(x.Name, SettingsManager.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
                 if (!filteredTags.Any())
                     return ExecutionResult.FromError($"No tags found with a name similar to \"{Name}\".");
@@ -99,7 +99,7 @@ namespace SammBot.Bot.Modules
                     replyEmbed.AddField($"`{tag.Name}`", $"By: **{userName}**");
                 }
 
-                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: Settings.Instance.AllowOnlyUsers);
+                await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
             }
 
             return ExecutionResult.Succesful();
@@ -144,7 +144,7 @@ namespace SammBot.Bot.Modules
                 await botDatabase.SaveChangesAsync();
             }
 
-            await FollowupAsync($"Tag created succesfully! Use `/tags get {Name}` to use it!", allowedMentions: Settings.Instance.AllowOnlyUsers);
+            await FollowupAsync($"Tag created succesfully! Use `/tags get {Name}` to use it!", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
             return ExecutionResult.Succesful();
         }
