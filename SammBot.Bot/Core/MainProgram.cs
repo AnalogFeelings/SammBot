@@ -22,21 +22,21 @@ namespace SammBot.Bot.Core
 
         private async Task MainAsync()
         {
-            Settings.Instance.StartupStopwatch.Start();
+            BotGlobals.Instance.StartupStopwatch.Start();
 
             BootLogger bootLogger = new BootLogger();
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
-            bootLogger.Log($"Loading {Settings.CONFIG_FILE}...", LogSeverity.Information);
-            if (!Settings.Instance.LoadConfiguration())
+            bootLogger.Log($"Loading {SettingsManager.CONFIG_FILE}...", LogSeverity.Information);
+            if (!SettingsManager.Instance.LoadConfiguration())
             {
-                string fullPath = Settings.Instance.BotDataDirectory;
-                Task writeTask = File.WriteAllTextAsync(Path.Combine(fullPath, Settings.CONFIG_FILE),
-                    JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
+                string fullPath = SettingsManager.Instance.BotDataDirectory;
+                Task writeTask = File.WriteAllTextAsync(Path.Combine(fullPath, SettingsManager.CONFIG_FILE),
+                    JsonConvert.SerializeObject(SettingsManager.Instance.LoadedConfig, Formatting.Indented));
 
-                bootLogger.Log($"Could not load {Settings.CONFIG_FILE} correctly! Make sure the path \"{fullPath}\" exists.\n" +
-                    $"{Settings.BOT_NAME} has attempted to write an empty template {Settings.CONFIG_FILE} file to that path.", LogSeverity.Fatal);
+                bootLogger.Log($"Could not load {SettingsManager.CONFIG_FILE} correctly! Make sure the path \"{fullPath}\" exists.\n" +
+                    $"{SettingsManager.BOT_NAME} has attempted to write an empty template {SettingsManager.CONFIG_FILE} file to that path.", LogSeverity.Fatal);
 
                 await writeTask;
 
@@ -49,7 +49,7 @@ namespace SammBot.Bot.Core
             bootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
             
 #if DEBUG
-            if (Settings.Instance.LoadedConfig.WaitForDebugger && !Debugger.IsAttached)
+            if (SettingsManager.Instance.LoadedConfig.WaitForDebugger && !Debugger.IsAttached)
             {
                 bootLogger.Log("Waiting for debugger to attach...", LogSeverity.Information);
                     
@@ -62,7 +62,7 @@ namespace SammBot.Bot.Core
             }
 #endif
 
-            string logsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Logs");
+            string logsDirectory = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs");
 
             if (!Directory.Exists(logsDirectory))
             {
@@ -85,7 +85,7 @@ namespace SammBot.Bot.Core
                 }
             }
 
-            string avatarsDirectory = Path.Combine(Settings.Instance.BotDataDirectory, "Avatars");
+            string avatarsDirectory = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Avatars");
 
             if (!Directory.Exists(avatarsDirectory))
             {
@@ -111,7 +111,7 @@ namespace SammBot.Bot.Core
             _ShardedClient = new DiscordShardedClient(new DiscordSocketConfig
             {
                 LogLevel = Discord.LogSeverity.Warning,
-                MessageCacheSize = Settings.Instance.LoadedConfig.MessageCacheSize,
+                MessageCacheSize = SettingsManager.Instance.LoadedConfig.MessageCacheSize,
                 AlwaysDownloadUsers = true,
                 GatewayIntents = GatewayIntents.All,
                 LogGatewayIntentWarnings = false

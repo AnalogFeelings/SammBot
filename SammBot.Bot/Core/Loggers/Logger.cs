@@ -17,7 +17,7 @@ namespace SammBot.Bot.Core
             //Default settings.
             MatchaLoggerSettings loggerSettings = new MatchaLoggerSettings()
             {
-                LogFilePath = Path.Combine(Settings.Instance.BotDataDirectory, "Logs"), 
+                LogFilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs"), 
 #if !DEBUG
                 AllowedSeverities = LogSeverity.Information | LogSeverity.Warning | LogSeverity.Error | LogSeverity.Fatal | LogSeverity.Success
 #endif

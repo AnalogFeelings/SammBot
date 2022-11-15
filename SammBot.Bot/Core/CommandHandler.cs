@@ -92,7 +92,7 @@ namespace SammBot.Bot.Core
                     MessageReference messageReference = new MessageReference(ReceivedMessage.Id, ReceivedMessage.Channel.Id, null, false);
                     AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
 
-                    await ReceivedMessage.Channel.SendMessageAsync($"Hi! I'm **{Settings.BOT_NAME}**!\n" + 
+                    await ReceivedMessage.Channel.SendMessageAsync($"Hi! I'm **{SettingsManager.BOT_NAME}**!\n" + 
                                                                    $"You can use `/help` to see a list of my available commands!", 
                         allowedMentions: allowedMentions, messageReference: messageReference);
                 }
@@ -109,14 +109,14 @@ namespace SammBot.Bot.Core
 
             ShardedInteractionContext context = new ShardedInteractionContext(ShardedClient, Interaction);
 
-            if (Settings.Instance.LoadedConfig.OnlyOwnerMode)
+            if (SettingsManager.Instance.LoadedConfig.OnlyOwnerMode)
             {
                 IApplication botApplication = await ShardedClient.GetApplicationInfoAsync();
 
                 if (Interaction.User.Id != botApplication.Owner.Id) return;
             }
             
-            BotLogger.Log(string.Format(Settings.Instance.LoadedConfig.CommandLogFormat,
+            BotLogger.Log(string.Format(SettingsManager.Instance.LoadedConfig.CommandLogFormat,
                 Interaction.User.GetFullUsername(), Interaction.Channel.Name), LogSeverity.Debug);
 
             await InteractionService.ExecuteCommandAsync(context, ServiceProvider);
