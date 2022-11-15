@@ -202,8 +202,10 @@ namespace SammBot.Bot.Modules
 
             await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Settings.Instance.AllowOnlyUsers);
 
-            await File.WriteAllTextAsync(Settings.CONFIG_FILE,
-                JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented));
+            string configFilePath = Path.Combine(Settings.Instance.BotDataDirectory, Settings.CONFIG_FILE);
+            string jsonContent = JsonConvert.SerializeObject(Settings.Instance.LoadedConfig, Formatting.Indented);
+
+            await File.WriteAllTextAsync(configFilePath, jsonContent);
 
             if (RestartBot)
             {
