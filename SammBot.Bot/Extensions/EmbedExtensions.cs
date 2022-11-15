@@ -13,7 +13,7 @@ namespace SammBot.Bot.Extensions
             if (Context == null)
                 throw new ArgumentNullException(nameof(Context));
 
-            string botName = Settings.BOT_NAME;
+            string botName = SettingsManager.BOT_NAME;
 
             Builder.Color = Color.DarkPurple;
             Builder.Title = $"{botName.ToUpper()} {Title.ToUpper()}";
@@ -31,7 +31,7 @@ namespace SammBot.Bot.Extensions
 
         public static EmbedBuilder ChangeTitle(this EmbedBuilder Builder, string Title, bool IncludeName = false)
         {
-            string botName = Settings.BOT_NAME;
+            string botName = SettingsManager.BOT_NAME;
 
             if (IncludeName) Builder.WithTitle($"{botName.ToUpper()} {Title.ToUpper()}");
             else Builder.WithTitle(Title.ToUpper());
