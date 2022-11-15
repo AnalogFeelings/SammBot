@@ -33,8 +33,8 @@ namespace SammBot.Bot.Classes
     }
 
     [AttributeUsage(AttributeTargets.Property)]
-    public class NotModifiable : Attribute
+    public class NeedsReboot : Attribute
     {
-        public NotModifiable() { }
+        public NeedsReboot() { }
     }
 }
