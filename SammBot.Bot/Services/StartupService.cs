@@ -20,7 +20,7 @@ namespace SammBot.Bot.Services
 {
     public class StartupService
     {
-        private IServiceProvider ServiceProvider;
+        private IServiceProvider _ServiceProvider;
         private DiscordShardedClient ShardedClient { get; set; }
         private InteractionService InteractionService { get; set; }
         private Logger BotLogger { get; set; }
@@ -28,19 +28,19 @@ namespace SammBot.Bot.Services
         private Timer _StatusTimer;
         private Timer _AvatarTimer;
 
-        private AutoDequeueList<string> RecentAvatars;
+        private AutoDequeueList<string> _RecentAvatars;
 
         private bool _EventsSetUp = false;
         private int _ShardsReady = 0;
         
         public StartupService(IServiceProvider ServiceProvider, DiscordShardedClient ShardedClient, InteractionService InteractionService, Logger Logger)
         {
-            this.ServiceProvider = ServiceProvider;
+            this._ServiceProvider = ServiceProvider;
             this.ShardedClient = ShardedClient;
             this.InteractionService = InteractionService;
             BotLogger = Logger;
 
-            RecentAvatars = new AutoDequeueList<string>(SettingsManager.Instance.LoadedConfig.AvatarRecentQueueSize);
+            _RecentAvatars = new AutoDequeueList<string>(SettingsManager.Instance.LoadedConfig.AvatarRecentQueueSize);
         }
 
         public async Task StartAsync()
@@ -58,8 +58,8 @@ namespace SammBot.Bot.Services
 
             Console.Title = $"{SettingsManager.BOT_NAME} v{SettingsManager.GetBotVersion()}";
 
-            string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit)).GetName().Version.ToString(3);
-            string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger)).GetName().Version.ToString(3);
+            string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit))!.GetName().Version!.ToString(3);
+            string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger))!.GetName().Version!.ToString(3);
             
             Console.Clear();
 
@@ -87,7 +87,7 @@ namespace SammBot.Bot.Services
             _ = Task.Run(() => WarmUpDatabase());
 
             BotLogger.Log("Initializing command handler...", LogSeverity.Information);
-            await ServiceProvider.GetRequiredService<CommandHandler>().InitializeHandlerAsync();
+            await _ServiceProvider.GetRequiredService<CommandHandler>().InitializeHandlerAsync();
             BotLogger.Log("Succesfully initialized command handler.", LogSeverity.Success);
         }
 
@@ -138,7 +138,7 @@ namespace SammBot.Bot.Services
                         _AvatarTimer = new Timer(RotateAvatar, null, avatarDelay, avatarDelay);
                     }
 
-                    await InteractionService.RegisterCommandsGloballyAsync(true);
+                    await InteractionService.RegisterCommandsGloballyAsync();
 
                     BotLogger.Log($"{SettingsManager.BOT_NAME} is ready to run.", LogSeverity.Success);
 
@@ -168,7 +168,7 @@ namespace SammBot.Bot.Services
             List<string> avatarList = Directory.EnumerateFiles(Path.Combine(SettingsManager.Instance.BotDataDirectory, "Avatars")).ToList();
             if (avatarList.Count < 2) return;
 
-            List<string> filteredList = avatarList.Except(RecentAvatars).ToList();
+            List<string> filteredList = avatarList.Except(_RecentAvatars).ToList();
 
             string chosenAvatar = filteredList.PickRandom();
             BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(chosenAvatar)}\".", LogSeverity.Debug);
@@ -180,7 +180,7 @@ namespace SammBot.Bot.Services
                 await ShardedClient.CurrentUser.ModifyAsync(x => x.Avatar = loadedAvatar);
             }
 
-            RecentAvatars.Push(chosenAvatar);
+            _RecentAvatars.Push(chosenAvatar);
         }
     }
 }
