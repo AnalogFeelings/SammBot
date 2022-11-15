@@ -27,7 +27,7 @@ namespace SammBot.Bot.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder OptionsBuilder)
         {
-            string databaseFile = Path.Combine(Settings.Instance.BotDataDirectory, "bot.db");
+            string databaseFile = Path.Combine(SettingsManager.Instance.BotDataDirectory, "bot.db");
 
             SqliteConnectionStringBuilder connectionStringBuilder = new SqliteConnectionStringBuilder() { DataSource = databaseFile };
             SqliteConnection connection = new SqliteConnection(connectionStringBuilder.ToString());
