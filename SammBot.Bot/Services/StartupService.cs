@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 using Discord.Interactions;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
+using SammBot.Bot.Core;
+using SammBot.Bot.Database;
+using SammBot.Bot.Extensions;
 using Color = System.Drawing.Color;
 
 namespace SammBot.Bot.Services

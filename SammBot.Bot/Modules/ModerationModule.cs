@@ -7,16 +7,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Database;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("Moderation")]
+    [PrettyName("Moderation")]
     [Group("mod", "Moderation commands like kick, ban, mute, etc.")]
     [ModuleEmoji("\U0001f9d1\u200D\u2696\uFE0F")]
     public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     {
         [SlashCommand("ban", "Bans a user with a reason.")]
-        [FullDescription("Bans a user from the server with the set reason.")]
+        [DetailedDescription("Bans a user from the server with the set reason.")]
         [RateLimit(1, 2)]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(GuildPermission.BanMembers)]
@@ -41,7 +46,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("kick", "Kicks a user with a reason.")]
-        [FullDescription("Kicks a user from the server with the set reason.")]
+        [DetailedDescription("Kicks a user from the server with the set reason.")]
         [RateLimit(1, 2)]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(GuildPermission.KickMembers)]
@@ -64,7 +69,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("warn", "Warns a user with a reason.")]
-        [FullDescription("Warns a user with a reason. Warnings will be stored in the bot's database, and you will be able to list them afterwards.")]
+        [DetailedDescription("Warns a user with a reason. Warnings will be stored in the bot's database, and you will be able to list them afterwards.")]
         [RateLimit(1, 2)]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.KickMembers)]
@@ -123,7 +128,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("unwarn", "Removes a warn from a user.")]
-        [FullDescription("Removes the warning with the specified ID.")]
+        [DetailedDescription("Removes the warning with the specified ID.")]
         [RateLimit(1, 2)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> RemoveWarnAsync([Summary(description: "The ID of the warn you want to remove.")] string WarningId)
@@ -150,7 +155,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("warns", "Lists all of the warns given to a user.")]
-        [FullDescription("Replies with a list of warnings given to the specified user.")]
+        [DetailedDescription("Replies with a list of warnings given to the specified user.")]
         [RateLimit(2, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> ListWarnsAsync([Summary(description: "The user you want to list the warns for.")] SocketGuildUser TargetUser)
@@ -183,7 +188,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("viewwarn", "Lists a specific warn.")]
-        [FullDescription("Lists a warning, and the full reason.")]
+        [DetailedDescription("Lists a warning, and the full reason.")]
         [RateLimit(2, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> ListWarnAsync([Summary(description: "The ID of the warn you want to view.")] string WarningId)
@@ -213,7 +218,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("mute", "Mutes a user for an amount of time with a reason.")]
-        [FullDescription("Mutes the specified user for an amount of time with the specified reason. The reason is optional.")]
+        [DetailedDescription("Mutes the specified user for an amount of time with the specified reason. The reason is optional.")]
         [RateLimit(1, 2)]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(GuildPermission.ModerateMembers)]
@@ -249,7 +254,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("purge", "Deletes an amount of messages.")]
-        [FullDescription("Deletes the provided amount of messages.")]
+        [DetailedDescription("Deletes the provided amount of messages.")]
         [RateLimit(2, 2)]
         [RequireBotPermission(GuildPermission.ManageMessages)]
         [RequireUserPermission(GuildPermission.ManageMessages)]

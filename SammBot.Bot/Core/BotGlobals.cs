@@ -1,9 +1,4 @@
-﻿global using SammBot.Bot.Core;
-global using SammBot.Bot.Database;
-global using SammBot.Bot.Extensions;
-global using SammBot.Bot.RestDefinitions;
-global using SammBot.Bot.Services;
-global using LogSeverity = Matcha.LogSeverity;
+﻿global using LogSeverity = Matcha.LogSeverity;
 
 using System;
 using System.Diagnostics;

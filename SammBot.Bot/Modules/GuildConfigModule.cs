@@ -6,17 +6,22 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
 using SammBot.Bot.Classes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Database;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("Server Settings")]
+    [PrettyName("Server Settings")]
     [Group("scfg", "Server settings such as logging, welcome messages, etc.")]
     [ModuleEmoji("\u2699\uFE0F")]
     public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext>
     {
         [SlashCommand("list", "Lists all the available settings and their current values.")]
-        [FullDescription("Lists all the available settings and their current values.")]
+        [DetailedDescription("Lists all the available settings and their current values.")]
         [RateLimit(3, 3)]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(GuildPermission.ManageChannels)]
@@ -55,15 +60,15 @@ namespace SammBot.Bot.Modules
                     }
                     else valueString = propertyValue.ToString();
                     
-                    FullName propertyFullName = property.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(FullName)) as FullName;
+                    PrettyName propertyFullName = property.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(PrettyName)) as PrettyName;
                     // Small blue diamond emoji.
                     string propertyName = "\U0001f539 ";
 
                     propertyName += !string.IsNullOrEmpty(propertyFullName.Name) ? propertyFullName.Name : property.Name;
                     propertyName += $"\n(Name: `{property.Name}`)";
                     
-                    FullDescription propertyFullDescription = property.GetCustomAttributes(false)
-                        .FirstOrDefault(x => x.GetType() == typeof(FullDescription)) as FullDescription;
+                    DetailedDescription propertyFullDescription = property.GetCustomAttributes(false)
+                        .FirstOrDefault(x => x.GetType() == typeof(DetailedDescription)) as DetailedDescription;
                     string propertyDescription = !string.IsNullOrEmpty(propertyFullDescription.Description) ? propertyFullDescription.Description : "No description.";
 
                     propertyDescription += $"\n**• Current Value**: `{valueString}`";
@@ -78,7 +83,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("set", "Sets the value of a setting.")]
-        [FullDescription("Sets the value of a server setting.\nYou must use the real name (\"EnableLogging\", not \"Enable Logging\").")]
+        [DetailedDescription("Sets the value of a server setting.\nYou must use the real name (\"EnableLogging\", not \"Enable Logging\").")]
         [RateLimit(2, 3)]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(GuildPermission.ManageChannels)]

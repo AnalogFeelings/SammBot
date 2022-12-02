@@ -6,16 +6,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Database;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("User Profiles")]
+    [PrettyName("User Profiles")]
     [Group("profiles", "Commands related to user profiles.")]
     [ModuleEmoji("\U0001f465")]
     public class ProfilesModule : InteractionModuleBase<ShardedInteractionContext>
     {
         [SlashCommand("setpronouns", "Set your pronouns with this command.")]
-        [FullDescription("Set your pronouns with this command. Some commands use they/them by default unless you set something else.")]
+        [DetailedDescription("Set your pronouns with this command. Some commands use they/them by default unless you set something else.")]
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> SetPronounsAsync([Summary(description: "Self-explanatory.")] string Subject,
                                                           [Summary(description: "Self-explanatory.")] string Object,
@@ -77,7 +82,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("getpronouns", "Get the pronouns of a user!")]
-        [FullDescription("Gets the pronoun information about a user!")]
+        [DetailedDescription("Gets the pronoun information about a user!")]
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetPronounsAsync([Summary(description: "The user you want to get the pronouns of.")] SocketGuildUser User = null)
         {

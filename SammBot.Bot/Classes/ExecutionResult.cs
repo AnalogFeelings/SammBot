@@ -1,6 +1,6 @@
 ﻿using Discord.Interactions;
 
-namespace SammBot.Bot.Classes
+namespace SammBot.Bot
 {
     public class ExecutionResult : RuntimeResult
     {

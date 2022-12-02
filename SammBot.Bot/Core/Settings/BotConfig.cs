@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SammBot.Bot.Classes;
+using SammBot.Bot.Attributes;
 
 namespace SammBot.Bot.Core
 {
@@ -222,7 +222,7 @@ namespace SammBot.Bot.Core
 
         private bool _WaitForDebugger = false;
 
-        [NeedsReboot]
+        [RequiresReboot]
         public bool WaitForDebugger
         {
             get => _WaitForDebugger;
@@ -238,7 +238,7 @@ namespace SammBot.Bot.Core
 
         private string _BotToken = "";
 
-        [NeedsReboot]
+        [RequiresReboot]
         public string BotToken
         {
             get => _BotToken;
@@ -360,7 +360,7 @@ namespace SammBot.Bot.Core
 
         private int _MessageCacheSize = 2000;
 
-        [NeedsReboot]
+        [RequiresReboot]
         public int MessageCacheSize
         {
             get => _MessageCacheSize;

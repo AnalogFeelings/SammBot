@@ -11,10 +11,17 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Database;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
+using SammBot.Bot.RestDefinitions;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("Fun")]
+    [PrettyName("Fun")]
     [Group("fun", "Games and fun!")]
     [ModuleEmoji("\U0001F3B2")]
     public class FunModule : InteractionModuleBase<ShardedInteractionContext>
@@ -30,7 +37,7 @@ namespace SammBot.Bot.Modules
         private const string _TWEMOJI_ASSETS = "https://raw.githubusercontent.com/twitter/twemoji/ad3d3d669bb3697946577247ebb15818f09c6c91/assets/svg/";
 
         [SlashCommand("8ball", "Ask the magic 8-ball!")]
-        [FullDescription("Ask a question to the magic 8-ball! Not guaranteed to answer first try!")]
+        [DetailedDescription("Ask a question to the magic 8-ball! Not guaranteed to answer first try!")]
         [RateLimit(2, 1)]
         public async Task<RuntimeResult> MagicBallAsync([Summary(description: "The question you want to ask to the magic 8-ball.")] string Question)
         {
@@ -49,7 +56,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("activity", "Creates an invite for a voice channel activity!")]
-        [FullDescription("Creates an activity invite for your current voice channel.")]
+        [DetailedDescription("Creates an activity invite for your current voice channel.")]
         [RateLimit(6, 1)]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(GuildPermission.CreateInstantInvite)]
@@ -69,7 +76,7 @@ namespace SammBot.Bot.Modules
         }
         
         [SlashCommand("dice", "Roll the dice, and get a random number!")]
-        [FullDescription("Roll the dice! It returns a random number between 1 and **FaceCount**. **FaceCount** must be larger than 3!")]
+        [DetailedDescription("Roll the dice! It returns a random number between 1 and **FaceCount**. **FaceCount** must be larger than 3!")]
         [RateLimit(2, 1)]
         public async Task<RuntimeResult> RollDiceAsync([Summary(description: "The amount of faces the die will have.")] int FaceCount = 6)
         {
@@ -88,7 +95,7 @@ namespace SammBot.Bot.Modules
         }
         
         [SlashCommand("hug", "Hug a user!")]
-        [FullDescription("Hugs are good for everyone! Spread the joy with this command.")]
+        [DetailedDescription("Hugs are good for everyone! Spread the joy with this command.")]
         [RateLimit(3, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> HugUserAsync([Summary(description: "The user you want to hug.")] IUser User)
@@ -104,7 +111,7 @@ namespace SammBot.Bot.Modules
         }
         
         [SlashCommand("pat", "Pats a user!")]
-        [FullDescription("Pets are ALSO good for everyone! Spread the joy with this command.")]
+        [DetailedDescription("Pets are ALSO good for everyone! Spread the joy with this command.")]
         [RateLimit(3, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> PatUserAsync([Summary(description: "The user you want to pat.")] IUser User)
@@ -117,7 +124,7 @@ namespace SammBot.Bot.Modules
         }
         
         [SlashCommand("dox", "Leak someone's (fake) IP address!")]
-        [FullDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
+        [DetailedDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
         [RateLimit(3, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> DoxUserAsync([Summary(description: "The user you want to \"dox\".")] SocketGuildUser User)
@@ -134,7 +141,7 @@ namespace SammBot.Bot.Modules
         }
         
         [SlashCommand("kill", "Commit first degree murder, fuck it.")]
-        [FullDescription("Commit first degree murder! Don't worry, its fictional, the police isn't after you.")]
+        [DetailedDescription("Commit first degree murder! Don't worry, its fictional, the police isn't after you.")]
         [RateLimit(4, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> FirstDegreeMurderAsync([Summary(description: "The user you want to kill.")] SocketGuildUser TargetUser)
@@ -167,8 +174,8 @@ namespace SammBot.Bot.Modules
         }
         
         [SlashCommand("ship", "Ship 2 users together! Awww!")]
-        [FullDescription("The Ship-O-Matic 5000 is here! If **SecondUser** is left empty, you will be shipped with **FirstUser**. If both are empty, " +
-                         "you will be shipped with a random user from the server.")]
+        [DetailedDescription("The Ship-O-Matic 5000 is here! If **SecondUser** is left empty, you will be shipped with **FirstUser**. If both are empty, " +
+                             "you will be shipped with a random user from the server.")]
         [RateLimit(5, 1)]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(GuildPermission.UseExternalEmojis)]
@@ -413,7 +420,7 @@ namespace SammBot.Bot.Modules
         }
         
         [SlashCommand("urban", "Gets a definition from the urban dictionary!")]
-        [FullDescription("Gets a definition from the urban dictionary. Click the embed's title to open the definition in your browser.")]
+        [DetailedDescription("Gets a definition from the urban dictionary. Click the embed's title to open the definition in your browser.")]
         [RateLimit(6, 1)]
         public async Task<RuntimeResult> UrbanAsync([Summary(description: "The term you want to search.")] string Term)
         {

@@ -5,6 +5,8 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Core
 {

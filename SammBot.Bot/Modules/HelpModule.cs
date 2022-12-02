@@ -4,17 +4,21 @@ using SammBot.Bot.Classes;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("Help")]
+    [PrettyName("Help")]
     public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
     {
         public InteractionService InteractionService { get; set; }
         public IServiceProvider ServiceProvider { get; set; }
 
         [SlashCommand("help", "Provides all commands and modules available.")]
-        [FullDescription("Provides a list of all the commands and modules available.")]
+        [DetailedDescription("Provides a list of all the commands and modules available.")]
         [RateLimit(1, 3)]
         [HideInHelp]
         public async Task<RuntimeResult> HelpAsync([Summary(description: "Leave empty to list all modules. " +
@@ -43,7 +47,7 @@ namespace SammBot.Bot.Modules
                     ModuleEmoji moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
                     string stringifiedEmoji = moduleEmoji != default(ModuleEmoji) ? moduleEmoji.Emoji + " " : string.Empty;
                     
-                    FullName moduleName = moduleInfo.Attributes.First(x => x is FullName) as FullName;
+                    PrettyName moduleName = moduleInfo.Attributes.First(x => x is PrettyName) as PrettyName;
 
                     string moduleHeader = $"**{stringifiedEmoji}{moduleName.Name}**\n" +
                                           $"{moduleInfo.Description}\n" +
@@ -87,10 +91,10 @@ namespace SammBot.Bot.Modules
                     replyEmbed.Color = new Color(204, 214, 221);
 
                     // Get command description, if any.
-                    FullDescription commandDescription = searchResult.Attributes.FirstOrDefault(x => x is FullDescription) as FullDescription;
+                    DetailedDescription commandDescription = searchResult.Attributes.FirstOrDefault(x => x is DetailedDescription) as DetailedDescription;
                     string formattedDescription = string.Empty;
 
-                    if (commandDescription != default(FullDescription) && !string.IsNullOrEmpty(commandDescription.Description))
+                    if (commandDescription != default(DetailedDescription) && !string.IsNullOrEmpty(commandDescription.Description))
                         formattedDescription = commandDescription.Description;
                     else
                         formattedDescription = "No description.";
@@ -168,7 +172,7 @@ namespace SammBot.Bot.Modules
                         ModuleEmoji moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
                         string stringifiedEmoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
                         
-                        FullName moduleName = moduleInfo.Attributes.First(x => x is FullName) as FullName;
+                        PrettyName moduleName = moduleInfo.Attributes.First(x => x is PrettyName) as PrettyName;
 
                         // Build the embed field.
                         string moduleHeader = $"{stringifiedEmoji}{moduleName.Name}\n" +

@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Core
 {

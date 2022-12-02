@@ -8,16 +8,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Database;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("User Tags")]
+    [PrettyName("User Tags")]
     [Group("tags", "Tags that reply with a message when searched.")]
     [ModuleEmoji("\U0001f3f7\uFE0F")]
     public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     {
         [SlashCommand("delete", "Deletes a user tag.")]
-        [FullDescription("Delets a user tag that you own.")]
+        [DetailedDescription("Delets a user tag that you own.")]
         [RateLimit(3, 2)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> DeleteTagAsync([Summary(description: "Self-explanatory.")] string Name)
@@ -47,7 +52,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("get", "Gets a tag by its name, and replies.")]
-        [FullDescription("Retrieve a tag by its name, and sends its content on the chat.")]
+        [DetailedDescription("Retrieve a tag by its name, and sends its content on the chat.")]
         [RateLimit(2, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> GetTagAsync([Summary(description: "Self-explanatory.")] string Name)
@@ -69,7 +74,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("search", "Searches for similar tags.")]
-        [FullDescription("Searches for tags with a similar name.")]
+        [DetailedDescription("Searches for tags with a similar name.")]
         [RateLimit(2, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> SearchTagsAsync([Summary(description: "The search term.")] string Name)
@@ -106,7 +111,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("create", "Creates a new tag.")]
-        [FullDescription("Creates a new tag with the specified reply.")]
+        [DetailedDescription("Creates a new tag with the specified reply.")]
         [RateLimit(3, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> CreateTagAsync([Summary(description: "Self-explanatory.")] string Name, 

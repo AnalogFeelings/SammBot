@@ -9,10 +9,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
+using SammBot.Bot.RestDefinitions;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("Utilities")]
+    [PrettyName("Utilities")]
     [Group("utils", "Miscellaneous utilities.")]
     [ModuleEmoji("\U0001f527")]
     public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
@@ -20,8 +26,8 @@ namespace SammBot.Bot.Modules
         public UtilsService UtilsService { get; set; }
 
         [SlashCommand("viewhex", "Displays a HEX color, and converts it in other formats.")]
-        [FullDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
-            "Also converts it to RGB, CMYK, HSV and HSL.")]
+        [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
+                             "Also converts it to RGB, CMYK, HSV and HSL.")]
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> VisualizeColorHex([Summary(description: "The color you want to visualize, in hexadecimal format.")] string HexColor)
         {
@@ -81,8 +87,8 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("viewrgb", "Displays an RGB color, and converts it in other formats.")]
-        [FullDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
-            "Also converts it to HEX, CMYK, HSV and HSL.")]
+        [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
+                             "Also converts it to HEX, CMYK, HSV and HSL.")]
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> VisualizeColorRgb([Summary(description: "The amount of red. Ranges between 0 to 255.")] byte Red, 
                                                            [Summary(description: "The amount of green. Ranges between 0 to 255.")] byte Green,
@@ -143,8 +149,8 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("avatar", "Gets the avatar of a user.")]
-        [FullDescription("Gets the avatar of a user. If **User** is a server user, it will display the per-guild avatar (if they have any), and send a link to the global one in " +
-            "the embed description.")]
+        [DetailedDescription("Gets the avatar of a user. If **User** is a server user, it will display the per-guild avatar (if they have any), and send a link to the global one in " +
+                             "the embed description.")]
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetProfilePicAsync([Summary(description: "Leave empty to get your own profile picture.")] SocketUser User = null)
         {
@@ -193,7 +199,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("weather", "Gets the current weather for your city.")]
-        [FullDescription("Gets the current weather forecast for your city. May not have all the information available, and the location may not be accurate.")]
+        [DetailedDescription("Gets the current weather forecast for your city. May not have all the information available, and the location may not be accurate.")]
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetWeatherAsync([Summary(description: "The name of the city you want to get the weather forecast for.")] string City)
         {

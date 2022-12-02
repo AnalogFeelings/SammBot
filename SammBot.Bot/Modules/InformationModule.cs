@@ -9,10 +9,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("Information")]
+    [PrettyName("Information")]
     [Group("info", "Bot information and statistics.")]
     [ModuleEmoji("\u2139")]
     public class InformationModule : InteractionModuleBase<ShardedInteractionContext>
@@ -20,7 +24,7 @@ namespace SammBot.Bot.Modules
         public DiscordShardedClient ShardedClient { get; set; }
         
         [SlashCommand("bot", "Shows information about the bot.")]
-        [FullDescription("Shows information about the bot such as version, uptime, ping, etc...")]
+        [DetailedDescription("Shows information about the bot such as version, uptime, ping, etc...")]
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> InformationFullAsync()
         {
@@ -67,7 +71,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("serverinfo", "Get information about a server!")]
-        [FullDescription("Gets all the information about the server you execute the command in.")]
+        [DetailedDescription("Gets all the information about the server you execute the command in.")]
         [RateLimit(3, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> ServerInfoAsync()
@@ -113,7 +117,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("userinfo", "Get information about a user!")]
-        [FullDescription("Gets all the information about the provided user.")]
+        [DetailedDescription("Gets all the information about the provided user.")]
         [RateLimit(3, 1)]
         [RequireContext(ContextType.Guild)]
         public async Task<RuntimeResult> UserInfoAsync([Summary(description: "The user you want to get the information from.")] SocketGuildUser User = null)

@@ -8,10 +8,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
+using SammBot.Bot.RestDefinitions;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("Random")]
+    [PrettyName("Random")]
     [Group("random", "Random crazyness!")]
     [ModuleEmoji("\U0001f3b0")]
     public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
@@ -19,7 +25,7 @@ namespace SammBot.Bot.Modules
         public RandomService RandomService { get; set; }
 
         [SlashCommand("cat", "Returns a random cat!")]
-        [FullDescription("Gets a random cat image from The Cat API!")]
+        [DetailedDescription("Gets a random cat image from The Cat API!")]
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetCatAsync()
         {
@@ -55,7 +61,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("dog", "Returns a random dog!")]
-        [FullDescription("Gets a random dog image from The Dog API!")]
+        [DetailedDescription("Gets a random dog image from The Dog API!")]
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetDogAsync()
         {
@@ -91,7 +97,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("fox", "Returns a random fox!")]
-        [FullDescription("Gets a random fox image from the RandomFox API!")]
+        [DetailedDescription("Gets a random fox image from the RandomFox API!")]
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetFoxAsync()
         {
@@ -118,7 +124,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("duck", "Returns a random duck!")]
-        [FullDescription("Gets a random duck image from the RandomDuk API!")]
+        [DetailedDescription("Gets a random duck image from the RandomDuk API!")]
         [RateLimit(3, 2)]
         public async Task<RuntimeResult> GetDuckAsync()
         {

@@ -10,10 +10,15 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Extensions;
+using SammBot.Bot.Preconditions;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules
 {
-    [FullName("Bot Administration")]
+    [PrettyName("Bot Administration")]
     [Group("badmin", "Bot management commands. Bot owner only.")]
     [ModuleEmoji("\U0001f4be")]
     [RequireOwner]
@@ -23,7 +28,7 @@ namespace SammBot.Bot.Modules
         public Logger Logger { get; set; }
 
         [SlashCommand("say", "Make the bot say something.")]
-        [FullDescription("Makes the bot say something. Use the **setsay** command to set the channel and guild beforehand.")]
+        [DetailedDescription("Makes the bot say something. Use the **setsay** command to set the channel and guild beforehand.")]
         [RateLimit(2, 1)]
         public async Task<RuntimeResult> SayMessageAsync([Summary(description: "The message text.")] string Message)
         {
@@ -38,7 +43,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("setsay", "Set the channel in which the say command will broadcast.")]
-        [FullDescription("Sets the channel and guild where the say command will send messages to.")]
+        [DetailedDescription("Sets the channel and guild where the say command will send messages to.")]
         [RateLimit(2, 1)]
         public async Task<RuntimeResult> SetSayAsync([Summary(description: "The target channel's ID.")] ulong Channel, 
                                                      [Summary(description: "The target guild's ID.")] ulong Guild)
@@ -59,7 +64,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("listservers", "Shows a list of all the servers the bot is in.")]
-        [FullDescription("Shows a list of the servers the bot is in, and their corresponding IDs.")]
+        [DetailedDescription("Shows a list of the servers the bot is in, and their corresponding IDs.")]
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> ServersAsync()
         {
@@ -81,7 +86,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("shutdown", "Shuts the bot down.")]
-        [FullDescription("Shuts the bot down. That's it.")]
+        [DetailedDescription("Shuts the bot down. That's it.")]
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> ShutdownAsync()
         {
@@ -95,7 +100,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("restart", "Restarts the bot.")]
-        [FullDescription("Restarts the bot. That's it.")]
+        [DetailedDescription("Restarts the bot. That's it.")]
         [RateLimit(1, 1)]
         public async Task<RuntimeResult> RestartAsync()
         {
@@ -109,7 +114,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("leaveserver", "Leaves the specified server.")]
-        [FullDescription("Forces the bot to leave the specified guild.")]
+        [DetailedDescription("Forces the bot to leave the specified guild.")]
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> LeaveAsync([Summary(description: "The ID of the guild you want the bot to leave.")] ulong ServerId)
         {
@@ -126,7 +131,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("listcfg", "Lists all of the bot settings available.")]
-        [FullDescription("Lists the bot settings. Does NOT list the bot's token or the URL detection regex. Some settings are not modifiable without a restart.")]
+        [DetailedDescription("Lists the bot settings. Does NOT list the bot's token or the URL detection regex. Some settings are not modifiable without a restart.")]
         [RateLimit(3, 1)]
         public async Task<RuntimeResult> ListConfigAsync([Summary(description: "Set to **true** to list non-modifiable settings.")] bool Override = false)
         {
@@ -147,7 +152,7 @@ namespace SammBot.Bot.Modules
             if (!Override)
             {
                 replyEmbed.Description = "This is a list of all the bot settings that are safe to display publicly.";
-                properties = properties.Where(x => x.GetCustomAttribute<NeedsReboot>() == null).ToList();
+                properties = properties.Where(x => x.GetCustomAttribute<RequiresReboot>() == null).ToList();
             }
 
             foreach (PropertyInfo property in properties)
@@ -155,7 +160,7 @@ namespace SammBot.Bot.Modules
                 string propertyName = string.Empty;
                 string propertyValue = string.Empty;
 
-                if (property.GetCustomAttribute<NeedsReboot>() == null) propertyName = "\U0001f539 ";
+                if (property.GetCustomAttribute<RequiresReboot>() == null) propertyName = "\U0001f539 ";
                 else propertyName = "\U0001f538 ";
 
                 propertyName += property.Name;
@@ -170,7 +175,7 @@ namespace SammBot.Bot.Modules
         }
 
         [SlashCommand("setcfg", "Sets a bot setting to the specified value.")]
-        [FullDescription("Sets a bot setting to the value specified.")]
+        [DetailedDescription("Sets a bot setting to the value specified.")]
         [RateLimit(2, 1)]
         public async Task<RuntimeResult> SetConfigAsync([Summary(description: "The name of the setting you want to modify.")] string VarName,
                                                         [Summary(description: "The new value of the setting.")] string VarValue,
@@ -184,7 +189,7 @@ namespace SammBot.Bot.Modules
             if (typeof(IEnumerable).IsAssignableFrom(retrievedVariable.PropertyType) && retrievedVariable.PropertyType != typeof(string))
                 return ExecutionResult.FromError($"{VarName} is a collection!");
 
-            if (retrievedVariable.GetCustomAttribute<NeedsReboot>() != null && !RestartBot)
+            if (retrievedVariable.GetCustomAttribute<RequiresReboot>() != null && !RestartBot)
                 return ExecutionResult.FromError($"**{VarName}** cannot be modified at runtime!\n" +
                     $"Please pass `true` to the **RestartBot** parameter.");
 

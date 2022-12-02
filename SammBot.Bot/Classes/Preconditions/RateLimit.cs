@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
 
-namespace SammBot.Bot.Classes
+namespace SammBot.Bot.Preconditions
 {
     public class RateLimit : PreconditionAttribute
     {
