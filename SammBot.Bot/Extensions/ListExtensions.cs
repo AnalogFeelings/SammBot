@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SammBot.Bot.Extensions
+namespace SammBot.Bot.Extensions;
+
+public static class ListExtensions
 {
-    public static class ListExtensions
+    public static T PickRandom<T>(this IList<T> TargetList)
     {
-        public static T PickRandom<T>(this IList<T> TargetList)
-        {
-            return TargetList[Random.Shared.Next(TargetList.Count)];
-        }
+        return TargetList[Random.Shared.Next(TargetList.Count)];
     }
 }

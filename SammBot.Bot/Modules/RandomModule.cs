@@ -15,139 +15,138 @@ using SammBot.Bot.Preconditions;
 using SammBot.Bot.RestDefinitions;
 using SammBot.Bot.Services;
 
-namespace SammBot.Bot.Modules
+namespace SammBot.Bot.Modules;
+
+[PrettyName("Random")]
+[Group("random", "Random crazyness!")]
+[ModuleEmoji("\U0001f3b0")]
+public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    [PrettyName("Random")]
-    [Group("random", "Random crazyness!")]
-    [ModuleEmoji("\U0001f3b0")]
-    public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
+    public RandomService RandomService { get; set; }
+
+    [SlashCommand("cat", "Returns a random cat!")]
+    [DetailedDescription("Gets a random cat image from The Cat API!")]
+    [RateLimit(3, 2)]
+    public async Task<RuntimeResult> GetCatAsync()
     {
-        public RandomService RandomService { get; set; }
-
-        [SlashCommand("cat", "Returns a random cat!")]
-        [DetailedDescription("Gets a random cat image from The Cat API!")]
-        [RateLimit(3, 2)]
-        public async Task<RuntimeResult> GetCatAsync()
+        await DeferAsync();
+            
+        CatImageSearchParams searchParameters = new CatImageSearchParams()
         {
-            await DeferAsync();
+            has_breeds = true,
+            mime_types = "jpg,png,gif",
+            size = "small",
+            limit = 1
+        };
+
+        List<CatImage> retrievedImages = await RandomService.CatRequester.GetImageAsync(searchParameters);
             
-            CatImageSearchParams searchParameters = new CatImageSearchParams()
-            {
-                has_breeds = true,
-                mime_types = "jpg,png,gif",
-                size = "small",
-                limit = 1
-            };
+        CatImage retrievedImage = retrievedImages.First();
+        CatBreed retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
 
-            List<CatImage> retrievedImages = await RandomService.CatRequester.GetImageAsync(searchParameters);
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+
+        replyEmbed.Title = "\U0001f431 Random Cat";
+        replyEmbed.Description = retrievedBreed != default(CatBreed) ?
+            $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
+            $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}" 
+            : string.Empty;
             
-            CatImage retrievedImage = retrievedImages.First();
-            CatBreed retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
+        replyEmbed.Color = new Color(255, 204, 77);
+        replyEmbed.ImageUrl = retrievedImage.Url;
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
-            replyEmbed.Title = "\U0001f431 Random Cat";
-            replyEmbed.Description = retrievedBreed != default(CatBreed) ?
-                $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
-                $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}" 
-                : string.Empty;
+        return ExecutionResult.Succesful();
+    }
+
+    [SlashCommand("dog", "Returns a random dog!")]
+    [DetailedDescription("Gets a random dog image from The Dog API!")]
+    [RateLimit(3, 2)]
+    public async Task<RuntimeResult> GetDogAsync()
+    {
+        await DeferAsync();
             
-            replyEmbed.Color = new Color(255, 204, 77);
-            replyEmbed.ImageUrl = retrievedImage.Url;
+        DogImageSearchParams searchParameters = new DogImageSearchParams()
+        {
+            has_breeds = true,
+            mime_types = "jpg,png,gif",
+            size = "small",
+            limit = 1
+        };
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        List<DogImage> retrievedImages = await RandomService.DogRequester.GetImageAsync(searchParameters);
 
-            return ExecutionResult.Succesful();
+        DogImage retrievedImage = retrievedImages.First();
+        DogBreed retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
+
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+
+        replyEmbed.Title = "\U0001f436 Random Dog";
+        replyEmbed.Description = retrievedBreed != default(DogBreed) ?
+            $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
+            $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}" 
+            : string.Empty;
+            
+        replyEmbed.Color = new Color(217, 158, 130);
+        replyEmbed.ImageUrl = retrievedImage.Url;
+
+        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+
+        return ExecutionResult.Succesful();
+    }
+
+    [SlashCommand("fox", "Returns a random fox!")]
+    [DetailedDescription("Gets a random fox image from the RandomFox API!")]
+    [RateLimit(3, 2)]
+    public async Task<RuntimeResult> GetFoxAsync()
+    {
+        await DeferAsync();
+            
+        string jsonReply = string.Empty;
+
+        using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://randomfox.ca/floof/"))
+        {
+            jsonReply = await responseMessage.Content.ReadAsStringAsync();
         }
 
-        [SlashCommand("dog", "Returns a random dog!")]
-        [DetailedDescription("Gets a random dog image from The Dog API!")]
-        [RateLimit(3, 2)]
-        public async Task<RuntimeResult> GetDogAsync()
+        FoxImage repliedImage = JsonConvert.DeserializeObject<FoxImage>(jsonReply);
+
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+            
+        replyEmbed.Title = "\U0001f98a Random Fox";
+        replyEmbed.Color = new Color(241, 143, 38);
+        replyEmbed.ImageUrl = repliedImage.ImageUrl;
+
+        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+
+        return ExecutionResult.Succesful();
+    }
+
+    [SlashCommand("duck", "Returns a random duck!")]
+    [DetailedDescription("Gets a random duck image from the RandomDuk API!")]
+    [RateLimit(3, 2)]
+    public async Task<RuntimeResult> GetDuckAsync()
+    {
+        await DeferAsync();
+            
+        string jsonReply = string.Empty;
+
+        using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://random-d.uk/api/v2/random"))
         {
-            await DeferAsync();
-            
-            DogImageSearchParams searchParameters = new DogImageSearchParams()
-            {
-                has_breeds = true,
-                mime_types = "jpg,png,gif",
-                size = "small",
-                limit = 1
-            };
-
-            List<DogImage> retrievedImages = await RandomService.DogRequester.GetImageAsync(searchParameters);
-
-            DogImage retrievedImage = retrievedImages.First();
-            DogBreed retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
-
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-
-            replyEmbed.Title = "\U0001f436 Random Dog";
-            replyEmbed.Description = retrievedBreed != default(DogBreed) ?
-                $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
-                $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}" 
-                : string.Empty;
-            
-            replyEmbed.Color = new Color(217, 158, 130);
-            replyEmbed.ImageUrl = retrievedImage.Url;
-
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
-
-            return ExecutionResult.Succesful();
+            jsonReply = await responseMessage.Content.ReadAsStringAsync();
         }
 
-        [SlashCommand("fox", "Returns a random fox!")]
-        [DetailedDescription("Gets a random fox image from the RandomFox API!")]
-        [RateLimit(3, 2)]
-        public async Task<RuntimeResult> GetFoxAsync()
-        {
-            await DeferAsync();
+        DuckImage repliedImage = JsonConvert.DeserializeObject<DuckImage>(jsonReply);
+
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
             
-            string jsonReply = string.Empty;
+        replyEmbed.Title = "\U0001f986 Random Duck";
+        replyEmbed.Color = new Color(62, 114, 29);
+        replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
-            using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://randomfox.ca/floof/"))
-            {
-                jsonReply = await responseMessage.Content.ReadAsStringAsync();
-            }
+        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
-            FoxImage repliedImage = JsonConvert.DeserializeObject<FoxImage>(jsonReply);
-
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-            
-            replyEmbed.Title = "\U0001f98a Random Fox";
-            replyEmbed.Color = new Color(241, 143, 38);
-            replyEmbed.ImageUrl = repliedImage.ImageUrl;
-
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
-
-            return ExecutionResult.Succesful();
-        }
-
-        [SlashCommand("duck", "Returns a random duck!")]
-        [DetailedDescription("Gets a random duck image from the RandomDuk API!")]
-        [RateLimit(3, 2)]
-        public async Task<RuntimeResult> GetDuckAsync()
-        {
-            await DeferAsync();
-            
-            string jsonReply = string.Empty;
-
-            using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://random-d.uk/api/v2/random"))
-            {
-                jsonReply = await responseMessage.Content.ReadAsStringAsync();
-            }
-
-            DuckImage repliedImage = JsonConvert.DeserializeObject<DuckImage>(jsonReply);
-
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-            
-            replyEmbed.Title = "\U0001f986 Random Duck";
-            replyEmbed.Color = new Color(62, 114, 29);
-            replyEmbed.ImageUrl = repliedImage.ImageUrl;
-
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
-
-            return ExecutionResult.Succesful();
-        }
+        return ExecutionResult.Succesful();
     }
 }

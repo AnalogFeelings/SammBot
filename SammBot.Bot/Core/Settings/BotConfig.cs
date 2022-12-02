@@ -2,373 +2,372 @@
 using System.Collections.Generic;
 using SammBot.Bot.Attributes;
 
-namespace SammBot.Bot.Core
+namespace SammBot.Bot.Core;
+
+public class BotConfig
 {
-    public class BotConfig
+    public delegate void TagDistanceModifiedEventHandler(object Sender, EventArgs Args);
+    public event TagDistanceModifiedEventHandler TagDistanceModified;
+        
+    private int _TagDistance = 3;
+        
+    public int TagDistance
     {
-        public delegate void TagDistanceModifiedEventHandler(object Sender, EventArgs Args);
-        public event TagDistanceModifiedEventHandler TagDistanceModified;
-        
-        private int _TagDistance = 3;
-        
-        public int TagDistance
+        get => _TagDistance;
+        set
         {
-            get => _TagDistance;
-            set
-            {
-                _TagDistance = value;
-                TagDistanceModified?.Invoke(this, EventArgs.Empty);
-            }
+            _TagDistance = value;
+            TagDistanceModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void MagicBallAnswersModifiedEventHandler(object Sender, EventArgs Args);
-        public event MagicBallAnswersModifiedEventHandler MagicBallAnswersModified;
+    public delegate void MagicBallAnswersModifiedEventHandler(object Sender, EventArgs Args);
+    public event MagicBallAnswersModifiedEventHandler MagicBallAnswersModified;
 
-        private List<string> _MagicBallAnswers = null;
+    private List<string> _MagicBallAnswers = null;
 
-        public List<string> MagicBallAnswers
+    public List<string> MagicBallAnswers
+    {
+        get => _MagicBallAnswers;
+        set
         {
-            get => _MagicBallAnswers;
-            set
-            {
-                _MagicBallAnswers = value;
-                MagicBallAnswersModified?.Invoke(this, EventArgs.Empty);
-            }
+            _MagicBallAnswers = value;
+            MagicBallAnswersModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void HugKaomojisModifiedEventHandler(object Sender, EventArgs Args);
-        public event HugKaomojisModifiedEventHandler HugKaomojisModified;
+    public delegate void HugKaomojisModifiedEventHandler(object Sender, EventArgs Args);
+    public event HugKaomojisModifiedEventHandler HugKaomojisModified;
 
-        private List<string> _HugKaomojis = null;
+    private List<string> _HugKaomojis = null;
 
-        public List<string> HugKaomojis
+    public List<string> HugKaomojis
+    {
+        get => _HugKaomojis;
+        set
         {
-            get => _HugKaomojis;
-            set
-            {
-                _HugKaomojis = value;
-                HugKaomojisModified?.Invoke(this, EventArgs.Empty);
-            }
+            _HugKaomojis = value;
+            HugKaomojisModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void KillMessagesModifiedEventHandler(object Sender, EventArgs Args);
-        public event KillMessagesModifiedEventHandler KillMessagesModified;
+    public delegate void KillMessagesModifiedEventHandler(object Sender, EventArgs Args);
+    public event KillMessagesModifiedEventHandler KillMessagesModified;
 
-        private List<string> _KillMessages = null;
+    private List<string> _KillMessages = null;
 
-        public List<string> KillMessages
+    public List<string> KillMessages
+    {
+        get => _KillMessages;
+        set
         {
-            get => _KillMessages;
-            set
-            {
-                _KillMessages = value;
-                KillMessagesModified?.Invoke(this, EventArgs.Empty);
-            }
+            _KillMessages = value;
+            KillMessagesModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void StatusListModifiedEventHandler(object Sender, EventArgs Args);
-        public event StatusListModifiedEventHandler StatusListModified;
+    public delegate void StatusListModifiedEventHandler(object Sender, EventArgs Args);
+    public event StatusListModifiedEventHandler StatusListModified;
 
-        private List<BotStatus> _StatusList = null;
+    private List<BotStatus> _StatusList = null;
 
-        public List<BotStatus> StatusList
+    public List<BotStatus> StatusList
+    {
+        get => _StatusList;
+        set
         {
-            get => _StatusList;
-            set
-            {
-                _StatusList = value;
-                StatusListModified?.Invoke(this, EventArgs.Empty);
-            }
+            _StatusList = value;
+            StatusListModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void OnlyOwnerModeModifiedEventHandler(object Sender, EventArgs Args);
-        public event OnlyOwnerModeModifiedEventHandler OnlyOwnerModeModified;
+    public delegate void OnlyOwnerModeModifiedEventHandler(object Sender, EventArgs Args);
+    public event OnlyOwnerModeModifiedEventHandler OnlyOwnerModeModified;
 
-        private bool _OnlyOwnerMode = false;
+    private bool _OnlyOwnerMode = false;
 
-        public bool OnlyOwnerMode
+    public bool OnlyOwnerMode
+    {
+        get => _OnlyOwnerMode;
+        set
         {
-            get => _OnlyOwnerMode;
-            set
-            {
-                _OnlyOwnerMode = value;
-                OnlyOwnerModeModified?.Invoke(this, EventArgs.Empty);
-            }
+            _OnlyOwnerMode = value;
+            OnlyOwnerModeModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void ShipBarStartEmptyModifiedEventHandler(object Sender, EventArgs Args);
-        public event ShipBarStartEmptyModifiedEventHandler ShipBarStartEmptyModified;
+    public delegate void ShipBarStartEmptyModifiedEventHandler(object Sender, EventArgs Args);
+    public event ShipBarStartEmptyModifiedEventHandler ShipBarStartEmptyModified;
 
-        private string _ShipBarStartEmpty = null;
+    private string _ShipBarStartEmpty = null;
 
-        public string ShipBarStartEmpty
+    public string ShipBarStartEmpty
+    {
+        get => _ShipBarStartEmpty;
+        set
         {
-            get => _ShipBarStartEmpty;
-            set
-            {
-                _ShipBarStartEmpty = value;
-                ShipBarStartEmptyModified?.Invoke(this, EventArgs.Empty);
-            }
+            _ShipBarStartEmpty = value;
+            ShipBarStartEmptyModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void ShipBarStartFullModifiedEventHandler(object Sender, EventArgs Args);
-        public event ShipBarStartFullModifiedEventHandler ShipBarStartFullModified;
+    public delegate void ShipBarStartFullModifiedEventHandler(object Sender, EventArgs Args);
+    public event ShipBarStartFullModifiedEventHandler ShipBarStartFullModified;
 
-        private string _ShipBarStartFull = null;
+    private string _ShipBarStartFull = null;
 
-        public string ShipBarStartFull
+    public string ShipBarStartFull
+    {
+        get => _ShipBarStartFull;
+        set
         {
-            get => _ShipBarStartFull;
-            set
-            {
-                _ShipBarStartFull = value;
-                ShipBarStartFullModified?.Invoke(this, EventArgs.Empty);
-            }
+            _ShipBarStartFull = value;
+            ShipBarStartFullModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void ShipBarHalfEmptyModifiedEventHandler(object Sender, EventArgs Args);
-        public event ShipBarHalfEmptyModifiedEventHandler ShipBarHalfEmptyModified;
+    public delegate void ShipBarHalfEmptyModifiedEventHandler(object Sender, EventArgs Args);
+    public event ShipBarHalfEmptyModifiedEventHandler ShipBarHalfEmptyModified;
 
-        private string _ShipBarHalfEmpty = null;
+    private string _ShipBarHalfEmpty = null;
 
-        public string ShipBarHalfEmpty
+    public string ShipBarHalfEmpty
+    {
+        get => _ShipBarHalfEmpty;
+        set
         {
-            get => _ShipBarHalfEmpty;
-            set
-            {
-                _ShipBarHalfEmpty = value;
-                ShipBarHalfEmptyModified?.Invoke(this, EventArgs.Empty);
-            }
+            _ShipBarHalfEmpty = value;
+            ShipBarHalfEmptyModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void ShipBarHalfFullModifiedEventHandler(object Sender, EventArgs Args);
-        public event ShipBarHalfFullModifiedEventHandler ShipBarHalfFullModified;
+    public delegate void ShipBarHalfFullModifiedEventHandler(object Sender, EventArgs Args);
+    public event ShipBarHalfFullModifiedEventHandler ShipBarHalfFullModified;
 
-        private string _ShipBarHalfFull = null;
+    private string _ShipBarHalfFull = null;
 
-        public string ShipBarHalfFull
+    public string ShipBarHalfFull
+    {
+        get => _ShipBarHalfFull;
+        set
         {
-            get => _ShipBarHalfFull;
-            set
-            {
-                _ShipBarHalfFull = value;
-                ShipBarHalfFullModified?.Invoke(this, EventArgs.Empty);
-            }
+            _ShipBarHalfFull = value;
+            ShipBarHalfFullModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void ShipBarEndEmptyModifiedEventHandler(object Sender, EventArgs Args);
-        public event ShipBarEndEmptyModifiedEventHandler ShipBarEndEmptyModified;
+    public delegate void ShipBarEndEmptyModifiedEventHandler(object Sender, EventArgs Args);
+    public event ShipBarEndEmptyModifiedEventHandler ShipBarEndEmptyModified;
 
-        private string _ShipBarEndEmpty = null;
+    private string _ShipBarEndEmpty = null;
 
-        public string ShipBarEndEmpty
+    public string ShipBarEndEmpty
+    {
+        get => _ShipBarEndEmpty;
+        set
         {
-            get => _ShipBarEndEmpty;
-            set
-            {
-                _ShipBarEndEmpty = value;
-                ShipBarEndEmptyModified?.Invoke(this, EventArgs.Empty);
-            }
+            _ShipBarEndEmpty = value;
+            ShipBarEndEmptyModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void ShipBarEndFullModifiedEventHandler(object Sender, EventArgs Args);
-        public event ShipBarEndFullModifiedEventHandler ShipBarEndFullModified;
+    public delegate void ShipBarEndFullModifiedEventHandler(object Sender, EventArgs Args);
+    public event ShipBarEndFullModifiedEventHandler ShipBarEndFullModified;
 
-        private string _ShipBarEndFull = null;
+    private string _ShipBarEndFull = null;
 
-        public string ShipBarEndFull
+    public string ShipBarEndFull
+    {
+        get => _ShipBarEndFull;
+        set
         {
-            get => _ShipBarEndFull;
-            set
-            {
-                _ShipBarEndFull = value;
-                ShipBarEndFullModified?.Invoke(this, EventArgs.Empty);
-            }
+            _ShipBarEndFull = value;
+            ShipBarEndFullModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void RotatingStatusModifiedEventHandler(object Sender, EventArgs Args);
-        public event RotatingStatusModifiedEventHandler RotatingStatusModified;
+    public delegate void RotatingStatusModifiedEventHandler(object Sender, EventArgs Args);
+    public event RotatingStatusModifiedEventHandler RotatingStatusModified;
 
-        private bool _RotatingStatus = true;
+    private bool _RotatingStatus = true;
 
-        public bool RotatingStatus
+    public bool RotatingStatus
+    {
+        get => _RotatingStatus;
+        set
         {
-            get => _RotatingStatus;
-            set
-            {
-                _RotatingStatus = value;
-                RotatingStatusModified?.Invoke(this, EventArgs.Empty);
-            }
+            _RotatingStatus = value;
+            RotatingStatusModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void RotatingAvatarModifiedEventHandler(object Sender, EventArgs Args);
-        public event RotatingAvatarModifiedEventHandler RotatingAvatarModified;
+    public delegate void RotatingAvatarModifiedEventHandler(object Sender, EventArgs Args);
+    public event RotatingAvatarModifiedEventHandler RotatingAvatarModified;
 
-        private bool _RotatingAvatar = true;
+    private bool _RotatingAvatar = true;
 
-        public bool RotatingAvatar
+    public bool RotatingAvatar
+    {
+        get => _RotatingAvatar;
+        set
         {
-            get => _RotatingAvatar;
-            set
-            {
-                _RotatingAvatar = value;
-                RotatingAvatarModified?.Invoke(this, EventArgs.Empty);
-            }
+            _RotatingAvatar = value;
+            RotatingAvatarModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void WaitForDebuggerModifiedEventHandler(object Sender, EventArgs Args);
+    public delegate void WaitForDebuggerModifiedEventHandler(object Sender, EventArgs Args);
 
-        public event WaitForDebuggerModifiedEventHandler WaitForDebuggerModified;
+    public event WaitForDebuggerModifiedEventHandler WaitForDebuggerModified;
 
-        private bool _WaitForDebugger = false;
+    private bool _WaitForDebugger = false;
 
-        [RequiresReboot]
-        public bool WaitForDebugger
+    [RequiresReboot]
+    public bool WaitForDebugger
+    {
+        get => _WaitForDebugger;
+        set
         {
-            get => _WaitForDebugger;
-            set
-            {
-                _WaitForDebugger = value;
-                WaitForDebuggerModified?.Invoke(this, EventArgs.Empty);
-            }
+            _WaitForDebugger = value;
+            WaitForDebuggerModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void BotTokenModifiedEventHandler(object Sender, EventArgs Args);
-        public event BotTokenModifiedEventHandler BotTokenModified;
+    public delegate void BotTokenModifiedEventHandler(object Sender, EventArgs Args);
+    public event BotTokenModifiedEventHandler BotTokenModified;
 
-        private string _BotToken = "";
+    private string _BotToken = "";
 
-        [RequiresReboot]
-        public string BotToken
+    [RequiresReboot]
+    public string BotToken
+    {
+        get => _BotToken;
+        set
         {
-            get => _BotToken;
-            set
-            {
-                _BotToken = value;
-                BotTokenModified?.Invoke(this, EventArgs.Empty);
-            }
+            _BotToken = value;
+            BotTokenModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void CatKeyModifiedEventHandler(object Sender, EventArgs Args);
-        public event CatKeyModifiedEventHandler CatKeyModified;
+    public delegate void CatKeyModifiedEventHandler(object Sender, EventArgs Args);
+    public event CatKeyModifiedEventHandler CatKeyModified;
 
-        private string _CatKey = "";
+    private string _CatKey = "";
 
-        public string CatKey
+    public string CatKey
+    {
+        get => _CatKey;
+        set
         {
-            get => _CatKey;
-            set
-            {
-                _CatKey = value;
-                CatKeyModified?.Invoke(this, EventArgs.Empty);
-            }
+            _CatKey = value;
+            CatKeyModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void DogKeyModifiedEventHandler(object Sender, EventArgs Args);
-        public event DogKeyModifiedEventHandler DogKeyModified;
+    public delegate void DogKeyModifiedEventHandler(object Sender, EventArgs Args);
+    public event DogKeyModifiedEventHandler DogKeyModified;
 
-        private string _DogKey = "";
+    private string _DogKey = "";
 
-        public string DogKey
+    public string DogKey
+    {
+        get => _DogKey;
+        set
         {
-            get => _DogKey;
-            set
-            {
-                _DogKey = value;
-                DogKeyModified?.Invoke(this, EventArgs.Empty);
-            }
+            _DogKey = value;
+            DogKeyModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void OpenWeatherKeyModifiedEventHandler(object Sender, EventArgs Args);
-        public event OpenWeatherKeyModifiedEventHandler OpenWeatherKeyModified;
+    public delegate void OpenWeatherKeyModifiedEventHandler(object Sender, EventArgs Args);
+    public event OpenWeatherKeyModifiedEventHandler OpenWeatherKeyModified;
 
-        private string _OpenWeatherKey = "";
+    private string _OpenWeatherKey = "";
 
-        public string OpenWeatherKey
+    public string OpenWeatherKey
+    {
+        get => _OpenWeatherKey;
+        set
         {
-            get => _OpenWeatherKey;
-            set
-            {
-                _OpenWeatherKey = value;
-                OpenWeatherKeyModified?.Invoke(this, EventArgs.Empty);
-            }
+            _OpenWeatherKey = value;
+            OpenWeatherKeyModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void TwitchUrlModifiedEventHandler(object Sender, EventArgs Args);
+    public delegate void TwitchUrlModifiedEventHandler(object Sender, EventArgs Args);
 
-        public event TwitchUrlModifiedEventHandler TwitchUrlModified;
+    public event TwitchUrlModifiedEventHandler TwitchUrlModified;
 
-        private string _TwitchUrl = "https://www.twitch.tv/coreaesthetics";
+    private string _TwitchUrl = "https://www.twitch.tv/coreaesthetics";
 
-        public string TwitchUrl
+    public string TwitchUrl
+    {
+        get => _TwitchUrl;
+        set
         {
-            get => _TwitchUrl;
-            set
-            {
-                _TwitchUrl = value;
-                TwitchUrlModified?.Invoke(this, EventArgs.Empty);
-            }
+            _TwitchUrl = value;
+            TwitchUrlModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void CommandLogFormatModifiedEventHandler(object Sender, EventArgs Args);
-        public event CommandLogFormatModifiedEventHandler CommandLogFormatModified;
+    public delegate void CommandLogFormatModifiedEventHandler(object Sender, EventArgs Args);
+    public event CommandLogFormatModifiedEventHandler CommandLogFormatModified;
 
-        private string _CommandLogFormat = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
+    private string _CommandLogFormat = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
 
-        public string CommandLogFormat
+    public string CommandLogFormat
+    {
+        get => _CommandLogFormat;
+        set
         {
-            get => _CommandLogFormat;
-            set
-            {
-                _CommandLogFormat = value;
-                CommandLogFormatModified?.Invoke(this, EventArgs.Empty);
-            }
+            _CommandLogFormat = value;
+            CommandLogFormatModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void AvatarRotationTimeModifiedEventHandler(object Sender, EventArgs Args);
-        public event AvatarRotationTimeModifiedEventHandler AvatarRotationTimeModified;
+    public delegate void AvatarRotationTimeModifiedEventHandler(object Sender, EventArgs Args);
+    public event AvatarRotationTimeModifiedEventHandler AvatarRotationTimeModified;
 
-        private int _AvatarRotationTime = 1;
+    private int _AvatarRotationTime = 1;
 
-        public int AvatarRotationTime
+    public int AvatarRotationTime
+    {
+        get => _AvatarRotationTime;
+        set
         {
-            get => _AvatarRotationTime;
-            set
-            {
-                _AvatarRotationTime = value;
-                AvatarRotationTimeModified?.Invoke(this, EventArgs.Empty);
-            }
+            _AvatarRotationTime = value;
+            AvatarRotationTimeModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void AvatarRecentQueueSizeModifiedEventHandler(object Sender, EventArgs Args);
-        public event AvatarRecentQueueSizeModifiedEventHandler AvatarRecentQueueModified;
+    public delegate void AvatarRecentQueueSizeModifiedEventHandler(object Sender, EventArgs Args);
+    public event AvatarRecentQueueSizeModifiedEventHandler AvatarRecentQueueModified;
 
-        private int _AvatarRecentQueueSize = 10;
+    private int _AvatarRecentQueueSize = 10;
 
-        public int AvatarRecentQueueSize
+    public int AvatarRecentQueueSize
+    {
+        get => _AvatarRecentQueueSize;
+        set
         {
-            get => _AvatarRecentQueueSize;
-            set
-            {
-                _AvatarRecentQueueSize = value;
-                AvatarRecentQueueModified?.Invoke(this, EventArgs.Empty);
-            }
+            _AvatarRecentQueueSize = value;
+            AvatarRecentQueueModified?.Invoke(this, EventArgs.Empty);
         }
+    }
 
-        public delegate void MessageCacheSizeModifiedEventHandler(object Sender, EventArgs Args);
-        public event MessageCacheSizeModifiedEventHandler MessageCacheSizeModified;
+    public delegate void MessageCacheSizeModifiedEventHandler(object Sender, EventArgs Args);
+    public event MessageCacheSizeModifiedEventHandler MessageCacheSizeModified;
 
-        private int _MessageCacheSize = 2000;
+    private int _MessageCacheSize = 2000;
 
-        [RequiresReboot]
-        public int MessageCacheSize
+    [RequiresReboot]
+    public int MessageCacheSize
+    {
+        get => _MessageCacheSize;
+        set
         {
-            get => _MessageCacheSize;
-            set
-            {
-                _MessageCacheSize = value;
-                MessageCacheSizeModified?.Invoke(this, EventArgs.Empty);
-            }
+            _MessageCacheSize = value;
+            MessageCacheSizeModified?.Invoke(this, EventArgs.Empty);
         }
     }
 }

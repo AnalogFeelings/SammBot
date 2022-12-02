@@ -1,13 +1,12 @@
 ﻿using Newtonsoft.Json;
 
-namespace SammBot.Bot.RestDefinitions
-{
-    public class DuckImage
-    {
-        [JsonProperty("url")]
-        public string ImageUrl { get; set; }
+namespace SammBot.Bot.RestDefinitions;
 
-        [JsonProperty("Message")]
-        public string Message { get; set; }
-    }
+public class DuckImage
+{
+    [JsonProperty("url")]
+    public string ImageUrl { get; set; }
+
+    [JsonProperty("Message")]
+    public string Message { get; set; }
 }
