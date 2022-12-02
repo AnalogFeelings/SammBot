@@ -4,23 +4,21 @@ This document will aid you in the (rare) case that you decide to create a pull r
 
 ## Indentation Style
 
-The indentation style that Samm-Bot uses is Allman with tabs. Tabs, as you may know, are 1 character, but they are equivalent to 4 spaces.
+The indentation style that Samm-Bot uses is Allman.
 
-You can read more about indentation styles [here](https://en.wikipedia.org/wiki/Indentation_style#Allman_style).
+You can read more about the Allman indentation style [here](https://en.wikipedia.org/wiki/Indentation_style#Allman_style).
 
 ## Module/Command Declaration
 
 A module is defined by 4 class attributes. They may appear in this order:
-* `Name`
+* `PrettyName`
 * `Group`
-* `Summary`
 * `ModuleEmoji`
+* `RequireOwner` (Optional)
 
 A command is defined by 2 or more function attributes. They may appear in this order:
-* `Command`
-* `Alias` (Optional)
-* `Summary`
-* `FullDescription`
+* `SlashCommand`
+* `DetailedDescription`
 * `RateLimit`
 * `RequireOwner` (Optional)
 * `RequireContext` (Optional)
@@ -37,6 +35,8 @@ You may group a statement (i.e. an `if` statement) group if it makes sense to do
 
 Use `PascalCase` for class names, variables and parameters, but use `camelCase` for local variables.
 Use `SCREAMING_SNAKE_CASE` for const variables.
+
+Anything private must use the `_PascalCase` or `_SCREAMING_SNAKE_CASE` convention.
 
 ## Strings
 
