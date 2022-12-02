@@ -426,7 +426,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     {
         UrbanSearchParameters searchParameters = new()
         {
-            term = Term
+            Term = Term
         };
 
         await DeferAsync();

@@ -312,9 +312,9 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         string locationReply = string.Empty;
         GeolocationParameters geolocationParameters = new GeolocationParameters()
         {
-            q = City,
-            appid = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
-            limit = 1,
+            Location = City,
+            AppId = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
+            Limit = 1,
         };
         string locationQuery = geolocationParameters.ToQueryString();
 
@@ -332,10 +332,10 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         string weatherReply = string.Empty;
         WeatherParameters weatherParams = new WeatherParameters()
         {
-            lat = Location.Latitude,
-            lon = Location.Longitude,
-            appid = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
-            units = "metric"
+            Latitude = Location.Latitude,
+            Longitude = Location.Longitude,
+            AppId = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
+            Units = "metric"
         };
         string weatherQuery = weatherParams.ToQueryString();
 
