@@ -466,9 +466,9 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         return ExecutionResult.Succesful();
     }
         
-    public async Task<UrbanDefinitionList> GetUrbanDefinitionAsync(UrbanSearchParameters searchParams)
+    public async Task<UrbanDefinitionList> GetUrbanDefinitionAsync(UrbanSearchParameters SearchParameters)
     {
-        string queryString = searchParams.ToQueryString();
+        string queryString = SearchParameters.ToQueryString();
         string jsonReply = string.Empty;
         
         using (HttpResponseMessage responseMessage = await FunService.FunHttpClient.GetAsync($"https://api.urbandictionary.com/v0/define?{queryString}"))
