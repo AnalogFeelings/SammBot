@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
+using SammBot.Bot.Attributes;
 
 namespace SammBot.Bot.Extensions;
 
@@ -10,7 +12,8 @@ public static class ObjectExtensions
     {
         IEnumerable<string> formattedProperties = from p in TargetObject.GetType().GetProperties()
             where p.GetValue(TargetObject, null) != null
-            select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
+            where p.GetCustomAttribute<UglyName>() != null
+            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
 
         return string.Join("&", formattedProperties.ToArray());
     }
