@@ -1,6 +1,9 @@
-﻿namespace SammBot.Bot.Rest.UrbanDictionary;
+﻿using SammBot.Bot.Attributes;
+
+namespace SammBot.Bot.Rest.UrbanDictionary;
 
 public class UrbanSearchParameters
 {
-    public string term { get; set; }
+    [UglyName("term")]
+    public string Term { get; set; }
 }

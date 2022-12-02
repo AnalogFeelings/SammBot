@@ -1,9 +1,15 @@
-﻿namespace SammBot.Bot.Rest.OpenWeather.Forecast;
+﻿using SammBot.Bot.Attributes;
+
+namespace SammBot.Bot.Rest.OpenWeather.Forecast;
 
 public class WeatherParameters
 {
-    public float lat { get; set; }
-    public float lon { get; set; }
-    public string appid { get; set; }
-    public string units { get; set; }
+    [UglyName("lat")]
+    public float Latitude { get; set; }
+    [UglyName("lon")]
+    public float Longitude { get; set; }
+    [UglyName("appid")]
+    public string AppId { get; set; }
+    [UglyName("units")]
+    public string Units { get; set; }
 }
