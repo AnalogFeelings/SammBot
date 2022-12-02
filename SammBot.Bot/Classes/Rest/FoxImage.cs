@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SammBot.Bot.RestDefinitions;
+namespace SammBot.Bot.Rest;
 
 public class FoxImage
 {

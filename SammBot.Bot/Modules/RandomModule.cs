@@ -12,7 +12,7 @@ using SammBot.Bot.Attributes;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
 using SammBot.Bot.Preconditions;
-using SammBot.Bot.RestDefinitions;
+using SammBot.Bot.Rest;
 using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;

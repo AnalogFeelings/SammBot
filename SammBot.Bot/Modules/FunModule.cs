@@ -16,7 +16,7 @@ using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Bot.Extensions;
 using SammBot.Bot.Preconditions;
-using SammBot.Bot.RestDefinitions;
+using SammBot.Bot.Rest.UrbanDictionary;
 using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;
@@ -424,7 +424,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(6, 1)]
     public async Task<RuntimeResult> UrbanAsync([Summary(description: "The term you want to search.")] string Term)
     {
-        UrbanSearchParams searchParameters = new()
+        UrbanSearchParameters searchParameters = new()
         {
             term = Term
         };
@@ -466,7 +466,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         return ExecutionResult.Succesful();
     }
         
-    public async Task<UrbanDefinitionList> GetUrbanDefinitionAsync(UrbanSearchParams searchParams)
+    public async Task<UrbanDefinitionList> GetUrbanDefinitionAsync(UrbanSearchParameters searchParams)
     {
         string queryString = searchParams.ToQueryString();
         string jsonReply = string.Empty;

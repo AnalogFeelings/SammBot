@@ -1,18 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace SammBot.Bot.RestDefinitions;
-
-public class UrbanSearchParams
-{
-    public string term { get; set; }
-}
-
-public class UrbanDefinitionList
-{
-    [JsonProperty("list")]
-    public List<UrbanDefinition> List { get; set; }
-}
+namespace SammBot.Bot.Rest.UrbanDictionary;
 
 public class UrbanDefinition
 {

@@ -13,7 +13,9 @@ using SammBot.Bot.Attributes;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
 using SammBot.Bot.Preconditions;
-using SammBot.Bot.RestDefinitions;
+using SammBot.Bot.Rest.OpenWeather;
+using SammBot.Bot.Rest.OpenWeather.Forecast;
+using SammBot.Bot.Rest.OpenWeather.Geolocation;
 using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;
@@ -205,13 +207,13 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
             
-        List<Location> retrievedLocations = await GetWeatherLocationsAsync(City);
+        List<GeolocationLocation> retrievedLocations = await GetWeatherLocationsAsync(City);
         if (retrievedLocations.Count == 0)
             return ExecutionResult.FromError("That location does not exist.");
 
-        Location finalLocation = retrievedLocations.First();
-        CurrentWeather retrievedWeather = await GetCurrentWeatherAsync(finalLocation);
-        Weather actualWeather = retrievedWeather.Weather[0];
+        GeolocationLocation finalLocation = retrievedLocations.First();
+        CompleteForecast retrievedWeather = await GetCurrentWeatherAsync(finalLocation);
+        Condition actualWeather = retrievedWeather.Weather[0];
 
         //Fucking christ. https://openweathermap.org/weather-conditions
         //Good luck.
@@ -263,14 +265,14 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         float windDirection = retrievedWeather.Wind.Degrees;
         float windGust = retrievedWeather.Wind.Gust.MpsToKmh();
 
-        long sunrise = retrievedWeather.System.Sunrise;
-        long sunset = retrievedWeather.System.Sunset;
+        long sunrise = retrievedWeather.Location.Sunrise;
+        long sunset = retrievedWeather.Location.Sunset;
 
         string embedDescription = $"\u26A0\uFE0F Some data may be missing due to an API limitation.\n";
             
         embedDescription += $"\u26A0\uFE0F The location may be inaccurate due to an API limitation as well.\n\n";
 
-        embedDescription += $"\U0001f4cd Location: {retrievedWeather.Name}, {retrievedWeather.System.Country.CountryCodeToFlag()}.\n\n";
+        embedDescription += $"\U0001f4cd Location: {retrievedWeather.Name}, {retrievedWeather.Location.Country.CountryCodeToFlag()}.\n\n";
 
         embedDescription += $"{conditionEmoji} **{actualWeather.Description.CapitalizeFirst()}**\n";
         embedDescription += $"\u2601\uFE0F Cloudiness: **{cloudiness}**%\n\n";
@@ -305,10 +307,10 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         return ExecutionResult.Succesful();
     }
 
-    public async Task<List<Location>> GetWeatherLocationsAsync(string City)
+    public async Task<List<GeolocationLocation>> GetWeatherLocationsAsync(string City)
     {
         string locationReply = string.Empty;
-        GeolocationParams geolocationParameters = new GeolocationParams()
+        GeolocationParameters geolocationParameters = new GeolocationParameters()
         {
             q = City,
             appid = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
@@ -320,15 +322,15 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         {
             locationReply = await responseMessage.Content.ReadAsStringAsync();
         }
-        List<Location> retrievedLocations = JsonConvert.DeserializeObject<List<Location>>(locationReply);
+        List<GeolocationLocation> retrievedLocations = JsonConvert.DeserializeObject<List<GeolocationLocation>>(locationReply);
 
         return retrievedLocations;
     }
 
-    public async Task<CurrentWeather> GetCurrentWeatherAsync(Location Location)
+    public async Task<CompleteForecast> GetCurrentWeatherAsync(GeolocationLocation Location)
     {
         string weatherReply = string.Empty;
-        WeatherParams weatherParams = new WeatherParams()
+        WeatherParameters weatherParams = new WeatherParameters()
         {
             lat = Location.Latitude,
             lon = Location.Longitude,
@@ -341,7 +343,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         {
             weatherReply = await responseMessage.Content.ReadAsStringAsync();
         }
-        CurrentWeather retrievedWeather = JsonConvert.DeserializeObject<CurrentWeather>(weatherReply);
+        CompleteForecast retrievedWeather = JsonConvert.DeserializeObject<CompleteForecast>(weatherReply);
 
         return retrievedWeather;
     }
