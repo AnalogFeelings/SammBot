@@ -31,6 +31,4 @@ public class CompleteForecast
     public long Id { get; set; }
     [JsonProperty("name")]
     public string Name { get; set; }
-    [JsonProperty("cod")]
-    public int Cod { get; set; }
 }
