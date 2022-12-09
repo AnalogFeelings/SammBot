@@ -3,7 +3,7 @@
 namespace SammBot.Bot.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class HiddenSetting
+public class HiddenSetting : Attribute
 {
     public HiddenSetting() {}
 }
