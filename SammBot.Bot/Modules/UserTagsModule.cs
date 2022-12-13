@@ -31,13 +31,14 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<UserTag> tagList = await botDatabase.UserTags.ToListAsync();
             UserTag retrievedTag = null;
 
             if ((Context.User as SocketGuildUser).GuildPermissions.Has(GuildPermission.ManageMessages))
-                retrievedTag = tagList.SingleOrDefault(x => x.Name == Name && x.GuildId == Context.Guild.Id);
+                retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == Name && x.GuildId == Context.Guild.Id);
             else
-                retrievedTag = tagList.SingleOrDefault(x => x.Name == Name && x.AuthorId == Context.User.Id && x.GuildId == Context.Guild.Id);
+                retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == Name &&
+                                                                                    x.AuthorId == Context.User.Id &&
+                                                                                    x.GuildId == Context.Guild.Id);
 
             if (retrievedTag == null)
                 return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
@@ -61,8 +62,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<UserTag> tagList = await botDatabase.UserTags.ToListAsync();
-            UserTag retrievedTag = tagList.SingleOrDefault(x => x.GuildId == Context.Guild.Id && x.Name == Name);
+            UserTag retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.GuildId == Context.Guild.Id && x.Name == Name);
 
             if (retrievedTag == null)
                 return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
@@ -83,8 +83,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<UserTag> tagList = await botDatabase.UserTags.ToListAsync();
-            List<UserTag> filteredTags = tagList.Where(x => x.GuildId == Context.Guild.Id &&
+            List<UserTag> filteredTags = botDatabase.UserTags.Where(x => x.GuildId == Context.Guild.Id &&
                                                             Name.DamerauLevenshteinDistance(x.Name, SettingsManager.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
             if (!filteredTags.Any())
@@ -128,15 +127,14 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<UserTag> tagList = await botDatabase.UserTags.ToListAsync();
-            tagList = tagList.Where(x => x.GuildId == Context.Guild.Id).ToList();
+            List<UserTag> tagList = botDatabase.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToList();
 
             if (tagList.Any(x => x.Name == Name))
                 return ExecutionResult.FromError($"There's already a tag called **\"{Name}\"**!");
 
             Guid newGuid = Guid.NewGuid();
 
-            await botDatabase.UserTags.AddAsync(new UserTag
+            UserTag newTag = new UserTag
             {
                 Id = newGuid.ToString(),
                 Name = Name,
@@ -144,7 +142,9 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
                 GuildId = Context.Guild.Id,
                 Reply = Reply,
                 CreatedAt = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
-            });
+            };
+
+            await botDatabase.UserTags.AddAsync(newTag);
                 
             await botDatabase.SaveChangesAsync();
         }
