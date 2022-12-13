@@ -18,13 +18,12 @@
  */
 #endregion
 
-namespace SammBot.WebGenerator.Core
+namespace SammBot.WebGenerator.Core;
+
+public class MainProgram
 {
-    public class MainProgram
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-        }
+        Console.WriteLine("Hello, World!");
     }
 }
