@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
+using Microsoft.EntityFrameworkCore;
 using SammBot.Bot.Attributes;
 using SammBot.Bot.Classes;
 using SammBot.Bot.Core;
@@ -41,7 +42,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverSettings = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == Context.Guild.Id) 
+            GuildConfig serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id) 
                                          ?? new GuildConfig()
                                          {
                                              GuildId = Context.Guild.Id
@@ -102,7 +103,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverSettings = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == Context.Guild.Id);
+            GuildConfig serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id);
                 
             if (serverSettings == default(GuildConfig))
             {
