@@ -46,11 +46,9 @@ public class ProfilesModule : InteractionModuleBase<ShardedInteractionContext>
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<Pronoun> allPronouns = await botDatabase.Pronouns.ToListAsync();
-
-            if (allPronouns.Any(x => x.UserId == Context.Interaction.User.Id))
+            if (botDatabase.Pronouns.Any(x => x.UserId == Context.Interaction.User.Id))
             {
-                Pronoun existingPronouns = allPronouns.Single(y => y.UserId == Context.Interaction.User.Id);
+                Pronoun existingPronouns = await botDatabase.Pronouns.SingleAsync(x => x.UserId == Context.Interaction.User.Id);
                         
                 existingPronouns.Subject = Subject;
                 existingPronouns.Object = Object;
@@ -61,7 +59,7 @@ public class ProfilesModule : InteractionModuleBase<ShardedInteractionContext>
             }
             else
             {
-                await botDatabase.Pronouns.AddAsync(new Pronoun
+                Pronoun newPronoun = new Pronoun
                 {
                     UserId = Context.Interaction.User.Id,
                     Subject = Subject,
@@ -70,7 +68,9 @@ public class ProfilesModule : InteractionModuleBase<ShardedInteractionContext>
                     IndependentPossessive = IndependentPossessive,
                     ReflexiveSingular = ReflexiveSingular,
                     ReflexivePlural = ReflexivePlural
-                });
+                };
+                
+                await botDatabase.Pronouns.AddAsync(newPronoun);
             }
 
             await botDatabase.SaveChangesAsync();
@@ -92,11 +92,9 @@ public class ProfilesModule : InteractionModuleBase<ShardedInteractionContext>
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<Pronoun> allPronouns = await botDatabase.Pronouns.ToListAsync();
-
-            if (allPronouns.Any(x => x.UserId == targetUser.Id))
+            if (botDatabase.Pronouns.Any(x => x.UserId == targetUser.Id))
             {
-                Pronoun existingPronouns = allPronouns.Single(y => y.UserId == targetUser.Id);
+                Pronoun existingPronouns = await botDatabase.Pronouns.SingleAsync(x => x.UserId == targetUser.Id);
                 string formattedPronouns = $"{existingPronouns.Subject}/{existingPronouns.Object}";
 
                 await FollowupAsync($"**{targetUser.GetUsernameOrNick()}**'s pronouns are: `{formattedPronouns}`.",
