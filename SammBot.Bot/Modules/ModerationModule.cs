@@ -137,8 +137,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<UserWarning> userWarnings = await botDatabase.UserWarnings.ToListAsync();
-            UserWarning specificWarning = userWarnings.SingleOrDefault(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
+            UserWarning specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
 
             if (specificWarning == default(UserWarning))
                 return ExecutionResult.FromError("There are no warnings with the specified ID.");
@@ -164,8 +163,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<UserWarning> userWarnings = await botDatabase.UserWarnings.ToListAsync();
-            List<UserWarning> filteredWarnings = userWarnings.Where(x => x.UserId == TargetUser.Id && x.GuildId == Context.Guild.Id).ToList();
+            List<UserWarning> filteredWarnings = botDatabase.UserWarnings.Where(x => x.UserId == TargetUser.Id && x.GuildId == Context.Guild.Id).ToList();
 
             if (!filteredWarnings.Any())
                 return ExecutionResult.FromError("This user has no warnings.");
@@ -197,8 +195,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<UserWarning> userWarnings = await botDatabase.UserWarnings.ToListAsync();
-            UserWarning specificWarning = userWarnings.SingleOrDefault(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
+            UserWarning specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
 
             if (specificWarning == default(UserWarning))
                 return ExecutionResult.FromError("There are no warnings with the specified ID.");
