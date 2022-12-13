@@ -40,15 +40,14 @@ public static class UserExtensions
 
     public static string GetStatusString(this SocketUser User)
     {
-        string onlineStatus = "Unknown";
-
-        switch (User.Status)
+        string onlineStatus = User.Status switch
         {
-            case UserStatus.DoNotDisturb: onlineStatus = "Do Not Disturb"; break;
-            case UserStatus.Idle: onlineStatus = "Idle"; break;
-            case UserStatus.Offline: onlineStatus = "Offline"; break;
-            case UserStatus.Online: onlineStatus = "Online"; break;
-        }
+            UserStatus.DoNotDisturb => "Do Not Disturb",
+            UserStatus.Idle => "Idle",
+            UserStatus.Offline => "Offline",
+            UserStatus.Online => "Online",
+            _ => "Unknown"
+        };
 
         return onlineStatus;
     }
