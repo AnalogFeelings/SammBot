@@ -32,17 +32,17 @@ public class BotDatabase : DbContext
     public DbSet<UserWarning> UserWarnings { get; set; }
     public DbSet<GuildConfig> GuildConfigs { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder ModelBuilder)
     {
-        modelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimit).HasDefaultValue(3);
-        modelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimitAction).HasDefaultValue(WarnLimitAction.None);
+        ModelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimit).HasDefaultValue(3);
+        ModelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimitAction).HasDefaultValue(WarnLimitAction.None);
             
-        modelBuilder.Entity<GuildConfig>().Property(x => x.EnableLogging).HasDefaultValue(false);
-        modelBuilder.Entity<GuildConfig>().Property(x => x.LogChannel).HasDefaultValue(0);
+        ModelBuilder.Entity<GuildConfig>().Property(x => x.EnableLogging).HasDefaultValue(false);
+        ModelBuilder.Entity<GuildConfig>().Property(x => x.LogChannel).HasDefaultValue(0);
             
-        modelBuilder.Entity<GuildConfig>().Property(x => x.EnableWelcome).HasDefaultValue(false);
-        modelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeChannel).HasDefaultValue(0);
-        modelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeMessage).HasDefaultValue("{0}, welcome to {1}! Remember to read the rules before chatting!");
+        ModelBuilder.Entity<GuildConfig>().Property(x => x.EnableWelcome).HasDefaultValue(false);
+        ModelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeChannel).HasDefaultValue(0);
+        ModelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeMessage).HasDefaultValue("{0}, welcome to {1}! Remember to read the rules before chatting!");
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder OptionsBuilder)
