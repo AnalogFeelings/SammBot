@@ -1,0 +1,39 @@
+﻿version: 2
+updates:
+  # For the bot itself.
+  - package-ecosystem: "nuget"
+    directory: "/SammBot.Bot"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Madrid"
+    target-branch: "master"
+    labels:
+      - "dependencies"
+      - "master"
+      - "bot"
+    assignees:
+      - "aestheticalz"
+    commit-message:
+      prefix: "[Bot -> All]"
+      include: "scope"
+      
+  # For the web generator.
+  - package-ecosystem: "nuget"
+    directory: "/SammBot.WebGenerator"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Madrid"
+    target-branch: "master"
+    labels:
+      - "dependencies"
+      - "master"
+      - "web generator"
+    assignees:
+      - "aestheticalz"
+    commit-message:
+      prefix: "[WebGenerator -> All]"
+      include: "scope"
