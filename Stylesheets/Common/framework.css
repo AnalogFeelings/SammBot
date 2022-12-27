@@ -87,7 +87,7 @@ body {
 
 .acrylicSurface {
     /*It's 2022 and backdrop-filter is still slow as shit. Why??? Prerendering an image every time I want to make a tiny change is annoying.*/
-    background-color: rgba(64, 64, 64, 0.1);
+    background-color: rgba(8, 8, 8, 0.4);
 }
 
 .separatorDiv {
