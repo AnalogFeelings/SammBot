@@ -8,14 +8,14 @@
 
 /*NAVIGATION BAR (LOGO, BUTTONS)*/
 .navigationBarDiv {
-    background-color: #362535;
+    background-color: #3d3d5d;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
     border-bottom: 5px solid;
-    border-color: #291c28;
+    border-color: #353551;
 }
 
 .navigationBarLogo {
@@ -56,7 +56,7 @@
 
     cursor: pointer;
 
-    color: white;
+    color: #cdd6f4;
     background-color: rgba(0, 0, 0, 0);
 
     transition-duration: 0.3s;

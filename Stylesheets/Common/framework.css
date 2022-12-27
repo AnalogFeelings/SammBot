@@ -33,9 +33,9 @@ body {
     margin: 0;
 
     font-family: 'Nunito-Regular';
-    color: white;
+    color: #cdd6f4;
 
-    background-color: #412c40;
+    background-color: #242437;
 }
 
 .headerDiv {
@@ -107,10 +107,10 @@ body {
 }
 
 .footerDiv {
-    background-color: #362535;
+    background-color: #3d3d5d;
 
     border-top: 5px solid;
-    border-color: #291c28;
+    border-color: #353551;
 
     display: flex;
     flex: 0 1 auto;
