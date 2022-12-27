@@ -3,10 +3,6 @@
     position: sticky;
     top: 0;
 
-    transition: box-shadow 0.3s ease-in-out;
-}
-
-.stickyBar.sticky {
     box-shadow: 0 0 10px 5px rgb(0 0 0 / 60%);
 }
 
@@ -19,21 +15,13 @@
     align-items: center;
 
     border-bottom: 5px solid;
-    border-color: #362535;
-
-    transition: border-bottom-color 0.3s ease-in-out;
-}
-
-.navigationBarDiv.sticky {
     border-color: #291c28;
 }
 
 .navigationBarLogo {
     display: flex;
 
-    opacity: 0;
-
-    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
 
     -webkit-user-select: none;
     user-select: none;
@@ -43,9 +31,6 @@
     font-family: "Nunito-Bold";
 
     margin: 0;
-}
-
-.navigationBarLogo.shown {
     opacity: 1;
 }
 
