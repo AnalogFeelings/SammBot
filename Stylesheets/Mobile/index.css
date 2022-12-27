@@ -29,6 +29,8 @@ body {
 	flex-direction: column;
 
 	margin-bottom: 10%;
+
+	gap: 10px;
 }
 
 .contentSection > img {
