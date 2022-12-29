@@ -47,8 +47,8 @@
 }
 
 .navigationBarButtons > button {
-    height: 85px;
-    min-height: 85px;
+    height: 80px;
+    min-height: 80px;
 
     width: 150px;
     min-width: 150px;
