@@ -1,4 +1,4 @@
-@media only screen and (min-width: 1230px) {
+@media only screen and (min-width: 1250px) {
 	body {
 		font-size: 1em;
 	}
@@ -41,13 +41,13 @@
 
 		text-align: left;
 
-		font-size: 4em;
+		font-size: 4.1em;
 	}
 
 	.contentSection > div > p {
 		text-align: left;
 
-		width: 575px;
+		width: 620px;
 
 		margin-left: 30px;
 		margin-right: 0;
