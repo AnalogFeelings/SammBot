@@ -66,11 +66,11 @@
 }
 
 .navigationBarButtons > button:hover {
-    background-color: #4f364d;
+    background-color: #565683;
 }
 
 .navigationBarButtons > button:active {
-    background-color: #5c3d58;
+    background-color: #34344f;
 }
 
 /*NAVBAR BURGER MENU ICON*/
@@ -94,15 +94,15 @@
 }
 
 .navigationBarBurger > button:hover {
-    background-color: #4f364d;
+    background-color: #565683;
 }
 
 .navigationBarBurger > button:focus {
-    background-color: #3d293b;
+    background-color: #12121c;
 }
 
 .navigationBarBurger > button:active {
-    background-color: #5c3d58;
+    background-color: #34344f;
 }
 
 /*NAVBAR BURGER MENU CONTENTS*/
@@ -112,14 +112,14 @@
 
     width: 100%;
 
-    background-color: #412d40;
+    background-color: rgba(61, 61, 93, 0.5);
+    backdrop-filter: blur(16px);
 
     display: none;
     flex-direction: column;
     gap: 5px;
 
-    border-bottom: 5px solid;
-    border-color: #291c28;
+    border-bottom: 5px solid rgba(0, 0, 0, 0.1);
 }
 
 .navigationBarBurgerMenu > button {
@@ -137,5 +137,5 @@
 }
 
 .navigationBarBurgerMenu > button:hover {
-    background-color: #4f364d;
+    background-color: #565683;
 }
