@@ -48,13 +48,13 @@ public class StartupService
     private InteractionService InteractionService { get; set; }
     private Logger BotLogger { get; set; }
 
-    private Timer _StatusTimer;
-    private Timer _AvatarTimer;
+    private Timer? _StatusTimer;
+    private Timer? _AvatarTimer;
 
     private AutoDequeueList<string> _RecentAvatars;
 
-    private bool _EventsSetUp = false;
-    private int _ShardsReady = 0;
+    private bool _EventsSetUp;
+    private int _ShardsReady;
         
     public StartupService(IServiceProvider ServiceProvider, DiscordShardedClient ShardedClient, InteractionService InteractionService, Logger Logger)
     {
@@ -177,16 +177,16 @@ public class StartupService
         return Task.CompletedTask;
     }
 
-    private async void RotateStatus(object State)
+    private async void RotateStatus(object? State)
     {
         BotStatus chosenStatus = SettingsManager.Instance.LoadedConfig.StatusList.PickRandom();
 
-        string gameUrl = chosenStatus.Type == 1 ? SettingsManager.Instance.LoadedConfig.TwitchUrl : null;
+        string? gameUrl = chosenStatus.Type == 1 ? SettingsManager.Instance.LoadedConfig.TwitchUrl : null;
 
         await ShardedClient.SetGameAsync(chosenStatus.Content, gameUrl, (ActivityType)chosenStatus.Type);
     }
 
-    private async void RotateAvatar(object State)
+    private async void RotateAvatar(object? State)
     {
         List<string> avatarList = Directory.EnumerateFiles(Path.Combine(SettingsManager.Instance.BotDataDirectory, "Avatars")).ToList();
         if (avatarList.Count < 2) return;

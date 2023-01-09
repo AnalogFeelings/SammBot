@@ -47,7 +47,7 @@ public class EventLoggingService
 
             if (serverConfig.EnableWelcome && !string.IsNullOrWhiteSpace(serverConfig.WelcomeMessage))
             {
-                ISocketMessageChannel welcomeChannel = currentGuild.GetChannel(serverConfig.WelcomeChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? welcomeChannel = currentGuild.GetChannel(serverConfig.WelcomeChannel) as ISocketMessageChannel;
 
                 if (welcomeChannel != null)
                 {
@@ -59,7 +59,7 @@ public class EventLoggingService
 
             if (serverConfig.EnableLogging)
             {
-                ISocketMessageChannel loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
                 if (loggingChannel != null)
                 {
@@ -96,7 +96,7 @@ public class EventLoggingService
 
             if (serverConfig.EnableLogging)
             {
-                ISocketMessageChannel loggingChannel = CurrentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? loggingChannel = CurrentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
                 if (loggingChannel != null)
                 {
@@ -129,17 +129,17 @@ public class EventLoggingService
         if (CachedChannel.Value is not SocketGuildChannel) return;
         if (CachedMessage.Value.Author.IsBot) return;
             
-        SocketGuildChannel targetChannel = CachedChannel.Value as SocketGuildChannel;
+        SocketGuildChannel? targetChannel = CachedChannel.Value as SocketGuildChannel;
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel.Guild.Id);
+            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
             if (serverConfig.EnableLogging)
             {
-                ISocketMessageChannel loggingChannel = targetChannel.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? loggingChannel = targetChannel!.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
                 if (loggingChannel != null)
                 {
@@ -192,17 +192,17 @@ public class EventLoggingService
         if (!CachedChannel.HasValue) return; // ??? why, if the message should contain a channel already?
         if (CachedChannel.Value is not SocketGuildChannel) return;
             
-        SocketGuildChannel targetChannel = CachedChannel.Value as SocketGuildChannel;
+        SocketGuildChannel? targetChannel = CachedChannel.Value as SocketGuildChannel;
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel.Guild.Id);
+            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
             if (serverConfig.EnableLogging)
             {
-                ISocketMessageChannel loggingChannel = targetChannel.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? loggingChannel = targetChannel!.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
                 if (loggingChannel != null)
                 {
@@ -233,17 +233,17 @@ public class EventLoggingService
         if (SourceChannel is not SocketGuildChannel) return;
         if (NewMessage.Author.IsBot) return;
             
-        SocketGuildChannel sourceGuildChannel = SourceChannel as SocketGuildChannel;
+        SocketGuildChannel? sourceGuildChannel = SourceChannel as SocketGuildChannel;
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuildChannel.Guild.Id);
+            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuildChannel!.Guild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
             if (serverConfig.EnableLogging)
             {
-                ISocketMessageChannel loggingChannel = sourceGuildChannel.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? loggingChannel = sourceGuildChannel!.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
                 if (loggingChannel != null)
                 {
@@ -297,7 +297,7 @@ public class EventLoggingService
 
             if (serverConfig.EnableLogging)
             {
-                ISocketMessageChannel loggingChannel = NewRole.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? loggingChannel = NewRole.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
                 if (loggingChannel != null)
                 {
@@ -338,7 +338,7 @@ public class EventLoggingService
 
             if (serverConfig.EnableLogging)
             {
-                ISocketMessageChannel loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
                 if (loggingChannel != null)
                 {
@@ -393,7 +393,7 @@ public class EventLoggingService
 
             if (serverConfig.EnableLogging)
             {
-                ISocketMessageChannel loggingChannel = SourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? loggingChannel = SourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
                 if (loggingChannel != null)
                 {
@@ -430,7 +430,7 @@ public class EventLoggingService
 
             if (serverConfig.EnableLogging)
             {
-                ISocketMessageChannel loggingChannel = SourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                ISocketMessageChannel? loggingChannel = SourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
                 if (loggingChannel != null)
                 {
