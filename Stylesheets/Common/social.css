@@ -37,6 +37,11 @@
     image-rendering: pixelated;
 }
 
+/*TWITTER ICON*/
+.footerSocialMediaIcon.twitter {
+    background-image: url("../../Resources/Social/twitter.svg");
+}
+
 /*MASTODON ICON*/
 .footerSocialMediaIcon.mastodon {
     background-image: url("../../Resources/Social/mastodon.svg");
