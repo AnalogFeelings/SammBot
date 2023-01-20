@@ -47,6 +47,11 @@
     background-image: url("../../Resources/Social/mastodon.svg");
 }
 
+/*REDDIT ICON*/
+.footerSocialMediaIcon.reddit {
+    background-image: url("../../Resources/Social/reddit.svg");
+}
+
 /*YOUTUBE ICON*/
 .footerSocialMediaIcon.youtube {
     background-image: url("../../Resources/Social/youtube.svg");
