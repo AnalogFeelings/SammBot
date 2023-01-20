@@ -1,0 +1,74 @@
+.footerDiv {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    flex-wrap: wrap;
+}
+
+.footerTop {
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.footerTop div:not(:last-child) {
+    margin-bottom: 15px;
+}
+
+.footerSeparator {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.footerLogo {
+    margin-bottom: 15px;
+}
+
+.footerLogo > img {
+    margin-right: 10px;
+
+    width: 48px;
+    height: 48px;
+}
+
+.footerLogo > p {
+    font-size: 1.3em;
+}
+
+.footerColumn {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footerColumn div:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.footerColumn > b {
+    margin-bottom: 10px;
+}
+
+.footerColumn > a {
+    margin-bottom: 5px;
+}
+
+/*Extremely fucking dirty hack*/
+.footerHeader > :nth-child(2) {
+    margin-bottom: 5px;
+}
+
+.footerText {
+    width: 100%;
+    margin-right: 0;
+}
+
+.footerBullet {
+    bottom: 0.08em;
+}
+
+.footerBullet:after {
+    content: "\a";
+    white-space: pre;
+}

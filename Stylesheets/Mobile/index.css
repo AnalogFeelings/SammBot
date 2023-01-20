@@ -74,20 +74,6 @@ body {
 	margin-left: 10px;
 }
 
-.footerDiv {
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-top: 5px;
-	padding-bottom: 10px;
-
-	flex-wrap: wrap;
-}
-
-.footerText {
-	width: 100%;
-	margin-right: 0;
-}
-
 .featuresDiv {
 	margin-top: 5px;
 	margin-bottom: 5px;

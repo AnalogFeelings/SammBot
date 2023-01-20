@@ -1,0 +1,93 @@
+@media only screen and (min-width: 750px)
+{
+    .footerDiv {
+        padding-left: 15%;
+        padding-right: 15%;
+        padding-top: 45px;
+        padding-bottom: 40px;
+
+        flex-direction: column;
+    }
+
+    .footerTop {
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-direction: row;
+    }
+
+    .footerSeparator {
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .footerHeader {
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+
+    /*Extremely fucking dirty hack*/
+    .footerHeader > :nth-child(2) {
+        margin-bottom: 10px;
+    }
+
+    .footerLogo {
+        margin-bottom: 25px;
+    }
+
+    .footerLogo > img {
+        margin-right: 15px;
+
+        width: 64px;
+        height: 64px;
+    }
+
+    .footerLogo > p {
+        font-size: 1.3em;
+    }
+
+    .footerColumn {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footerColumn > b {
+        margin-bottom: 10px;
+    }
+
+    .footerColumn > a {
+        margin-bottom: 5px;
+    }
+
+    .footerText {
+        width: auto;
+        margin-right: auto;
+    }
+
+    .footerBullet {
+        bottom: 0.05em;
+    }
+
+    .footerBullet:after {
+        content: " \2022 ";
+
+        position: relative;
+
+        left: -0.1em;
+    }
+}
+
+@media only screen and (max-width: 1100px)
+{
+    .footerDiv {
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+}
+
+@media only screen and (max-width: 900px)
+{
+    .footerDiv {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+}
