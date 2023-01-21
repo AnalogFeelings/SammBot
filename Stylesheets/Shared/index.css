@@ -33,9 +33,9 @@ body {
     margin: 0;
 
     font-family: 'Nunito-Regular';
-    color: #cdd6f4;
+    color: var(--text-color);
 
-    background-color: #242437;
+    background-color: var(--body-color);
 }
 
 .headerDiv {
@@ -87,14 +87,14 @@ body {
 
 .acrylicSurface {
     /*It's 2022 and backdrop-filter is still slow as shit. Why??? Prerendering an image every time I want to make a tiny change is annoying.*/
-    background-color: rgba(8, 8, 8, 0.4);
+    background-color: var(--acrylic-color);
 }
 
 .separatorDiv {
-    background-color: #291c28;
+    background-color: var(--separator-background);
 
-    height: 10px;
-    min-height: 10px;
+    width: 100%;
+    height: 3px;
 }
 
 .bodyDiv {
@@ -104,6 +104,17 @@ body {
 
 .contentSection {
     width: 100%;
+}
+
+.contentSection > div > h1 {
+    background: linear-gradient(90deg, var(--text-gradient-1) 0%, var(--text-gradient-2) 33%, var(--text-gradient-3) 66%, var(--text-gradient-4) 100%);
+    background-size: 150% 150%;
+    animation: gradientText 8s ease infinite alternate;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    user-select: none;
 }
 
 .featuresDiv {

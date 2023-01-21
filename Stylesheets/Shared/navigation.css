@@ -10,7 +10,7 @@
 
 /*NAVIGATION BAR (LOGO, BUTTONS)*/
 .navigationBarDiv {
-    background-color: rgba(61, 61, 93, 0.5);
+    background-color: var(--navbar-background);
     backdrop-filter: blur(16px);
 
     display: flex;
@@ -58,19 +58,19 @@
 
     cursor: pointer;
 
-    color: #cdd6f4;
-    background-color: rgba(0, 0, 0, 0);
+    color: var(--text-color);
+    background-color: var(--navbar-button-bg);
 
     transition-duration: 0.3s;
     border: none;
 }
 
 .navigationBarButtons > button:hover {
-    background-color: #565683;
+    background-color: var(--button-hover);
 }
 
 .navigationBarButtons > button:active {
-    background-color: #34344f;
+    background-color: var(--button-active);
 }
 
 /*NAVBAR BURGER MENU ICON*/
@@ -94,15 +94,15 @@
 }
 
 .navigationBarBurger > button:hover {
-    background-color: #565683;
+    background-color: var(--button-hover);
 }
 
 .navigationBarBurger > button:focus {
-    background-color: #12121c;
+    background-color: var(--button-focus);
 }
 
 .navigationBarBurger > button:active {
-    background-color: #34344f;
+    background-color: var(--button-active);
 }
 
 /*NAVBAR BURGER MENU CONTENTS*/
@@ -112,7 +112,7 @@
 
     width: 100%;
 
-    background-color: rgba(61, 61, 93, 0.5);
+    background-color: var(--navbar-background);
     backdrop-filter: blur(16px);
 
     display: none;
@@ -129,13 +129,13 @@
     font-family: "Nunito-Bold";
     font-size: 1.1em;
 
-    color: white;
-    background-color: rgba(0, 0, 0, 0);
+    color: var(--text-color);
+    background-color: var(--navbar-button-bg);
 
     transition-duration: 0.3s;
     border: 0;
 }
 
 .navigationBarBurgerMenu > button:hover {
-    background-color: #565683;
+    background-color: var(--button-hover);
 }

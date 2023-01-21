@@ -7,7 +7,7 @@
 
     color: white;
 
-    background-color: rgba(0, 0, 0, 0);
+    background-color: var(--social-button-background);
     background-repeat: no-repeat;
     background-size: 32px 32px;
     background-position: center center;
@@ -19,11 +19,11 @@
 }
 
 .footerSocialMediaIcon:hover {
-    background-color: #565683;
+    background-color: var(--button-hover);
 }
 
 .footerSocialMediaIcon:active {
-    background-color: #34344f;
+    background-color: var(--button-active);
 }
 
 /*GITHUB ICON*/

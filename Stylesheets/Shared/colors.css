@@ -1,0 +1,26 @@
+:root
+{
+    --text-color: #cdd6f4;
+    --body-color: #242437;
+
+    --acrylic-color: rgba(8, 8, 8, 0.4);
+
+    --navbar-background: rgba(61, 61, 93, 0.5);
+    --navbar-thin-text-color: #a2a9c1;
+
+    --navbar-button-bg: rgba(0, 0, 0, 0);
+
+    --separator-background: #565683;
+
+    --button-hover: #565683;
+    --button-active: #34344f;
+    --button-focus: #12121c;
+
+    --text-gradient-1: rgba(176, 172, 255, 1);
+    --text-gradient-2: rgba(201, 64, 255, 1);
+    --text-gradient-3: rgba(210, 161, 255, 1);
+    --text-gradient-4: rgba(255, 118, 201, 1);
+
+    --social-button-background: rgba(0, 0, 0, 0);
+}
+
