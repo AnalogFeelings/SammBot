@@ -44,6 +44,27 @@
     user-select: none;
 }
 
+.footerColumn > a {
+    transition: color 0.3s;
+}
+
+.footerColumn > a:visited {
+    color: inherit;
+}
+
+.footerColumn > a:hover {
+    color: #a2a9c1;
+}
+
+.footerColumn > a:active {
+    color: #777c8e;
+}
+
+.footerColumn > a:link {
+    text-decoration: none;
+    color: #cdd6f4;
+}
+
 .footerBullet {
     position: relative;
 }
