@@ -13,10 +13,6 @@
     flex-direction: column;
 }
 
-.footerTop div:not(:last-child) {
-    margin-bottom: 15px;
-}
-
 .footerSeparator {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -71,4 +67,11 @@
 .footerBullet:after {
     content: "\a";
     white-space: pre;
+}
+
+@media only screen and (max-width: 750px)
+{
+    .footerTop div:not(:last-child) {
+        margin-bottom: 15px;
+    }
 }
