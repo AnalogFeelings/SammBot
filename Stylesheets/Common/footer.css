@@ -25,6 +25,10 @@
     flex-direction: column;
 }
 
+.footerLogo {
+    user-select: none;
+}
+
 .footerLogo > p {
     font-family: "Nunito-Bold";
     margin: 0;
@@ -34,6 +38,10 @@
 .footerHeaderSocial {
     width: 100%;
     justify-content: space-between;
+}
+
+.footerColumn > b {
+    user-select: none;
 }
 
 .footerBullet {
