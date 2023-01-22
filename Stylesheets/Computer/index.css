@@ -4,16 +4,7 @@
 	}
 
 	.headerDiv {
-		min-height: 640px;
-	}
-
-	.headerOverlayDiv > img {
-		width: 256px;
-		height: 256px;
-	}
-
-	.headerOverlayDiv > h1 {
-		font-size: 8em;
+		min-height: 550px;
 	}
 
 	.bodyContent:nth-child(1) {
@@ -83,5 +74,61 @@
 	.featuresDiv > div {
 		max-width: 32%;
 		width: 32%;
+	}
+}
+
+@media only screen and (min-width: 1090px)
+{
+	.headerOverlayDiv {
+		flex-direction: row
+	}
+
+	.headerSideDiv {
+		align-items: flex-start;
+
+		text-align: left;
+	}
+
+	.headerOverlayDiv > img {
+		width: 345px;
+		height: 345px;
+
+		margin-right: 35px;
+	}
+
+	.headerSideDiv > h1 {
+		font-size: 4em;
+	}
+
+	.headerSideDiv > h2 {
+		font-size: 1.4em;
+	}
+}
+
+@media only screen and (min-width: 965px)
+{
+	.headerOverlayDiv {
+		flex-direction: row
+	}
+
+	.headerSideDiv {
+		align-items: flex-start;
+
+		text-align: left;
+	}
+
+	.headerOverlayDiv > img {
+		width: 300px;
+		height: 300px;
+
+		margin-right: 25px;
+	}
+
+	.headerSideDiv > h1 {
+		font-size: 3.8em;
+	}
+
+	.headerSideDiv > h2 {
+		font-size: 1.3em;
 	}
 }

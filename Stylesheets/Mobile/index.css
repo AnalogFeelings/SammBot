@@ -3,16 +3,34 @@ body {
 }
 
 .headerDiv {
-	min-height: 280px;
+	min-height: 575px;
+}
+
+.headerOverlayDiv {
+	flex-direction: column;
 }
 
 .headerOverlayDiv > img {
 	width: 180px;
 	height: 180px;
+
+	margin-bottom: 20px;
 }
 
-.headerOverlayDiv > h1 {
-	font-size: 5em;
+.headerSideDiv {
+	text-align: center;
+
+	max-width: 80vw;
+}
+
+.headerSideDiv > h1 {
+	font-size: 3em;
+
+	margin-bottom: 10px;
+}
+
+.headerSideDiv > h2 {
+	font-size: 1.1em;
 }
 
 .bodyContent:nth-child(1) {
