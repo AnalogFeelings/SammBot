@@ -14,6 +14,10 @@ h1 {
     color-scheme: dark;
 }
 
+html {
+    overflow-x: clip;
+}
+
 body {
     padding: 0;
     margin: 0;
@@ -22,6 +26,8 @@ body {
     color: var(--text-color);
 
     background-color: var(--body-color);
+
+    overflow-x: clip;
 }
 
 .headerDiv {
