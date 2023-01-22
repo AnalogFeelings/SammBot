@@ -39,10 +39,12 @@
 
 .footerColumn > a {
     transition: color 0.3s;
+    color: var(--footer-link);
+    text-decoration: none;
 }
 
 .footerColumn > a:visited {
-    color: inherit;
+    color: var(--footer-link);
 }
 
 .footerColumn > a:hover {
@@ -51,11 +53,6 @@
 
 .footerColumn > a:active {
     color: var(--footer-link-active);
-}
-
-.footerColumn > a:link {
-    text-decoration: none;
-    color: var(--footer-link);
 }
 
 .footerBullet {

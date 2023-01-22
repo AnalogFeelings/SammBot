@@ -1,21 +1,3 @@
-a:link {
-    color: #c287bc;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #e8a1e1;
-    text-decoration: underline;
-}
-
-a:visited {
-    color: #654c65;
-}
-
-li::marker {
-    color: #755072;
-}
-
 b {
     font-family: 'Nunito-Bold';
 }
