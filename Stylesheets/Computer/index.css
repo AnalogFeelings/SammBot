@@ -65,19 +65,7 @@
 	}
 }
 
-@media only screen and (min-width: 1200px) {
-	.featuresDiv {
-		margin-top: 10px;
-		margin-bottom: 10px;
-	}
-
-	.featuresDiv > div {
-		max-width: 32%;
-		width: 32%;
-	}
-}
-
-@media only screen and (min-width: 1090px)
+@media only screen and (min-width: 965px)
 {
 	.headerOverlayDiv {
 		flex-direction: row
@@ -93,9 +81,21 @@
 		width: 345px;
 		height: 345px;
 
-		margin-right: 35px;
+		margin-right: 45px;
+		margin-bottom: 0;
 	}
 
+	.headerSideDiv > h1 {
+		font-size: 5em;
+	}
+
+	.headerSideDiv > h2 {
+		font-size: 1.5em;
+	}
+}
+
+@media only screen and (max-width: 1200px)
+{
 	.headerSideDiv > h1 {
 		font-size: 4em;
 	}
@@ -105,18 +105,8 @@
 	}
 }
 
-@media only screen and (min-width: 965px)
+@media only screen and (max-width: 1090px)
 {
-	.headerOverlayDiv {
-		flex-direction: row
-	}
-
-	.headerSideDiv {
-		align-items: flex-start;
-
-		text-align: left;
-	}
-
 	.headerOverlayDiv > img {
 		width: 300px;
 		height: 300px;
