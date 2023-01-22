@@ -92,6 +92,9 @@ body {
 .bodyDiv {
     padding-top: 20px;
     padding-bottom: 20px;
+
+    border-top: 5px solid;
+    border-color: var(--body-separator);
 }
 
 .contentSection {

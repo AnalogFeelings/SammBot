@@ -2,7 +2,7 @@
     background-color: var(--footer-background);
 
     border-top: 5px solid;
-    border-color: var(--footer-border-top);
+    border-color: var(--body-separator);
 
     display: flex;
     flex: 0 1 auto;

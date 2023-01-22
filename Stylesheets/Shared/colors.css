@@ -2,6 +2,7 @@
 {
     --text-color: #cdd6f4;
     --body-color: #242437;
+    --body-separator: #353551;
 
     --acrylic-color: rgba(8, 8, 8, 0.4);
 
@@ -27,7 +28,6 @@
     --scrollbar-background: #1b1b29;
 
     --footer-background: #3d3d5d;
-    --footer-border-top: #353551;
     --footer-link-hover: #a2a9c1;
     --footer-link-active: #777c8e;
     --footer-link: #cdd6f4;
