@@ -28,6 +28,10 @@ h1 {
     font-family: 'Nunito-Bold';
 }
 
+:root {
+    color-scheme: dark;
+}
+
 body {
     padding: 0;
     margin: 0;

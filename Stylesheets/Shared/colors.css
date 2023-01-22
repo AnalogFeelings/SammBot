@@ -12,6 +12,7 @@
 
     --separator-background: #565683;
 
+    --button-normal: #41415a;
     --button-hover: #565683;
     --button-active: #34344f;
     --button-focus: #12121c;
@@ -22,5 +23,7 @@
     --text-gradient-4: rgba(255, 118, 201, 1);
 
     --social-button-background: rgba(0, 0, 0, 0);
+
+    --scrollbar-background: #1b1b29;
 }
 
