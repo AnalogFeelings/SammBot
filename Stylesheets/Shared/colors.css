@@ -25,5 +25,12 @@
     --social-button-background: rgba(0, 0, 0, 0);
 
     --scrollbar-background: #1b1b29;
+
+    --footer-background: #3d3d5d;
+    --footer-border-top: #353551;
+    --footer-link-hover: #a2a9c1;
+    --footer-link-active: #777c8e;
+    --footer-link: #cdd6f4;
+    --footer-bottom-text: #a2a9c1;
 }
 

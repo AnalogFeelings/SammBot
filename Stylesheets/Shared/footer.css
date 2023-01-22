@@ -1,8 +1,8 @@
 .footerDiv {
-    background-color: #3d3d5d;
+    background-color: var(--footer-background);
 
     border-top: 5px solid;
-    border-color: #353551;
+    border-color: var(--footer-border-top);
 
     display: flex;
     flex: 0 1 auto;
@@ -46,16 +46,16 @@
 }
 
 .footerColumn > a:hover {
-    color: #a2a9c1;
+    color: var(--footer-link-hover);
 }
 
 .footerColumn > a:active {
-    color: #777c8e;
+    color: var(--footer-link-active);
 }
 
 .footerColumn > a:link {
     text-decoration: none;
-    color: #cdd6f4;
+    color: var(--footer-link);
 }
 
 .footerBullet {
@@ -63,5 +63,5 @@
 }
 
 .footerBottom {
-    color: #a2a9c1;
+    color: var(--footer-bottom-text);
 }
