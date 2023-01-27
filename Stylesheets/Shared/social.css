@@ -31,10 +31,9 @@
     background-image: url("../../Resources/Social/githublight.svg");
 }
 
-/*HIDEOUT ICON*/
-.footerSocialMediaIcon.hideout {
-    background-image: url("../../Resources/Social/hideout.png");
-    image-rendering: pixelated;
+/*TUMBLR ICON*/
+.footerSocialMediaIcon.tumblr {
+    background-image: url("../../Resources/Social/tumblr.svg");
 }
 
 /*TWITTER ICON*/
