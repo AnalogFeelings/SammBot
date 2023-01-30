@@ -16,11 +16,22 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
+using Fergun.Interactive;
+using Fergun.Interactive.Pagination;
+using Newtonsoft.Json;
 using SammBot.Bot.Attributes;
+using SammBot.Bot.Core;
+using SammBot.Bot.Extensions;
 using SammBot.Bot.Preconditions;
+using SammBot.Bot.Rest.Rule34;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;
 
@@ -29,29 +40,100 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f51e")]
 public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
 {
+    public NsfwService NsfwService { get; set; }
+    public InteractiveService InteractiveService { get; set; }
+    
     [SlashCommand("r34", "Gets a list of images from rule34.")]
     [DetailedDescription("Gets a list of images from rule34. Maximum amount is 1000 images per command.")]
     [RateLimit(3, 2)]
     [RequireContext(ContextType.Guild)]
     [RequireNsfw]
-    public async Task<RuntimeResult> GetRule34Async()
+    public async Task<RuntimeResult> GetRule34Async([Summary(description: "The tags you want to use for the search.")] string Tags)
     {
-        ComponentBuilder testBuilder = new ComponentBuilder().WithButton("Test!", "test-id", ButtonStyle.Success, new Emoji("\U0001f44d"));
+        if(string.IsNullOrWhiteSpace(Tags))
+            return ExecutionResult.FromError("You must provide tags!");
+        
+        Rule34SearchParameters searchParameters = new Rule34SearchParameters()
+        {
+            Limit = 1000,
+            Tags = Tags,
+            UseJson = 1
+        };
 
-        await RespondAsync("Here's a button!", components: testBuilder.Build());
+        await DeferAsync();
+
+        List<Rule34Post>? nsfwPosts;
+        using (Context.Channel.EnterTypingState()) nsfwPosts = await GetRule34PostsAsync(searchParameters);
+        
+        if(nsfwPosts == null || nsfwPosts.Count == 0)
+            return ExecutionResult.FromError("Rule34 returned no posts! The API could be down for maintenance, or one of your tags is invalid.");
+
+        List<Rule34Post> filteredPosts = nsfwPosts.Where(x => !x.FileUrl.EndsWith(".mp4") && !x.FileUrl.EndsWith(".webm")).ToList();
+
+        if (filteredPosts.Count == 0)
+            return ExecutionResult.FromError("All of the posts returned were videos! Please try another tag combination.");
+
+        if (filteredPosts.Count == 1)
+        {
+            string embedDescription = $"\U0001f50d **Search Terms**: `{Tags.Truncate(1024)}`\n\n";
+            embedDescription += $"\U0001f464 **Author**: `{filteredPosts[0].Owner}`\n";
+            embedDescription += $"\U0001f44d **Score**: `{filteredPosts[0].Score}`\n";
+            embedDescription += $"\U0001f51e **Rating**: `{filteredPosts[0].Rating.CapitalizeFirst()}`\n";
+            embedDescription += $"\U0001f3f7\uFE0F **Tags**: `{filteredPosts[0].Tags.Truncate(512)}`\n";
+
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: embedDescription);
+            replyEmbed.Title = "\U0001f633 Rule34 Search Results";
+            replyEmbed.WithColor(new Color(170, 229, 164));
+            replyEmbed.WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[0].Id}");
+            replyEmbed.WithImageUrl(filteredPosts[0].FileUrl);
+
+            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        }
+        else
+        {
+            LazyPaginator lazyPaginator = new LazyPaginatorBuilder()
+                .AddUser(Context.User)
+                .WithPageFactory(GeneratePage)
+                .WithMaxPageIndex(filteredPosts.Count - 1)
+                .WithFooter(PaginatorFooter.None)
+                .WithActionOnTimeout(ActionOnStop.DisableInput)
+                .WithActionOnCancellation(ActionOnStop.DisableInput)
+                .Build();
+
+            await InteractiveService.SendPaginatorAsync(lazyPaginator, Context.Interaction, TimeSpan.FromMinutes(8), InteractionResponseType.DeferredChannelMessageWithSource);
+        }
 
         return ExecutionResult.Succesful();
-    }
 
-    [ComponentInteraction("test-id", true)]
-    public async Task ReplyTest()
-    {
-        IComponentInteraction interaction = Context.Interaction as IComponentInteraction;
-
-        await interaction.UpdateAsync(x =>
+        PageBuilder GeneratePage(int Index)
         {
-            x.Content = "Clicked!!";
-            x.Components = null;
-        });
+            string embedDescription = $"\U0001f50d **Search Terms**: `{Tags.Truncate(1024)}`\n\n";
+            embedDescription += $"\U0001f464 **Author**: `{filteredPosts[Index].Owner}`\n";
+            embedDescription += $"\U0001f44d **Score**: `{filteredPosts[Index].Score}`\n";
+            embedDescription += $"\U0001f51e **Rating**: `{filteredPosts[Index].Rating.CapitalizeFirst()}`\n";
+            embedDescription += $"\U0001f3f7\uFE0F **Tags**: `{filteredPosts[Index].Tags.Truncate(512)}`\n";
+
+            return new PageBuilder()
+                .WithTitle("\U0001f633 Rule34 Search Results")
+                .WithDescription(embedDescription)
+                .WithFooter($"Post {Index + 1}/{filteredPosts.Count}")
+                .WithCurrentTimestamp()
+                .WithColor(new Color(170, 229, 164))
+                .WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[Index].Id}")
+                .WithImageUrl(filteredPosts[Index].FileUrl);
+        }
+    }
+    
+    private async Task<List<Rule34Post>?> GetRule34PostsAsync(Rule34SearchParameters SearchParameters)
+    {
+        string queryString = SearchParameters.ToQueryString();
+        string jsonReply;
+
+        using (HttpResponseMessage response = await NsfwService.NsfwClient.GetAsync($"https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&{queryString}"))
+        {
+            jsonReply = await response.Content.ReadAsStringAsync();
+        }
+
+        return JsonConvert.DeserializeObject<List<Rule34Post>>(jsonReply);
     }
 }
