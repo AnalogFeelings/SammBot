@@ -80,11 +80,7 @@ public class CommandHandler
                 switch (Result.Error)
                 {
                     case InteractionCommandError.UnknownCommand:
-                        replyEmbed.Title = "\u2139\uFE0F I didn't quite understand that...";
-                        replyEmbed.Color = new Color(59, 136, 195);
-                            
-                        finalMessage = $"There is no command named like that!\nUse the `/help` command for a command list.";
-                        break;
+                        return;
                     case InteractionCommandError.BadArgs:
                         finalMessage = $"You provided an incorrect number of parameters!\nUse the `/help " +
                                        $"{SlashCommand.Module.Name} {SlashCommand.Name}` command to see all of the parameters.";
@@ -96,7 +92,14 @@ public class CommandHandler
 
                 replyEmbed.Description = finalMessage;
 
-                await Context.Interaction.FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                if (Context.Interaction.HasResponded)
+                {
+                    await Context.Interaction.FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                }
+                else
+                {
+                    await Context.Interaction.RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                }
             }
         }
         catch (Exception ex)
