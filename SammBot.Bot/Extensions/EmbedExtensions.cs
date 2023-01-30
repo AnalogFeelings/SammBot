@@ -59,7 +59,7 @@ public static class EmbedExtensions
         return Builder;
     }
 
-    public static EmbedBuilder ChangeFooter(this EmbedBuilder Builder, SocketCommandContext Context, string Text)
+    public static EmbedBuilder ChangeFooter(this EmbedBuilder Builder, ShardedInteractionContext Context, string Text)
     {
         Builder.WithFooter(x =>
         {
