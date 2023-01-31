@@ -107,11 +107,11 @@ public class CommandHandler
 
                 if (Context.Interaction.HasResponded)
                 {
-                    await Context.Interaction.FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                    await Context.Interaction.FollowupAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
                 }
                 else
                 {
-                    await Context.Interaction.RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: allowedMentions);
+                    await Context.Interaction.RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
                 }
             }
         }
