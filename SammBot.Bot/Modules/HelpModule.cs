@@ -126,10 +126,10 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                                      requiredContexts.Contexts.HasFlag(ContextType.Guild) && 
                                      !requiredContexts.Contexts.HasFlag(ContextType.DM);
 
-                replyEmbed.AddField("🏷 Name", searchResult.Name, true);
-                replyEmbed.AddField("🗃 Group", searchResult.Module.SlashGroupName, true);
+                replyEmbed.AddField("\U0001f3f7\uFE0F Name", searchResult.Name, true);
+                replyEmbed.AddField("\U0001f5c3\uFE0F Group", searchResult.Module.SlashGroupName, true);
                 replyEmbed.AddField("\U0001f575\uFE0F Usable in DMs", (!requiresGuild).ToYesNo(), true);
-                replyEmbed.AddField("📋 Description", formattedDescription);
+                replyEmbed.AddField("\U0001f4cb Description", formattedDescription);
 
                 // Get command cooldown information.
                 RateLimit commandRateLimit = searchResult.Preconditions.FirstOrDefault(x => x is RateLimit) as RateLimit;
@@ -145,7 +145,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                                       $"Triggered after using the command **{commandRateLimit.Requests}** time(s).";
                 }
 
-                replyEmbed.AddField("⏱ Cooldown", rateLimitString);
+                replyEmbed.AddField("\u23F1\uFE0FCooldown", rateLimitString);
 
                 // Append all parameters to output embed.
                 string commandParameters = "A parameter with a `*` symbol is optional.\n";
@@ -165,7 +165,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                     commandParameters += $"• **Default**: {defaultValue}\n";
                 }
 
-                replyEmbed.AddField("📃 Parameters", searchResult.Parameters.Count == 0 ? "No parameters." : commandParameters);
+                replyEmbed.AddField("\U0001f4c3 Parameters", searchResult.Parameters.Count == 0 ? "No parameters." : commandParameters);
             }
         }
         else // ModuleName is null, user is asking to see all the available modules.
