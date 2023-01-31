@@ -218,9 +218,9 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             FirstUser = Context.Interaction.User as SocketGuildUser;
         }
         
-        //Do not allow people to ship themselves, thats Sweetheart from OMORI levels of weird.
+        //Do not allow people to ship the same 2 people, thats Sweetheart from OMORI levels of weird.
         if (FirstUser.Id == SecondUser.Id)
-            return ExecutionResult.FromError("You can't ship yourself!");
+            return ExecutionResult.FromError("You can't ship the same 2 people!");
 
         await DeferAsync();
         
