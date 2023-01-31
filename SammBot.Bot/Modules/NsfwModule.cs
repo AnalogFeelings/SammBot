@@ -46,8 +46,8 @@ public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("r34", "Gets a list of images from rule34.")]
     [DetailedDescription("Gets a list of images from rule34. Maximum amount is 1000 images per command.")]
     [RateLimit(3, 2)]
+    [RequireContext(ContextType.Guild)]
     [RequireNsfw]
-    [EnabledInDm(false)]
     public async Task<RuntimeResult> GetRule34Async([Summary(description: "The tags you want to use for the search.")] string Tags)
     {
         if(string.IsNullOrWhiteSpace(Tags))

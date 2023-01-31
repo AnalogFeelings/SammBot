@@ -43,7 +43,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("ban", "Bans a user with a reason.")]
     [DetailedDescription("Bans a user from the server with the set reason.")]
     [RateLimit(1, 2)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.BanMembers)]
     [RequireUserPermission(GuildPermission.BanMembers)]
     public async Task<RuntimeResult> BanUserAsync([Summary(description: "The user you want to ban.")] SocketGuildUser TargetUser,
@@ -68,7 +68,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("kick", "Kicks a user with a reason.")]
     [DetailedDescription("Kicks a user from the server with the set reason.")]
     [RateLimit(1, 2)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.KickMembers)]
     [RequireUserPermission(GuildPermission.KickMembers)]
     public async Task<RuntimeResult> KickUserAsync([Summary(description: "The user you want to kick.")] SocketGuildUser TargetUser,
@@ -91,7 +91,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("warn", "Warns a user with a reason.")]
     [DetailedDescription("Warns a user with a reason. Warnings will be stored in the bot's database, and you will be able to list them afterwards.")]
     [RateLimit(1, 2)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     [RequireUserPermission(GuildPermission.KickMembers)]
     public async Task<RuntimeResult> WarnUserAsync([Summary(description: "The user you want to warn.")] SocketGuildUser TargetUser,
         [Summary(description: "The reason of the warn.")] string Reason)
@@ -150,7 +150,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("unwarn", "Removes a warn from a user.")]
     [DetailedDescription("Removes the warning with the specified ID.")]
     [RateLimit(1, 2)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> RemoveWarnAsync([Summary(description: "The ID of the warn you want to remove.")] string WarningId)
     {
         await DeferAsync(true);
@@ -176,7 +176,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("warns", "Lists all of the warns given to a user.")]
     [DetailedDescription("Replies with a list of warnings given to the specified user.")]
     [RateLimit(2, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> ListWarnsAsync([Summary(description: "The user you want to list the warns for.")] SocketGuildUser TargetUser)
     {
         await DeferAsync();
@@ -208,7 +208,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("viewwarn", "Lists a specific warn.")]
     [DetailedDescription("Lists a warning, and the full reason.")]
     [RateLimit(2, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> ListWarnAsync([Summary(description: "The ID of the warn you want to view.")] string WarningId)
     {
         await DeferAsync();
@@ -237,7 +237,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("mute", "Mutes a user for an amount of time with a reason.")]
     [DetailedDescription("Mutes the specified user for an amount of time with the specified reason. The reason is optional.")]
     [RateLimit(1, 2)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.ModerateMembers)]
     [RequireUserPermission(GuildPermission.ModerateMembers)]
     public async Task<RuntimeResult> MuteUserAsync([Summary(description: "The user you want to mute.")] SocketGuildUser TargetUser,

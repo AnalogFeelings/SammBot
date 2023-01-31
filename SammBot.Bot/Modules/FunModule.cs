@@ -78,7 +78,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("activity", "Creates an invite for a voice channel activity!")]
     [DetailedDescription("Creates an activity invite for your current voice channel.")]
     [RateLimit(6, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.CreateInstantInvite)]
     [RequireUserPermission(GuildPermission.CreateInstantInvite)]
     public async Task<RuntimeResult> CreateActivityAsync([Summary(description: "The name of the activity you want to start.")] DefaultApplications ActivityType)
@@ -117,7 +117,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("hug", "Hug a user!")]
     [DetailedDescription("Hugs are good for everyone! Spread the joy with this command.")]
     [RateLimit(3, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> HugUserAsync([Summary(description: "The user you want to hug.")] IUser User)
     {
         string chosenKaomoji = SettingsManager.Instance.LoadedConfig.HugKaomojis.PickRandom();
@@ -133,7 +133,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("pat", "Pats a user!")]
     [DetailedDescription("Pets are ALSO good for everyone! Spread the joy with this command.")]
     [RateLimit(3, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> PatUserAsync([Summary(description: "The user you want to pat.")] IUser User)
     {
         SocketGuildUser authorGuildUser = Context.Interaction.User as SocketGuildUser;
@@ -146,7 +146,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("dox", "Leak someone's (fake) IP address!")]
     [DetailedDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
     [RateLimit(3, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> DoxUserAsync([Summary(description: "The user you want to \"dox\".")] SocketGuildUser User)
     {
         int firstSegment = Random.Shared.Next(0, 256);
@@ -163,7 +163,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("kill", "Commit first degree murder, fuck it.")]
     [DetailedDescription("Commit first degree murder! Don't worry, its fictional, the police isn't after you.")]
     [RateLimit(4, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> FirstDegreeMurderAsync([Summary(description: "The user you want to kill.")] SocketGuildUser TargetUser)
     {
         SocketGuildUser authorUser = Context.Interaction.User as SocketGuildUser;
@@ -197,7 +197,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("The Ship-O-Matic 5000 is here! If **SecondUser** is left empty, you will be shipped with **FirstUser**. If both are empty, " +
                          "you will be shipped with a random user from the server.")]
     [RateLimit(5, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.UseExternalEmojis)]
     public async Task<RuntimeResult> ShipUsersAsync([Summary(description: "The first user you want to ship.")] SocketGuildUser FirstUser = null,
         [Summary(description: "The second user you want to ship.")] SocketGuildUser SecondUser = null)

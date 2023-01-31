@@ -104,7 +104,6 @@ public class ProfilesModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("getpronouns", "Get the pronouns of a user!")]
     [DetailedDescription("Gets the pronoun information about a user!")]
     [RateLimit(3, 2)]
-    [EnabledInDm(false)]
     public async Task<RuntimeResult> GetPronounsAsync([Summary(description: "The user you want to get the pronouns of.")] SocketGuildUser User = null)
     {
         SocketGuildUser targetUser = User ?? Context.Interaction.User as SocketGuildUser;

@@ -44,7 +44,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("delete", "Deletes a user tag.")]
     [DetailedDescription("Delets a user tag that you own.")]
     [RateLimit(3, 2)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> DeleteTagAsync([Summary(description: "Self-explanatory.")] string Name)
     {
         await DeferAsync(true);
@@ -75,7 +75,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("get", "Gets a tag by its name, and replies.")]
     [DetailedDescription("Retrieve a tag by its name, and sends its content on the chat.")]
     [RateLimit(2, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> GetTagAsync([Summary(description: "Self-explanatory.")] string Name)
     {
         await DeferAsync();
@@ -96,7 +96,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("search", "Searches for similar tags.")]
     [DetailedDescription("Searches for tags with a similar name.")]
     [RateLimit(2, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> SearchTagsAsync([Summary(description: "The search term.")] string Name)
     {
         await DeferAsync();
@@ -132,7 +132,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("create", "Creates a new tag.")]
     [DetailedDescription("Creates a new tag with the specified reply.")]
     [RateLimit(3, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> CreateTagAsync([Summary(description: "Self-explanatory.")] string Name, 
         [Summary(description: "The text the bot will reply with when retrieving the tag.")] string Reply)
     {

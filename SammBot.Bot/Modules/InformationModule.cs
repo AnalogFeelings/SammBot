@@ -93,7 +93,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
     [SlashCommand("serverinfo", "Get information about a server!")]
     [DetailedDescription("Gets all the information about the server you execute the command in.")]
     [RateLimit(3, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> ServerInfoAsync()
     {
         RestUser serverOwner = await Context.Client.Rest.GetUserAsync(Context.Guild.OwnerId);
@@ -139,7 +139,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
     [SlashCommand("userinfo", "Get information about a user!")]
     [DetailedDescription("Gets all the information about the provided user.")]
     [RateLimit(3, 1)]
-    [EnabledInDm(false)]
+    [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> UserInfoAsync([Summary(description: "The user you want to get the information from.")] SocketGuildUser User = null)
     {
         SocketGuildUser targetUser = User ?? Context.Interaction.User as SocketGuildUser;
