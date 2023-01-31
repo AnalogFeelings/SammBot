@@ -118,10 +118,17 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                     formattedDescription = commandDescription.Description;
                 else
                     formattedDescription = "No description.";
+                
+                // Check if the command needs to be executed in guild or not.
+                RequireContextAttribute requiredContexts = searchResult.Preconditions.FirstOrDefault(x => x is RequireContextAttribute) as RequireContextAttribute;
+
+                bool requiresGuild = requiredContexts != default(RequireContextAttribute) && 
+                                     requiredContexts.Contexts.HasFlag(ContextType.Guild) && 
+                                     !requiredContexts.Contexts.HasFlag(ContextType.DM);
 
                 replyEmbed.AddField("🏷 Name", searchResult.Name, true);
                 replyEmbed.AddField("🗃 Group", searchResult.Module.SlashGroupName, true);
-                replyEmbed.AddField("\U0001f575\uFE0F Usable in DMs", searchResult.IsEnabledInDm.ToYesNo(), true);
+                replyEmbed.AddField("\U0001f575\uFE0F Usable in DMs", (!requiresGuild).ToYesNo(), true);
                 replyEmbed.AddField("📋 Description", formattedDescription);
 
                 // Get command cooldown information.
