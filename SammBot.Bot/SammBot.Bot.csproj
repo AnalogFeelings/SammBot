@@ -6,8 +6,8 @@
 	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	<Company>AestheticalZ</Company>
 	<Product>Samm-Bot</Product>
-	<AssemblyVersion>6.1</AssemblyVersion>
-	<FileVersion>6.1</FileVersion>
+	<AssemblyVersion>6.3</AssemblyVersion>
+	<FileVersion>6.3</FileVersion>
 	<LangVersion>11</LangVersion>
 	<Nullable>enable</Nullable>
   </PropertyGroup>
