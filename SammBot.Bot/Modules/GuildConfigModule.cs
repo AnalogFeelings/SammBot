@@ -44,7 +44,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
     [SlashCommand("list", "Lists all the available settings and their current values.")]
     [DetailedDescription("Lists all the available settings and their current values.")]
     [RateLimit(3, 3)]
-    [RequireContext(ContextType.Guild)]
+    [EnabledInDm(false)]
     [RequireBotPermission(GuildPermission.ManageChannels)]
     [RequireUserPermission(GuildPermission.Administrator)]
     public async Task<RuntimeResult> ListSettingsAsync()
@@ -106,7 +106,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
     [SlashCommand("set", "Sets the value of a setting.")]
     [DetailedDescription("Sets the value of a server setting.\nYou must use the real name (\"EnableLogging\", not \"Enable Logging\").")]
     [RateLimit(2, 3)]
-    [RequireContext(ContextType.Guild)]
+    [EnabledInDm(false)]
     [RequireBotPermission(GuildPermission.ManageChannels)]
     [RequireUserPermission(GuildPermission.Administrator)]
     public async Task<RuntimeResult> SetSettingAsync([Summary(description: "The name of the setting you want to set.")] string SettingName,
