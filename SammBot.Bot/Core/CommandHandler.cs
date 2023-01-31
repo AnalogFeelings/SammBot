@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using Fergun.Interactive;
 using SammBot.Bot.Extensions;
 using SammBot.Bot.Services;
 
@@ -38,6 +39,7 @@ public class CommandHandler
 
     private AdminService AdminService { get; set; }
     private InteractionService InteractionService { get; set; }
+    private InteractiveService InteractiveService { get; set; }
     private EventLoggingService EventLoggingService { get; set; }
 
     public CommandHandler(DiscordShardedClient Client, InteractionService InteractionService, IServiceProvider Services, Logger Logger)
@@ -48,6 +50,7 @@ public class CommandHandler
         BotLogger = Logger;
             
         AdminService = ServiceProvider.GetRequiredService<AdminService>();
+        InteractiveService = ServiceProvider.GetRequiredService<InteractiveService>();
         EventLoggingService = ServiceProvider.GetRequiredService<EventLoggingService>();
     }
 
@@ -80,7 +83,17 @@ public class CommandHandler
                 switch (Result.Error)
                 {
                     case InteractionCommandError.UnknownCommand:
-                        return;
+                        if (Context.Interaction is SocketMessageComponent messageComponent)
+                        {
+                            if (InteractiveService.Callbacks.ContainsKey(messageComponent.Message.Id))
+                                return;
+                        }
+                        
+                        replyEmbed.Title = "\u2139\uFE0F I didn't quite understand that...";
+                        replyEmbed.Color = new Color(59, 136, 195);
+                            
+                        finalMessage = $"There is no command named like that!\nUse the `/help` command for a command list.";
+                        break;
                     case InteractionCommandError.BadArgs:
                         finalMessage = $"You provided an incorrect number of parameters!\nUse the `/help " +
                                        $"{SlashCommand.Module.Name} {SlashCommand.Name}` command to see all of the parameters.";
