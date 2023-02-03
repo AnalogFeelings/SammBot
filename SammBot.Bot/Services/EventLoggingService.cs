@@ -31,9 +31,9 @@ namespace SammBot.Bot.Services;
 
 public class EventLoggingService
 {
-    private readonly Color GoodColor = new Color(119, 178, 85); // Green
-    private readonly Color BadColor = new Color(255, 205, 77); // Yellow
-    private readonly Color VeryBadColor = new Color(221, 46, 68); // Red
+    private readonly Color _GoodColor = new Color(119, 178, 85); // Green
+    private readonly Color _BadColor = new Color(255, 205, 77); // Yellow
+    private readonly Color _VeryBadColor = new Color(221, 46, 68); // Red
         
     public async Task OnUserJoinedAsync(SocketGuildUser NewUser)
     {
@@ -41,7 +41,7 @@ public class EventLoggingService
         {
             SocketGuild currentGuild = NewUser.Guild;
                 
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
+            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
@@ -67,7 +67,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f44b User Joined";
                     replyEmbed.Description = "A new user has joined the server.";
-                    replyEmbed.WithColor(GoodColor);
+                    replyEmbed.WithColor(_GoodColor);
 
                     replyEmbed.AddField("\U0001f464 User", NewUser.Mention);
                     replyEmbed.AddField("\U0001faaa User ID", NewUser.Id);
@@ -90,7 +90,7 @@ public class EventLoggingService
     {
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == CurrentGuild.Id);
+            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == CurrentGuild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
@@ -104,7 +104,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f590\uFE0F User Left";
                     replyEmbed.Description = "A user has left the server.";
-                    replyEmbed.WithColor(VeryBadColor);
+                    replyEmbed.WithColor(_VeryBadColor);
 
                     replyEmbed.AddField("\U0001f464 User", User.Mention);
                     replyEmbed.AddField("\U0001faaa User ID", User.Id);
@@ -133,7 +133,7 @@ public class EventLoggingService
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
+            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
@@ -147,7 +147,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\u274C Message Deleted";
                     replyEmbed.Description = "A message has been deleted.";
-                    replyEmbed.WithColor(VeryBadColor);
+                    replyEmbed.WithColor(_VeryBadColor);
 
                     string messageContent = string.Empty;
                     string attachments = string.Empty;
@@ -196,7 +196,7 @@ public class EventLoggingService
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
+            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
@@ -210,7 +210,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\u274C Messages Bulk Deleted";
                     replyEmbed.Description = "Multiple messages have been deleted at once.";
-                    replyEmbed.WithColor(VeryBadColor);
+                    replyEmbed.WithColor(_VeryBadColor);
 
                     replyEmbed.AddField("\U0001f4e8 Message Count", CachedMessages.Count, true);
                     replyEmbed.AddField("\U0001f4e2 Channel", $"<#{CachedChannel.Value.Id}>", true);
@@ -237,7 +237,7 @@ public class EventLoggingService
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuildChannel!.Guild.Id);
+            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuildChannel!.Guild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
@@ -252,7 +252,7 @@ public class EventLoggingService
                     replyEmbed.Title = "\U0001f4dd Message Edited";
                     replyEmbed.Description = $"A message has been edited.\n" +
                                              $"The old content will be listed below if the message has been cached by {SettingsManager.BOT_NAME}.";
-                    replyEmbed.WithColor(BadColor);
+                    replyEmbed.WithColor(_BadColor);
 
                     replyEmbed.AddField("\U0001f464 Author", NewMessage.Author.Mention, true);
                     replyEmbed.AddField("\U0001faaa Author ID", NewMessage.Author.Id, true);
@@ -291,7 +291,7 @@ public class EventLoggingService
     {
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == NewRole.Guild.Id);
+            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == NewRole.Guild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
@@ -305,7 +305,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f4e6 Role Created";
                     replyEmbed.Description = "A new role has been created.";
-                    replyEmbed.WithColor(GoodColor);
+                    replyEmbed.WithColor(_GoodColor);
                         
                     replyEmbed.AddField("\U0001f465 Role", NewRole.Mention);
                     replyEmbed.AddField("\U0001faaa Role ID", NewRole.Id);
@@ -332,7 +332,7 @@ public class EventLoggingService
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
+            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
@@ -346,7 +346,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f4e6 Role Updated";
                     replyEmbed.Description = "A role has been updated.";
-                    replyEmbed.WithColor(BadColor);
+                    replyEmbed.WithColor(_BadColor);
 
                     if (OutdatedRole.Name != UpdatedRole.Name)
                     {
@@ -387,7 +387,7 @@ public class EventLoggingService
     {
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == SourceGuild.Id);
+            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == SourceGuild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
@@ -401,7 +401,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f528 User Banned";
                     replyEmbed.Description = "A user has been banned from the server.";
-                    replyEmbed.WithColor(VeryBadColor);
+                    replyEmbed.WithColor(_VeryBadColor);
                         
                     replyEmbed.AddField("\U0001f464 User", BannedUser.GetFullUsername());
                     replyEmbed.AddField("\U0001faaa User ID", BannedUser.Id);
@@ -424,7 +424,7 @@ public class EventLoggingService
     {
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == SourceGuild.Id);
+            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == SourceGuild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
 
@@ -438,7 +438,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\u2705 User Unbanned";
                     replyEmbed.Description = "A user has been unbanned from the server.";
-                    replyEmbed.WithColor(GoodColor);
+                    replyEmbed.WithColor(_GoodColor);
                         
                     replyEmbed.AddField("\U0001f464 User", UnbannedUser.GetFullUsername());
                     replyEmbed.AddField("\U0001faaa User ID", UnbannedUser.Id);
