@@ -21,7 +21,6 @@
 using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +47,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireUserPermission(GuildPermission.BanMembers)]
     public async Task<RuntimeResult> BanUserAsync([Summary(description: "The user you want to ban.")] SocketGuildUser TargetUser,
         [Summary(description: "The amount of days the bot will delete.")] int PruneDays,
-        [Summary(description: "The reason of the ban.")] string Reason = null)
+        [Summary(description: "The reason of the ban.")] string? Reason = null)
     {
         string banReason = Reason ?? "No reason specified.";
 
@@ -60,7 +59,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Description = $"**Reason**: {banReason}\n";
         replyEmbed.Description += $"**Prune Days**: {PruneDays} day(s).";
 
-        await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -72,7 +71,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireBotPermission(GuildPermission.KickMembers)]
     [RequireUserPermission(GuildPermission.KickMembers)]
     public async Task<RuntimeResult> KickUserAsync([Summary(description: "The user you want to kick.")] SocketGuildUser TargetUser,
-        [Summary(description: "The reason of the kick.")] string Reason = null)
+        [Summary(description: "The reason of the kick.")] string? Reason = null)
     {
         string kickReason = Reason ?? "No reason specified.";
 
@@ -83,7 +82,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
         replyEmbed.Description = $"**Reason**: {kickReason}";
 
-        await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -134,14 +133,14 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
                 directMessageEmbed.Description += $"**Warn ID**: {newGuid}\n\n";
                 directMessageEmbed.Description += $"You may see all of your warnings with the `/mod warns` command.";
 
-                await TargetUser.SendMessageAsync(null, embed: directMessageEmbed.Build());
+                await TargetUser.SendMessageAsync(embed: directMessageEmbed.Build());
             }
             catch (Exception)
             {
                 replyEmbed.Description += "I could not DM the user about this warning.";
             }
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -199,7 +198,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.Description += $"**· Reason**: {warning.Reason.Truncate(48)}\n\n";
             }
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -228,7 +227,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             replyEmbed.AddField("Date", $"<t:{specificWarning.Date}:F>");
             replyEmbed.AddField("Reason", specificWarning.Reason);
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -242,7 +241,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireUserPermission(GuildPermission.ModerateMembers)]
     public async Task<RuntimeResult> MuteUserAsync([Summary(description: "The user you want to mute.")] SocketGuildUser TargetUser,
         [Summary(description: "The duration of the mute.")] TimeSpan Duration,
-        [Summary(description: "The reason of the mute.")] string Reason = null)
+        [Summary(description: "The reason of the mute.")] string? Reason = null)
     {
         string muteReason = Reason ?? "No reason specified.";
 
@@ -265,7 +264,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Description += $"**Duration**: {days} day(s), {hours} hour(s), {minutes} minute(s) and {seconds} second(s).\n";
         replyEmbed.Description += $"**Expires in**: <t:{untilDate}:F>";
 
-        await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -273,13 +272,14 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("purge", "Deletes an amount of messages.")]
     [DetailedDescription("Deletes the provided amount of messages.")]
     [RateLimit(2, 2)]
+    [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.ManageMessages)]
     [RequireUserPermission(GuildPermission.ManageMessages)]
     public async Task<RuntimeResult> PurgeMessagesAsync([Summary(description: "The amount of messages you want to purge.")] int Count)
     {
         IEnumerable<IMessage> retrievedMessages = await Context.Interaction.Channel.GetMessagesAsync(Count + 1).FlattenAsync();
 
-        await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(retrievedMessages);
+        await (Context.Channel as SocketTextChannel)!.DeleteMessagesAsync(retrievedMessages);
 
         await RespondAsync($":white_check_mark: Cleared `{Count}` message/s.", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
