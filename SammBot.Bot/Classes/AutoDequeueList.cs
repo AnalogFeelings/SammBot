@@ -20,7 +20,7 @@
 
 using System.Collections.Generic;
 
-namespace SammBot.Bot.Classes;
+namespace SammBot.Bot;
 
 public class AutoDequeueList<T> : LinkedList<T>
 {

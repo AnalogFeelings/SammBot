@@ -23,7 +23,6 @@ using Discord.WebSocket;
 using Figgle;
 using Matcha;
 using Pastel;
-using SammBot.Bot.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
