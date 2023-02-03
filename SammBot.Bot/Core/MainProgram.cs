@@ -156,7 +156,6 @@ public class MainProgram
         serviceProvider.GetRequiredService<CommandHandler>();
         serviceProvider.GetRequiredService<RandomService>();
         serviceProvider.GetRequiredService<AdminService>();
-        serviceProvider.GetRequiredService<FunService>();
         serviceProvider.GetRequiredService<UtilsService>();
         serviceProvider.GetRequiredService<EventLoggingService>();
 
@@ -179,7 +178,6 @@ public class MainProgram
             .AddSingleton<Logger>()
             .AddSingleton<RandomService>()
             .AddSingleton<AdminService>()
-            .AddSingleton<FunService>()
             .AddSingleton<UtilsService>()
             .AddSingleton<NsfwService>()
             .AddSingleton<EventLoggingService>();
