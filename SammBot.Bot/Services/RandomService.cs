@@ -27,8 +27,8 @@ namespace SammBot.Bot.Services;
 
 public class RandomService
 {
-    public SharpCatRequester CatRequester;
-    public SharpDogRequester DogRequester;
+    public readonly SharpCatRequester CatRequester;
+    public readonly SharpDogRequester DogRequester;
 
     public readonly HttpClient RandomClient;
 
