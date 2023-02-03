@@ -46,7 +46,7 @@ namespace SammBot.Bot.Modules;
 public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 {
     public Logger Logger { get; set; }
-    public FunService FunService { get; set; }
+    public HttpService HttpService { get; set; }
 
     private readonly int[] _ShipSegments = new int[]
     {
@@ -427,14 +427,14 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         
     private async Task<MemoryStream> DownloadToMemoryStream(string Url)
     {
-        byte[] rawData = await FunService.FunHttpClient.GetByteArrayAsync(Url);
+        byte[] rawData = await HttpService.Client.GetByteArrayAsync(Url);
         
         return new MemoryStream(rawData);
     }
         
     private async Task<string> DownloadToString(string Url)
     {
-        string downloadedData = await FunService.FunHttpClient.GetStringAsync(Url);
+        string downloadedData = await HttpService.Client.GetStringAsync(Url);
         
         return downloadedData;
     }
@@ -451,7 +451,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 
         await DeferAsync();
         
-        UrbanDefinitionList? urbanDefinitions = await GetUrbanDefinitionAsync(searchParameters);
+        UrbanDefinitionList? urbanDefinitions = await HttpService.GetObjectFromJsonAsync<UrbanDefinitionList>("https://api.urbandictionary.com/v0/define", searchParameters);
         
         if (urbanDefinitions == null || urbanDefinitions.List.Count == 0)
             return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{Term}\"!");
@@ -483,20 +483,5 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
-    }
-        
-    public async Task<UrbanDefinitionList?> GetUrbanDefinitionAsync(UrbanSearchParameters SearchParameters)
-    {
-        string queryString = SearchParameters.ToQueryString();
-        string jsonReply;
-        
-        using (HttpResponseMessage responseMessage = await FunService.FunHttpClient.GetAsync($"https://api.urbandictionary.com/v0/define?{queryString}"))
-        {
-            jsonReply = await responseMessage.Content.ReadAsStringAsync();
-        }
-        
-        UrbanDefinitionList? definitionReply = JsonConvert.DeserializeObject<UrbanDefinitionList>(jsonReply);
-        
-        return definitionReply;
     }
 }
