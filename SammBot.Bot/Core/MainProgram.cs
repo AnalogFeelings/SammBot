@@ -152,11 +152,6 @@ public class MainProgram
         ConfigureServices(serviceCollection);
 
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-        serviceProvider.GetRequiredService<Logger>();
-        serviceProvider.GetRequiredService<CommandHandler>();
-        serviceProvider.GetRequiredService<RandomService>();
-        serviceProvider.GetRequiredService<AdminService>();
-        serviceProvider.GetRequiredService<EventLoggingService>();
 
         bootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
 
