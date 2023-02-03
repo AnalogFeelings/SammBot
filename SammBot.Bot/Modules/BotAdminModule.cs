@@ -21,7 +21,6 @@
 using Discord;
 using Discord.WebSocket;
 using Newtonsoft.Json;
-using SammBot.Bot.Classes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -177,8 +176,8 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
 
         foreach (PropertyInfo property in properties)
         {
-            string propertyName = string.Empty;
-            string propertyValue = string.Empty;
+            string propertyName;
+            string propertyValue;
 
             if (property.GetCustomAttribute<RequiresReboot>() == null) propertyName = "\U0001f539 ";
             else propertyName = "\U0001f538 ";
@@ -189,7 +188,7 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
             replyEmbed.AddField(propertyName, propertyValue);
         }
 
-        await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -201,7 +200,7 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
         [Summary(description: "The new value of the setting.")] string VarValue,
         [Summary(description: "Set to **true** to restart the bot afterwards. Needed for non-modifiable settings.")] bool RestartBot = false)
     {
-        PropertyInfo retrievedVariable = typeof(BotConfig).GetProperty(VarName);
+        PropertyInfo? retrievedVariable = typeof(BotConfig).GetProperty(VarName);
 
         if (retrievedVariable == null)
             return ExecutionResult.FromError($"{VarName} does not exist!");
@@ -217,15 +216,15 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
 
         retrievedVariable.SetValue(SettingsManager.Instance.LoadedConfig, Convert.ChangeType(VarValue, retrievedVariable.PropertyType));
 
-        object newValue = retrievedVariable.GetValue(SettingsManager.Instance.LoadedConfig);
+        object? newValue = retrievedVariable.GetValue(SettingsManager.Instance.LoadedConfig);
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         replyEmbed.Title = "\u2705 Success";
-        replyEmbed.Description = $"Successfully set setting **{VarName}** to value `{newValue.ToString().Truncate(128)}`.";
+        replyEmbed.Description = $"Successfully set setting **{VarName}** to value `{newValue!.ToString()!.Truncate(128)}`.";
         replyEmbed.WithColor(119, 178, 85);
 
-        await RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         string configFilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, SettingsManager.CONFIG_FILE);
         string jsonContent = JsonConvert.SerializeObject(SettingsManager.Instance.LoadedConfig, Formatting.Indented);
