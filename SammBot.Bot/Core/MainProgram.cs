@@ -156,7 +156,6 @@ public class MainProgram
         serviceProvider.GetRequiredService<CommandHandler>();
         serviceProvider.GetRequiredService<RandomService>();
         serviceProvider.GetRequiredService<AdminService>();
-        serviceProvider.GetRequiredService<UtilsService>();
         serviceProvider.GetRequiredService<EventLoggingService>();
 
         bootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
@@ -178,7 +177,6 @@ public class MainProgram
             .AddSingleton<Logger>()
             .AddSingleton<RandomService>()
             .AddSingleton<AdminService>()
-            .AddSingleton<UtilsService>()
             .AddSingleton<EventLoggingService>();
     }
 }
