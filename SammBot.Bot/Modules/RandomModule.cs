@@ -20,7 +20,6 @@
 
 using Discord;
 using Newtonsoft.Json;
-using SammBot.Bot.Classes;
 using SharpCat.Types.Cat;
 using SharpCat.Types.Dog;
 using System.Collections.Generic;
@@ -62,7 +61,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         List<CatImage> retrievedImages = await RandomService.CatRequester.GetImageAsync(searchParameters);
             
         CatImage retrievedImage = retrievedImages.First();
-        CatBreed retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
+        CatBreed? retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
@@ -75,7 +74,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Color = new Color(255, 204, 77);
         replyEmbed.ImageUrl = retrievedImage.Url;
 
-        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -98,7 +97,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         List<DogImage> retrievedImages = await RandomService.DogRequester.GetImageAsync(searchParameters);
 
         DogImage retrievedImage = retrievedImages.First();
-        DogBreed retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
+        DogBreed? retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
@@ -111,7 +110,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Color = new Color(217, 158, 130);
         replyEmbed.ImageUrl = retrievedImage.Url;
 
-        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -123,14 +122,16 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
             
-        string jsonReply = string.Empty;
-
+        string jsonReply;
         using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://randomfox.ca/floof/"))
         {
             jsonReply = await responseMessage.Content.ReadAsStringAsync();
         }
 
-        FoxImage repliedImage = JsonConvert.DeserializeObject<FoxImage>(jsonReply);
+        FoxImage? repliedImage = JsonConvert.DeserializeObject<FoxImage>(jsonReply);
+
+        if (repliedImage == null)
+            return ExecutionResult.FromError("Could not retrieve a fox image! The service may be unavailable.");
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
             
@@ -138,7 +139,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Color = new Color(241, 143, 38);
         replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
-        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -150,14 +151,16 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
             
-        string jsonReply = string.Empty;
-
+        string jsonReply;
         using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://random-d.uk/api/v2/random"))
         {
             jsonReply = await responseMessage.Content.ReadAsStringAsync();
         }
 
-        DuckImage repliedImage = JsonConvert.DeserializeObject<DuckImage>(jsonReply);
+        DuckImage? repliedImage = JsonConvert.DeserializeObject<DuckImage>(jsonReply);
+        
+        if (repliedImage == null)
+            return ExecutionResult.FromError("Could not retrieve a duck image! The service may be unavailable.");
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
             
@@ -165,7 +168,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Color = new Color(62, 114, 29);
         replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
-        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
