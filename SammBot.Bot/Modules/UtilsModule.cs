@@ -174,7 +174,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Gets the avatar of a user. If **User** is a server user, it will display the per-guild avatar (if they have any), and send a link to the global one in " +
                          "the embed description.")]
     [RateLimit(3, 2)]
-    public async Task<RuntimeResult> GetProfilePicAsync([Summary(description: "Leave empty to get your own profile picture.")] SocketUser User = null)
+    public async Task<RuntimeResult> GetProfilePicAsync([Summary(description: "Leave empty to get your own profile picture.")] SocketUser? User = null)
     {
         SocketUser targetUser = User ?? Context.Interaction.User;
             
@@ -187,9 +187,9 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
         string userAvatar = targetUser.GetAvatarUrl(size: 2048);
 
-        if (Context.User is SocketGuildUser)
+        if (targetUser is SocketGuildUser)
         {
-            SocketGuildUser guildUser = targetUser as SocketGuildUser;
+            SocketGuildUser guildUser = (targetUser as SocketGuildUser)!;
 
             string serverAvatar = guildUser.GetGuildAvatarUrl(size: 2048);
             if (serverAvatar != null)
@@ -227,12 +227,16 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
             
-        List<GeolocationLocation> retrievedLocations = await GetWeatherLocationsAsync(City);
-        if (retrievedLocations.Count == 0)
-            return ExecutionResult.FromError("That location does not exist.");
+        List<GeolocationLocation>? retrievedLocations = await GetWeatherLocationsAsync(City);
+        if (retrievedLocations == null || retrievedLocations.Count == 0)
+            return ExecutionResult.FromError("That location does not exist, or the weather service is currently unavailable.");
 
         GeolocationLocation finalLocation = retrievedLocations.First();
-        CompleteForecast retrievedWeather = await GetCurrentWeatherAsync(finalLocation);
+        
+        CompleteForecast? retrievedWeather = await GetCurrentWeatherAsync(finalLocation);
+        if (retrievedWeather == null)
+            return ExecutionResult.FromError("There is no weather forecast for that area, or the weather service is currently unavailable.");
+        
         Condition actualWeather = retrievedWeather.Weather[0];
 
         //Fucking christ. https://openweathermap.org/weather-conditions
@@ -327,9 +331,8 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         return ExecutionResult.Succesful();
     }
 
-    private async Task<List<GeolocationLocation>> GetWeatherLocationsAsync(string City)
+    private async Task<List<GeolocationLocation>?> GetWeatherLocationsAsync(string City)
     {
-        string locationReply = string.Empty;
         GeolocationParameters geolocationParameters = new GeolocationParameters()
         {
             Location = City,
@@ -338,18 +341,19 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         };
         string locationQuery = geolocationParameters.ToQueryString();
 
+        string locationReply;
         using (HttpResponseMessage responseMessage = await UtilsService.WeatherClient.GetAsync($"geo/1.0/direct?{locationQuery}"))
         {
             locationReply = await responseMessage.Content.ReadAsStringAsync();
         }
-        List<GeolocationLocation> retrievedLocations = JsonConvert.DeserializeObject<List<GeolocationLocation>>(locationReply);
+        
+        List<GeolocationLocation>? retrievedLocations = JsonConvert.DeserializeObject<List<GeolocationLocation>>(locationReply);
 
         return retrievedLocations;
     }
 
-    private async Task<CompleteForecast> GetCurrentWeatherAsync(GeolocationLocation Location)
+    private async Task<CompleteForecast?> GetCurrentWeatherAsync(GeolocationLocation Location)
     {
-        string weatherReply = string.Empty;
         WeatherParameters weatherParams = new WeatherParameters()
         {
             Latitude = Location.Latitude,
@@ -359,11 +363,13 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         };
         string weatherQuery = weatherParams.ToQueryString();
 
+        string weatherReply;
         using (HttpResponseMessage responseMessage = await UtilsService.WeatherClient.GetAsync($"data/2.5/weather?{weatherQuery}"))
         {
             weatherReply = await responseMessage.Content.ReadAsStringAsync();
         }
-        CompleteForecast retrievedWeather = JsonConvert.DeserializeObject<CompleteForecast>(weatherReply);
+        
+        CompleteForecast? retrievedWeather = JsonConvert.DeserializeObject<CompleteForecast>(weatherReply);
 
         return retrievedWeather;
     }
