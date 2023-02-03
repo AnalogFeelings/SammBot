@@ -27,7 +27,7 @@ namespace SammBot.Bot.Core;
 
 public class SettingsManager
 {
-    public BotConfig? LoadedConfig = new BotConfig();
+    public BotConfig LoadedConfig = new BotConfig();
 
     public const string BOT_NAME = "Samm-Bot";
     public const string BOT_CONFIG_FOLDER = "Bot";
@@ -58,6 +58,7 @@ public class SettingsManager
         }
 
         string configContent = File.ReadAllText(configFilePath);
+        
         LoadedConfig = JsonConvert.DeserializeObject<BotConfig>(configContent);
 
         if (LoadedConfig == null) return false;
