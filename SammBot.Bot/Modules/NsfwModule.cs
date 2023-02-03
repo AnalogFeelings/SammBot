@@ -87,7 +87,7 @@ public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
             replyEmbed.WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[0].Id}");
             replyEmbed.WithImageUrl(filteredPosts[0].FileUrl);
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         }
         else
         {
