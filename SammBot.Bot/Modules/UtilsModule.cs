@@ -327,7 +327,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         return ExecutionResult.Succesful();
     }
 
-    public async Task<List<GeolocationLocation>> GetWeatherLocationsAsync(string City)
+    private async Task<List<GeolocationLocation>> GetWeatherLocationsAsync(string City)
     {
         string locationReply = string.Empty;
         GeolocationParameters geolocationParameters = new GeolocationParameters()
@@ -347,7 +347,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         return retrievedLocations;
     }
 
-    public async Task<CompleteForecast> GetCurrentWeatherAsync(GeolocationLocation Location)
+    private async Task<CompleteForecast> GetCurrentWeatherAsync(GeolocationLocation Location)
     {
         string weatherReply = string.Empty;
         WeatherParameters weatherParams = new WeatherParameters()
