@@ -22,7 +22,6 @@ using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,9 +50,9 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            UserTag retrievedTag = null;
+            UserTag? retrievedTag;
 
-            if ((Context.User as SocketGuildUser).GuildPermissions.Has(GuildPermission.ManageMessages))
+            if ((Context.User as SocketGuildUser)!.GuildPermissions.Has(GuildPermission.ManageMessages))
                 retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == Name && x.GuildId == Context.Guild.Id);
             else
                 retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == Name &&
@@ -123,7 +122,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.AddField($"`{tag.Name}`", $"By: **{userName}**");
             }
 
-            await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
