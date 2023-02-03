@@ -21,7 +21,6 @@
 using Discord;
 using Discord.WebSocket;
 using Newtonsoft.Json;
-using SammBot.Bot.Classes;
 using SkiaSharp;
 using Svg.Skia;
 using System;
@@ -49,7 +48,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     public Logger Logger { get; set; }
     public FunService FunService { get; set; }
 
-    private readonly int[] _ShipSegments = new int[10]
+    private readonly int[] _ShipSegments = new int[]
     {
         10, 20, 30, 40, 50, 60, 70, 80, 90, 100
     };
@@ -83,7 +82,8 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireUserPermission(GuildPermission.CreateInstantInvite)]
     public async Task<RuntimeResult> CreateActivityAsync([Summary(description: "The name of the activity you want to start.")] DefaultApplications ActivityType)
     {
-        SocketGuildUser author = Context.User as SocketGuildUser;
+        SocketGuildUser author = (Context.User as SocketGuildUser)!;
+        
         if (author.VoiceChannel == null)
             return ExecutionResult.FromError("You must be in a voice channel to create an activity!");
         
@@ -122,7 +122,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     {
         string chosenKaomoji = SettingsManager.Instance.LoadedConfig.HugKaomojis.PickRandom();
         
-        SocketGuildUser authorGuildUser = Context.Interaction.User as SocketGuildUser;
+        SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
         
         await RespondAsync($"Warm hugs from **{authorGuildUser.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>",
             allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
@@ -136,7 +136,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> PatUserAsync([Summary(description: "The user you want to pat.")] IUser User)
     {
-        SocketGuildUser authorGuildUser = Context.Interaction.User as SocketGuildUser;
+        SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
         
         await RespondAsync($"Pats from **{authorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
@@ -166,7 +166,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> FirstDegreeMurderAsync([Summary(description: "The user you want to kill.")] SocketGuildUser TargetUser)
     {
-        SocketGuildUser authorUser = Context.Interaction.User as SocketGuildUser;
+        SocketGuildUser authorUser = (Context.Interaction.User as SocketGuildUser)!;
         
         Pronoun authorPronouns = await authorUser.GetUserPronouns();
         Pronoun targetPronouns = await TargetUser.GetUserPronouns();
@@ -199,8 +199,8 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(5, 1)]
     [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.UseExternalEmojis)]
-    public async Task<RuntimeResult> ShipUsersAsync([Summary(description: "The first user you want to ship.")] SocketGuildUser FirstUser = null,
-        [Summary(description: "The second user you want to ship.")] SocketGuildUser SecondUser = null)
+    public async Task<RuntimeResult> ShipUsersAsync([Summary(description: "The first user you want to ship.")] SocketGuildUser? FirstUser = null,
+        [Summary(description: "The second user you want to ship.")] SocketGuildUser? SecondUser = null)
     {
         //If both users are null, ship the author with a random user.
         if(FirstUser == null && SecondUser == null)
@@ -219,7 +219,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         }
         
         //Do not allow people to ship the same 2 people, thats Sweetheart from OMORI levels of weird.
-        if (FirstUser.Id == SecondUser.Id)
+        if (FirstUser!.Id == SecondUser!.Id)
             return ExecutionResult.FromError("You can't ship the same 2 people!");
 
         await DeferAsync();
@@ -337,12 +337,12 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
                 emojiSvg.FromSvg(emojiData);
                     
                 const int emojiSize = 96;
-                using (SKBitmap emojiBitmap = emojiSvg.Picture.ToBitmap(SKColor.Empty, emojiSize, emojiSize,
-                           SKColorType.Rgba8888, SKAlphaType.Unpremul, SKColorSpace.CreateSrgb()))
+                using (SKBitmap emojiBitmap = emojiSvg.Picture!.ToBitmap(SKColor.Empty, emojiSize, emojiSize,
+                           SKColorType.Rgba8888, SKAlphaType.Unpremul, SKColorSpace.CreateSrgb())!)
                 {
                     //Add the two "Windows" to the clip path. They have their origin in the center, not the top left corner.
-                    loversClipPath.AddCircle(imageInfo.Width / 4, imageInfo.Height / 2, imageInfo.Height / 2);
-                    loversClipPath.AddCircle((int)(imageInfo.Width / 1.3333f), imageInfo.Height / 2, imageInfo.Height / 2);
+                    loversClipPath.AddCircle(imageInfo.Width / 4f, imageInfo.Height / 2f, imageInfo.Height / 2f);
+                    loversClipPath.AddCircle((int)(imageInfo.Width / 1.3333f), imageInfo.Height / 2f, imageInfo.Height / 2f);
         
                     //Save canvas state.
                     surface.Canvas.Save();
@@ -352,12 +352,12 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
                     {
                         Left = 0,
                         Top = 0,
-                        Right = imageInfo.Width / 2,
+                        Right = imageInfo.Width / 2f,
                         Bottom = imageInfo.Height
                     };
                     SKRect secondUserRect = new SKRect()
                     {
-                        Left = imageInfo.Width / 2,
+                        Left = imageInfo.Width / 2f,
                         Top = 0,
                         Right = imageInfo.Width,
                         Bottom = imageInfo.Height
@@ -451,8 +451,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 
         await DeferAsync();
         
-        UrbanDefinitionList urbanDefinitions = null;
-        urbanDefinitions = await GetUrbanDefinitionAsync(searchParameters);
+        UrbanDefinitionList? urbanDefinitions = await GetUrbanDefinitionAsync(searchParameters);
         
         if (urbanDefinitions == null || urbanDefinitions.List.Count == 0)
             return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{Term}\"!");
@@ -481,22 +480,22 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             
         replyEmbed.WithUrl(chosenDefinition.Permalink);
         
-        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
     }
         
-    public async Task<UrbanDefinitionList> GetUrbanDefinitionAsync(UrbanSearchParameters SearchParameters)
+    public async Task<UrbanDefinitionList?> GetUrbanDefinitionAsync(UrbanSearchParameters SearchParameters)
     {
         string queryString = SearchParameters.ToQueryString();
-        string jsonReply = string.Empty;
+        string jsonReply;
         
         using (HttpResponseMessage responseMessage = await FunService.FunHttpClient.GetAsync($"https://api.urbandictionary.com/v0/define?{queryString}"))
         {
             jsonReply = await responseMessage.Content.ReadAsStringAsync();
         }
         
-        UrbanDefinitionList definitionReply = JsonConvert.DeserializeObject<UrbanDefinitionList>(jsonReply);
+        UrbanDefinitionList? definitionReply = JsonConvert.DeserializeObject<UrbanDefinitionList>(jsonReply);
         
         return definitionReply;
     }
