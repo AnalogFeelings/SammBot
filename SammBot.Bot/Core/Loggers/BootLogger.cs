@@ -29,11 +29,11 @@ namespace SammBot.Bot.Core;
 /// </summary>
 public class BootLogger
 {
-    private object LogLock = new object();
+    private object _LogLock = new object();
 
     public void Log(string Message, LogSeverity Severity)
     {
-        lock (LogLock)
+        lock (_LogLock)
         {
             string assembledMessage = "[".Pastel(Color.White);
 
