@@ -74,7 +74,7 @@ public class CommandHandler
 
             if (!Result.IsSuccess)
             {
-                string finalMessage = string.Empty;
+                string finalMessage;
 
                 EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed((ShardedInteractionContext)Context);
                 replyEmbed.Title = "\u26A0 An error has occurred.";
@@ -107,11 +107,11 @@ public class CommandHandler
 
                 if (Context.Interaction.HasResponded)
                 {
-                    await Context.Interaction.FollowupAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
+                    await Context.Interaction.FollowupAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
                 }
                 else
                 {
-                    await Context.Interaction.RespondAsync(null, embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
+                    await Context.Interaction.RespondAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
                 }
             }
         }
