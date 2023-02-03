@@ -40,7 +40,7 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f51e")]
 public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    public NsfwService NsfwService { get; set; }
+    public HttpService HttpService { get; set; }
     public InteractiveService InteractiveService { get; set; }
     
     [SlashCommand("r34", "Gets a list of images from rule34.")]
@@ -62,8 +62,7 @@ public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
 
         await DeferAsync();
 
-        List<Rule34Post>? nsfwPosts;
-        using (Context.Channel.EnterTypingState()) nsfwPosts = await GetRule34PostsAsync(searchParameters);
+        List<Rule34Post>? nsfwPosts = await HttpService.GetObjectFromJsonAsync<List<Rule34Post>>("https://api.rule34.xxx/index.php?page=dapi&s=post&q=index", searchParameters);
         
         if(nsfwPosts == null || nsfwPosts.Count == 0)
             return ExecutionResult.FromError("Rule34 returned no posts! The API could be down for maintenance, or one of your tags is invalid.");
@@ -122,18 +121,5 @@ public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
                 .WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[Index].Id}")
                 .WithImageUrl(filteredPosts[Index].FileUrl);
         }
-    }
-    
-    private async Task<List<Rule34Post>?> GetRule34PostsAsync(Rule34SearchParameters SearchParameters)
-    {
-        string queryString = SearchParameters.ToQueryString();
-        string jsonReply;
-
-        using (HttpResponseMessage response = await NsfwService.NsfwClient.GetAsync($"https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&{queryString}"))
-        {
-            jsonReply = await response.Content.ReadAsStringAsync();
-        }
-
-        return JsonConvert.DeserializeObject<List<Rule34Post>>(jsonReply);
     }
 }
