@@ -28,7 +28,6 @@ using Discord;
 using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
 using SammBot.Bot.Attributes;
-using SammBot.Bot.Classes;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Bot.Extensions;
@@ -70,8 +69,8 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
 
             foreach (PropertyInfo property in propertyList)
             {
-                string valueString = string.Empty;
-                object propertyValue = property.GetValue(serverSettings, null);
+                string valueString;
+                object? propertyValue = property.GetValue(serverSettings, null);
 
                 // Property is a collection.
                 // String is an IEnumerable too, so check for that.
@@ -79,9 +78,9 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
                 {
                     valueString = string.Join(", ", propertyValue);
                 }
-                else valueString = propertyValue.ToString();
+                else valueString = propertyValue!.ToString()!; // ???
                     
-                PrettyName propertyFullName = property.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(PrettyName)) as PrettyName;
+                PrettyName? propertyFullName = property.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(PrettyName)) as PrettyName;
                 // Small blue diamond emoji.
                 string propertyName = "\U0001f539 ";
 
@@ -98,7 +97,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
             }
         }
             
-        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -114,8 +113,8 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
     {
         if (SettingName == "GuildId") return ExecutionResult.FromError("You cannot modify this setting.");
 
-        PropertyInfo targetProperty = typeof(GuildConfig).GetProperty(SettingName);
-        object newValue = null;
+        PropertyInfo? targetProperty = typeof(GuildConfig).GetProperty(SettingName);
+        object? newValue;
             
         if (targetProperty == null) return ExecutionResult.FromError("This setting does not exist! Check your spelling.");
             
@@ -123,7 +122,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id);
+            GuildConfig? serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id);
                 
             if (serverSettings == default(GuildConfig))
             {
@@ -153,7 +152,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.Description = $"Successfully set setting **{SettingName}** to value `{newValue}`.";
         replyEmbed.WithColor(119, 178, 85);
             
-        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
             
         return ExecutionResult.Succesful();
     }
