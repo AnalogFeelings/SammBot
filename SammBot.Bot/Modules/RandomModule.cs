@@ -42,6 +42,7 @@ namespace SammBot.Bot.Modules;
 public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 {
     public RandomService RandomService { get; set; }
+    public HttpService HttpService { get; set; }
 
     [SlashCommand("cat", "Returns a random cat!")]
     [DetailedDescription("Gets a random cat image from The Cat API!")]
@@ -121,14 +122,8 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     public async Task<RuntimeResult> GetFoxAsync()
     {
         await DeferAsync();
-            
-        string jsonReply;
-        using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://randomfox.ca/floof/"))
-        {
-            jsonReply = await responseMessage.Content.ReadAsStringAsync();
-        }
 
-        FoxImage? repliedImage = JsonConvert.DeserializeObject<FoxImage>(jsonReply);
+        FoxImage? repliedImage = await HttpService.GetObjectFromJsonAsync<FoxImage>("https://randomfox.ca/floof/");
 
         if (repliedImage == null)
             return ExecutionResult.FromError("Could not retrieve a fox image! The service may be unavailable.");
@@ -150,14 +145,8 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     public async Task<RuntimeResult> GetDuckAsync()
     {
         await DeferAsync();
-            
-        string jsonReply;
-        using (HttpResponseMessage responseMessage = await RandomService.RandomClient.GetAsync("https://random-d.uk/api/v2/random"))
-        {
-            jsonReply = await responseMessage.Content.ReadAsStringAsync();
-        }
 
-        DuckImage? repliedImage = JsonConvert.DeserializeObject<DuckImage>(jsonReply);
+        DuckImage? repliedImage = await HttpService.GetObjectFromJsonAsync<DuckImage>("https://random-d.uk/api/v2/random");
         
         if (repliedImage == null)
             return ExecutionResult.FromError("Could not retrieve a duck image! The service may be unavailable.");
