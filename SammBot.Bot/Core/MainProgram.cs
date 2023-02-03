@@ -179,7 +179,6 @@ public class MainProgram
             .AddSingleton<RandomService>()
             .AddSingleton<AdminService>()
             .AddSingleton<UtilsService>()
-            .AddSingleton<NsfwService>()
             .AddSingleton<EventLoggingService>();
     }
 }
