@@ -58,7 +58,7 @@ public class BotGlobals
         Environment.Exit(0);
     }
         
-    private static BotGlobals _PrivateInstance;
+    private static BotGlobals? _PrivateInstance;
     public static BotGlobals Instance
     {
         get
