@@ -21,7 +21,6 @@
 using Discord;
 using Discord.WebSocket;
 using Newtonsoft.Json;
-using SammBot.Bot.Classes;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.IO;
@@ -53,13 +52,12 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(3, 2)]
     public async Task<RuntimeResult> VisualizeColorHex([Summary(description: "The color you want to visualize, in hexadecimal format.")] string HexColor)
     {
-        string fileName = "colorView.png";
-        SKColor parsedColor;
+        const string fileName = "colorView.png";
 
         SKImageInfo imageInfo = new SKImageInfo(512, 512);
         using (SKSurface surface = SKSurface.Create(imageInfo))
         {
-            parsedColor = SKColor.Parse(HexColor);
+            SKColor parsedColor = SKColor.Parse(HexColor);
 
             surface.Canvas.Clear(parsedColor);
 
@@ -116,13 +114,12 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         [Summary(description: "The amount of green. Ranges between 0 to 255.")] byte Green,
         [Summary(description: "The amount of blue. Ranges between 0 to 255.")] byte Blue)
     {
-        string fileName = "colorView.png";
-        SKColor parsedColor;
+        const string fileName = "colorView.png";
+        
         SKImageInfo imageInfo = new SKImageInfo(512, 512);
-            
         using (SKSurface surface = SKSurface.Create(imageInfo))
         {
-            parsedColor = new SKColor(Red, Green, Blue);
+            SKColor parsedColor = new SKColor(Red, Green, Blue);
             surface.Canvas.Clear(parsedColor);
 
             using (SKPaint paint = new SKPaint())
@@ -203,7 +200,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
                 replyEmbed.ImageUrl = serverAvatar;
 
-                await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
                 return ExecutionResult.Succesful();
             }
@@ -215,7 +212,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
         replyEmbed.ImageUrl = userAvatar;
 
-        await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -326,7 +323,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
         replyEmbed.Description = embedDescription;
 
-        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
