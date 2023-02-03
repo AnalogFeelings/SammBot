@@ -20,7 +20,6 @@
 
 using System;
 using Discord;
-using SammBot.Bot.Classes;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
@@ -42,12 +41,12 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(1, 3)]
     [HideInHelp]
     public async Task<RuntimeResult> HelpAsync([Summary(description: "Leave empty to list all modules. " +
-                                                                     "Add a command name to list help for that command.")] string ModuleName = null)
+                                                                     "Add a command name to list help for that command.")] string? ModuleName = null)
     {
         // Hoh boy, this is QUITE a bumpy ride. Be ready!
         await DeferAsync();
 
-        EmbedBuilder replyEmbed = null;
+        EmbedBuilder replyEmbed;
 
         // User passed a module name and probably command name too.
         if (ModuleName != null)
@@ -69,7 +68,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                     
                 PrettyName moduleName = moduleInfo.Attributes.First(x => x is PrettyName) as PrettyName;
 
-                string moduleHeader = $"**{stringifiedEmoji}{moduleName.Name}**\n" +
+                string moduleHeader = $"**{stringifiedEmoji}{moduleName!.Name}**\n" +
                                       $"{moduleInfo.Description}\n" +
                                       $"**Syntax**: `/{moduleInfo.SlashGroupName} <Command Name>`";
 
@@ -112,7 +111,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
 
                 // Get command description, if any.
                 DetailedDescription commandDescription = searchResult.Attributes.FirstOrDefault(x => x is DetailedDescription) as DetailedDescription;
-                string formattedDescription = string.Empty;
+                string formattedDescription;
 
                 if (commandDescription != default(DetailedDescription) && !string.IsNullOrEmpty(commandDescription.Description))
                     formattedDescription = commandDescription.Description;
@@ -133,7 +132,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
 
                 // Get command cooldown information.
                 RateLimit commandRateLimit = searchResult.Preconditions.FirstOrDefault(x => x is RateLimit) as RateLimit;
-                string rateLimitString = string.Empty;
+                string rateLimitString;
 
                 if (commandRateLimit == default(RateLimit))
                 {
@@ -157,7 +156,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                     string summaryString = "No summary.";
 
                     if (!parameterInfo.IsRequired) additionalSymbols += "*";
-                    if (parameterInfo.DefaultValue != null) defaultValue = parameterInfo.DefaultValue.ToString();
+                    if (parameterInfo.DefaultValue != null) defaultValue = parameterInfo.DefaultValue.ToString()!;
                     if (!string.IsNullOrEmpty(parameterInfo.Description)) summaryString = parameterInfo.Description;
 
                     commandParameters += $"[**{typeName}**{additionalSymbols}] `{parameterInfo.Name}`\n";
@@ -202,7 +201,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                     PrettyName moduleName = moduleInfo.Attributes.First(x => x is PrettyName) as PrettyName;
 
                     // Build the embed field.
-                    string moduleHeader = $"{stringifiedEmoji}{moduleName.Name}\n" +
+                    string moduleHeader = $"{stringifiedEmoji}{moduleName!.Name}\n" +
                                           $"(Group: `{moduleInfo.SlashGroupName}`)";
                     string moduleDescription = string.IsNullOrEmpty(moduleInfo.Description) ? "No description." : moduleInfo.Description;
 
@@ -211,7 +210,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
             }
         }
             
-        await FollowupAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
