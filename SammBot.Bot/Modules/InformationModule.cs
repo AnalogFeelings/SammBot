@@ -21,7 +21,6 @@
 using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
-using SammBot.Bot.Classes;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -56,7 +55,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
             BotGlobals.Instance.RuntimeStopwatch.Elapsed.Minutes);
         long memoryUsage = Process.GetCurrentProcess().PrivateMemorySize64 / 1000000;
 
-        string releaseConfig = "Unknown";
+        string releaseConfig;
 #if DEBUG
         releaseConfig = "Debug";
 #elif RELEASE
@@ -85,7 +84,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.AddField("\U0001f5a5\uFE0F Host System", FriendlySystemName(), true);
         replyEmbed.AddField("\U0001f4ca Working Set", $"{memoryUsage} megabytes", true);
 
-        await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -131,7 +130,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.AddField("\U0001f465 Member Count", memberCount, true);
         replyEmbed.AddField("\U0001f4e6 Role Count", roleCount, true);
 
-        await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -140,9 +139,9 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
     [DetailedDescription("Gets all the information about the provided user.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> UserInfoAsync([Summary(description: "The user you want to get the information from.")] SocketGuildUser User = null)
+    public async Task<RuntimeResult> UserInfoAsync([Summary(description: "The user you want to get the information from.")] SocketGuildUser? User = null)
     {
-        SocketGuildUser targetUser = User ?? Context.Interaction.User as SocketGuildUser;
+        SocketGuildUser targetUser = User ?? (Context.Interaction.User as SocketGuildUser)!;
 
         string userAvatar = targetUser.GetAvatarOrDefault(2048);
         string userName = targetUser.GetFullUsername();
@@ -150,7 +149,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         string userNickname = targetUser.Nickname ?? "None";
         string isBot = targetUser.IsBot.ToYesNo();
         string isOwner = (Context.Guild.Owner.Id == targetUser.Id).ToYesNo();
-        string joinDate = $"<t:{targetUser.JoinedAt.Value.ToUnixTimeSeconds()}>";
+        string joinDate = $"<t:{targetUser.JoinedAt.Value.ToUnixTimeSeconds()}>"; // ???
         string signUpDate = $"<t:{targetUser.CreatedAt.ToUnixTimeSeconds()}>";
         string boostingSince = targetUser.PremiumSince != null ? $"<t:{targetUser.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
         string roles = targetUser.Roles.Count > 1 ?
@@ -174,16 +173,16 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.AddField("\U0001f44b Join Date", joinDate, true);
         replyEmbed.AddField("\U0001f382 Creation Date", signUpDate, true);
         replyEmbed.AddField("\U0001f680 Booster Since", boostingSince, true);
-        replyEmbed.AddField("\U0001f4e6 Roles", roles, false);
+        replyEmbed.AddField("\U0001f4e6 Roles", roles);
             
-        await RespondAsync(null, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
 
     private string FriendlySystemName()
     {
-        string osName = string.Empty;
+        string osName;
         Version version = Environment.OSVersion.Version;
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
