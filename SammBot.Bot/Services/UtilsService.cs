@@ -29,6 +29,6 @@ public class UtilsService
 
     public UtilsService()
     {
-        WeatherClient = new HttpClient() { BaseAddress = new Uri("http://api.openweathermap.org/") };
+        WeatherClient = new HttpClient() { BaseAddress = new Uri("https://api.openweathermap.org/") };
     }
 }
