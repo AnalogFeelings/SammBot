@@ -172,6 +172,7 @@ public class MainProgram
     {
         Services.AddSingleton(_ShardedClient)
             .AddSingleton(_InteractionService)
+            .AddSingleton<HttpService>()
             .AddSingleton<CommandHandler>()
             .AddSingleton<InteractiveService>()
             .AddSingleton<StartupService>()
