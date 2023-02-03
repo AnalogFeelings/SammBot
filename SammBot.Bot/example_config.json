@@ -10,6 +10,7 @@
   "TwitchUrl": null,
   "OwnerUserId": null,
   "CommandLogFormat": "User @{0} is executing a command at channel #{1}.",
+  "HttpUserAgent": "My User Agent",
   "AvatarRotationTime": 1,
   "AvatarRecentQueueSize": 10, 
   "MessageCacheSize": 2000,
