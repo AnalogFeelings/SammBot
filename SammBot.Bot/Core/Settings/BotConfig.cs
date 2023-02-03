@@ -27,7 +27,7 @@ namespace SammBot.Bot.Core;
 public class BotConfig
 {
     public delegate void TagDistanceModifiedEventHandler(object Sender, EventArgs Args);
-    public event TagDistanceModifiedEventHandler TagDistanceModified;
+    public event TagDistanceModifiedEventHandler? TagDistanceModified;
         
     private int _TagDistance = 3;
         
@@ -42,11 +42,11 @@ public class BotConfig
     }
 
     public delegate void MagicBallAnswersModifiedEventHandler(object Sender, EventArgs Args);
-    public event MagicBallAnswersModifiedEventHandler MagicBallAnswersModified;
+    public event MagicBallAnswersModifiedEventHandler? MagicBallAnswersModified;
 
-    private List<string> _MagicBallAnswers = null;
+    private List<string>? _MagicBallAnswers;
 
-    public List<string> MagicBallAnswers
+    public List<string>? MagicBallAnswers
     {
         get => _MagicBallAnswers;
         set
@@ -57,11 +57,11 @@ public class BotConfig
     }
 
     public delegate void HugKaomojisModifiedEventHandler(object Sender, EventArgs Args);
-    public event HugKaomojisModifiedEventHandler HugKaomojisModified;
+    public event HugKaomojisModifiedEventHandler? HugKaomojisModified;
 
-    private List<string> _HugKaomojis = null;
+    private List<string>? _HugKaomojis;
 
-    public List<string> HugKaomojis
+    public List<string>? HugKaomojis
     {
         get => _HugKaomojis;
         set
@@ -72,11 +72,11 @@ public class BotConfig
     }
 
     public delegate void KillMessagesModifiedEventHandler(object Sender, EventArgs Args);
-    public event KillMessagesModifiedEventHandler KillMessagesModified;
+    public event KillMessagesModifiedEventHandler? KillMessagesModified;
 
-    private List<string> _KillMessages = null;
+    private List<string>? _KillMessages;
 
-    public List<string> KillMessages
+    public List<string>? KillMessages
     {
         get => _KillMessages;
         set
@@ -87,11 +87,11 @@ public class BotConfig
     }
 
     public delegate void StatusListModifiedEventHandler(object Sender, EventArgs Args);
-    public event StatusListModifiedEventHandler StatusListModified;
+    public event StatusListModifiedEventHandler? StatusListModified;
 
-    private List<BotStatus> _StatusList = null;
+    private List<BotStatus>? _StatusList;
 
-    public List<BotStatus> StatusList
+    public List<BotStatus>? StatusList
     {
         get => _StatusList;
         set
@@ -102,9 +102,9 @@ public class BotConfig
     }
 
     public delegate void OnlyOwnerModeModifiedEventHandler(object Sender, EventArgs Args);
-    public event OnlyOwnerModeModifiedEventHandler OnlyOwnerModeModified;
+    public event OnlyOwnerModeModifiedEventHandler? OnlyOwnerModeModified;
 
-    private bool _OnlyOwnerMode = false;
+    private bool _OnlyOwnerMode;
 
     public bool OnlyOwnerMode
     {
@@ -117,11 +117,11 @@ public class BotConfig
     }
 
     public delegate void ShipBarStartEmptyModifiedEventHandler(object Sender, EventArgs Args);
-    public event ShipBarStartEmptyModifiedEventHandler ShipBarStartEmptyModified;
+    public event ShipBarStartEmptyModifiedEventHandler? ShipBarStartEmptyModified;
 
-    private string _ShipBarStartEmpty = null;
+    private string? _ShipBarStartEmpty;
 
-    public string ShipBarStartEmpty
+    public string? ShipBarStartEmpty
     {
         get => _ShipBarStartEmpty;
         set
@@ -132,11 +132,11 @@ public class BotConfig
     }
 
     public delegate void ShipBarStartFullModifiedEventHandler(object Sender, EventArgs Args);
-    public event ShipBarStartFullModifiedEventHandler ShipBarStartFullModified;
+    public event ShipBarStartFullModifiedEventHandler? ShipBarStartFullModified;
 
-    private string _ShipBarStartFull = null;
+    private string? _ShipBarStartFull;
 
-    public string ShipBarStartFull
+    public string? ShipBarStartFull
     {
         get => _ShipBarStartFull;
         set
@@ -147,11 +147,11 @@ public class BotConfig
     }
 
     public delegate void ShipBarHalfEmptyModifiedEventHandler(object Sender, EventArgs Args);
-    public event ShipBarHalfEmptyModifiedEventHandler ShipBarHalfEmptyModified;
+    public event ShipBarHalfEmptyModifiedEventHandler? ShipBarHalfEmptyModified;
 
-    private string _ShipBarHalfEmpty = null;
+    private string? _ShipBarHalfEmpty;
 
-    public string ShipBarHalfEmpty
+    public string? ShipBarHalfEmpty
     {
         get => _ShipBarHalfEmpty;
         set
@@ -162,11 +162,11 @@ public class BotConfig
     }
 
     public delegate void ShipBarHalfFullModifiedEventHandler(object Sender, EventArgs Args);
-    public event ShipBarHalfFullModifiedEventHandler ShipBarHalfFullModified;
+    public event ShipBarHalfFullModifiedEventHandler? ShipBarHalfFullModified;
 
-    private string _ShipBarHalfFull = null;
+    private string? _ShipBarHalfFull;
 
-    public string ShipBarHalfFull
+    public string? ShipBarHalfFull
     {
         get => _ShipBarHalfFull;
         set
@@ -177,11 +177,11 @@ public class BotConfig
     }
 
     public delegate void ShipBarEndEmptyModifiedEventHandler(object Sender, EventArgs Args);
-    public event ShipBarEndEmptyModifiedEventHandler ShipBarEndEmptyModified;
+    public event ShipBarEndEmptyModifiedEventHandler? ShipBarEndEmptyModified;
 
-    private string _ShipBarEndEmpty = null;
+    private string? _ShipBarEndEmpty;
 
-    public string ShipBarEndEmpty
+    public string? ShipBarEndEmpty
     {
         get => _ShipBarEndEmpty;
         set
@@ -192,11 +192,11 @@ public class BotConfig
     }
 
     public delegate void ShipBarEndFullModifiedEventHandler(object Sender, EventArgs Args);
-    public event ShipBarEndFullModifiedEventHandler ShipBarEndFullModified;
+    public event ShipBarEndFullModifiedEventHandler? ShipBarEndFullModified;
 
-    private string _ShipBarEndFull = null;
+    private string? _ShipBarEndFull;
 
-    public string ShipBarEndFull
+    public string? ShipBarEndFull
     {
         get => _ShipBarEndFull;
         set
@@ -207,7 +207,7 @@ public class BotConfig
     }
 
     public delegate void RotatingStatusModifiedEventHandler(object Sender, EventArgs Args);
-    public event RotatingStatusModifiedEventHandler RotatingStatusModified;
+    public event RotatingStatusModifiedEventHandler? RotatingStatusModified;
 
     private bool _RotatingStatus = true;
 
@@ -222,7 +222,7 @@ public class BotConfig
     }
 
     public delegate void RotatingAvatarModifiedEventHandler(object Sender, EventArgs Args);
-    public event RotatingAvatarModifiedEventHandler RotatingAvatarModified;
+    public event RotatingAvatarModifiedEventHandler? RotatingAvatarModified;
 
     private bool _RotatingAvatar = true;
 
@@ -238,9 +238,9 @@ public class BotConfig
 
     public delegate void WaitForDebuggerModifiedEventHandler(object Sender, EventArgs Args);
 
-    public event WaitForDebuggerModifiedEventHandler WaitForDebuggerModified;
+    public event WaitForDebuggerModifiedEventHandler? WaitForDebuggerModified;
 
-    private bool _WaitForDebugger = false;
+    private bool _WaitForDebugger;
 
     [RequiresReboot]
     public bool WaitForDebugger
@@ -254,7 +254,7 @@ public class BotConfig
     }
 
     public delegate void BotTokenModifiedEventHandler(object Sender, EventArgs Args);
-    public event BotTokenModifiedEventHandler BotTokenModified;
+    public event BotTokenModifiedEventHandler? BotTokenModified;
 
     private string _BotToken = "";
 
@@ -270,7 +270,7 @@ public class BotConfig
     }
 
     public delegate void CatKeyModifiedEventHandler(object Sender, EventArgs Args);
-    public event CatKeyModifiedEventHandler CatKeyModified;
+    public event CatKeyModifiedEventHandler? CatKeyModified;
 
     private string _CatKey = "";
 
@@ -285,7 +285,7 @@ public class BotConfig
     }
 
     public delegate void DogKeyModifiedEventHandler(object Sender, EventArgs Args);
-    public event DogKeyModifiedEventHandler DogKeyModified;
+    public event DogKeyModifiedEventHandler? DogKeyModified;
 
     private string _DogKey = "";
 
@@ -300,7 +300,7 @@ public class BotConfig
     }
 
     public delegate void OpenWeatherKeyModifiedEventHandler(object Sender, EventArgs Args);
-    public event OpenWeatherKeyModifiedEventHandler OpenWeatherKeyModified;
+    public event OpenWeatherKeyModifiedEventHandler? OpenWeatherKeyModified;
 
     private string _OpenWeatherKey = "";
 
@@ -316,7 +316,7 @@ public class BotConfig
 
     public delegate void TwitchUrlModifiedEventHandler(object Sender, EventArgs Args);
 
-    public event TwitchUrlModifiedEventHandler TwitchUrlModified;
+    public event TwitchUrlModifiedEventHandler? TwitchUrlModified;
 
     private string _TwitchUrl = "https://www.twitch.tv/coreaesthetics";
 
@@ -331,7 +331,7 @@ public class BotConfig
     }
 
     public delegate void CommandLogFormatModifiedEventHandler(object Sender, EventArgs Args);
-    public event CommandLogFormatModifiedEventHandler CommandLogFormatModified;
+    public event CommandLogFormatModifiedEventHandler? CommandLogFormatModified;
 
     private string _CommandLogFormat = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
 
@@ -346,7 +346,7 @@ public class BotConfig
     }
 
     public delegate void AvatarRotationTimeModifiedEventHandler(object Sender, EventArgs Args);
-    public event AvatarRotationTimeModifiedEventHandler AvatarRotationTimeModified;
+    public event AvatarRotationTimeModifiedEventHandler? AvatarRotationTimeModified;
 
     private int _AvatarRotationTime = 1;
 
@@ -361,7 +361,7 @@ public class BotConfig
     }
 
     public delegate void AvatarRecentQueueSizeModifiedEventHandler(object Sender, EventArgs Args);
-    public event AvatarRecentQueueSizeModifiedEventHandler AvatarRecentQueueModified;
+    public event AvatarRecentQueueSizeModifiedEventHandler? AvatarRecentQueueModified;
 
     private int _AvatarRecentQueueSize = 10;
 
@@ -376,7 +376,7 @@ public class BotConfig
     }
 
     public delegate void MessageCacheSizeModifiedEventHandler(object Sender, EventArgs Args);
-    public event MessageCacheSizeModifiedEventHandler MessageCacheSizeModified;
+    public event MessageCacheSizeModifiedEventHandler? MessageCacheSizeModified;
 
     private int _MessageCacheSize = 2000;
 
