@@ -49,7 +49,7 @@ public class Logger
         InteractionService.Log += LogAsync;
     }
 
-    public void Log(string Message, LogSeverity Severity)
+    public void Log(string? Message, LogSeverity Severity)
     {
         if(Message != null)
             _LoggerInstance.Log(Message, Severity);
