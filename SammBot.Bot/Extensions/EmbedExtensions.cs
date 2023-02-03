@@ -19,7 +19,6 @@
 #endregion
 
 using Discord;
-using Discord.Commands;
 using SammBot.Bot.Core;
 using System;
 using Discord.Interactions;
