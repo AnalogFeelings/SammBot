@@ -345,6 +345,22 @@ public class BotConfig
         }
     }
 
+    public delegate void HttpUserAgentModifiedEventHandler(object Sender, EventArgs Args);
+
+    public event HttpUserAgentModifiedEventHandler? HttpUserAgentModified;
+
+    private string _HttpUserAgent = "Placeholder User Agent (.NET Application)";
+
+    public string HttpUserAgent
+    {
+        get => _HttpUserAgent;
+        set
+        {
+            _HttpUserAgent = value;
+            HttpUserAgentModified?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     public delegate void AvatarRotationTimeModifiedEventHandler(object Sender, EventArgs Args);
     public event AvatarRotationTimeModifiedEventHandler? AvatarRotationTimeModified;
 
