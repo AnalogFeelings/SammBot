@@ -44,7 +44,7 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f527")]
 public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    public UtilsService UtilsService { get; set; }
+    public HttpService HttpService { get; set; }
 
     [SlashCommand("viewhex", "Displays a HEX color, and converts it in other formats.")]
     [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
@@ -223,14 +223,32 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     public async Task<RuntimeResult> GetWeatherAsync([Summary(description: "The name of the city you want to get the weather forecast for.")] string City)
     {
         await DeferAsync();
+        
+        GeolocationParameters geolocationParameters = new GeolocationParameters()
+        {
+            Location = City,
+            AppId = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
+            Limit = 1,
+        };
             
-        List<GeolocationLocation>? retrievedLocations = await GetWeatherLocationsAsync(City);
+        List<GeolocationLocation>? retrievedLocations = await HttpService.GetObjectFromJsonAsync<List<GeolocationLocation>>("https://api.openweathermap.org/geo/1.0/direct",
+            geolocationParameters);
+        
         if (retrievedLocations == null || retrievedLocations.Count == 0)
             return ExecutionResult.FromError("That location does not exist, or the weather service is currently unavailable.");
 
         GeolocationLocation finalLocation = retrievedLocations.First();
         
-        CompleteForecast? retrievedWeather = await GetCurrentWeatherAsync(finalLocation);
+        WeatherParameters weatherParameters = new WeatherParameters()
+        {
+            Latitude = finalLocation.Latitude,
+            Longitude = finalLocation.Longitude,
+            AppId = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
+            Units = "metric"
+        };
+
+        CompleteForecast? retrievedWeather = await HttpService.GetObjectFromJsonAsync<CompleteForecast>("https://api.openweathermap.org/data/2.5/weather", weatherParameters);
+        
         if (retrievedWeather == null)
             return ExecutionResult.FromError("There is no weather forecast for that area, or the weather service is currently unavailable.");
         
@@ -326,48 +344,5 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
-    }
-
-    private async Task<List<GeolocationLocation>?> GetWeatherLocationsAsync(string City)
-    {
-        GeolocationParameters geolocationParameters = new GeolocationParameters()
-        {
-            Location = City,
-            AppId = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
-            Limit = 1,
-        };
-        string locationQuery = geolocationParameters.ToQueryString();
-
-        string locationReply;
-        using (HttpResponseMessage responseMessage = await UtilsService.WeatherClient.GetAsync($"geo/1.0/direct?{locationQuery}"))
-        {
-            locationReply = await responseMessage.Content.ReadAsStringAsync();
-        }
-        
-        List<GeolocationLocation>? retrievedLocations = JsonConvert.DeserializeObject<List<GeolocationLocation>>(locationReply);
-
-        return retrievedLocations;
-    }
-
-    private async Task<CompleteForecast?> GetCurrentWeatherAsync(GeolocationLocation Location)
-    {
-        WeatherParameters weatherParams = new WeatherParameters()
-        {
-            Latitude = Location.Latitude,
-            Longitude = Location.Longitude,
-            AppId = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
-            Units = "metric"
-        };
-        string weatherQuery = weatherParams.ToQueryString();
-
-        string weatherReply;
-        using (HttpResponseMessage responseMessage = await UtilsService.WeatherClient.GetAsync($"data/2.5/weather?{weatherQuery}"))
-        {
-            weatherReply = await responseMessage.Content.ReadAsStringAsync();
-        }
-        
-        CompleteForecast? retrievedWeather = JsonConvert.DeserializeObject<CompleteForecast>(weatherReply);
-
-        return retrievedWeather;
     }
 }
