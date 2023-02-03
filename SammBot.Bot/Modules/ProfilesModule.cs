@@ -18,11 +18,8 @@
  */
 #endregion
 
-using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Classes;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
@@ -104,9 +101,10 @@ public class ProfilesModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("getpronouns", "Get the pronouns of a user!")]
     [DetailedDescription("Gets the pronoun information about a user!")]
     [RateLimit(3, 2)]
-    public async Task<RuntimeResult> GetPronounsAsync([Summary(description: "The user you want to get the pronouns of.")] SocketGuildUser User = null)
+    [RequireContext(ContextType.Guild)]
+    public async Task<RuntimeResult> GetPronounsAsync([Summary(description: "The user you want to get the pronouns of.")] SocketGuildUser? User = null)
     {
-        SocketGuildUser targetUser = User ?? Context.Interaction.User as SocketGuildUser;
+        SocketGuildUser targetUser = User ?? (Context.Interaction.User as SocketGuildUser)!;
 
         await DeferAsync();
 
