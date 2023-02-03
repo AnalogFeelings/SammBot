@@ -41,7 +41,7 @@ namespace SammBot.Bot.Modules;
 public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
 {
     [SlashCommand("delete", "Deletes a user tag.")]
-    [DetailedDescription("Delets a user tag that you own.")]
+    [DetailedDescription("Delets a user tag that you own. If you have permission to manage messages in the server, you can delete any tag without owning it.")]
     [RateLimit(3, 2)]
     [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> DeleteTagAsync([Summary(description: "Self-explanatory.")] string Name)
