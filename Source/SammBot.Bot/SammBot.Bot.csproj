@@ -27,6 +27,7 @@
     <Compile Remove="Source\obj\**" />
     <EmbeddedResource Remove="Source\obj\**" />
     <None Remove="Source\obj\**" />
+    <None Remove="SammBot.Bot.csproj.DotSettings" />
   </ItemGroup>
 
   <ItemGroup>
