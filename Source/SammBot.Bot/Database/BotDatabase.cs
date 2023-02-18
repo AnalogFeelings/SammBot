@@ -42,7 +42,7 @@ public class BotDatabase : DbContext
             
         ModelBuilder.Entity<GuildConfig>().Property(x => x.EnableWelcome).HasDefaultValue(false);
         ModelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeChannel).HasDefaultValue(0);
-        ModelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeMessage).HasDefaultValue("{0}, welcome to {1}! Remember to read the rules before chatting!");
+        ModelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeMessage).HasDefaultValue("%usermention%, welcome to %servername%! Remember to read the rules before chatting!");
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder OptionsBuilder)
