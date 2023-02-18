@@ -30,8 +30,9 @@ public class SettingsManager
     public BotConfig LoadedConfig = new BotConfig();
 
     public const string BOT_NAME = "Samm-Bot";
-    public const string BOT_CONFIG_FOLDER = "Bot";
     public const string CONFIG_FILE = "config.json";
+    
+    private const string _BOT_CONFIG_FOLDER = "Bot";
 
     public readonly string BotDataDirectory;
 
@@ -39,7 +40,7 @@ public class SettingsManager
     {
         string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-        BotDataDirectory = Path.Combine(appData, BOT_NAME, BOT_CONFIG_FOLDER);
+        BotDataDirectory = Path.Combine(appData, BOT_NAME, _BOT_CONFIG_FOLDER);
     }
 
     public bool LoadConfiguration()
@@ -61,9 +62,7 @@ public class SettingsManager
         
         LoadedConfig = JsonConvert.DeserializeObject<BotConfig>(configContent);
 
-        if (LoadedConfig == null) return false;
-
-        return true;
+        return LoadedConfig != null;
     }
 
     public static string GetBotVersion()
