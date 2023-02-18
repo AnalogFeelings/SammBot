@@ -153,9 +153,11 @@ public class CommandHandler
 
             if (Interaction.User.Id != botApplication.Owner.Id) return;
         }
-            
-        BotLogger.Log(string.Format(SettingsManager.Instance.LoadedConfig.CommandLogFormat,
-            Interaction.User.GetFullUsername(), Interaction.Channel.Name), LogSeverity.Debug);
+
+        string formattedLog = SettingsManager.Instance.LoadedConfig.CommandLogFormat.Replace("%username%", Interaction.User.GetFullUsername())
+            .Replace("%channelname%", Interaction.Channel.Name);
+        
+        BotLogger.Log(formattedLog, LogSeverity.Debug);
 
         await InteractionService.ExecuteCommandAsync(context, ServiceProvider);
     }
