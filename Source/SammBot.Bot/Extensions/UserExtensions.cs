@@ -23,6 +23,7 @@ using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using SammBot.Bot.Database;
 using System.Threading.Tasks;
+using SammBot.Bot.Database.Models;
 
 namespace SammBot.Bot.Extensions;
 
