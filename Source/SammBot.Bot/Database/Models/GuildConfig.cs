@@ -61,6 +61,6 @@ public class GuildConfig
     public ulong WelcomeChannel { get; set; }
         
     [PrettyName("Welcome Message Template")]
-    [DetailedDescription("The template for the welcome message.\n{0} is the user mention, {1} is the server name.")]
-    public string WelcomeMessage { get; set; } = "{0}, welcome to {1}! Remember to read the rules before chatting!";
+    [DetailedDescription("The template for the welcome message.")]
+    public string WelcomeMessage { get; set; } = "%usermention%, welcome to %servername%! Remember to read the rules before chatting!";
 }
