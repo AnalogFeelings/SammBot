@@ -18,23 +18,20 @@
  */
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using SammBot.Bot.Common.Attributes;
+using Newtonsoft.Json;
 
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Bot.Common.Rest.OpenWeather.Geolocation;
 
-public static class ObjectExtensions
+public class GeolocationLocation
 {
-    public static string ToQueryString(this object TargetObject)
-    {
-        IEnumerable<string> formattedProperties = from p in TargetObject.GetType().GetProperties()
-            where p.GetValue(TargetObject, null) != null
-            where p.GetCustomAttribute<UglyName>() != null
-            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
-
-        return string.Join("&", formattedProperties.ToArray());
-    }
+    [JsonProperty("name")]
+    public string Name { get; set; }
+    [JsonProperty("lat")]
+    public float Latitude { get; set; }
+    [JsonProperty("lon")]
+    public float Longitude { get; set; }
+    [JsonProperty("country")]
+    public string Country { get; set; }
+    [JsonProperty("state")]
+    public string State { get; set; }
 }

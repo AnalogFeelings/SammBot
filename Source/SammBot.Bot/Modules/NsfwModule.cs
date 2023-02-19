@@ -26,11 +26,12 @@ using Discord.Interactions;
 using Fergun.Interactive;
 using Fergun.Interactive.Pagination;
 using Newtonsoft.Json;
-using SammBot.Bot.Attributes;
+using SammBot.Bot.Common;
+using SammBot.Bot.Common.Attributes;
+using SammBot.Bot.Common.Preconditions;
+using SammBot.Bot.Common.Rest.Rule34;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
-using SammBot.Bot.Preconditions;
-using SammBot.Bot.Rest.Rule34;
 using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;

@@ -19,22 +19,19 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using SammBot.Bot.Common.Attributes;
 
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Bot.Common;
 
-public static class ObjectExtensions
+public class AutoDequeueList<T> : LinkedList<T>
 {
-    public static string ToQueryString(this object TargetObject)
-    {
-        IEnumerable<string> formattedProperties = from p in TargetObject.GetType().GetProperties()
-            where p.GetValue(TargetObject, null) != null
-            where p.GetCustomAttribute<UglyName>() != null
-            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
+    private readonly int _MaxSize;
 
-        return string.Join("&", formattedProperties.ToArray());
+    public AutoDequeueList(int MaxSize) => this._MaxSize = MaxSize;
+
+    public void Push(T Item)
+    {
+        this.AddFirst(Item);
+
+        if (this.Count > _MaxSize) this.RemoveLast();
     }
 }

@@ -18,23 +18,14 @@
  */
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using SammBot.Bot.Common.Attributes;
+using System;
 
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Bot.Common.Attributes;
 
-public static class ObjectExtensions
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
+public class DetailedDescription : Attribute
 {
-    public static string ToQueryString(this object TargetObject)
-    {
-        IEnumerable<string> formattedProperties = from p in TargetObject.GetType().GetProperties()
-            where p.GetValue(TargetObject, null) != null
-            where p.GetCustomAttribute<UglyName>() != null
-            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
+    public readonly string Description;
 
-        return string.Join("&", formattedProperties.ToArray());
-    }
+    public DetailedDescription(string Description) => this.Description = Description;
 }

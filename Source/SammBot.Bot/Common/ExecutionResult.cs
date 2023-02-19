@@ -18,23 +18,17 @@
  */
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using SammBot.Bot.Common.Attributes;
+using Discord.Interactions;
 
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Bot.Common;
 
-public static class ObjectExtensions
+public class ExecutionResult : RuntimeResult
 {
-    public static string ToQueryString(this object TargetObject)
-    {
-        IEnumerable<string> formattedProperties = from p in TargetObject.GetType().GetProperties()
-            where p.GetValue(TargetObject, null) != null
-            where p.GetCustomAttribute<UglyName>() != null
-            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
-
-        return string.Join("&", formattedProperties.ToArray());
-    }
+    public ExecutionResult(InteractionCommandError? Error, string Reason) : base(Error, Reason) { }
+        
+    public static ExecutionResult FromError(string Reason) =>
+        new ExecutionResult(InteractionCommandError.Unsuccessful, Reason);
+        
+    public static ExecutionResult Succesful() =>
+        new ExecutionResult(null, "Execution succesful.");
 }

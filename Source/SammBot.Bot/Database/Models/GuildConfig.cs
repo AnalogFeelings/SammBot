@@ -19,7 +19,7 @@
 #endregion
 
 using System.ComponentModel.DataAnnotations;
-using SammBot.Bot.Attributes;
+using SammBot.Bot.Common.Attributes;
 
 namespace SammBot.Bot.Database.Models;
 

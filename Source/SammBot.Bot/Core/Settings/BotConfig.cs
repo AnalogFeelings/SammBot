@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-using SammBot.Bot.Attributes;
+using SammBot.Bot.Common.Attributes;
 
 namespace SammBot.Bot.Core;
 

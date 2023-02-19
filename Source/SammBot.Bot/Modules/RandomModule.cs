@@ -27,11 +27,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Discord.Interactions;
-using SammBot.Bot.Attributes;
+using SammBot.Bot.Common;
+using SammBot.Bot.Common.Attributes;
+using SammBot.Bot.Common.Preconditions;
+using SammBot.Bot.Common.Rest;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
-using SammBot.Bot.Preconditions;
-using SammBot.Bot.Rest;
 using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;

@@ -30,13 +30,14 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Discord.Interactions;
-using SammBot.Bot.Attributes;
+using SammBot.Bot.Common;
+using SammBot.Bot.Common.Attributes;
+using SammBot.Bot.Common.Preconditions;
+using SammBot.Bot.Common.Rest.UrbanDictionary;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Bot.Database.Models;
 using SammBot.Bot.Extensions;
-using SammBot.Bot.Preconditions;
-using SammBot.Bot.Rest.UrbanDictionary;
 using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;

@@ -23,10 +23,11 @@ using Discord;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
-using SammBot.Bot.Attributes;
+using SammBot.Bot.Common;
+using SammBot.Bot.Common.Attributes;
+using SammBot.Bot.Common.Preconditions;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
-using SammBot.Bot.Preconditions;
 
 namespace SammBot.Bot.Modules;
 
