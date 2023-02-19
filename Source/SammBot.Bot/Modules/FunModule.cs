@@ -55,6 +55,30 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         10, 20, 30, 40, 50, 60, 70, 80, 90, 100
     };
 
+    private readonly string[] _MagicBallAnswers = new string[]
+    {
+        "It is certain.",
+        "As I see it, yes.",
+        "Reply hazy, try again.",
+        "Don't count on it.",
+        "It is decidedly so.",
+        "Most likely.",
+        "Ask again later.",
+        "My reply is no.",
+        "Without a doubt.",
+        "Outlook good.",
+        "Better not tell you now.",
+        "My sources say no.",
+        "Yes definitely.",
+        "Yes.",
+        "Cannot predict now.",
+        "Outlook not so good.",
+        "You may rely on it.",
+        "Signs point to yes.",
+        "Concentrate and ask again.",
+        "Very doubtful."
+    };
+
     private const string _TWEMOJI_ASSETS = "https://raw.githubusercontent.com/twitter/twemoji/ad3d3d669bb3697946577247ebb15818f09c6c91/assets/svg/";
 
     [SlashCommand("8ball", "Ask the magic 8-ball!")]
@@ -62,7 +86,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(2, 1)]
     public async Task<RuntimeResult> MagicBallAsync([Summary(description: "The question you want to ask to the magic 8-ball.")] string Question)
     {
-        string chosenAnswer = SettingsManager.Instance.LoadedConfig.MagicBallAnswers.PickRandom();
+        string chosenAnswer = _MagicBallAnswers.PickRandom();
 
         await RespondAsync($":8ball: Asking the magic 8-ball...\n" +
                            $"**• Question**: {Question}", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
