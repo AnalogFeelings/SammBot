@@ -18,13 +18,10 @@
  */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
-
 namespace SammBot.Bot.Database.Models;
 
-public class Pronoun
+public class Pronoun : DatabaseEntity
 {
-    [Key]
     public ulong UserId { get; set; }
     public string Subject { get; set; }
     public string Object { get; set; }

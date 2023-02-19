@@ -18,7 +18,6 @@
  */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
 using SammBot.Bot.Common.Attributes;
 
 namespace SammBot.Bot.Database.Models;
@@ -31,9 +30,8 @@ public enum WarnLimitAction
 }
 
 // REMINDER: Set these default values in BotDatabase -> OnModelCreating too!
-public class GuildConfig
+public class GuildConfig : DatabaseEntity
 {
-    [Key]
     public ulong GuildId { get; set; }
 
     [PrettyName("Warning Limit")]

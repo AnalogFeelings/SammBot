@@ -22,10 +22,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SammBot.Bot.Database.Models;
 
-public class UserWarning
+public class UserWarning : DatabaseEntity
 {
-    [Key]
-    public string Id { get; set; }
     public ulong UserId { get; set; }
     public ulong GuildId { get; set; }
     public string Reason { get; set; }

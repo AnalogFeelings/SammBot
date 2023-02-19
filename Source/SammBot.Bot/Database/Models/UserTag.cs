@@ -22,10 +22,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SammBot.Bot.Database.Models;
 
-public class UserTag
+public class UserTag : DatabaseEntity
 {
-    [Key]
-    public string Id { get; set; }
     public string Name { get; set; }
     public string Reply { get; set; }
     public ulong AuthorId { get; set; }

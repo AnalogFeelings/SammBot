@@ -104,17 +104,15 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            Guid newGuid = Guid.NewGuid();
-
-            await botDatabase.UserWarnings.AddAsync(new UserWarning
+            UserWarning newWarning = new UserWarning
             {
-                Id = newGuid.ToString(),
                 UserId = TargetUser.Id,
                 GuildId = Context.Guild.Id,
                 Reason = Reason,
                 Date = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
-            });
+            };
 
+            await botDatabase.UserWarnings.AddAsync(newWarning);
             await botDatabase.SaveChangesAsync();
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
@@ -123,7 +121,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             replyEmbed.Description = $"User <@{TargetUser.Id}> has been warned successfully. Details below.\n\n";
 
             replyEmbed.Description += $"**Reason**: {Reason}\n";
-            replyEmbed.Description += $"**Warn ID**: {newGuid}\n\n";
+            replyEmbed.Description += $"**Warn ID**: {newWarning.Id}\n\n";
 
             //DM the user about it.
             try
@@ -132,7 +130,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
                     .WithTitle($"⚠️ You have been warned in \"{Context.Guild.Name}\".").WithColor(new Color(255, 205, 77));
 
                 directMessageEmbed.Description = $"**Reason**: {Reason}\n";
-                directMessageEmbed.Description += $"**Warn ID**: {newGuid}\n\n";
+                directMessageEmbed.Description += $"**Warn ID**: {newWarning.Id}\n\n";
                 directMessageEmbed.Description += $"You may see all of your warnings with the `/mod warns` command.";
 
                 await TargetUser.SendMessageAsync(embed: directMessageEmbed.Build());
@@ -152,7 +150,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Removes the warning with the specified ID.")]
     [RateLimit(1, 2)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> RemoveWarnAsync([Summary(description: "The ID of the warn you want to remove.")] string WarningId)
+    public async Task<RuntimeResult> RemoveWarnAsync([Summary(description: "The ID of the warn you want to remove.")] int WarningId)
     {
         await DeferAsync(true);
             
@@ -210,7 +208,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Lists a warning, and the full reason.")]
     [RateLimit(2, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> ListWarnAsync([Summary(description: "The ID of the warn you want to view.")] string WarningId)
+    public async Task<RuntimeResult> ListWarnAsync([Summary(description: "The ID of the warn you want to view.")] int WarningId)
     {
         await DeferAsync();
             

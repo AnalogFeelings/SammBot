@@ -153,11 +153,8 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             if (tagList.Any(x => x.Name == Name))
                 return ExecutionResult.FromError($"There's already a tag called **\"{Name}\"**!");
 
-            Guid newGuid = Guid.NewGuid();
-
             UserTag newTag = new UserTag
             {
-                Id = newGuid.ToString(),
                 Name = Name,
                 AuthorId = Context.Interaction.User.Id,
                 GuildId = Context.Guild.Id,
