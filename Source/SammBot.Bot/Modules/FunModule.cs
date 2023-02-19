@@ -33,6 +33,7 @@ using Discord.Interactions;
 using SammBot.Bot.Attributes;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
+using SammBot.Bot.Database.Models;
 using SammBot.Bot.Extensions;
 using SammBot.Bot.Preconditions;
 using SammBot.Bot.Rest.UrbanDictionary;
