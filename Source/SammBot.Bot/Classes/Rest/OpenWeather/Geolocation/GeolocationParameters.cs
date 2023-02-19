@@ -20,7 +20,7 @@
 
 using SammBot.Bot.Attributes;
 
-namespace SammBot.Bot.Rest.OpenWeather;
+namespace SammBot.Bot.Rest.OpenWeather.Geolocation;
 
 public class GeolocationParameters
 {
