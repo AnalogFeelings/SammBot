@@ -35,7 +35,6 @@ using SammBot.Bot.Common.Rest.OpenWeather.Forecast;
 using SammBot.Bot.Common.Rest.OpenWeather.Geolocation;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
-using SammBot.Bot.Rest.OpenWeather;
 using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;
