@@ -20,14 +20,15 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace SammBot.Bot.Database;
+namespace SammBot.Bot.Database.Models;
 
-public class UserWarning
+public class UserTag
 {
     [Key]
     public string Id { get; set; }
-    public ulong UserId { get; set; }
+    public string Name { get; set; }
+    public string Reply { get; set; }
+    public ulong AuthorId { get; set; }
     public ulong GuildId { get; set; }
-    public string Reason { get; set; }
-    public long Date { get; set; }
+    public long CreatedAt { get; set; }
 }

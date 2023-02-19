@@ -21,7 +21,7 @@
 using System.ComponentModel.DataAnnotations;
 using SammBot.Bot.Attributes;
 
-namespace SammBot.Bot.Database;
+namespace SammBot.Bot.Database.Models;
 
 public enum WarnLimitAction
 {

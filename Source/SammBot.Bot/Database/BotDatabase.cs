@@ -22,6 +22,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using SammBot.Bot.Core;
 using System.IO;
+using SammBot.Bot.Database.Models;
 
 namespace SammBot.Bot.Database;
 
