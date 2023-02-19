@@ -31,6 +31,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Common;
@@ -43,27 +44,29 @@ namespace SammBot.Bot.Services;
 
 public class StartupService
 {
-    private IServiceProvider _ServiceProvider;
+    private IServiceProvider ServiceProvider { get; set; }
     private DiscordShardedClient ShardedClient { get; set; }
     private InteractionService InteractionService { get; set; }
     private Logger BotLogger { get; set; }
-
+    
+    [UsedImplicitly]
     private Timer? _StatusTimer;
+    [UsedImplicitly]
     private Timer? _AvatarTimer;
 
-    private AutoDequeueList<string> _RecentAvatars;
+    private AutoDequeueList<string> RecentAvatars { get; set; }
 
     private bool _EventsSetUp;
     private int _ShardsReady;
         
     public StartupService(IServiceProvider ServiceProvider, DiscordShardedClient ShardedClient, InteractionService InteractionService, Logger Logger)
     {
-        this._ServiceProvider = ServiceProvider;
+        this.ServiceProvider = ServiceProvider;
         this.ShardedClient = ShardedClient;
         this.InteractionService = InteractionService;
         BotLogger = Logger;
 
-        _RecentAvatars = new AutoDequeueList<string>(SettingsManager.Instance.LoadedConfig.AvatarRecentQueueSize);
+        RecentAvatars = new AutoDequeueList<string>(SettingsManager.Instance.LoadedConfig.AvatarRecentQueueSize);
     }
 
     public async Task StartAsync()
@@ -110,7 +113,7 @@ public class StartupService
         _ = Task.Run(() => WarmUpDatabase());
 
         BotLogger.Log("Initializing command handler...", LogSeverity.Information);
-        await _ServiceProvider.GetRequiredService<CommandHandler>().InitializeHandlerAsync();
+        await ServiceProvider.GetRequiredService<CommandHandler>().InitializeHandlerAsync();
         BotLogger.Log("Succesfully initialized command handler.", LogSeverity.Success);
     }
 
@@ -191,7 +194,7 @@ public class StartupService
         List<string> avatarList = Directory.EnumerateFiles(Path.Combine(SettingsManager.Instance.BotDataDirectory, "Avatars")).ToList();
         if (avatarList.Count < 2) return;
 
-        List<string> filteredList = avatarList.Except(_RecentAvatars).ToList();
+        List<string> filteredList = avatarList.Except(RecentAvatars).ToList();
 
         string chosenAvatar = filteredList.PickRandom();
         BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(chosenAvatar)}\".", LogSeverity.Debug);
@@ -203,6 +206,6 @@ public class StartupService
             await ShardedClient.CurrentUser.ModifyAsync(x => x.Avatar = loadedAvatar);
         }
 
-        _RecentAvatars.Push(chosenAvatar);
+        RecentAvatars.Push(chosenAvatar);
     }
 }
