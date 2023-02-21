@@ -158,16 +158,12 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         replyEmbed.Title = "\u2699\uFE0F Configuration File";
-        replyEmbed.Description = "This is a list of all the bot settings that are safe to display publicly.\n" +
+        replyEmbed.Description = "This is a list of all the bot settings that are safe to display on Discord.\n" +
                                  "Properties with an orange diamond next to their name are marked as not modifiable at runtime.";
         replyEmbed.Color = new Color(102, 117, 127);
 
-        List<PropertyInfo> properties = typeof(BotConfig).GetProperties()
-            .Where(x => !x.PropertyType.IsGenericType &&
-                        x.Name != "CatKey" &&
-                        x.Name != "DogKey" &&
-                        x.Name != "OpenWeatherKey" &&
-                        x.Name != "BotToken").ToList();
+        List<PropertyInfo> properties = typeof(BotConfig).GetProperties().Where(x => !x.PropertyType.IsGenericType && 
+                                                                                     !Attribute.IsDefined(x, typeof(SensitiveSetting))).ToList();
 
         if (!Override)
         {
