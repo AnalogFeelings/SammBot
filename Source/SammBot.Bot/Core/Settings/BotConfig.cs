@@ -49,11 +49,22 @@ public class BotConfig
     public bool WaitForDebugger { get; set; } = false;
     public string TwitchUrl { get; set; } = "https://www.twitch.tv/coreaesthetics";
     public string CommandLogFormat { get; set; } = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
-    public string HttpUserAgent { get; set; } = "Placeholder User Agent (.NET Application)";
+    [SensitiveSetting] public string HttpUserAgent { get; set; } = "Placeholder User Agent (.NET Application)";
 
     // API Tokens
-    [RequiresReboot] public string BotToken { get; set; } = string.Empty;
-    [RequiresReboot] public string CatKey { get; set; } = string.Empty;
-    [RequiresReboot] public string DogKey { get; set; } = string.Empty;
-    [RequiresReboot] public string OpenWeatherKey { get; set; } = string.Empty;
+    [RequiresReboot]
+    [SensitiveSetting]
+    public string BotToken { get; set; } = string.Empty;
+    
+    [RequiresReboot]
+    [SensitiveSetting]
+    public string CatKey { get; set; } = string.Empty;
+    
+    [RequiresReboot]
+    [SensitiveSetting]
+    public string DogKey { get; set; } = string.Empty;
+    
+    [RequiresReboot]
+    [SensitiveSetting]
+    public string OpenWeatherKey { get; set; } = string.Empty;
 }
