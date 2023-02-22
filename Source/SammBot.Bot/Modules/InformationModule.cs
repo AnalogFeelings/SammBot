@@ -28,6 +28,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using JetBrains.Annotations;
 using SammBot.Bot.Common;
 using SammBot.Bot.Common.Attributes;
 using SammBot.Bot.Common.Preconditions;
@@ -41,14 +42,14 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\u2139")]
 public class InformationModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    public DiscordShardedClient ShardedClient { get; set; }
+    [UsedImplicitly]  public DiscordShardedClient ShardedClient { get; init; } = default!;
         
     [SlashCommand("bot", "Shows information about the bot.")]
     [DetailedDescription("Shows information about the bot such as version, uptime, ping, etc...")]
     [RateLimit(3, 1)]
     public async Task<RuntimeResult> InformationFullAsync()
     {
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Information");
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         string elapsedUptime = string.Format("{0:00} days,\n{1:00} hours,\n{2:00} minutes",
             BotGlobals.Instance.RuntimeStopwatch.Elapsed.Days,
@@ -56,11 +57,10 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
             BotGlobals.Instance.RuntimeStopwatch.Elapsed.Minutes);
         long memoryUsage = Process.GetCurrentProcess().PrivateMemorySize64 / 1000000;
 
-        string releaseConfig;
 #if DEBUG
-        releaseConfig = "Debug";
+        string releaseConfig = "Debug";
 #elif RELEASE
-            releaseConfig = "Release";
+        string releaseConfig = "Release";
 #endif
             
         string formattedWebsite = Format.Url("website", "https://aestheticalz.github.io/SammBot/");
@@ -90,28 +90,31 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         return ExecutionResult.Succesful();
     }
 
-    [SlashCommand("serverinfo", "Get information about a server!")]
-    [DetailedDescription("Gets all the information about the server you execute the command in.")]
+    [SlashCommand("server", "Get information about a server!")]
+    [DetailedDescription("Gets all the public information about the server you execute the command in.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> ServerInfoAsync()
     {
         RestUser serverOwner = await Context.Client.Rest.GetUserAsync(Context.Guild.OwnerId);
 
-        string serverBanner = Context.Guild.BannerUrl != null ? $"[Banner URL]({Context.Guild.BannerUrl})" : "None";
-        string discoverySplash = Context.Guild.DiscoverySplashUrl != null ? $"[Splash URL]({Context.Guild.DiscoverySplashId})" : "None";
+        string serverBanner = Context.Guild.BannerUrl != null ? Format.Url("Banner URL", Context.Guild.BannerUrl) : "None";
+        string discoverySplash = Context.Guild.DiscoverySplashUrl != null ? Format.Url("Splash URL", Context.Guild.DiscoverySplashId) : "None";
+        
         int channelCount = Context.Guild.Channels.Count;
         int emoteCount = Context.Guild.Emotes.Count;
         int stickerCount = Context.Guild.Stickers.Count;
         int memberCount = Context.Guild.MemberCount;
+        
         int boostTier = (int)Context.Guild.PremiumTier;
         int roleCount = Context.Guild.Roles.Count;
         string boostCount = Context.Guild.PremiumSubscriptionCount != 0 ? Context.Guild.PremiumSubscriptionCount.ToString() : "No Boosts";
+        
         string creationDate = $"<t:{Context.Guild.CreatedAt.ToUnixTimeSeconds()}>";
         string serverName = Context.Guild.Name;
-        string serverOwnerName = $"{serverOwner.Username}#{serverOwner.Discriminator}";
+        string serverOwnerName = serverOwner.GetFullUsername();
 
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("GUILD INFORMATION");
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         replyEmbed.Title = "\u2139\uFE0F Server Information";
         replyEmbed.Description = "Here's some information about the current server.";
@@ -136,8 +139,8 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         return ExecutionResult.Succesful();
     }
 
-    [SlashCommand("userinfo", "Get information about a user!")]
-    [DetailedDescription("Gets all the information about the provided user.")]
+    [SlashCommand("user", "Get information about a user!")]
+    [DetailedDescription("Gets all the public information about the provided user.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> UserInfoAsync([Summary(description: "The user you want to get the information from.")] SocketGuildUser? User = null)
@@ -150,7 +153,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         string userNickname = targetUser.Nickname ?? "None";
         string isBot = targetUser.IsBot.ToYesNo();
         string isOwner = (Context.Guild.Owner.Id == targetUser.Id).ToYesNo();
-        string joinDate = $"<t:{targetUser.JoinedAt.Value.ToUnixTimeSeconds()}>"; // ???
+        string joinDate = $"<t:{targetUser.JoinedAt!.Value.ToUnixTimeSeconds()}>"; // ??? Why is JoinedAt nullable?
         string signUpDate = $"<t:{targetUser.CreatedAt.ToUnixTimeSeconds()}>";
         string boostingSince = targetUser.PremiumSince != null ? $"<t:{targetUser.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
         string roles = targetUser.Roles.Count > 1 ?
@@ -158,7 +161,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
             : "None";
         string onlineStatus = targetUser.GetStatusString();
 
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("USER INFORMATION");
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
             
         replyEmbed.Title = "\u2139\uFE0F User Information";
         replyEmbed.Description = $"Here's some information about {targetUser.Mention}.";
