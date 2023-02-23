@@ -66,7 +66,7 @@ Please read the [style guidelines](STYLE_GUIDELINES.md) before creating a pull r
 
 <div align="center"><h1>License</h1></div>
 
-© Copyright 2022 AestheticalZ.  
+© Copyright 2021-2023 AestheticalZ.  
 Licensed under the [GPL v3.0 license](LICENSE)
 
 <div align="center"><h1>Special Thanks</h1></div>
