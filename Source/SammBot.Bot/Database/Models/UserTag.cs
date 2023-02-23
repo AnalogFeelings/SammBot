@@ -18,8 +18,6 @@
  */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
-
 namespace SammBot.Bot.Database.Models;
 
 public class UserTag : DatabaseEntity

@@ -44,7 +44,7 @@ public class GuildConfig : DatabaseEntity
 
     [PrettyName("Enable Logging")]
     [DetailedDescription("Enable server event logging?")]
-    public bool EnableLogging { get; set; } = false;
+    public bool EnableLogging { get; set; }
         
     [PrettyName("Log Channel ID")]
     [DetailedDescription("The channel ID where logs will be sent to. The bot must have permission to write to that channel.")]
@@ -52,7 +52,7 @@ public class GuildConfig : DatabaseEntity
         
     [PrettyName("Enable Welcome Message")]
     [DetailedDescription("Enable welcome message?")]
-    public bool EnableWelcome { get; set; } = false;
+    public bool EnableWelcome { get; set; }
         
     [PrettyName("Welcome Channel ID")]
     [DetailedDescription("The channel ID where welcome messages will be sent to. The bot must have permission to write to that channel.")]
