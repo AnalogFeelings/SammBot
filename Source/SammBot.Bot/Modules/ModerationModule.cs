@@ -156,7 +156,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            UserWarning specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
+            UserWarning? specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
 
             if (specificWarning == default(UserWarning))
                 return ExecutionResult.FromError("There are no warnings with the specified ID.");
@@ -214,7 +214,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            UserWarning specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
+            UserWarning? specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
 
             if (specificWarning == default(UserWarning))
                 return ExecutionResult.FromError("There are no warnings with the specified ID.");
