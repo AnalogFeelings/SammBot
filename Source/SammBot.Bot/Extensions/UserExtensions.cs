@@ -75,7 +75,8 @@ public static class UserExtensions
     {
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            Pronoun chosenPronoun = await botDatabase.Pronouns.SingleOrDefaultAsync(x => x.UserId == User.Id);
+            // TODO: Rewrite!
+            Pronoun? chosenPronoun = await botDatabase.Pronouns.SingleOrDefaultAsync(x => x.UserId == User.Id);
 
             if (chosenPronoun != default(Pronoun)) return chosenPronoun;
                 
