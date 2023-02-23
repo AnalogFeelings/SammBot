@@ -4,10 +4,7 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/SammBot.Bot"
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Europe/Madrid"
+      interval: "daily"
     target-branch: "master"
     labels:
       - "dependencies"
@@ -23,10 +20,7 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/SammBot.WebGenerator"
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Europe/Madrid"
+      interval: "daily"
     target-branch: "master"
     labels:
       - "dependencies"
