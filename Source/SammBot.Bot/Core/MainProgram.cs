@@ -36,8 +36,8 @@ namespace SammBot.Bot.Core;
 
 public class MainProgram
 {
-    private DiscordShardedClient _ShardedClient;
-    private InteractionService _InteractionService;
+    private DiscordShardedClient _ShardedClient = default!;
+    private InteractionService _InteractionService = default!;
 
     public static void Main()
         => new MainProgram().MainAsync().GetAwaiter().GetResult();
