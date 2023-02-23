@@ -20,22 +20,20 @@
 
 using Discord;
 using Discord.WebSocket;
-using Newtonsoft.Json;
 using SkiaSharp;
 using Svg.Skia;
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using JetBrains.Annotations;
 using SammBot.Bot.Common;
 using SammBot.Bot.Common.Attributes;
 using SammBot.Bot.Common.Preconditions;
 using SammBot.Bot.Common.Rest.UrbanDictionary;
 using SammBot.Bot.Core;
-using SammBot.Bot.Database;
 using SammBot.Bot.Database.Models;
 using SammBot.Bot.Extensions;
 using SammBot.Bot.Services;
@@ -47,8 +45,7 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001F3B2")]
 public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    public Logger Logger { get; set; }
-    public HttpService HttpService { get; set; }
+    [UsedImplicitly] public HttpService HttpService { get; init; } = default!;
 
     private readonly int[] _ShipSegments = new int[]
     {
@@ -127,15 +124,15 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     public async Task<RuntimeResult> RollDiceAsync([Summary(description: "The amount of faces the die will have.")] int FaceCount = 6)
     {
         if (FaceCount < 3)
-            return ExecutionResult.FromError("The dice must have at least 3 faces!");
+            return ExecutionResult.FromError("The die must have at least 3 faces!");
         
         int chosenNumber = Random.Shared.Next(1, FaceCount + 1);
         
-        await RespondAsync(":game_die: Rolling the dice...", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(":game_die: Rolling the die...", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         
         await Task.Delay(1500);
         
-        await ModifyOriginalResponseAsync(x => x.Content = $"The dice landed on **{chosenNumber}**!");
+        await ModifyOriginalResponseAsync(x => x.Content = $"The die landed on **{chosenNumber}**!");
         
         return ExecutionResult.Succesful();
     }
@@ -144,7 +141,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Hugs are good for everyone! Spread the joy with this command.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> HugUserAsync([Summary(description: "The user you want to hug.")] IUser User)
+    public async Task<RuntimeResult> HugUserAsync([Summary(description: "The user you want to hug.")] SocketGuildUser User)
     {
         string chosenKaomoji = SettingsManager.Instance.LoadedConfig.HugKaomojis.PickRandom();
         
@@ -332,7 +329,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             }
         }
         
-        //Twemoji's repository expects filenames in big endian UTF-32, with no leading zeroes AND in PNG format.
+        //Twemoji's repository expects filenames in big endian UTF-32, with no leading zeroes AND in SVG format.
         Encoding emojiEncoding = new UTF32Encoding(true, false);
         byte[] emojiBytes = emojiEncoding.GetBytes(percentageEmoji);
         string hexString = Convert.ToHexString(emojiBytes);
@@ -348,7 +345,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         //Also download the emoji from Twemoji's GitHub.
         using (MemoryStream firstUserAvatarStream = await DownloadToMemoryStream(FirstUser.GetGuildGlobalOrDefaultAvatar(2048)))
         using (MemoryStream secondUserAvatarStream = await DownloadToMemoryStream(SecondUser.GetGuildGlobalOrDefaultAvatar(2048)))
-            //Create the actual drawing surface.
+        //Create the actual drawing surface.
         using (SKSurface surface = SKSurface.Create(imageInfo))
         {
             string emojiData = await DownloadToString(emojiUrl);
@@ -470,7 +467,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(6, 1)]
     public async Task<RuntimeResult> UrbanAsync([Summary(description: "The term you want to search.")] string Term)
     {
-        UrbanSearchParameters searchParameters = new()
+        UrbanSearchParameters searchParameters = new UrbanSearchParameters()
         {
             Term = Term
         };
