@@ -25,5 +25,4 @@ namespace SammBot.Bot.Common.Attributes;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class HideInHelp : Attribute
 {
-    public HideInHelp() { }
 }
