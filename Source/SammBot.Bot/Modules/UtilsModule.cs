@@ -20,14 +20,13 @@
 
 using Discord;
 using Discord.WebSocket;
-using Newtonsoft.Json;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using JetBrains.Annotations;
 using SammBot.Bot.Common;
 using SammBot.Bot.Common.Attributes;
 using SammBot.Bot.Common.Preconditions;
@@ -44,7 +43,7 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f527")]
 public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    public HttpService HttpService { get; set; }
+    [UsedImplicitly] public HttpService HttpService { get; init; } = default!;
 
     [SlashCommand("viewhex", "Displays a HEX color, and converts it in other formats.")]
     [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
