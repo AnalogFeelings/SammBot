@@ -23,6 +23,7 @@ using Discord;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using JetBrains.Annotations;
 using SammBot.Bot.Common;
 using SammBot.Bot.Common.Attributes;
 using SammBot.Bot.Common.Preconditions;
@@ -34,8 +35,8 @@ namespace SammBot.Bot.Modules;
 [PrettyName("Help")]
 public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    public InteractionService InteractionService { get; set; }
-    public IServiceProvider ServiceProvider { get; set; }
+    [UsedImplicitly] public InteractionService InteractionService { get; init; } = default!;
+    [UsedImplicitly] public IServiceProvider ServiceProvider { get; init; } = default!;
 
     [SlashCommand("help", "Provides all commands and modules available.")]
     [DetailedDescription("Provides a list of all the commands and modules available.")]
@@ -58,18 +59,19 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
             // If the splittedName array contains 1 element, the user is looking for a module.
             if (splittedName.Length == 1)
             {
-                ModuleInfo moduleInfo = InteractionService.Modules.SingleOrDefault(x => x.Name == ModuleName || x.SlashGroupName == ModuleName);
+                ModuleInfo? moduleInfo = InteractionService.Modules.SingleOrDefault(x => x.Name == ModuleName || x.SlashGroupName == ModuleName);
 
                 if (moduleInfo == default(ModuleInfo))
                     return ExecutionResult.FromError($"The module \"{ModuleName}\" doesn't exist.");
 
                 // Get the module emoji, if it has any.
-                ModuleEmoji moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
+                ModuleEmoji? moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
                 string stringifiedEmoji = moduleEmoji != default(ModuleEmoji) ? moduleEmoji.Emoji + " " : string.Empty;
-                    
-                PrettyName moduleName = moduleInfo.Attributes.First(x => x is PrettyName) as PrettyName;
+                
+                // It's impossible to have more than one PrettyName attribute, so use Single().
+                PrettyName moduleName = moduleInfo.Attributes.OfType<PrettyName>().Single();
 
-                string moduleHeader = $"**{stringifiedEmoji}{moduleName!.Name}**\n" +
+                string moduleHeader = $"**{stringifiedEmoji}{moduleName.Name}**\n" +
                                       $"{moduleInfo.Description}\n" +
                                       $"**Syntax**: `/{moduleInfo.SlashGroupName} <Command Name>`";
 
@@ -99,7 +101,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
             }
             else // splittedName array contains more than 1 element, user is looking for a command.
             {
-                SlashCommandInfo searchResult = InteractionService.SlashCommands.FirstOrDefault(x => x.Module.SlashGroupName == splittedName[0] 
+                SlashCommandInfo? searchResult = InteractionService.SlashCommands.FirstOrDefault(x => x.Module.SlashGroupName == splittedName[0] 
                                                                                                      && x.Name == splittedName[1]);
 
                 if (searchResult == null)
@@ -111,7 +113,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.Color = new Color(204, 214, 221);
 
                 // Get command description, if any.
-                DetailedDescription commandDescription = searchResult.Attributes.FirstOrDefault(x => x is DetailedDescription) as DetailedDescription;
+                DetailedDescription? commandDescription = searchResult.Attributes.FirstOrDefault(x => x is DetailedDescription) as DetailedDescription;
                 string formattedDescription;
 
                 if (commandDescription != default(DetailedDescription) && !string.IsNullOrEmpty(commandDescription.Description))
@@ -120,7 +122,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                     formattedDescription = "No description.";
                 
                 // Check if the command needs to be executed in guild or not.
-                RequireContextAttribute requiredContexts = searchResult.Preconditions.FirstOrDefault(x => x is RequireContextAttribute) as RequireContextAttribute;
+                RequireContextAttribute? requiredContexts = searchResult.Preconditions.FirstOrDefault(x => x is RequireContextAttribute) as RequireContextAttribute;
 
                 bool requiresGuild = requiredContexts != default(RequireContextAttribute) && 
                                      requiredContexts.Contexts.HasFlag(ContextType.Guild) && 
@@ -132,7 +134,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.AddField("\U0001f4cb Description", formattedDescription);
 
                 // Get command cooldown information.
-                RateLimit commandRateLimit = searchResult.Preconditions.FirstOrDefault(x => x is RateLimit) as RateLimit;
+                RateLimit? commandRateLimit = searchResult.Preconditions.FirstOrDefault(x => x is RateLimit) as RateLimit;
                 string rateLimitString;
 
                 if (commandRateLimit == default(RateLimit))
@@ -196,13 +198,14 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                 if (foundCommand)
                 {
                     // Get module emoji, if any.
-                    ModuleEmoji moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
+                    ModuleEmoji? moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
                     string stringifiedEmoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
-                        
-                    PrettyName moduleName = moduleInfo.Attributes.First(x => x is PrettyName) as PrettyName;
+                    
+                    // It's impossible to have more than one PrettyName attribute, so use Single().
+                    PrettyName moduleName = moduleInfo.Attributes.OfType<PrettyName>().Single();
 
                     // Build the embed field.
-                    string moduleHeader = $"{stringifiedEmoji}{moduleName!.Name}\n" +
+                    string moduleHeader = $"{stringifiedEmoji}{moduleName.Name}\n" +
                                           $"(Group: `{moduleInfo.SlashGroupName}`)";
                     string moduleDescription = string.IsNullOrEmpty(moduleInfo.Description) ? "No description." : moduleInfo.Description;
 
