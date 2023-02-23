@@ -29,6 +29,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using JetBrains.Annotations;
 using SammBot.Bot.Common;
 using SammBot.Bot.Common.Attributes;
 using SammBot.Bot.Common.Preconditions;
@@ -44,8 +45,8 @@ namespace SammBot.Bot.Modules;
 [RequireOwner]
 public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    public AdminService AdminService { get; set; }
-    public Logger Logger { get; set; }
+    [UsedImplicitly] public AdminService AdminService { get; init; } = default!;
+    [UsedImplicitly] public Logger Logger { get; init; } = default!;
 
     [SlashCommand("say", "Make the bot say something.")]
     [DetailedDescription("Makes the bot say something. Use the **setsay** command to set the channel and guild beforehand.")]
