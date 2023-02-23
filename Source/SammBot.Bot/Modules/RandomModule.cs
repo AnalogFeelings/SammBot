@@ -19,14 +19,13 @@
 #endregion
 
 using Discord;
-using Newtonsoft.Json;
 using SharpCat.Types.Cat;
 using SharpCat.Types.Dog;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Discord.Interactions;
+using JetBrains.Annotations;
 using SammBot.Bot.Common;
 using SammBot.Bot.Common.Attributes;
 using SammBot.Bot.Common.Preconditions;
@@ -42,8 +41,8 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f3b0")]
 public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    public RandomService RandomService { get; set; }
-    public HttpService HttpService { get; set; }
+    [UsedImplicitly] public RandomService RandomService { get; init; } = default!;
+    [UsedImplicitly] public HttpService HttpService { get; init; } = default!;
 
     [SlashCommand("cat", "Returns a random cat!")]
     [DetailedDescription("Gets a random cat image from The Cat API!")]
