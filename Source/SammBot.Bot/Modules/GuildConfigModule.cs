@@ -81,16 +81,19 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
                     valueString = string.Join(", ", propertyValue);
                 }
                 else valueString = propertyValue!.ToString()!; // ???
-                    
-                PrettyName? propertyFullName = property.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(PrettyName)) as PrettyName;
+                
+                // It's impossible to have more than one PrettyName attribute, so use Single().
+                PrettyName propertyFullName = property.GetCustomAttributes(false).OfType<PrettyName>().Single();
+                
                 // Small blue diamond emoji.
                 string propertyName = "\U0001f539 ";
 
                 propertyName += !string.IsNullOrEmpty(propertyFullName.Name) ? propertyFullName.Name : property.Name;
                 propertyName += $"\n(Name: `{property.Name}`)";
-                    
-                DetailedDescription propertyFullDescription = property.GetCustomAttributes(false)
-                    .FirstOrDefault(x => x.GetType() == typeof(DetailedDescription)) as DetailedDescription;
+                
+                // It's also impossible to have more than one DetailedDescription attribute, so use Single().
+                DetailedDescription propertyFullDescription = property.GetCustomAttributes(false).OfType<DetailedDescription>().Single();
+                
                 string propertyDescription = !string.IsNullOrEmpty(propertyFullDescription.Description) ? propertyFullDescription.Description : "No description.";
 
                 propertyDescription += $"\n**• Current Value**: `{valueString}`";
