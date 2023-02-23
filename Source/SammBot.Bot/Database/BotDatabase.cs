@@ -22,16 +22,17 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using SammBot.Bot.Core;
 using System.IO;
+using JetBrains.Annotations;
 using SammBot.Bot.Database.Models;
 
 namespace SammBot.Bot.Database;
 
 public class BotDatabase : DbContext
 {
-    public DbSet<Pronoun> Pronouns { get; set; }
-    public DbSet<UserTag> UserTags { get; set; }
-    public DbSet<UserWarning> UserWarnings { get; set; }
-    public DbSet<GuildConfig> GuildConfigs { get; set; }
+    [UsedImplicitly] public DbSet<Pronoun> Pronouns { get; set; } = default!;
+    [UsedImplicitly] public DbSet<UserTag> UserTags { get; set; } = default!;
+    [UsedImplicitly] public DbSet<UserWarning> UserWarnings { get; set; } = default!;
+    [UsedImplicitly] public DbSet<GuildConfig> GuildConfigs { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder ModelBuilder)
     {
