@@ -22,7 +22,6 @@ using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -83,9 +82,9 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            UserTag retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.GuildId == Context.Guild.Id && x.Name == Name);
+            UserTag? retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.GuildId == Context.Guild.Id && x.Name == Name);
 
-            if (retrievedTag == null)
+            if (retrievedTag == default(UserTag))
                 return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
 
             await FollowupAsync(retrievedTag.Reply, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
