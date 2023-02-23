@@ -19,13 +19,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
 using Fergun.Interactive;
 using Fergun.Interactive.Pagination;
-using Newtonsoft.Json;
+using JetBrains.Annotations;
 using SammBot.Bot.Common;
 using SammBot.Bot.Common.Attributes;
 using SammBot.Bot.Common.Preconditions;
@@ -41,8 +40,8 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f51e")]
 public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    public HttpService HttpService { get; set; }
-    public InteractiveService InteractiveService { get; set; }
+    [UsedImplicitly] public HttpService HttpService { get; init; } = default!;
+    [UsedImplicitly] public InteractiveService InteractiveService { get; init; } = default!;
     
     [SlashCommand("r34", "Gets a list of images from rule34.")]
     [DetailedDescription("Gets a list of images from rule34. Maximum amount is 1000 images per command.")]
