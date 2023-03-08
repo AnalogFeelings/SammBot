@@ -18,8 +18,11 @@
  */
 #endregion
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SammBot.Bot.Database.Models;
 
+[Index(nameof(UserId), IsUnique = true)]
 public class Pronoun : DatabaseEntity
 {
     public ulong UserId { get; set; }

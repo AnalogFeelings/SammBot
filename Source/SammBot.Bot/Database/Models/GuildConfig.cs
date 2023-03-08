@@ -18,6 +18,7 @@
  */
 #endregion
 
+using Microsoft.EntityFrameworkCore;
 using SammBot.Bot.Common.Attributes;
 
 namespace SammBot.Bot.Database.Models;
@@ -30,6 +31,7 @@ public enum WarnLimitAction
 }
 
 // REMINDER: Set these default values in BotDatabase -> OnModelCreating too!
+[Index(nameof(GuildId), IsUnique = true)]
 public class GuildConfig : DatabaseEntity
 {
     public ulong GuildId { get; set; }
