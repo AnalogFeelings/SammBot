@@ -2,7 +2,7 @@ version: 2
 updates:
   # For the bot itself.
   - package-ecosystem: "nuget"
-    directory: "/SammBot.Bot"
+    directory: "/Source/SammBot.Bot"
     schedule:
       interval: "daily"
     target-branch: "master"
@@ -18,7 +18,7 @@ updates:
       
   # For the web generator.
   - package-ecosystem: "nuget"
-    directory: "/SammBot.WebGenerator"
+    directory: "/Source/SammBot.WebGenerator"
     schedule:
       interval: "daily"
     target-branch: "master"
