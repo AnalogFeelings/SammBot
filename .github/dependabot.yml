@@ -12,6 +12,8 @@ updates:
       - "bot"
     assignees:
       - "aestheticalz"
+    reviewers:
+      - "aestheticalz"
     commit-message:
       prefix: "[Bot -> All]"
       include: "scope"
@@ -27,6 +29,8 @@ updates:
       - "master"
       - "web generator"
     assignees:
+      - "aestheticalz"
+    reviewers:
       - "aestheticalz"
     commit-message:
       prefix: "[WebGenerator -> All]"
