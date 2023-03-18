@@ -59,7 +59,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
                                  "Their real names and current values will also be listed.";
         replyEmbed.Color = new Color(102, 117, 127);
             
-        List<PropertyInfo> propertyList = typeof(GuildConfig).GetProperties().Where(x => x.Name != "GuildId").ToList();
+        List<PropertyInfo> propertyList = typeof(GuildConfig).GetProperties().Where(x => x.Name != "Id" && x.Name != "GuildId").ToList();
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
