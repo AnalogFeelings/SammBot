@@ -21,7 +21,7 @@ It uses [Matcha](https://github.com/AestheticalZ/Matcha) for event logging!
 This README file is not updated often, so sometimes it's possible for new commands or modules to be added without them being listed here.
 
 <div align="center">
-  <h1>:grey_question: What is Samm-Bot?</h1>
+  <h2>:grey_question: What is Samm-Bot?</h2>
 </div>
 
 Samm-Bot is a Discord bot that I began developing around 2020 for fun.  
@@ -33,6 +33,14 @@ My main motivation is because currently, most large bots are owned by money-hung
 I wanted to make a free and open source bot that people could rely on for simple server-keeping tasks such as warnings, logging and more.
 
 Currently, the bot is in a **beta** state and is very unpolished.
+
+<div align="center">
+  <h2>:trophy: Maintainers</h2>
+</div>
+
+This is a list of all the people who maintain Samm-Bot's development.
+
+* :floppy_disk: AestheticalZ - Creator and lead developer.
 
 <div align="center">
   <h2>:books: Features</h2>
@@ -107,8 +115,8 @@ Licensed under the [GPL v3.0 license](LICENSE).
   <h1>:sparkles: Special Thanks</h1>
 </div>
 
-This is a list of companies or projects who have been helpful for the development of Samm-Bot.  
-Samm-Bot wouldn't be what it is today without them, so please support them if you can.
+This is a list of companies or projects who have been very helpful for the development of Samm-Bot.  
+If your project or company has been very influential in the development of Samm-Bot, it will be listed here.
 
 <div align="center">
   
