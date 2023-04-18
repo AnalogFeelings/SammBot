@@ -22,6 +22,9 @@ using Newtonsoft.Json;
 
 namespace SammBot.Bot.Common.Rest;
 
+/// <summary>
+/// A class that contains a fox image from the Random Fox API.
+/// </summary>
 public class FoxImage
 {
     [JsonProperty("image")]

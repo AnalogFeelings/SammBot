@@ -22,6 +22,9 @@ using Newtonsoft.Json;
 
 namespace SammBot.Bot.Common.Rest;
 
+/// <summary>
+/// A class that contains a duck image from the random-d.uk API.
+/// </summary>
 public class DuckImage
 {
     [JsonProperty("url")]

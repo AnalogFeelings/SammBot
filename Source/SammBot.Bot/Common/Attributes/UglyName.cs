@@ -22,10 +22,23 @@ using System;
 
 namespace SammBot.Bot.Common.Attributes;
 
+/// <summary>
+/// An attribute used to denote an internal "ugly" name for a property.
+/// <para/>
+/// An example would be when exposing REST parameters to C#.
+/// </summary>
 [AttributeUsage(AttributeTargets.Property)]
 public class UglyName : Attribute
 {
+    /// <summary>
+    /// The ugly name of the property.
+    /// </summary>
     public readonly string Name;
 
-    public UglyName(string Name) => this.Name = Name;
+    /// <summary>
+    /// Creates a new instance of the <see cref="UglyName"/> class.
+    /// </summary>
+    /// <param name="Name">The ugly name of the property.</param>
+    public UglyName(string Name) => 
+        this.Name = Name;
 }

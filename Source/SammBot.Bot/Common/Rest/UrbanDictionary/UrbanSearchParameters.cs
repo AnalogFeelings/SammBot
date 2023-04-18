@@ -22,6 +22,10 @@ using SammBot.Bot.Common.Attributes;
 
 namespace SammBot.Bot.Common.Rest.UrbanDictionary;
 
+/// <summary>
+/// A class used to pass search parameters to the Urban
+/// Dictionary API.
+/// </summary>
 public class UrbanSearchParameters
 {
     [UglyName("term")]

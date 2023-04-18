@@ -22,16 +22,36 @@ using System.Collections.Generic;
 
 namespace SammBot.Bot.Common;
 
+/// <summary>
+/// A <see cref="LinkedList{T}"/> that automatically removes the last element after
+/// reaching a set capacity.
+/// </summary>
+/// <typeparam name="T">The type of the <see cref="LinkedList{T}"/>.</typeparam>
 public class AutoDequeueList<T> : LinkedList<T>
 {
+    /// <summary>
+    /// The capacity of the list.
+    /// </summary>
     private readonly int _MaxSize;
 
-    public AutoDequeueList(int MaxSize) => this._MaxSize = MaxSize;
+    /// <summary>
+    /// Creates a new instance of the <see cref="AutoDequeueList{T}"/> class.
+    /// </summary>
+    /// <param name="MaxSize">The capacity of the list.</param>
+    public AutoDequeueList(int MaxSize) => 
+        this._MaxSize = MaxSize;
 
+    /// <summary>
+    /// Pushes an item to the beginning of the list.
+    /// <para/>
+    /// If the list has reached maximum capacity, the last item will be removed.
+    /// </summary>
+    /// <param name="Item">The item to add to the list.</param>
     public void Push(T Item)
     {
         this.AddFirst(Item);
 
-        if (this.Count > _MaxSize) this.RemoveLast();
+        if (this.Count > _MaxSize) 
+            this.RemoveLast();
     }
 }

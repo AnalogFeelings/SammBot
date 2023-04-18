@@ -143,8 +143,8 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                 }
                 else
                 {
-                    rateLimitString = $"Cooldown of **{commandRateLimit.Seconds}** second(s).\n" +
-                                      $"Triggered after using the command **{commandRateLimit.Requests}** time(s).";
+                    rateLimitString = $"Cooldown of **{commandRateLimit.TimeoutDuration}** second(s).\n" +
+                                      $"Triggered after using the command **{commandRateLimit.RequestLimit}** time(s).";
                 }
 
                 replyEmbed.AddField("\u23F1\uFE0FCooldown", rateLimitString);

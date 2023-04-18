@@ -20,6 +20,10 @@ using SammBot.Bot.Common.Attributes;
 
 namespace SammBot.Bot.Common.Rest.Rule34;
 
+/// <summary>
+/// A class used to pass search parameters to the Rule34
+/// API.
+/// </summary>
 public class Rule34SearchParameters
 {
     [UglyName("limit")]

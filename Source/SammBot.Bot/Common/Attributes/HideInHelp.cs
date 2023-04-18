@@ -22,7 +22,12 @@ using System;
 
 namespace SammBot.Bot.Common.Attributes;
 
+/// <summary>
+/// An attribute that denotes a module or command that should
+/// be hidden in the bot's help command.
+/// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class HideInHelp : Attribute
 {
+    // No members.
 }

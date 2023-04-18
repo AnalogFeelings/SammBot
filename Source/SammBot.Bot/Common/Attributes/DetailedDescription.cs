@@ -22,10 +22,21 @@ using System;
 
 namespace SammBot.Bot.Common.Attributes;
 
+/// <summary>
+/// An attribute that denotes the extended description of a method or property.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
 public class DetailedDescription : Attribute
 {
+    /// <summary>
+    /// The description of the method or property.
+    /// </summary>
     public readonly string Description;
 
-    public DetailedDescription(string Description) => this.Description = Description;
+    /// <summary>
+    /// Creates a new instance of the <see cref="DetailedDescription"/> class.
+    /// </summary>
+    /// <param name="Description">The extended description of the method or property.</param>
+    public DetailedDescription(string Description) => 
+        this.Description = Description;
 }

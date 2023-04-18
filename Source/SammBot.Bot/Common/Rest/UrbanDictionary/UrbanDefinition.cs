@@ -23,6 +23,9 @@ using Newtonsoft.Json;
 
 namespace SammBot.Bot.Common.Rest.UrbanDictionary;
 
+/// <summary>
+/// A class that contains a word definition from the Urban Dictionary API.
+/// </summary>
 public class UrbanDefinition
 {
     [JsonProperty("definition")]

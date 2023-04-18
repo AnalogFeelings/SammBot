@@ -22,10 +22,26 @@ using System;
 
 namespace SammBot.Bot.Common.Attributes;
 
+/// <summary>
+/// An attribute used to denote a module's emoji to be used on
+/// the bot's help command.
+/// </summary>
+/// <remarks>
+/// Please use UTF escape sequences. Don't paste the emoji
+/// into the code directly.
+/// </remarks>
 [AttributeUsage(AttributeTargets.Class)]
 public class ModuleEmoji : Attribute
 {
+    /// <summary>
+    /// The module emoji.
+    /// </summary>
     public readonly string Emoji;
 
-    public ModuleEmoji(string Emoji) => this.Emoji = Emoji;
+    /// <summary>
+    /// Creates a new instance of the <see cref="ModuleEmoji"/> class.
+    /// </summary>
+    /// <param name="Emoji">The emoji to set.</param>
+    public ModuleEmoji(string Emoji) => 
+        this.Emoji = Emoji;
 }

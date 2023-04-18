@@ -22,13 +22,32 @@ using Discord.Interactions;
 
 namespace SammBot.Bot.Common;
 
+/// <summary>
+/// Represents the result of an interaction execution.
+/// </summary>
+/// <seealso cref="RuntimeResult"/>
 public class ExecutionResult : RuntimeResult
 {
+    /// <summary>
+    /// Creates a new instance of the <see cref="ExecutionResult"/> class.
+    /// </summary>
+    /// <param name="Error">The interaction error, if any.</param>
+    /// <param name="Reason">The reason or explanation of the error or success.</param>
+    /// <remarks>If <paramref name="Error"/> is null, this will be interpreted as successful.</remarks>
     public ExecutionResult(InteractionCommandError? Error, string Reason) : base(Error, Reason) { }
         
+    /// <summary>
+    /// Convenience method to create an unsuccessful <see cref="ExecutionResult"/>.
+    /// </summary>
+    /// <param name="Reason">The error reason or explanation.</param>
+    /// <returns>A new <see cref="ExecutionResult"/> object with <paramref name="Reason"/>.</returns>
     public static ExecutionResult FromError(string Reason) =>
         new ExecutionResult(InteractionCommandError.Unsuccessful, Reason);
         
+    /// <summary>
+    /// Convenience method to create a successful <see cref="ExecutionResult"/>.
+    /// </summary>
+    /// <returns>A new successful <see cref="ExecutionResult"/> object.</returns>
     public static ExecutionResult Succesful() =>
         new ExecutionResult(null, "Execution succesful.");
 }

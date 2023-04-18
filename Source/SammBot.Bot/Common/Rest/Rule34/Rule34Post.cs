@@ -20,6 +20,9 @@ using Newtonsoft.Json;
 
 namespace SammBot.Bot.Common.Rest.Rule34;
 
+/// <summary>
+/// A class that contains a post from the Rule34 API.
+/// </summary>
 public class Rule34Post
 {
     [JsonProperty("preview_url")]

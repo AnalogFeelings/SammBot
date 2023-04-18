@@ -20,7 +20,13 @@ using System;
 
 namespace SammBot.Bot.Common.Attributes;
 
+/// <summary>
+/// An attribute used to denote a setting that contains sensitive information.
+/// <para/>
+/// This prevents the setting from being shown in public.
+/// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public class SensitiveSetting : Attribute
 {
+    // No members.
 }

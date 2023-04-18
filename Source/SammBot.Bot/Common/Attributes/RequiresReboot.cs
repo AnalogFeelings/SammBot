@@ -22,7 +22,12 @@ using System;
 
 namespace SammBot.Bot.Common.Attributes;
 
+/// <summary>
+/// An attribute used to denote a setting that requires a full bot reboot to
+/// do any effect.
+/// </summary>
 [AttributeUsage(AttributeTargets.Property)]
 public class RequiresReboot : Attribute
 {
+    // No members.
 }
