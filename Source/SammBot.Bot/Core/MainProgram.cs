@@ -44,11 +44,11 @@ public class MainProgram
 
     private async Task MainAsync()
     {
-        BotGlobals.Instance.StartupStopwatch.Start();
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+        
+        BotGlobals.Instance.RuntimeStopwatch.Start();
 
         BootLogger bootLogger = new BootLogger();
-
-        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
         bootLogger.Log($"Loading {SettingsManager.CONFIG_FILE}...", LogSeverity.Information);
         if (!SettingsManager.Instance.LoadConfiguration())

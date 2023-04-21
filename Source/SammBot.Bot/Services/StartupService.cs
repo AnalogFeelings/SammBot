@@ -80,7 +80,7 @@ public class StartupService
         ShardedClient.ShardReady += OnShardReady;
         ShardedClient.ShardDisconnected += OnShardDisconnect;
             
-        BotGlobals.Instance.StartupStopwatch.Stop();
+        BotGlobals.Instance.RuntimeStopwatch.Stop();
 
         Console.Title = $"{SettingsManager.BOT_NAME} v{SettingsManager.GetBotVersion()}";
 
@@ -94,13 +94,13 @@ public class StartupService
         Console.Write($"Source code v{SettingsManager.GetBotVersion()}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
         Console.WriteLine("===========".Pastel(Color.CadetBlue));
         Console.WriteLine();
-
-        BotGlobals.Instance.RuntimeStopwatch.Start();
-
+        
         BotLogger.Log($"Using MatchaLogger {matchaVersion}.", LogSeverity.Information);
 
         BotLogger.Log($"{SettingsManager.BOT_NAME} took" +
-                      $" {BotGlobals.Instance.StartupStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
+                      $" {BotGlobals.Instance.RuntimeStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
+
+        BotGlobals.Instance.RuntimeStopwatch.Restart();
             
 #if DEBUG
         BotLogger.Log($"{SettingsManager.BOT_NAME} has been built on Debug configuration. Extra logging will be available.", LogSeverity.Warning);

@@ -29,7 +29,6 @@ namespace SammBot.Bot.Core;
 
 public class BotGlobals
 {
-    public readonly Stopwatch StartupStopwatch = new Stopwatch();
     public readonly Stopwatch RuntimeStopwatch = new Stopwatch();
 
     public readonly AllowedMentions AllowOnlyUsers = new AllowedMentions(AllowedMentionTypes.Users);
