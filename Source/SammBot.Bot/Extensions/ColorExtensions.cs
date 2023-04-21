@@ -32,7 +32,7 @@ public static class ColorExtensions
 
     public static string ToRgbString(this SKColor Color)
     {
-        return "rgb(" + Color.Red.ToString() + ", " + Color.Green.ToString() + ", " + Color.Blue.ToString() + ")";
+        return "rgb(" + Color.Red + ", " + Color.Green + ", " + Color.Blue + ")";
     }
 
     public static string ToCmykString(this SKColor Color)
@@ -42,7 +42,8 @@ public static class ColorExtensions
         float green = Color.Green / 255f;
         float blue = Color.Blue / 255f;
             
-        if(red == 0 && green == 0 && blue == 0) return $"cmyk(0%, 0%, 0%, 100)";
+        if(red == 0 && green == 0 && blue == 0) 
+            return "cmyk(0%, 0%, 0%, 100)";
 
         double kf = 1 - Math.Max(red, Math.Max(green, blue));
         double cf = (1 - red - kf) / (1 - kf);

@@ -39,7 +39,7 @@ public class Logger
         {
             LogFilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs"), 
 #if !DEBUG
-                AllowedSeverities = LogSeverity.Information | LogSeverity.Warning | LogSeverity.Error | LogSeverity.Fatal | LogSeverity.Success
+            AllowedSeverities = LogSeverity.Information | LogSeverity.Warning | LogSeverity.Error | LogSeverity.Fatal | LogSeverity.Success
 #endif
         };
 
