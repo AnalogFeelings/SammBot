@@ -54,13 +54,12 @@ public class MainProgram
         if (!SettingsManager.Instance.LoadConfiguration())
         {
             string fullPath = SettingsManager.Instance.BotDataDirectory;
-            Task writeTask = File.WriteAllTextAsync(Path.Combine(fullPath, SettingsManager.CONFIG_FILE),
-                JsonConvert.SerializeObject(SettingsManager.Instance.LoadedConfig, Formatting.Indented));
+            string serializedSettings = JsonConvert.SerializeObject(SettingsManager.Instance.LoadedConfig, Formatting.Indented);
 
             bootLogger.Log($"Could not load {SettingsManager.CONFIG_FILE} correctly! Make sure the path \"{fullPath}\" exists.\n" +
-                           $"{SettingsManager.BOT_NAME} has attempted to write an empty template {SettingsManager.CONFIG_FILE} file to that path.", LogSeverity.Fatal);
+                           $"A template {SettingsManager.CONFIG_FILE} file has been written to that path.", LogSeverity.Fatal);
 
-            await writeTask;
+            await File.WriteAllTextAsync(Path.Combine(fullPath, SettingsManager.CONFIG_FILE), serializedSettings);
 
             bootLogger.Log("Press any key to exit...", LogSeverity.Information);
             Console.ReadKey();
