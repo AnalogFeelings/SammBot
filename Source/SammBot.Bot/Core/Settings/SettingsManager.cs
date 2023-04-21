@@ -67,9 +67,9 @@ public class SettingsManager
 
     public static string GetBotVersion()
     {
-        Version? botVersion = Assembly.GetEntryAssembly()!.GetName().Version;
+        Version botVersion = Assembly.GetEntryAssembly()!.GetName().Version!;
 
-        return botVersion!.ToString(2);
+        return botVersion.ToString(2);
     }
 
     private static SettingsManager? _PrivateInstance;
