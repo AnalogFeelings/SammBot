@@ -182,30 +182,44 @@ public class StartupService
 
     private async void RotateStatus(object? State)
     {
-        BotStatus chosenStatus = SettingsManager.Instance.LoadedConfig.StatusList.PickRandom();
+        try
+        {
+            BotStatus chosenStatus = SettingsManager.Instance.LoadedConfig.StatusList.PickRandom();
 
-        string? gameUrl = chosenStatus.Type == 1 ? SettingsManager.Instance.LoadedConfig.TwitchUrl : null;
+            string? gameUrl = chosenStatus.Type == 1 ? SettingsManager.Instance.LoadedConfig.TwitchUrl : null;
 
-        await ShardedClient.SetGameAsync(chosenStatus.Content, gameUrl, (ActivityType)chosenStatus.Type);
+            await ShardedClient.SetGameAsync(chosenStatus.Content, gameUrl, (ActivityType)chosenStatus.Type);
+        }
+        catch (Exception ex)
+        {
+            BotLogger.Log($"An exception has ocurred when rotating the status: {ex}", LogSeverity.Error);
+        }
     }
 
     private async void RotateAvatar(object? State)
     {
-        List<string> avatarList = Directory.EnumerateFiles(Path.Combine(SettingsManager.Instance.BotDataDirectory, "Avatars")).ToList();
-        if (avatarList.Count < 2) return;
-
-        List<string> filteredList = avatarList.Except(RecentAvatars).ToList();
-
-        string chosenAvatar = filteredList.PickRandom();
-        BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(chosenAvatar)}\".", LogSeverity.Debug);
-
-        using (FileStream avatarStream = new FileStream(chosenAvatar, FileMode.Open))
+        try
         {
-            Image loadedAvatar = new Image(avatarStream);
+            List<string> avatarList = Directory.EnumerateFiles(Path.Combine(SettingsManager.Instance.BotDataDirectory, "Avatars")).ToList();
+            if (avatarList.Count < 2) return;
 
-            await ShardedClient.CurrentUser.ModifyAsync(x => x.Avatar = loadedAvatar);
+            List<string> filteredList = avatarList.Except(RecentAvatars).ToList();
+
+            string chosenAvatar = filteredList.PickRandom();
+            BotLogger.Log($"Setting bot avatar to \"{Path.GetFileName(chosenAvatar)}\".", LogSeverity.Debug);
+
+            using (FileStream avatarStream = new FileStream(chosenAvatar, FileMode.Open))
+            {
+                Image loadedAvatar = new Image(avatarStream);
+
+                await ShardedClient.CurrentUser.ModifyAsync(x => x.Avatar = loadedAvatar);
+            }
+
+            RecentAvatars.Push(chosenAvatar);
         }
-
-        RecentAvatars.Push(chosenAvatar);
+        catch (Exception ex)
+        {
+            BotLogger.Log($"An exception has ocurred when rotating the avatar: {ex}", LogSeverity.Error);
+        }
     }
 }
