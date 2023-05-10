@@ -1,4 +1,4 @@
-[i14]: https://github.com/AestheticalZ/SammBot/issues/14
+[i14]: https://github.com/AnalogFeelings/SammBot/issues/14
 
 <div align="center">
   <img src="Branding/SammBot.svg" width="256" height="256">
@@ -6,17 +6,17 @@
     :leaves: Samm-Bot
   </h1>
   
-  ![Lines of code](https://img.shields.io/tokei/lines/github/aestheticalz/sammbot?label=Lines%20Of%20Code&style=flat-square)
+  ![Lines of code](https://img.shields.io/tokei/lines/github/analogfeelings/sammbot?label=Lines%20Of%20Code&style=flat-square)
   ![.NET Version](https://img.shields.io/badge/.NET%20Version-7-success?style=flat-square)
-  ![GitHub issues by-label](https://img.shields.io/github/issues/aestheticalz/sammbot/master?label=Bot%20Issues&style=flat-square)
-  ![GitHub pull requests by-label](https://img.shields.io/github/issues-pr/aestheticalz/sammbot/master?label=Bot%20Pull%20Requests&style=flat-square)
-  ![GitHub](https://img.shields.io/github/license/aestheticalz/sammbot?label=License&style=flat-square)
-  ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/aestheticalz/sammbot/master?label=Commit%20Activity&style=flat-square)
-  ![GitHub Repo stars](https://img.shields.io/github/stars/aestheticalz/sammbot?label=Stargazers&style=flat-square)
+  ![GitHub issues by-label](https://img.shields.io/github/issues/analogfeelings/sammbot/master?label=Bot%20Issues&style=flat-square)
+  ![GitHub pull requests by-label](https://img.shields.io/github/issues-pr/analogfeelings/sammbot/master?label=Bot%20Pull%20Requests&style=flat-square)
+  ![GitHub](https://img.shields.io/github/license/analogfeelings/sammbot?label=License&style=flat-square)
+  ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot/master?label=Commit%20Activity&style=flat-square)
+  ![GitHub Repo stars](https://img.shields.io/github/stars/analogfeelings/sammbot?label=Stargazers&style=flat-square)
 </div>
 
 Samm-Bot rewritten for the fourth time, but in C# and [Discord.Net](https://github.com/discord-net/Discord.Net) instead of TypeScript and [discord.js](https://github.com/discordjs/discord.js). In constant evolution!  
-It uses [Matcha](https://github.com/AestheticalZ/Matcha) for event logging!
+It uses [Matcha](https://github.com/AnalogFeelings/Matcha) for event logging!
 
 This README file is not updated often, so sometimes it's possible for new commands or modules to be added without them being listed here.
 
@@ -40,7 +40,7 @@ Currently, the bot is in a **beta** state and is very unpolished.
 
 This is a list of all the people who maintain Samm-Bot's development.
 
-* :floppy_disk: AestheticalZ - Creator and lead developer.
+* :floppy_disk: Analog Feelings - Creator and lead developer.
 
 <div align="center">
   <h2>:books: Features</h2>
@@ -64,7 +64,7 @@ This is a list of all the people who maintain Samm-Bot's development.
 The .NET toolset will automatically pull all the required NuGet packages on build.  
 Samm-Bot has currently been tested on **x86-64** and **aarch64**.
 
-For Linux and macOS users, this [tiny script](https://gist.github.com/AestheticalZ/7969c2af2f87d606b3fd8b72cd8c6432) should make it easier for you to pull and build automatically.
+For Linux and macOS users, this [tiny script](https://gist.github.com/AnalogFeelings/7969c2af2f87d606b3fd8b72cd8c6432) should make it easier for you to pull and build automatically.
 
 :warning: **The file config.json must be filled in manually! Run the bot, and it will create a template config.json file for you.**
 
@@ -108,7 +108,7 @@ Adding an automatic `.editorconfig` file to enforce these is of low priority rig
   <h1>:balance_scale: License</h1>
 </div>
 
-© Copyright 2021-2023 AestheticalZ.  
+© Copyright 2021-2023 Analog Feelings.  
 Licensed under the [GPL v3.0 license](LICENSE).
 
 <div align="center">
