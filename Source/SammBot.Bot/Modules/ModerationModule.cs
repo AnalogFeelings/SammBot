@@ -150,6 +150,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Removes the warning with the specified ID.")]
     [RateLimit(1, 2)]
     [RequireContext(ContextType.Guild)]
+    [RequireUserPermission(GuildPermission.KickMembers)]
     public async Task<RuntimeResult> RemoveWarnAsync([Summary(description: "The ID of the warn you want to remove.")] int WarningId)
     {
         await DeferAsync(true);
