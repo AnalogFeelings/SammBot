@@ -11,9 +11,9 @@ updates:
       - "master"
       - "bot"
     assignees:
-      - "aestheticalz"
+      - "analogfeelings"
     reviewers:
-      - "aestheticalz"
+      - "analogfeelings"
     commit-message:
       prefix: "[Bot -> All]"
       include: "scope"
@@ -29,9 +29,9 @@ updates:
       - "master"
       - "web generator"
     assignees:
-      - "aestheticalz"
+      - "analogfeelings"
     reviewers:
-      - "aestheticalz"
+      - "analogfeelings"
     commit-message:
       prefix: "[WebGenerator -> All]"
       include: "scope"
