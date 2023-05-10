@@ -1,7 +1,7 @@
 ﻿#region License Information (GPLv3)
 /*
  * Samm-Bot - A lightweight Discord.NET bot for moderation and other purposes.
- * Copyright (C) 2021-2023 AestheticalZ
+ * Copyright (C) 2021-2023 Analog Feelings
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -63,8 +63,8 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         string releaseConfig = "Release";
 #endif
             
-        string formattedWebsite = Format.Url("website", "https://aestheticalz.github.io/SammBot/");
-        string formattedGithub = Format.Url("repository", "https://github.com/AestheticalZ/SammBot");
+        string formattedWebsite = Format.Url("website", "https://analogfeelings.github.io/SammBot/");
+        string formattedGithub = Format.Url("repository", "https://github.com/AnalogFeelings/SammBot");
 
         replyEmbed.Title = "\u2139\uFE0F Bot Information";
         replyEmbed.WithColor(59, 136, 195);

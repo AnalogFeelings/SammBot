@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
 	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-	<Company>AestheticalZ</Company>
+	<Company>Analog Feelings</Company>
 	<Product>Samm-Bot</Product>
 	<AssemblyVersion>6.3</AssemblyVersion>
 	<FileVersion>6.3</FileVersion>
