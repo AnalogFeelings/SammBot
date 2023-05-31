@@ -18,9 +18,7 @@
  */
 #endregion
 
-using System.Collections.Generic;
-
-namespace SammBot.Bot.Common;
+namespace SammBot.Library;
 
 /// <summary>
 /// A <see cref="LinkedList{T}"/> that automatically removes the last element after

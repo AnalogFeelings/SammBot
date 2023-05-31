@@ -20,7 +20,7 @@
 
 using Discord.Interactions;
 
-namespace SammBot.Bot.Common;
+namespace SammBot.Library;
 
 /// <summary>
 /// Represents the result of an interaction execution.

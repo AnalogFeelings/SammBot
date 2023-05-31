@@ -29,9 +29,9 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Discord.Interactions;
 using JetBrains.Annotations;
-using SammBot.Bot.Common;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
+using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Preconditions;
 

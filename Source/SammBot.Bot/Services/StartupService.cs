@@ -34,10 +34,10 @@ using Discord.Interactions;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Bot.Common;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Bot.Extensions;
+using SammBot.Library;
 using Color = System.Drawing.Color;
 
 namespace SammBot.Bot.Services;
