@@ -25,10 +25,10 @@ using System.Threading.Tasks;
 using Discord.Interactions;
 using JetBrains.Annotations;
 using SammBot.Bot.Common;
-using SammBot.Bot.Common.Preconditions;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
 using SammBot.Library.Attributes;
+using SammBot.Library.Preconditions;
 
 namespace SammBot.Bot.Modules;
 

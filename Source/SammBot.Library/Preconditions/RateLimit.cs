@@ -6,15 +6,11 @@
 //- Made it cleaner.
 //- Adapted it for text-based commands.
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
 
-namespace SammBot.Bot.Common.Preconditions;
+namespace SammBot.Library.Preconditions;
 
 /// <summary>
 /// A precondition that prevents people from running commands too often.
