@@ -16,7 +16,7 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Bot.Common.Attributes;
+using SammBot.Library.Attributes;
 
 namespace SammBot.Bot.Common.Rest.Rule34;
 

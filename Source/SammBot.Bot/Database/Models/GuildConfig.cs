@@ -19,7 +19,7 @@
 #endregion
 
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Common.Attributes;
+using SammBot.Library.Attributes;
 
 namespace SammBot.Bot.Database.Models;
 

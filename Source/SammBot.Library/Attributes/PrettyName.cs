@@ -18,27 +18,26 @@
  */
 #endregion
 
-using System;
-
-namespace SammBot.Bot.Common.Attributes;
+namespace SammBot.Library.Attributes;
 
 /// <summary>
-/// An attribute used to denote an internal "ugly" name for a property.
+/// An attribute that denotes a "pretty" name for a property or class.
 /// <para/>
-/// An example would be when exposing REST parameters to C#.
+/// This pretty name can contain spaces and other characters not allowed
+/// by the C# compiler.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
-public class UglyName : Attribute
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
+public class PrettyName : Attribute
 {
     /// <summary>
-    /// The ugly name of the property.
+    /// The pretty name of the property or class.
     /// </summary>
     public readonly string Name;
 
     /// <summary>
-    /// Creates a new instance of the <see cref="UglyName"/> class.
+    /// Creates a new instance of the <see cref="PrettyName"/> class.
     /// </summary>
-    /// <param name="Name">The ugly name of the property.</param>
-    public UglyName(string Name) => 
+    /// <param name="Name">The pretty name of the class or property.</param>
+    public PrettyName(string Name) => 
         this.Name = Name;
 }

@@ -19,7 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
-using SammBot.Bot.Common.Attributes;
+using SammBot.Library.Attributes;
 
 namespace SammBot.Bot.Core;
 

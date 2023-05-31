@@ -18,7 +18,7 @@
  */
 #endregion
 
-using SammBot.Bot.Common.Attributes;
+using SammBot.Library.Attributes;
 
 namespace SammBot.Bot.Common.Rest.OpenWeather.Geolocation;
 

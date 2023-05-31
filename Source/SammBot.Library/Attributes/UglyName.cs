@@ -18,16 +18,25 @@
  */
 #endregion
 
-using System;
-
-namespace SammBot.Bot.Common.Attributes;
+namespace SammBot.Library.Attributes;
 
 /// <summary>
-/// An attribute used to denote a setting that requires a full bot reboot to
-/// do any effect.
+/// An attribute used to denote an internal "ugly" name for a property.
+/// <para/>
+/// An example would be when exposing REST parameters to C#.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class RequiresReboot : Attribute
+public class UglyName : Attribute
 {
-    // No members.
+    /// <summary>
+    /// The ugly name of the property.
+    /// </summary>
+    public readonly string Name;
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="UglyName"/> class.
+    /// </summary>
+    /// <param name="Name">The ugly name of the property.</param>
+    public UglyName(string Name) => 
+        this.Name = Name;
 }

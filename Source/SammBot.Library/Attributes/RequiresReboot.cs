@@ -18,28 +18,14 @@
  */
 #endregion
 
-using System;
-
-namespace SammBot.Bot.Common.Attributes;
+namespace SammBot.Library.Attributes;
 
 /// <summary>
-/// An attribute that denotes a "pretty" name for a property or class.
-/// <para/>
-/// This pretty name can contain spaces and other characters not allowed
-/// by the C# compiler.
+/// An attribute used to denote a setting that requires a full bot reboot to
+/// do any effect.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
-public class PrettyName : Attribute
+[AttributeUsage(AttributeTargets.Property)]
+public class RequiresReboot : Attribute
 {
-    /// <summary>
-    /// The pretty name of the property or class.
-    /// </summary>
-    public readonly string Name;
-
-    /// <summary>
-    /// Creates a new instance of the <see cref="PrettyName"/> class.
-    /// </summary>
-    /// <param name="Name">The pretty name of the class or property.</param>
-    public PrettyName(string Name) => 
-        this.Name = Name;
+    // No members.
 }

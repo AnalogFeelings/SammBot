@@ -18,9 +18,7 @@
  */
 #endregion
 
-using System;
-
-namespace SammBot.Bot.Common.Attributes;
+namespace SammBot.Library.Attributes;
 
 /// <summary>
 /// An attribute that denotes a module or command that should

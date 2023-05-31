@@ -28,13 +28,13 @@ using System.Threading.Tasks;
 using Discord.Interactions;
 using JetBrains.Annotations;
 using SammBot.Bot.Common;
-using SammBot.Bot.Common.Attributes;
 using SammBot.Bot.Common.Preconditions;
 using SammBot.Bot.Common.Rest.OpenWeather.Forecast;
 using SammBot.Bot.Common.Rest.OpenWeather.Geolocation;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
 using SammBot.Bot.Services;
+using SammBot.Library.Attributes;
 
 namespace SammBot.Bot.Modules;
 

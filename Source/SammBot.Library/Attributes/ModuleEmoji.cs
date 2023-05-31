@@ -18,25 +18,28 @@
  */
 #endregion
 
-using System;
-
-namespace SammBot.Bot.Common.Attributes;
+namespace SammBot.Library.Attributes;
 
 /// <summary>
-/// An attribute that denotes the extended description of a method or property.
+/// An attribute used to denote a module's emoji to be used on
+/// the bot's help command.
 /// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
-public class DetailedDescription : Attribute
+/// <remarks>
+/// Please use UTF escape sequences. Don't paste the emoji
+/// into the code directly.
+/// </remarks>
+[AttributeUsage(AttributeTargets.Class)]
+public class ModuleEmoji : Attribute
 {
     /// <summary>
-    /// The description of the method or property.
+    /// The module emoji.
     /// </summary>
-    public readonly string Description;
+    public readonly string Emoji;
 
     /// <summary>
-    /// Creates a new instance of the <see cref="DetailedDescription"/> class.
+    /// Creates a new instance of the <see cref="ModuleEmoji"/> class.
     /// </summary>
-    /// <param name="Description">The extended description of the method or property.</param>
-    public DetailedDescription(string Description) => 
-        this.Description = Description;
+    /// <param name="Emoji">The emoji to set.</param>
+    public ModuleEmoji(string Emoji) => 
+        this.Emoji = Emoji;
 }

@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
-using SammBot.Bot.Common.Attributes;
+using SammBot.Library.Attributes;
 
 namespace SammBot.Bot.Extensions;
 
