@@ -29,9 +29,9 @@ using Discord.Interactions;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Bot.Database.Models;
-using SammBot.Bot.Extensions;
 using SammBot.Library;
 using SammBot.Library.Attributes;
+using SammBot.Library.Extensions;
 using SammBot.Library.Preconditions;
 
 namespace SammBot.Bot.Modules;
@@ -188,8 +188,9 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             if (!filteredWarnings.Any())
                 return ExecutionResult.FromError("This user has no warnings.");
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("📃 List of Warnings");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
+            replyEmbed.Title = "📃 List of Warnings";
             replyEmbed.Description = "Reasons longer than 48 characters will be truncated.\n\n";
 
             foreach (UserWarning warning in filteredWarnings)
@@ -220,8 +221,9 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             if (specificWarning == default(UserWarning))
                 return ExecutionResult.FromError("There are no warnings with the specified ID.");
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context).ChangeTitle("Warning Details");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
+            replyEmbed.Title = "Warning Details";
             replyEmbed.Description = $"Details for the warning \"{specificWarning.Id}\".\n";
 
             replyEmbed.AddField("User", $"<@{specificWarning.UserId}> (ID: {specificWarning.UserId})");

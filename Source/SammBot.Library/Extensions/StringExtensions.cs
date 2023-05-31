@@ -18,10 +18,7 @@
  */
 #endregion
 
-using System;
-using System.Linq;
-
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Library.Extensions;
 
 public static class StringExtensions
 {

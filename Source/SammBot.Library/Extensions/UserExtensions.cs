@@ -20,12 +20,8 @@
 
 using Discord;
 using Discord.WebSocket;
-using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Database;
-using System.Threading.Tasks;
-using SammBot.Bot.Database.Models;
 
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Library.Extensions;
 
 public static class UserExtensions
 {
@@ -69,26 +65,5 @@ public static class UserExtensions
         };
 
         return onlineStatus;
-    }
-
-    public static async Task<Pronoun> GetUserPronouns(this SocketUser User)
-    {
-        using (BotDatabase botDatabase = new BotDatabase())
-        {
-            // TODO: Rewrite!
-            Pronoun? chosenPronoun = await botDatabase.Pronouns.SingleOrDefaultAsync(x => x.UserId == User.Id);
-
-            if (chosenPronoun != default(Pronoun)) return chosenPronoun;
-                
-            return new Pronoun()
-            {
-                Subject = "they",
-                Object = "them",
-                DependentPossessive = "their",
-                IndependentPossessive = "theirs",
-                ReflexiveSingular = "themself",
-                ReflexivePlural = "themselves"
-            };
-        }
     }
 }

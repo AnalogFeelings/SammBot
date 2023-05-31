@@ -18,23 +18,12 @@
  */
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using SammBot.Library.Attributes;
+namespace SammBot.Library.Extensions;
 
-namespace SammBot.Bot.Extensions;
-
-public static class ObjectExtensions
+public static class BoolExtensions
 {
-    public static string ToQueryString(this object TargetObject)
+    public static string ToYesNo(this bool Boolean)
     {
-        IEnumerable<string> formattedProperties = from p in TargetObject.GetType().GetProperties()
-            where p.GetValue(TargetObject, null) != null
-            where p.GetCustomAttribute<UglyName>() != null
-            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
-
-        return string.Join("&", formattedProperties.ToArray());
+        return Boolean ? "Yes" : "No";
     }
 }

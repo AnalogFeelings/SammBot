@@ -18,15 +18,21 @@
  */
 #endregion
 
-using System;
-using System.Collections.Generic;
+using System.Reflection;
+using System.Web;
+using SammBot.Library.Attributes;
 
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Library.Extensions;
 
-public static class ListExtensions
+public static class ObjectExtensions
 {
-    public static T PickRandom<T>(this IList<T> TargetList)
+    public static string ToQueryString(this object TargetObject)
     {
-        return TargetList[Random.Shared.Next(TargetList.Count)];
+        IEnumerable<string> formattedProperties = from p in TargetObject.GetType().GetProperties()
+            where p.GetValue(TargetObject, null) != null
+            where p.GetCustomAttribute<UglyName>() != null
+            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
+
+        return string.Join("&", formattedProperties.ToArray());
     }
 }

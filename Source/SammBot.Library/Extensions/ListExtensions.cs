@@ -18,12 +18,12 @@
  */
 #endregion
 
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Library.Extensions;
 
-public static class BoolExtensions
+public static class ListExtensions
 {
-    public static string ToYesNo(this bool Boolean)
+    public static T PickRandom<T>(this IList<T> TargetList)
     {
-        return Boolean ? "Yes" : "No";
+        return TargetList[Random.Shared.Next(TargetList.Count)];
     }
 }

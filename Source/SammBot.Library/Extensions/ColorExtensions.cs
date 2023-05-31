@@ -19,9 +19,8 @@
 #endregion
 
 using SkiaSharp;
-using System;
 
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Library.Extensions;
 
 public static class ColorExtensions
 {

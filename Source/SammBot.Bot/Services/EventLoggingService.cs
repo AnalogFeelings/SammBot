@@ -26,7 +26,7 @@ using Discord.WebSocket;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Bot.Database.Models;
-using SammBot.Bot.Extensions;
+using SammBot.Library.Extensions;
 
 namespace SammBot.Bot.Services;
 

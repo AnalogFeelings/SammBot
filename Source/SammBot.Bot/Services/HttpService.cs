@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
 using SammBot.Bot.Core;
-using SammBot.Bot.Extensions;
+using SammBot.Library.Extensions;
 
 namespace SammBot.Bot.Services;
 

@@ -18,34 +18,27 @@
  */
 #endregion
 
-using System;
+using Discord;
+using Discord.Interactions;
 
-namespace SammBot.Bot.Extensions;
+namespace SammBot.Library.Extensions;
 
-public static class NumberExtensions
+public static class EmbedExtensions
 {
-    public static float RoundTo(this float Number, int DecimalCount)
+    public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context, string Title = "", string Description = "")
     {
-        return (float)Math.Round(Number, DecimalCount);
-    }
+        if (Context == null)
+            throw new ArgumentNullException(nameof(Context));
+        
+        Builder.Description = Description;
 
-    public static float ToFahrenheit(this float Number)
-    {
-        return ((Number * 9 / 5) + 32).RoundTo(1);
-    }
+        Builder.WithFooter(x =>
+        {
+            x.Text = $"Requested by {Context.Interaction.User.GetFullUsername()}"; 
+            x.IconUrl = Context.Interaction.User.GetGuildGlobalOrDefaultAvatar(256);
+        });
+        Builder.WithCurrentTimestamp();
 
-    public static float ToPsi(this float Number)
-    {
-        return (Number / 68.948f).RoundTo(2);
-    }
-
-    public static float KmhToMph(this float Number)
-    {
-        return (Number / 1.609f).RoundTo(1);
-    }
-
-    public static float MpsToKmh(this float Number)
-    {
-        return (Number * 3.6f).RoundTo(1);
+        return Builder;
     }
 }

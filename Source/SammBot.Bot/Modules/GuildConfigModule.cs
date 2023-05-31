@@ -30,9 +30,9 @@ using Microsoft.EntityFrameworkCore;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Bot.Database.Models;
-using SammBot.Bot.Extensions;
 using SammBot.Library;
 using SammBot.Library.Attributes;
+using SammBot.Library.Extensions;
 using SammBot.Library.Preconditions;
 
 namespace SammBot.Bot.Modules;

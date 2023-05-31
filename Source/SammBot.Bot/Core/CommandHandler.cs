@@ -26,8 +26,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Discord.Interactions;
 using Fergun.Interactive;
-using SammBot.Bot.Extensions;
 using SammBot.Bot.Services;
+using SammBot.Library.Extensions;
 
 namespace SammBot.Bot.Core;
 
