@@ -169,7 +169,6 @@ public class CommandHandler
             
         ShardedClient.MessageDeleted += EventLoggingService.OnMessageDeleted;
         ShardedClient.MessagesBulkDeleted += EventLoggingService.OnMessagesBulkDeleted;
-        ShardedClient.MessageUpdated += EventLoggingService.OnMessageUpdated;
             
         ShardedClient.RoleCreated += EventLoggingService.OnRoleCreated;
         ShardedClient.RoleUpdated += EventLoggingService.OnRoleUpdated;

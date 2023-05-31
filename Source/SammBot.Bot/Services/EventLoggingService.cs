@@ -230,65 +230,6 @@ public class EventLoggingService
         }
     }
         
-    public async Task OnMessageUpdated(Cacheable<IMessage, ulong> CachedMessage, SocketMessage NewMessage, ISocketMessageChannel SourceChannel)
-    {
-        if (SourceChannel is not SocketGuildChannel) return;
-        if (NewMessage.Author.IsBot) return;
-            
-        SocketGuildChannel? sourceGuildChannel = SourceChannel as SocketGuildChannel;
-
-        using (BotDatabase botDatabase = new BotDatabase())
-        {
-            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuildChannel!.Guild.Id);
-
-            if (serverConfig == default(GuildConfig)) return;
-
-            if (serverConfig.EnableLogging)
-            {
-                ISocketMessageChannel? loggingChannel = sourceGuildChannel!.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
-
-                if (loggingChannel != null)
-                {
-                    EmbedBuilder replyEmbed = new EmbedBuilder();
-
-                    replyEmbed.Title = "\U0001f4dd Message Edited";
-                    replyEmbed.Description = $"A message has been edited.\n" +
-                                             $"The old content will be listed below if the message has been cached by {SettingsManager.BOT_NAME}.";
-                    replyEmbed.WithColor(_BadColor);
-
-                    replyEmbed.AddField("\U0001f464 Author", NewMessage.Author.Mention, true);
-                    replyEmbed.AddField("\U0001faaa Author ID", NewMessage.Author.Id, true);
-
-                    if (CachedMessage.HasValue)
-                    {
-                        if (CachedMessage.Value.Content == NewMessage.Content) return;
-                            
-                        string oldSanitizedContent = Format.Sanitize(CachedMessage.Value.Content);
-                        string oldTrimmedContent = oldSanitizedContent.Truncate(512);
-                            
-                        replyEmbed.AddField("\u2709\uFE0F Old Content", oldTrimmedContent);
-                    }
-
-                    string newSanitizedContent = Format.Sanitize(NewMessage.Content);
-                    string newTrimmedContent = newSanitizedContent.Truncate(512);
-
-                    replyEmbed.AddField("\U0001f4e9 New Content", newTrimmedContent);
-                    replyEmbed.AddField("\U0001f4e2 Message Channel", $"<#{sourceGuildChannel.Id}>", true);
-                    replyEmbed.AddField("\U0001f4c5 Send Date", NewMessage.CreatedAt.ToString(), true);
-
-                    replyEmbed.WithFooter(x =>
-                    {
-                        x.Text = $"Server ID: {sourceGuildChannel.Guild.Id}";
-                        x.IconUrl = sourceGuildChannel.Guild.IconUrl;
-                    });
-                    replyEmbed.WithCurrentTimestamp();
-
-                    await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
-                }
-            }
-        }
-    }
-        
     public async Task OnRoleCreated(SocketRole NewRole)
     {
         using (BotDatabase botDatabase = new BotDatabase())
