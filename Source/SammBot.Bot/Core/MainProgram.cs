@@ -30,6 +30,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord.Interactions;
 using Fergun.Interactive;
+using SammBot.Bot.Common.Helpers;
 using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Core;
@@ -40,7 +41,11 @@ public class MainProgram
     private InteractionService _InteractionService = default!;
 
     public static void Main()
-        => new MainProgram().MainAsync().GetAwaiter().GetResult();
+    {
+        MainProgram mainProgram = new MainProgram();
+
+        AsyncHelper.RunSync(() => mainProgram.MainAsync());
+    }
 
     private async Task MainAsync()
     {
