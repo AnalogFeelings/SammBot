@@ -27,12 +27,9 @@
 
 #endregion
 
-using System;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SammBot.Bot.Common.Helpers;
+namespace SammBot.Library.Helpers;
 
 /// <summary>
 /// Helper class to run async methods inside synchronous methods in a clean way.

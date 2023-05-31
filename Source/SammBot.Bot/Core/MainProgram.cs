@@ -30,8 +30,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord.Interactions;
 using Fergun.Interactive;
-using SammBot.Bot.Common.Helpers;
 using SammBot.Bot.Services;
+using SammBot.Library.Helpers;
 
 namespace SammBot.Bot.Core;
 
