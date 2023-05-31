@@ -29,7 +29,6 @@ namespace SammBot.Bot.Database;
 
 public class BotDatabase : DbContext
 {
-    [UsedImplicitly] public DbSet<Pronoun> Pronouns { get; set; } = default!;
     [UsedImplicitly] public DbSet<UserTag> UserTags { get; set; } = default!;
     [UsedImplicitly] public DbSet<UserWarning> UserWarnings { get; set; } = default!;
     [UsedImplicitly] public DbSet<GuildConfig> GuildConfigs { get; set; } = default!;
