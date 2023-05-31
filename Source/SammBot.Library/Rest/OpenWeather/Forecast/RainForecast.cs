@@ -18,16 +18,14 @@
  */
 #endregion
 
-using SammBot.Library.Attributes;
+using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.OpenWeather.Geolocation;
+namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
-public class GeolocationParameters
+public class RainForecast
 {
-    [UglyName("q")]
-    public string Location { get; set; }
-    [UglyName("appid")]
-    public string AppId { get; set; }
-    [UglyName("limit")]
-    public int Limit { get; set; }
+    [JsonProperty("1h")]
+    public float OneHour { get; set; }
+    [JsonProperty("3h")]
+    public float ThreeHour { get; set; }
 }

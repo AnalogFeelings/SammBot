@@ -18,16 +18,14 @@
  */
 #endregion
 
-using SammBot.Library.Attributes;
+using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.UrbanDictionary;
+namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
-/// <summary>
-/// A class used to pass search parameters to the Urban
-/// Dictionary API.
-/// </summary>
-public class UrbanSearchParameters
+public class SnowForecast
 {
-    [UglyName("term")]
-    public string Term { get; set; }
+    [JsonProperty("1h")]
+    public float OneHour { get; set; }
+    [JsonProperty("3h")]
+    public float ThreeHour { get; set; }
 }

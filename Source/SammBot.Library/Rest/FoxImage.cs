@@ -20,12 +20,16 @@
 
 using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.OpenWeather.Forecast;
+namespace SammBot.Library.Rest;
 
-public class RainForecast
+/// <summary>
+/// A class that contains a fox image from the Random Fox API.
+/// </summary>
+public class FoxImage
 {
-    [JsonProperty("1h")]
-    public float OneHour { get; set; }
-    [JsonProperty("3h")]
-    public float ThreeHour { get; set; }
+    [JsonProperty("image")]
+    public string ImageUrl { get; set; }
+
+    [JsonProperty("link")]
+    public string Link { get; set; }
 }

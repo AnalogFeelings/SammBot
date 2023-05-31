@@ -20,16 +20,14 @@
 
 using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest;
+namespace SammBot.Library.Rest.UrbanDictionary;
 
 /// <summary>
-/// A class that contains a duck image from the random-d.uk API.
+/// A class that contains a list of word definitions from the Urban Dictionary
+/// API.
 /// </summary>
-public class DuckImage
+public class UrbanDefinitionList
 {
-    [JsonProperty("url")]
-    public string ImageUrl { get; set; }
-
-    [JsonProperty("Message")]
-    public string Message { get; set; }
+    [JsonProperty("list")]
+    public List<UrbanDefinition> List { get; set; }
 }

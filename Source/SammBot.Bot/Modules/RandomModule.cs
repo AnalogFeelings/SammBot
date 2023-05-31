@@ -27,12 +27,12 @@ using System.Threading.Tasks;
 using Discord.Interactions;
 using JetBrains.Annotations;
 using SammBot.Bot.Common;
-using SammBot.Bot.Common.Rest;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
 using SammBot.Bot.Services;
 using SammBot.Library.Attributes;
 using SammBot.Library.Preconditions;
+using SammBot.Library.Rest;
 
 namespace SammBot.Bot.Modules;
 

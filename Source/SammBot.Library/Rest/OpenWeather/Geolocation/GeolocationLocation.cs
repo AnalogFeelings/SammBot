@@ -20,12 +20,18 @@
 
 using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.OpenWeather.Forecast;
+namespace SammBot.Library.Rest.OpenWeather.Geolocation;
 
-public class SnowForecast
+public class GeolocationLocation
 {
-    [JsonProperty("1h")]
-    public float OneHour { get; set; }
-    [JsonProperty("3h")]
-    public float ThreeHour { get; set; }
+    [JsonProperty("name")]
+    public string Name { get; set; }
+    [JsonProperty("lat")]
+    public float Latitude { get; set; }
+    [JsonProperty("lon")]
+    public float Longitude { get; set; }
+    [JsonProperty("country")]
+    public string Country { get; set; }
+    [JsonProperty("state")]
+    public string State { get; set; }
 }

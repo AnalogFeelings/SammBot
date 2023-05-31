@@ -20,16 +20,14 @@
 
 using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.OpenWeather.Forecast;
+namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
-public class Condition
+public class WindForecast
 {
-    [JsonProperty("id")]
-    public int Id { get; set; }
-    [JsonProperty("main")]
-    public string Main { get; set; }
-    [JsonProperty("description")]
-    public string Description { get; set; }
-    [JsonProperty("icon")]
-    public string Icon { get; set; }
+    [JsonProperty("speed")]
+    public float Speed { get; set; }
+    [JsonProperty("degrees")]
+    public float Degrees { get; set; }
+    [JsonProperty("gust")]
+    public float Gust { get; set; }
 }

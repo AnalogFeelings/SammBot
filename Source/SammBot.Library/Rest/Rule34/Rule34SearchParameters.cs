@@ -18,7 +18,7 @@
 
 using SammBot.Library.Attributes;
 
-namespace SammBot.Bot.Common.Rest.Rule34;
+namespace SammBot.Library.Rest.Rule34;
 
 /// <summary>
 /// A class used to pass search parameters to the Rule34

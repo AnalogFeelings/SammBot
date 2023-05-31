@@ -18,10 +18,9 @@
  */
 #endregion
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.UrbanDictionary;
+namespace SammBot.Library.Rest.UrbanDictionary;
 
 /// <summary>
 /// A class that contains a word definition from the Urban Dictionary API.

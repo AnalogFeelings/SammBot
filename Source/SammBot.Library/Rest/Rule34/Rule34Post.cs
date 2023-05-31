@@ -18,7 +18,7 @@
 
 using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.Rule34;
+namespace SammBot.Library.Rest.Rule34;
 
 /// <summary>
 /// A class that contains a post from the Rule34 API.

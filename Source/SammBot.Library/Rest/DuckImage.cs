@@ -18,17 +18,18 @@
  */
 #endregion
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.UrbanDictionary;
+namespace SammBot.Library.Rest;
 
 /// <summary>
-/// A class that contains a list of word definitions from the Urban Dictionary
-/// API.
+/// A class that contains a duck image from the random-d.uk API.
 /// </summary>
-public class UrbanDefinitionList
+public class DuckImage
 {
-    [JsonProperty("list")]
-    public List<UrbanDefinition> List { get; set; }
+    [JsonProperty("url")]
+    public string ImageUrl { get; set; }
+
+    [JsonProperty("Message")]
+    public string Message { get; set; }
 }

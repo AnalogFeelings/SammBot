@@ -26,12 +26,12 @@ using Fergun.Interactive;
 using Fergun.Interactive.Pagination;
 using JetBrains.Annotations;
 using SammBot.Bot.Common;
-using SammBot.Bot.Common.Rest.Rule34;
 using SammBot.Bot.Core;
 using SammBot.Bot.Extensions;
 using SammBot.Bot.Services;
 using SammBot.Library.Attributes;
 using SammBot.Library.Preconditions;
+using SammBot.Library.Rest.Rule34;
 
 namespace SammBot.Bot.Modules;
 

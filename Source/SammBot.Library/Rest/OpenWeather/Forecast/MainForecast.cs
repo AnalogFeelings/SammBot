@@ -20,7 +20,7 @@
 
 using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.OpenWeather.Forecast;
+namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
 public class MainForecast
 {

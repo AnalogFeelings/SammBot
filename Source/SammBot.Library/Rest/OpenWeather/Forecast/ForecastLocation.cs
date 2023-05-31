@@ -18,18 +18,16 @@
  */
 #endregion
 
-using SammBot.Library.Attributes;
+using Newtonsoft.Json;
 
-namespace SammBot.Bot.Common.Rest.OpenWeather.Forecast;
+namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
-public class WeatherParameters
+public class ForecastLocation
 {
-    [UglyName("lat")]
-    public float Latitude { get; set; }
-    [UglyName("lon")]
-    public float Longitude { get; set; }
-    [UglyName("appid")]
-    public string AppId { get; set; }
-    [UglyName("units")]
-    public string Units { get; set; }
+    [JsonProperty("country")]
+    public string Country { get; set; }
+    [JsonProperty("sunrise")]
+    public long Sunrise { get; set; }
+    [JsonProperty("sunset")]
+    public long Sunset { get; set; }
 }
