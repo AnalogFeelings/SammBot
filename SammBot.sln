@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SammBot.Library", "Source\SammBot.Library\SammBot.Library.csproj", "{E93C6BE7-371F-4030-AE5C-CB4941B49759}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SammBot.Tests", "Source\SammBot.Tests\SammBot.Tests.csproj", "{4635433A-53F5-4866-8D9A-7FDEBC7FC069}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{E93C6BE7-371F-4030-AE5C-CB4941B49759}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E93C6BE7-371F-4030-AE5C-CB4941B49759}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E93C6BE7-371F-4030-AE5C-CB4941B49759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4635433A-53F5-4866-8D9A-7FDEBC7FC069}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4635433A-53F5-4866-8D9A-7FDEBC7FC069}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4635433A-53F5-4866-8D9A-7FDEBC7FC069}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4635433A-53F5-4866-8D9A-7FDEBC7FC069}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
