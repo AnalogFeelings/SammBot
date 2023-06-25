@@ -19,7 +19,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SammBot.Bot.Database;
+namespace SammBot.Library.Database;
 
 public class DatabaseEntity
 {

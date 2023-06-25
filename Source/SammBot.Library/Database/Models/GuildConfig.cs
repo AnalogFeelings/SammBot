@@ -21,7 +21,7 @@
 using Microsoft.EntityFrameworkCore;
 using SammBot.Library.Attributes;
 
-namespace SammBot.Bot.Database.Models;
+namespace SammBot.Library.Database.Models;
 
 public enum WarnLimitAction
 {

@@ -18,7 +18,7 @@
  */
 #endregion
 
-namespace SammBot.Bot.Database.Models;
+namespace SammBot.Library.Database.Models;
 
 public class UserWarning : DatabaseEntity
 {

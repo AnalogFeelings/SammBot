@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using Discord.Interactions;
 using JetBrains.Annotations;
 using SammBot.Bot.Core;
-using SammBot.Bot.Database.Models;
 using SammBot.Bot.Services;
 using SammBot.Library;
 using SammBot.Library.Attributes;

@@ -29,9 +29,9 @@ using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
-using SammBot.Bot.Database.Models;
 using SammBot.Library;
 using SammBot.Library.Attributes;
+using SammBot.Library.Database.Models;
 using SammBot.Library.Extensions;
 using SammBot.Library.Preconditions;
 
