@@ -18,20 +18,38 @@ updates:
       prefix: "[Bot -> All]"
       include: "scope"
       
-  # For the web generator.
+  # For the library.
   - package-ecosystem: "nuget"
-    directory: "/Source/SammBot.WebGenerator"
+    directory: "/Source/SammBot.Library"
     schedule:
       interval: "daily"
     target-branch: "master"
     labels:
       - "dependencies"
       - "master"
-      - "web generator"
+      - "library"
     assignees:
       - "analogfeelings"
     reviewers:
       - "analogfeelings"
     commit-message:
-      prefix: "[WebGenerator -> All]"
+      prefix: "[Library -> All]"
+      include: "scope"
+      
+  # For the tests.
+  - package-ecosystem: "nuget"
+    directory: "/Source/SammBot.Tests"
+    schedule:
+      interval: "daily"
+    target-branch: "master"
+    labels:
+      - "dependencies"
+      - "master"
+      - "tests"
+    assignees:
+      - "analogfeelings"
+    reviewers:
+      - "analogfeelings"
+    commit-message:
+      prefix: "[Tests -> All]"
       include: "scope"
