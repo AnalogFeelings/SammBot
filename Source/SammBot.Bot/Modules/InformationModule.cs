@@ -250,6 +250,9 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
                 case 13:
                     osName = "macOS Ventura";
                     break;
+                case 14:
+                    osName = "macOS Sonoma";
+                    break;
                 default:
                     osName = "Unknown macOS";
                     break;
