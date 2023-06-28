@@ -169,13 +169,21 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
 
         replyEmbed.WithThumbnailUrl(userAvatar);
         replyEmbed.AddField("\U0001faaa Username", userName, true);
+        
+        if (targetUser.HasPomelo())
+        {
+            string globalName = targetUser.GlobalName;
+            
+            replyEmbed.AddField("\U0001f310 Global Name", globalName, true);
+        }
+        
         replyEmbed.AddField("\U0001f3ad Nickname", userNickname, true);
         replyEmbed.AddField("\U0001f6c2 User ID", userId, true);
         replyEmbed.AddField("\U0001f518 Status", onlineStatus, true);
-        replyEmbed.AddField("\U0001fac5 Is Owner", isOwner, true);
-        replyEmbed.AddField("\U0001f916 Is Bot", isBot, true);
+        replyEmbed.AddField("\U0001fac5 Is Owner?", isOwner, true);
+        replyEmbed.AddField("\U0001f916 Is Bot?", isBot, true);
         replyEmbed.AddField("\U0001f44b Join Date", joinDate, true);
-        replyEmbed.AddField("\U0001f382 Creation Date", signUpDate, true);
+        replyEmbed.AddField("\U0001f382 Sign Up Date", signUpDate, true);
         replyEmbed.AddField("\U0001f680 Booster Since", boostingSince, true);
         replyEmbed.AddField("\U0001f4e6 Roles", roles);
             

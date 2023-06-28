@@ -9,7 +9,7 @@
   "OpenWeatherKey": null,
   "TwitchUrl": null,
   "OwnerUserId": null,
-  "CommandLogFormat": "User @%username% is executing a command at channel #%channelname%.",
+  "CommandLogFormat": "User %username% is executing a command at channel #%channelname%.",
   "HttpUserAgent": "My User Agent",
   "AvatarRotationTime": 1,
   "AvatarRecentQueueSize": 10, 

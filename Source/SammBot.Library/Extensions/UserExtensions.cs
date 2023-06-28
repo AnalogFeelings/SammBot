@@ -45,12 +45,23 @@ public static class UserExtensions
 
     public static string GetUsernameOrNick(this SocketGuildUser User)
     {
-        return User.Nickname ?? User.Username;
+        if (!User.HasPomelo())
+            return User.Nickname ?? User.Username;
+
+        return User.DisplayName;
     }
 
     public static string GetFullUsername(this IUser User)
     {
-        return $"{User.Username}#{User.Discriminator}";
+        if (!User.HasPomelo())
+            return $"{User.Username}#{User.Discriminator}";
+
+        return $"@{User.Username}";
+    }
+
+    public static bool HasPomelo(this IUser User)
+    {
+        return User.DiscriminatorValue == 0;
     }
 
     public static string GetStatusString(this SocketUser User)
