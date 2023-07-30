@@ -37,6 +37,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Library;
+using SammBot.Library.Components;
 using SammBot.Library.Extensions;
 using Color = System.Drawing.Color;
 
