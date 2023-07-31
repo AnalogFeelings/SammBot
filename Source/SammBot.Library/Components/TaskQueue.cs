@@ -38,26 +38,6 @@ public class TaskQueue
     /// Adds a <see cref="Task{TResult}"/> to the queue and waits if the queue is held.
     /// </summary>
     /// <param name="taskSource">A <see cref="Func{TResult}"/> that contains the Task to enqueue.</param>
-    /// <typeparam name="T">The return type of the enqueued Task.</typeparam>
-    /// <returns>The result of the Task.</returns>
-    public async Task<T> Enqueue<T>(Func<Task<T>> taskSource)
-    {
-        await _Semaphore.WaitAsync();
-        
-        try
-        {
-            return await taskSource();
-        }
-        finally
-        {
-            _Semaphore.Release();
-        }
-    }
-    
-    /// <summary>
-    /// Adds a <see cref="Task{TResult}"/> to the queue and waits if the queue is held.
-    /// </summary>
-    /// <param name="taskSource">A <see cref="Func{TResult}"/> that contains the Task to enqueue.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the queue wait.</param>
     /// <typeparam name="T">The return type of the enqueued Task.</typeparam>
     /// <returns>The result of the Task.</returns>
@@ -68,24 +48,6 @@ public class TaskQueue
         try
         {
             return await taskSource();
-        }
-        finally
-        {
-            _Semaphore.Release();
-        }
-    }
-    
-    /// <summary>
-    /// Adds a <see cref="Task"/> to the queue and waits if the queue is held.
-    /// </summary>
-    /// <param name="taskSource">A <see cref="Func{TResult}"/> that contains the Task to enqueue.</param>
-    public async Task Enqueue(Func<Task> taskSource)
-    {
-        await _Semaphore.WaitAsync();
-        
-        try
-        {
-            await taskSource();
         }
         finally
         {
