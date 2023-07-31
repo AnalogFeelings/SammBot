@@ -38,15 +38,15 @@ public class TaskQueueTests
             Task firstEnqueue = _TaskQueue.Enqueue(() => Task.Run(() =>
             {
                 Task.Delay(750);
-            }), CancellationToken.None);
+            }), TimeSpan.Zero, CancellationToken.None);
             Task secondEnqueue = _TaskQueue.Enqueue(() => Task.Run(() =>
             {
                 Task.Delay(500);
-            }), CancellationToken.None);
+            }), TimeSpan.Zero, CancellationToken.None);
             Task thirdEnqueue = _TaskQueue.Enqueue(() => Task.Run(() =>
             {
                 Task.Delay(800);
-            }), CancellationToken.None);
+            }), TimeSpan.Zero, CancellationToken.None);
 
             Task finishedTask = await Task.WhenAny(firstEnqueue, secondEnqueue, thirdEnqueue);
         
