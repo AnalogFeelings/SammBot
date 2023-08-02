@@ -8,11 +8,12 @@
   
   ![Lines of code](https://img.shields.io/tokei/lines/github/analogfeelings/sammbot?label=Lines%20Of%20Code&style=flat-square)
   ![.NET Version](https://img.shields.io/badge/.NET%20Version-7-success?style=flat-square)
-  ![GitHub issues by-label](https://img.shields.io/github/issues/analogfeelings/sammbot/master?label=Bot%20Issues&style=flat-square)
-  ![GitHub pull requests by-label](https://img.shields.io/github/issues-pr/analogfeelings/sammbot/master?label=Bot%20Pull%20Requests&style=flat-square)
-  ![GitHub](https://img.shields.io/github/license/analogfeelings/sammbot?label=License&style=flat-square)
-  ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot/master?label=Commit%20Activity&style=flat-square)
-  ![GitHub Repo stars](https://img.shields.io/github/stars/analogfeelings/sammbot?label=Stargazers&style=flat-square)
+  [![GitHub issues](https://img.shields.io/github/issues/analogfeelings/sammbot?label=Issues&style=flat-square)](https://github.com/AnalogFeelings/sammbot/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/analogfeelings/sammbot?label=Pull%20Requests&style=flat-square)](https://github.com/AnalogFeelings/sammbot/pulls)
+  [![GitHub](https://img.shields.io/github/license/analogfeelings/sammbot?label=License&style=flat-square)](https://github.com/AnalogFeelings/sammbot/blob/master/LICENSE)
+  [![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot/master?label=Commit%20Activity&style=flat-square)](https://github.com/AnalogFeelings/sammbot/graphs/commit-activity)
+  [![GitHub Repo stars](https://img.shields.io/github/stars/analogfeelings/sammbot?label=Stargazers&style=flat-square)](https://github.com/AnalogFeelings/sammbot/stargazers)
+  [![Mastodon Follow](https://img.shields.io/mastodon/follow/109309123442839534?domain=https%3A%2F%2Ftech.lgbt&style=social)](https://tech.lgbt/@analog_feelings)
 </div>
 
 Samm-Bot rewritten for the fourth time, but in C# and [Discord.Net](https://github.com/discord-net/Discord.Net) instead of TypeScript and [discord.js](https://github.com/discordjs/discord.js). In constant evolution!  
