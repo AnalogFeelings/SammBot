@@ -22,8 +22,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using SammBot.Bot.Core;
+using SammBot.Library.Components;
 using SammBot.Library.Extensions;
 using System.Text.Json;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace SammBot.Bot.Services;
 
@@ -37,11 +40,56 @@ public class HttpService
     /// </summary>
     public HttpClient Client { get; private set; }
 
+    /// <summary>
+    /// A concurrent dictionary that contains a list of domain names and
+    /// their corresponding task queues.
+    /// </summary>
+    private readonly ConcurrentDictionary<string, TaskQueue> _QueueDictionary;
+
     public HttpService()
     {
         Client = new HttpClient();
+        _QueueDictionary = new ConcurrentDictionary<string, TaskQueue>();
         
         Client.DefaultRequestHeaders.Add("User-Agent", SettingsManager.Instance.LoadedConfig.HttpUserAgent);
+    }
+
+    /// <summary>
+    /// Adds a domain to the queue dictionary to allow for custom
+    /// waiting times for each domain.
+    /// </summary>
+    /// <param name="domain">The domain name of the website.</param>
+    /// <param name="concurrentRequests">
+    /// The amount of requests to let through before
+    /// holding a queue.
+    /// </param>
+    /// <param name="releaseAfter">How much time to wait before opening the queue.</param>
+    /// <remarks>
+    /// If a domain is already added to the dictionary, the queue will be replaced with a new one.
+    /// </remarks>
+    public void RegisterDomainQueue(string domain, int concurrentRequests, TimeSpan releaseAfter)
+    {
+        // Invalid domain.
+        if (Uri.CheckHostName(domain) == UriHostNameType.Unknown)
+            return;
+
+        TaskQueue newQueue = new TaskQueue(concurrentRequests, releaseAfter);
+
+        _QueueDictionary.AddOrUpdate(domain, newQueue, (_, _) => newQueue);
+    }
+
+    /// <summary>
+    /// Removes a domain from the queue dictionary.
+    /// </summary>
+    /// <param name="domain">The domain name of the website.</param>
+    public void UnregisterDomainQueue(string domain)
+    {
+        // Invalid domain.
+        if (Uri.CheckHostName(domain) == UriHostNameType.Unknown)
+            return;
+
+        if (_QueueDictionary.ContainsKey(domain))
+            _QueueDictionary.TryRemove(domain, out _);
     }
 
     /// <summary>
@@ -69,14 +117,35 @@ public class HttpService
             uriBuilder.Query = uriQuery.ToString();
         }
 
-        string jsonReply;
-        using (HttpResponseMessage responseMessage = await Client.GetAsync(uriBuilder.ToString()))
+        // This domain has a queue.
+        if (_QueueDictionary.TryGetValue(uriBuilder.Host, out TaskQueue? queue) && queue != default)
+            return await queue.Enqueue(GetJsonRemote, CancellationToken.None);
+        
+        return await GetJsonRemote();
+
+        async Task<T?> GetJsonRemote()
         {
-            jsonReply = await responseMessage.Content.ReadAsStringAsync();
+            string jsonReply = await GetStringFromRemote(uriBuilder.ToString());
+            T? parsedReply = JsonSerializer.Deserialize<T>(jsonReply);
+
+            return parsedReply;
         }
+    }
 
-        T? parsedReply = JsonSerializer.Deserialize<T>(jsonReply);
-
-        return parsedReply;
+    /// <summary>
+    /// Retrieves a plain string from <paramref name="remoteUrl"/>.
+    /// </summary>
+    /// <param name="remoteUrl">The URL to retrieve the string from.</param>
+    /// <returns>The returned string.</returns>
+    private async Task<string> GetStringFromRemote(string remoteUrl)
+    {
+        string stringReply;
+        
+        using (HttpResponseMessage responseMessage = await Client.GetAsync(remoteUrl))
+        {
+            stringReply = await responseMessage.Content.ReadAsStringAsync();
+        }
+        
+        return stringReply;
     }
 }
