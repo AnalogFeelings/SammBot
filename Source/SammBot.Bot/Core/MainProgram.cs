@@ -175,7 +175,6 @@ public class MainProgram
             .AddSingleton<StartupService>()
             .AddSingleton<Logger>()
             .AddSingleton<RandomService>()
-            .AddSingleton<AdminService>()
             .AddSingleton<EventLoggingService>();
     }
 }

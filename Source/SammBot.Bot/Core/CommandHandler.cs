@@ -37,7 +37,6 @@ public class CommandHandler
     private IServiceProvider ServiceProvider { get; set; }
     private Logger BotLogger { get; set; }
 
-    private AdminService AdminService { get; set; }
     private InteractionService InteractionService { get; set; }
     private InteractiveService InteractiveService { get; set; }
     private EventLoggingService EventLoggingService { get; set; }
@@ -48,8 +47,7 @@ public class CommandHandler
         ShardedClient = Client;
         ServiceProvider = Services;
         BotLogger = Logger;
-            
-        AdminService = ServiceProvider.GetRequiredService<AdminService>();
+        
         InteractiveService = ServiceProvider.GetRequiredService<InteractiveService>();
         EventLoggingService = ServiceProvider.GetRequiredService<EventLoggingService>();
     }
@@ -143,8 +141,6 @@ public class CommandHandler
 
     private async Task HandleInteractionAsync(SocketInteraction Interaction)
     {
-        if (AdminService.ChangingConfig) return;
-
         ShardedInteractionContext context = new ShardedInteractionContext(ShardedClient, Interaction);
 
         if (SettingsManager.Instance.LoadedConfig.OnlyOwnerMode)
