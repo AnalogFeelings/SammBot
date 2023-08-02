@@ -66,7 +66,8 @@ Samm-Bot has currently been tested on **x86-64** and **aarch64**.
 
 For Linux and macOS users, this [tiny script](https://gist.github.com/AnalogFeelings/7969c2af2f87d606b3fd8b72cd8c6432) should make it easier for you to pull and build automatically.
 
-:warning: **The file config.json must be filled in manually! Run the bot, and it will create a template config.json file for you.**
+> [!WARNING]  
+> The file config.json must be filled in manually! Run the bot, and it will create a template config.json file for you.
 
 :warning: ([Issue #14][i14]) **JetBrains Mono Regular is needed for the `viewhex` and `viewrgb` commands in the Utils module to work!**
 
