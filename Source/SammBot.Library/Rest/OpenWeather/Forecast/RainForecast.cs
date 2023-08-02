@@ -18,14 +18,14 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
 public class RainForecast
 {
-    [JsonProperty("1h")]
+    [JsonPropertyName("1h")]
     public float OneHour { get; set; }
-    [JsonProperty("3h")]
+    [JsonPropertyName("3h")]
     public float ThreeHour { get; set; }
 }

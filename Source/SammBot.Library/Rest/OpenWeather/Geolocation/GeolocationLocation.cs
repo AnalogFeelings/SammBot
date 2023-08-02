@@ -18,20 +18,20 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest.OpenWeather.Geolocation;
 
 public class GeolocationLocation
 {
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; }
-    [JsonProperty("lat")]
+    [JsonPropertyName("lat")]
     public float Latitude { get; set; }
-    [JsonProperty("lon")]
+    [JsonPropertyName("lon")]
     public float Longitude { get; set; }
-    [JsonProperty("country")]
+    [JsonPropertyName("country")]
     public string Country { get; set; }
-    [JsonProperty("state")]
+    [JsonPropertyName("state")]
     public string State { get; set; }
 }

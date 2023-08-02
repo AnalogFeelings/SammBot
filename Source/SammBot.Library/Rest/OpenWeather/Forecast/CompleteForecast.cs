@@ -18,36 +18,36 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
 public class CompleteForecast
 {
-    [JsonProperty("coord")]
+    [JsonPropertyName("coord")]
     public Coordinate Coordinates { get; set; }
-    [JsonProperty("weather")]
+    [JsonPropertyName("weather")]
     public List<Condition> Weather { get; set; }
-    [JsonProperty("main")]
+    [JsonPropertyName("main")]
     public MainForecast Information { get; set; }
-    [JsonProperty("visibility")]
+    [JsonPropertyName("visibility")]
     public float Visibility { get; set; }
-    [JsonProperty("wind")]
+    [JsonPropertyName("wind")]
     public WindForecast Wind { get; set; }
-    [JsonProperty("clouds")]
+    [JsonPropertyName("clouds")]
     public CloudForecast Clouds { get; set; }
-    [JsonProperty("rain")]
+    [JsonPropertyName("rain")]
     public RainForecast Rain { get; set; }
-    [JsonProperty("snow")]
+    [JsonPropertyName("snow")]
     public SnowForecast Snow { get; set; }
-    [JsonProperty("dt")]
+    [JsonPropertyName("dt")]
     public long CalculationTime { get; set; }
-    [JsonProperty("sys")]
+    [JsonPropertyName("sys")]
     public ForecastLocation Location { get; set; }
-    [JsonProperty("timezone")]
+    [JsonPropertyName("timezone")]
     public int TimeShift { get; set; }
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public long Id { get; set; }
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; }
 }

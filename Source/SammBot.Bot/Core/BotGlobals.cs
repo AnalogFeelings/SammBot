@@ -24,14 +24,18 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Discord;
+using System.Text.Json;
 
 namespace SammBot.Bot.Core;
 
 public class BotGlobals
 {
     public readonly Stopwatch RuntimeStopwatch = new Stopwatch();
-
     public readonly AllowedMentions AllowOnlyUsers = new AllowedMentions(AllowedMentionTypes.Users);
+    public readonly JsonSerializerOptions JsonSettings = new JsonSerializerOptions()
+    {
+        WriteIndented = true
+    };
         
     private BotGlobals() {}
         

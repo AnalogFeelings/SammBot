@@ -21,7 +21,6 @@
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -32,6 +31,7 @@ using Discord.Interactions;
 using Fergun.Interactive;
 using SammBot.Bot.Services;
 using SammBot.Library.Helpers;
+using System.Text.Json;
 
 namespace SammBot.Bot.Core;
 
@@ -59,7 +59,7 @@ public class MainProgram
         if (!SettingsManager.Instance.LoadConfiguration())
         {
             string fullPath = SettingsManager.Instance.BotDataDirectory;
-            string serializedSettings = JsonConvert.SerializeObject(SettingsManager.Instance.LoadedConfig, Formatting.Indented);
+            string serializedSettings = JsonSerializer.Serialize(SettingsManager.Instance.LoadedConfig, BotGlobals.Instance.JsonSettings);
 
             bootLogger.Log($"Could not load {SettingsManager.CONFIG_FILE} correctly! Make sure the path \"{fullPath}\" exists.\n" +
                            $"A template {SettingsManager.CONFIG_FILE} file has been written to that path.", LogSeverity.Fatal);

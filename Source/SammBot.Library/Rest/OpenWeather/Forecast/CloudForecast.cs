@@ -18,12 +18,12 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
 public class CloudForecast
 {
-    [JsonProperty("all")]
+    [JsonPropertyName("all")]
     public float Cloudiness { get; set; }
 }

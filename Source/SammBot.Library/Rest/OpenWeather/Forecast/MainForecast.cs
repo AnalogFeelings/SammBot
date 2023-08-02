@@ -18,26 +18,26 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
 public class MainForecast
 {
-    [JsonProperty("temp")]
+    [JsonPropertyName("temp")]
     public float Temperature { get; set; }
-    [JsonProperty("feels_like")]
+    [JsonPropertyName("feels_like")]
     public float FeelsLike { get; set; }
-    [JsonProperty("pressure")]
+    [JsonPropertyName("pressure")]
     public float Pressure { get; set; }
-    [JsonProperty("humidity")]
+    [JsonPropertyName("humidity")]
     public float Humidity { get; set; }
-    [JsonProperty("temp_min")]
+    [JsonPropertyName("temp_min")]
     public float MinimumTemperature { get; set; }
-    [JsonProperty("temp_max")]
+    [JsonPropertyName("temp_max")]
     public float MaximumTemperature { get; set; }
-    [JsonProperty("sea_level")]
+    [JsonPropertyName("sea_level")]
     public float SeaLevelPressure { get; set; }
-    [JsonProperty("grnd_level")]
+    [JsonPropertyName("grnd_level")]
     public float GroundLevelPressure { get; set; }
 }

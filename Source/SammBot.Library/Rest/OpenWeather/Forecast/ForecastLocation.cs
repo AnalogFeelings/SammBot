@@ -18,16 +18,16 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest.OpenWeather.Forecast;
 
 public class ForecastLocation
 {
-    [JsonProperty("country")]
+    [JsonPropertyName("country")]
     public string Country { get; set; }
-    [JsonProperty("sunrise")]
+    [JsonPropertyName("sunrise")]
     public long Sunrise { get; set; }
-    [JsonProperty("sunset")]
+    [JsonPropertyName("sunset")]
     public long Sunset { get; set; }
 }

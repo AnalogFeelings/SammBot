@@ -16,7 +16,7 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest.Rule34;
 
@@ -25,48 +25,48 @@ namespace SammBot.Library.Rest.Rule34;
 /// </summary>
 public class Rule34Post
 {
-    [JsonProperty("preview_url")]
+    [JsonPropertyName("preview_url")]
     public string PreviewUrl { get; set; }
-    [JsonProperty("sample_url")]
+    [JsonPropertyName("sample_url")]
     public string SampleUrl { get; set; }
-    [JsonProperty("file_url")]
+    [JsonPropertyName("file_url")]
     public string FileUrl { get; set; }
-    [JsonProperty("image")]
+    [JsonPropertyName("image")]
     public string Image { get; set; }
     
-    [JsonProperty("directory")]
+    [JsonPropertyName("directory")]
     public int Directory { get; set; }
-    [JsonProperty("hash")]
+    [JsonPropertyName("hash")]
     public string Hash { get; set; }
     
-    [JsonProperty("width")]
+    [JsonPropertyName("width")]
     public int Width { get; set; }
-    [JsonProperty("height")]
+    [JsonPropertyName("height")]
     public int Height { get; set; }
     
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public long Id { get; set; }
-    [JsonProperty("parent_id")]
+    [JsonPropertyName("parent_id")]
     public long OwnerId { get; set; }
     
-    [JsonProperty("change")]
+    [JsonPropertyName("change")]
     public long Change { get; set; }
     
-    [JsonProperty("owner")]
+    [JsonPropertyName("owner")]
     public string Owner { get; set; }
     
-    [JsonProperty("rating")]
+    [JsonPropertyName("rating")]
     public string Rating { get; set; }
-    [JsonProperty("score")]
+    [JsonPropertyName("score")]
     public int Score { get; set; }
     
-    [JsonProperty("sample")]
+    [JsonPropertyName("sample")]
     public int Sample { get; set; }
-    [JsonProperty("sample_height")]
+    [JsonPropertyName("sample_height")]
     public int SampleHeight { get; set; }
-    [JsonProperty("sample_width")]
+    [JsonPropertyName("sample_width")]
     public int SampleWidth { get; set; }
     
-    [JsonProperty("tags")]
+    [JsonPropertyName("tags")]
     public string Tags { get; set; }
 }

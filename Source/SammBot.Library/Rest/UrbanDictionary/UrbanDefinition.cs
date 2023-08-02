@@ -18,7 +18,7 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest.UrbanDictionary;
 
@@ -27,26 +27,26 @@ namespace SammBot.Library.Rest.UrbanDictionary;
 /// </summary>
 public class UrbanDefinition
 {
-    [JsonProperty("definition")]
+    [JsonPropertyName("definition")]
     public string Definition { get; set; }
-    [JsonProperty("permalink")]
+    [JsonPropertyName("permalink")]
     public string Permalink { get; set; }
-    [JsonProperty("thumbs_up")]
+    [JsonPropertyName("thumbs_up")]
     public int ThumbsUp { get; set; }
-    [JsonProperty("thumbs_down")]
+    [JsonPropertyName("thumbs_down")]
     public int ThumbsDown { get; set; }
-    [JsonProperty("sound_urls")]
+    [JsonPropertyName("sound_urls")]
     public List<string> SoundUrls { get; set; }
-    [JsonProperty("author")]
+    [JsonPropertyName("author")]
     public string Author { get; set; }
-    [JsonProperty("word")]
+    [JsonPropertyName("word")]
     public string Word { get; set; }
-    [JsonProperty("defid")]
+    [JsonPropertyName("defid")]
     public long DefinitionId { get; set; }
-    [JsonProperty("current_vote")]
+    [JsonPropertyName("current_vote")]
     public string CurrentVote { get; set; }
-    [JsonProperty("written_on")]
+    [JsonPropertyName("written_on")]
     public string WrittenOn { get; set; }
-    [JsonProperty("example")]
+    [JsonPropertyName("example")]
     public string Example { get; set; }
 }

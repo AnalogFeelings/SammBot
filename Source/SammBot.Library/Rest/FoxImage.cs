@@ -18,7 +18,7 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest;
 
@@ -27,9 +27,9 @@ namespace SammBot.Library.Rest;
 /// </summary>
 public class FoxImage
 {
-    [JsonProperty("image")]
+    [JsonPropertyName("image")]
     public string ImageUrl { get; set; }
 
-    [JsonProperty("link")]
+    [JsonPropertyName("link")]
     public string Link { get; set; }
 }

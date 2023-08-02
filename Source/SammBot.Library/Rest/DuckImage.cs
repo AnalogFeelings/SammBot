@@ -18,7 +18,7 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest;
 
@@ -27,9 +27,9 @@ namespace SammBot.Library.Rest;
 /// </summary>
 public class DuckImage
 {
-    [JsonProperty("url")]
+    [JsonPropertyName("url")]
     public string ImageUrl { get; set; }
 
-    [JsonProperty("Message")]
+    [JsonPropertyName("Message")]
     public string Message { get; set; }
 }

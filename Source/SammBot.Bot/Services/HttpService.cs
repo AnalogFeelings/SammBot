@@ -21,9 +21,9 @@ using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json;
 using SammBot.Bot.Core;
 using SammBot.Library.Extensions;
+using System.Text.Json;
 
 namespace SammBot.Bot.Services;
 
@@ -75,7 +75,7 @@ public class HttpService
             jsonReply = await responseMessage.Content.ReadAsStringAsync();
         }
 
-        T? parsedReply = JsonConvert.DeserializeObject<T>(jsonReply);
+        T? parsedReply = JsonSerializer.Deserialize<T>(jsonReply);
 
         return parsedReply;
     }

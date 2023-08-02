@@ -18,7 +18,7 @@
  */
 #endregion
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Rest.UrbanDictionary;
 
@@ -28,6 +28,6 @@ namespace SammBot.Library.Rest.UrbanDictionary;
 /// </summary>
 public class UrbanDefinitionList
 {
-    [JsonProperty("list")]
+    [JsonPropertyName("list")]
     public List<UrbanDefinition> List { get; set; }
 }

@@ -18,10 +18,10 @@
  */
 #endregion
 
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
 
 namespace SammBot.Bot.Core;
 
@@ -60,7 +60,7 @@ public class SettingsManager
 
         string configContent = File.ReadAllText(configFilePath);
         
-        LoadedConfig = JsonConvert.DeserializeObject<BotConfig>(configContent);
+        LoadedConfig = JsonSerializer.Deserialize<BotConfig>(configContent);
 
         return LoadedConfig != null;
     }
