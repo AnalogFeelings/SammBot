@@ -20,9 +20,7 @@ It uses [Matcha](https://github.com/AnalogFeelings/Matcha) for event logging!
 
 This README file is not updated often, so sometimes it's possible for new commands or modules to be added without them being listed here.
 
-<div align="center">
-  <h2>:grey_question: What is Samm-Bot?</h2>
-</div>
+## :grey_question: What is Samm-Bot?
 
 Samm-Bot is a Discord bot that I began developing around 2020 for fun.  
 Its source code was private, was written in TypeScript, and was very feature-lacking.
@@ -32,19 +30,16 @@ In 2021, I decided to rewrite it in .NET, open source it and make it much more f
 My main motivation is because currently, most large bots are owned by money-hungry people who like to shove Premium ads everywhere they can.  
 I wanted to make a free and open source bot that people could rely on for simple server-keeping tasks such as warnings, logging and more.
 
-Currently, the bot is in a **beta** state and is very unpolished.
+> [!IMPORTANT]  
+> Currently, the bot is in a **beta** state and is very unpolished.
 
-<div align="center">
-  <h2>:trophy: Maintainers</h2>
-</div>
+## :trophy: Maintainers
 
 This is a list of all the people who maintain Samm-Bot's development.
 
 * :floppy_disk: Analog Feelings - Creator and lead developer.
 
-<div align="center">
-  <h2>:books: Features</h2>
-</div>
+## :books: Features
 
 * :floppy_disk: **Bot Administration Module**: Allows the bot's owner to manage the bot remotely.
 * :gear: **Server Settings Module**: Allows you to set server-specific settings, like logging, welcome messages, etc...
@@ -57,9 +52,7 @@ This is a list of all the people who maintain Samm-Bot's development.
 * :wrench: **Utils Module**: Allows you to view RGB or HEX colors, get a user's avatar, or the weather forecast of your city.
 * :underage: **NSFW Module**: Allows you to retrieve NSFW (or SFW) images from popular sites such as rule34.
  
-<div align="center">
-  <h2>:package: Building</h2>
-</div>
+## :package: Building
 
 The .NET toolset will automatically pull all the required NuGet packages on build.  
 Samm-Bot has currently been tested on **x86-64** and **aarch64**.
@@ -69,11 +62,10 @@ For Linux and macOS users, this [tiny script](https://gist.github.com/AnalogFeel
 > [!WARNING]  
 > The file config.json must be filled in manually! Run the bot, and it will create a template config.json file for you.
 
-:warning: ([Issue #14][i14]) **JetBrains Mono Regular is needed for the `viewhex` and `viewrgb` commands in the Utils module to work!**
+> [!IMPORTANT]  
+> ([#14][i14]) JetBrains Mono Regular is needed for the `viewhex` and `viewrgb` commands in the Utils module to work!
 
-<div align="center">
-  <h2>:cd: Database Setup</h2>
-</div>
+## :cd: Database Setup
 
 Here is a small TL;DR on how to update the database in Samm-Bot.  
 Knowing how EntityFramework works is still recommended for this project.
@@ -96,25 +88,19 @@ dotnet ef database update
 
 This will apply the latest migration to the local database, or create a database if one doesn't already exist.
 
-<div align="center">
-  <h2>:judge: Code Style Guidelines</h2>
-</div>
+## :judge: Code Style Guidelines
 
 Please read the [style guidelines](STYLE_GUIDELINES.md) before creating a pull request.  
 Your pull request won't be merged until the code is up to the standards.
 
 Adding an automatic `.editorconfig` file to enforce these is of low priority right now, so please read the file thoroughly.
 
-<div align="center">
-  <h1>:balance_scale: License</h1>
-</div>
+## :balance_scale: License
 
 © Copyright 2021-2023 Analog Feelings.  
 Licensed under the [GPL v3.0 license](LICENSE).
 
-<div align="center">
-  <h1>:sparkles: Special Thanks</h1>
-</div>
+## :sparkles: Special Thanks
 
 This is a list of companies or projects who have been very helpful for the development of Samm-Bot.  
 If your project or company has been very influential in the development of Samm-Bot, it will be listed here.
