@@ -6,8 +6,8 @@
 	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	<Company>Analog Feelings</Company>
 	<Product>Samm-Bot</Product>
-	<AssemblyVersion>7.0</AssemblyVersion>
-	<FileVersion>7.0</FileVersion>
+	<AssemblyVersion>7.1</AssemblyVersion>
+	<FileVersion>7.1</FileVersion>
 	<LangVersion>11</LangVersion>
 	<Nullable>enable</Nullable>
   </PropertyGroup>
