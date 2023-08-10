@@ -60,10 +60,11 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
                                                                                     x.AuthorId == Context.User.Id &&
                                                                                     x.GuildId == Context.Guild.Id);
 
-            if (retrievedTag == null)
+            if (retrievedTag == default)
                 return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
 
             botDatabase.UserTags.Remove(retrievedTag);
+            
             await botDatabase.SaveChangesAsync();
         }
 
@@ -84,7 +85,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
         {
             UserTag? retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.GuildId == Context.Guild.Id && x.Name == Name);
 
-            if (retrievedTag == default(UserTag))
+            if (retrievedTag == default)
                 return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
 
             await FollowupAsync(retrievedTag.Reply, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
