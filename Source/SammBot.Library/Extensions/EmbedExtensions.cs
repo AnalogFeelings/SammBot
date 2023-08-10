@@ -23,8 +23,18 @@ using Discord.Interactions;
 
 namespace SammBot.Library.Extensions;
 
+/// <summary>
+/// Extension methods for working with rich embeds.
+/// </summary>
 public static class EmbedExtensions
 {
+    /// <summary>
+    /// Generates a generic embed.
+    /// </summary>
+    /// <param name="Builder">The embed builder.</param>
+    /// <param name="Context">The interaction context.</param>
+    /// <returns>The new embed.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="Context"/> is null.</exception>
     public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context)
     {
         if (Context == null)
@@ -38,5 +48,38 @@ public static class EmbedExtensions
         Builder.WithCurrentTimestamp();
 
         return Builder;
+    }
+
+    /// <summary>
+    /// Generates a generic embed that represents the success of an operation.
+    /// </summary>
+    /// <param name="Builder">The embed builder.</param>
+    /// <param name="Context">The interaction context.</param>
+    /// <returns>The new embed.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="Context"/> is null.</exception>
+    public static EmbedBuilder BuildSuccessEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context)
+    {
+        EmbedBuilder defaultEmbed = Builder.BuildDefaultEmbed(Context);
+        
+        defaultEmbed.Title = "\u2705 Success";
+        defaultEmbed.Color = Constants.GoodColor;
+
+        return defaultEmbed;
+    }
+
+    /// <summary>
+    /// Generates a generic embed that represents the failure of an operation.
+    /// </summary>
+    /// <param name="Builder">The embed builder.</param>
+    /// <param name="Context">The interaction context.</param>
+    /// <returns>The new embed.</returns>
+    public static EmbedBuilder BuildErrorEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context)
+    {
+        EmbedBuilder defaultEmbed = Builder.BuildDefaultEmbed(Context);
+        
+        defaultEmbed.Title = "\u26A0\uFE0F An error has occurred";
+        defaultEmbed.Color = Constants.BadColor;
+
+        return defaultEmbed;
     }
 }
