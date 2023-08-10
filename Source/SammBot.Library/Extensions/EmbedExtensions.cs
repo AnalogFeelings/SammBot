@@ -25,12 +25,10 @@ namespace SammBot.Library.Extensions;
 
 public static class EmbedExtensions
 {
-    public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context, string Title = "", string Description = "")
+    public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context)
     {
         if (Context == null)
             throw new ArgumentNullException(nameof(Context));
-        
-        Builder.Description = Description;
 
         Builder.WithFooter(x =>
         {

@@ -80,8 +80,11 @@ public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
             embedDescription += $"\U0001f51e **Rating**: `{filteredPosts[0].Rating.CapitalizeFirst()}`\n";
             embedDescription += $"\U0001f3f7\uFE0F **Tags**: `{filteredPosts[0].Tags.Truncate(512)}`\n";
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: embedDescription);
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+            
             replyEmbed.Title = "\U0001f633 Rule34 Search Results";
+            replyEmbed.Description = embedDescription;
+            
             replyEmbed.WithColor(new Color(170, 229, 164));
             replyEmbed.WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[0].Id}");
             replyEmbed.WithImageUrl(filteredPosts[0].FileUrl);

@@ -75,9 +75,10 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                                       $"{moduleInfo.Description}\n" +
                                       $"**Syntax**: `/{moduleInfo.SlashGroupName} <Command Name>`";
 
-                replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Module Help", moduleHeader);
+                replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
                 replyEmbed.Title = "\U0001f4c2 Module Help";
+                replyEmbed.Description = moduleHeader;
                 replyEmbed.Color = new Color(85, 172, 238);
 
                 // Check permissions of containing commands. If the command doesn't pass the check, the command
@@ -107,7 +108,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                 if (searchResult == null)
                     return ExecutionResult.FromError($"There is no command named \"{ModuleName}\". Check your spelling.");
 
-                replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Command Help");
+                replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
                 replyEmbed.Title = "\U0001f4c4 Command Help";
                 replyEmbed.Color = new Color(204, 214, 221);
@@ -175,9 +176,10 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
             string replyDescription = $"These are all the modules available to you.\n" +
                                       $"Use `/help <Group Name>` to see its commands.";
                 
-            replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Module List", replyDescription);
+            replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
             replyEmbed.Title = "\U0001f4c1 Module List";
+            replyEmbed.Description = replyDescription;
             replyEmbed.Color = new Color(85, 172, 238);
 
             foreach (ModuleInfo moduleInfo in InteractionService.Modules)

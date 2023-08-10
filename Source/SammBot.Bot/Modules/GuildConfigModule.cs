@@ -52,7 +52,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
     {
         await DeferAsync(true);
             
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, "Server Settings");
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         replyEmbed.Title = "\u2699\uFE0F Server Settings";
         replyEmbed.Description = "These are all the server settings available.\n" +

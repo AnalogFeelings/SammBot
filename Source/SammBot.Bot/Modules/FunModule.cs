@@ -479,9 +479,10 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         embedDescription += $"\U0001f44d **Thumbs Up** : {chosenDefinition.ThumbsUp}\n";
         embedDescription += $"\U0001f44e **Thumbs Down** : {chosenDefinition.ThumbsDown}\n";
         
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context, Description: embedDescription);
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
             
         replyEmbed.Title = $"\U0001f4d6 Urban Definition Of \"{chosenDefinition.Word}\"";
+        replyEmbed.Description = embedDescription;
         replyEmbed.Color = new Color(34, 102, 153);
             
         replyEmbed.WithUrl(chosenDefinition.Permalink);
