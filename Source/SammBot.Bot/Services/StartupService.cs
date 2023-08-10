@@ -186,10 +186,13 @@ public class StartupService
         try
         {
             BotStatus chosenStatus = SettingsManager.Instance.LoadedConfig.StatusList.PickRandom();
+            string gameUrl = SettingsManager.Instance.LoadedConfig.TwitchUrl;
+            ActivityType gameType = (ActivityType)chosenStatus.Type;
 
-            string? gameUrl = chosenStatus.Type == 1 ? SettingsManager.Instance.LoadedConfig.TwitchUrl : null;
-
-            await ShardedClient.SetGameAsync(chosenStatus.Content, gameUrl, (ActivityType)chosenStatus.Type);
+            if (gameType == ActivityType.CustomStatus)
+                await ShardedClient.SetCustomStatusAsync(chosenStatus.Content);
+            else
+                await ShardedClient.SetGameAsync(chosenStatus.Content, gameUrl, gameType);
         }
         catch (Exception ex)
         {
