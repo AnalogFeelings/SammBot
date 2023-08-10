@@ -25,6 +25,7 @@ using Discord;
 using Discord.WebSocket;
 using SammBot.Bot.Core;
 using SammBot.Bot.Database;
+using SammBot.Library;
 using SammBot.Library.Database.Models;
 using SammBot.Library.Extensions;
 
@@ -32,10 +33,6 @@ namespace SammBot.Bot.Services;
 
 public class EventLoggingService
 {
-    private readonly Color _GoodColor = new Color(119, 178, 85); // Green
-    private readonly Color _BadColor = new Color(255, 205, 77); // Yellow
-    private readonly Color _VeryBadColor = new Color(221, 46, 68); // Red
-        
     public async Task OnUserJoinedAsync(SocketGuildUser NewUser)
     {
         using (BotDatabase botDatabase = new BotDatabase())
@@ -69,7 +66,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f44b User Joined";
                     replyEmbed.Description = "A new user has joined the server.";
-                    replyEmbed.WithColor(_GoodColor);
+                    replyEmbed.WithColor(Constants.GoodColor);
 
                     replyEmbed.AddField("\U0001f464 User", NewUser.Mention);
                     replyEmbed.AddField("\U0001faaa User ID", NewUser.Id);
@@ -106,7 +103,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f590\uFE0F User Left";
                     replyEmbed.Description = "A user has left the server.";
-                    replyEmbed.WithColor(_VeryBadColor);
+                    replyEmbed.WithColor(Constants.VeryBadColor);
 
                     replyEmbed.AddField("\U0001f464 User", User.Mention);
                     replyEmbed.AddField("\U0001faaa User ID", User.Id);
@@ -149,7 +146,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\u274C Message Deleted";
                     replyEmbed.Description = "A message has been deleted.";
-                    replyEmbed.WithColor(_VeryBadColor);
+                    replyEmbed.WithColor(Constants.VeryBadColor);
 
                     string messageContent = string.Empty;
                     string attachments = string.Empty;
@@ -212,7 +209,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\u274C Messages Bulk Deleted";
                     replyEmbed.Description = "Multiple messages have been deleted at once.";
-                    replyEmbed.WithColor(_VeryBadColor);
+                    replyEmbed.WithColor(Constants.VeryBadColor);
 
                     replyEmbed.AddField("\U0001f4e8 Message Count", CachedMessages.Count, true);
                     replyEmbed.AddField("\U0001f4e2 Channel", $"<#{CachedChannel.Value.Id}>", true);
@@ -248,7 +245,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f4e6 Role Created";
                     replyEmbed.Description = "A new role has been created.";
-                    replyEmbed.WithColor(_GoodColor);
+                    replyEmbed.WithColor(Constants.GoodColor);
                         
                     replyEmbed.AddField("\U0001f465 Role", NewRole.Mention);
                     replyEmbed.AddField("\U0001faaa Role ID", NewRole.Id);
@@ -289,7 +286,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f4e6 Role Updated";
                     replyEmbed.Description = "A role has been updated.";
-                    replyEmbed.WithColor(_BadColor);
+                    replyEmbed.WithColor(Constants.BadColor);
 
                     if (OutdatedRole.Name != UpdatedRole.Name)
                     {
@@ -344,7 +341,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\U0001f528 User Banned";
                     replyEmbed.Description = "A user has been banned from the server.";
-                    replyEmbed.WithColor(_VeryBadColor);
+                    replyEmbed.WithColor(Constants.VeryBadColor);
                         
                     replyEmbed.AddField("\U0001f464 User", BannedUser.GetFullUsername());
                     replyEmbed.AddField("\U0001faaa User ID", BannedUser.Id);
@@ -381,7 +378,7 @@ public class EventLoggingService
 
                     replyEmbed.Title = "\u2705 User Unbanned";
                     replyEmbed.Description = "A user has been unbanned from the server.";
-                    replyEmbed.WithColor(_GoodColor);
+                    replyEmbed.WithColor(Constants.GoodColor);
                         
                     replyEmbed.AddField("\U0001f464 User", UnbannedUser.GetFullUsername());
                     replyEmbed.AddField("\U0001faaa User ID", UnbannedUser.Id);
