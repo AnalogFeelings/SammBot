@@ -88,7 +88,10 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             if (retrievedTag == default)
                 return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
 
-            await FollowupAsync(retrievedTag.Reply, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            string builtMessage = $"\u2611\uFE0F Here is the tag named `{Name}`:\n" +
+                                  retrievedTag.Reply;
+
+            await FollowupAsync(builtMessage, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
