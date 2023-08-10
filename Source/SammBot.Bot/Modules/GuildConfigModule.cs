@@ -151,11 +151,8 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
             await botDatabase.SaveChangesAsync();
         }
             
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-
-        replyEmbed.Title = "\u2705 Success";
-        replyEmbed.Description = $"Successfully set setting **{SettingName}** to value `{newValue}`.";
-        replyEmbed.WithColor(119, 178, 85);
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
+                                                    .WithDescription($"Successfully set setting **{SettingName}** to value `{newValue}`.");
             
         await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
             

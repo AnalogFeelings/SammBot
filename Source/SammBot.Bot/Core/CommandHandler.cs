@@ -74,24 +74,10 @@ public class CommandHandler
             {
                 string finalMessage;
 
-                EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed((ShardedInteractionContext)Context);
-                replyEmbed.Title = "\u26A0 An error has occurred.";
-                replyEmbed.Color = new Color(255, 204, 77);
+                EmbedBuilder replyEmbed = new EmbedBuilder().BuildErrorEmbed((ShardedInteractionContext)Context);
 
                 switch (Result.Error)
                 {
-                    case InteractionCommandError.UnknownCommand:
-                        if (Context.Interaction is SocketMessageComponent messageComponent)
-                        {
-                            if (InteractiveService.Callbacks.ContainsKey(messageComponent.Message.Id))
-                                return;
-                        }
-                        
-                        replyEmbed.Title = "\u2139\uFE0F I didn't quite understand that...";
-                        replyEmbed.Color = new Color(59, 136, 195);
-                            
-                        finalMessage = $"There is no command named like that!\nUse the `/help` command for a command list.";
-                        break;
                     case InteractionCommandError.BadArgs:
                         finalMessage = $"You provided an incorrect number of parameters!\nUse the `/help " +
                                        $"{SlashCommand.Module.Name} {SlashCommand.Name}` command to see all of the parameters.";

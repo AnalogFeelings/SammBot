@@ -55,11 +55,11 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
         await Context.Guild.AddBanAsync(TargetUser, PruneDays, banReason);
 
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-            .WithTitle($"🔨 Banned user {TargetUser.Username}.").WithColor(new Color(255, 0, 0));
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
+                                                    .WithDescription($"Successfully banned user `{TargetUser.GetFullUsername()}`.");
 
-        replyEmbed.Description = $"**Reason**: {banReason}\n";
-        replyEmbed.Description += $"**Prune Days**: {PruneDays} day(s).";
+        replyEmbed.AddField("\U0001f914 Reason", banReason);
+        replyEmbed.AddField("\U0001f5d3\uFE0F Prune Days", $"{PruneDays} day(s).");
 
         await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
@@ -79,10 +79,10 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
         await TargetUser.KickAsync(kickReason);
 
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-            .WithTitle($"👢 Kicked user {TargetUser.Username}.").WithColor(new Color(255, 255, 0));
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
+                                                    .WithDescription($"Successfully kicked user `{TargetUser.GetFullUsername()}`.");
 
-        replyEmbed.Description = $"**Reason**: {kickReason}";
+        replyEmbed.AddField("\U0001f914 Reason", kickReason);
 
         await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
@@ -115,29 +115,29 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             await botDatabase.UserWarnings.AddAsync(newWarning);
             await botDatabase.SaveChangesAsync();
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-                .WithTitle($"⚠️ Warning Issued").WithColor(new Color(255, 205, 77));
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
+                                                        .WithDescription($"Successfully warned user <@{TargetUser.Id}>.");
 
-            replyEmbed.Description = $"User <@{TargetUser.Id}> has been warned successfully. Details below.\n\n";
-
-            replyEmbed.Description += $"**Reason**: {Reason}\n";
-            replyEmbed.Description += $"**Warn ID**: {newWarning.Id}\n\n";
+            replyEmbed.AddField("\U0001f914 Reason", Reason);
+            replyEmbed.AddField("\U0001f6c2 Warn ID", newWarning.Id);
 
             //DM the user about it.
             try
             {
                 EmbedBuilder directMessageEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-                    .WithTitle($"⚠️ You have been warned in \"{Context.Guild.Name}\".").WithColor(new Color(255, 205, 77));
+                                                                    .WithTitle("\u26A0\uFE0F You have been warned")
+                                                                    .WithDescription("You may see all of your warnings with the `/mod warns` command in the server.")
+                                                                    .WithColor(Constants.BadColor);
 
-                directMessageEmbed.Description = $"**Reason**: {Reason}\n";
-                directMessageEmbed.Description += $"**Warn ID**: {newWarning.Id}\n\n";
-                directMessageEmbed.Description += $"You may see all of your warnings with the `/mod warns` command.";
+                directMessageEmbed.AddField("\U0001faaa Server", Context.Guild.Name);
+                directMessageEmbed.AddField("\U0001f914 Reason", Reason);
+                directMessageEmbed.AddField("\U0001f6c2 Warn ID", newWarning.Id);
 
                 await TargetUser.SendMessageAsync(embed: directMessageEmbed.Build());
             }
             catch (Exception)
             {
-                replyEmbed.Description += "I could not DM the user about this warning.";
+                replyEmbed.Description += "\nI could not message the user about this warning.";
             }
 
             await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
@@ -260,12 +260,12 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
         long untilDate = (DateTimeOffset.Now + Duration).ToUnixTimeSeconds();
 
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-            .WithTitle($"⏱️ Timed out user {TargetUser.Username}.").WithColor(Color.LightGrey);
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
+                                                    .WithDescription($"Successfully timed out user `{TargetUser.GetFullUsername()}`.");
 
-        replyEmbed.Description = $"**Reason**: {Reason}\n";
-        replyEmbed.Description += $"**Duration**: {days} day(s), {hours} hour(s), {minutes} minute(s) and {seconds} second(s).\n";
-        replyEmbed.Description += $"**Expires in**: <t:{untilDate}:F>";
+        replyEmbed.AddField("\U0001f914 Reason", muteReason);
+        replyEmbed.AddField("\u23F1\uFE0F Duration", $"{days} day(s), {hours} hour(s), {minutes} minute(s) and {seconds} second(s).");
+        replyEmbed.AddField("\u23F0 Expires In", $"<t:{untilDate}:F>");
 
         await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
 
