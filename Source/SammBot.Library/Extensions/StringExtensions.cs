@@ -42,7 +42,7 @@ public static class StringExtensions
     }
 
     //Thanks Joshua Honig from StackOverflow :)
-    public static int DamerauLevenshteinDistance(this string Source, string Target, int Threshold)
+    public static int DamerauDistance(this string Source, string Target, int Threshold)
     {
         void Swap<T>(ref T Arg1, ref T Arg2)
         {
