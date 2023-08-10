@@ -107,8 +107,8 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<UserTag> filteredTags = botDatabase.UserTags.Where(x => x.GuildId == Context.Guild.Id && 
-                                                                         Name.DamerauDistance(x.Name, SettingsManager.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
+            List<UserTag> allTags = await botDatabase.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToListAsync();
+            List<UserTag> filteredTags = allTags.Where(x => Name.DamerauDistance(x.Name, SettingsManager.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
             if (!filteredTags.Any())
                 return ExecutionResult.FromError($"No tags found with a name similar to \"{Name}\".");
