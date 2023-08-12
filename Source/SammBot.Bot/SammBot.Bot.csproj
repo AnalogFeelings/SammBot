@@ -28,6 +28,27 @@
     <EmbeddedResource Remove="Source\obj\**" />
     <None Remove="Source\obj\**" />
     <None Remove="SammBot.Bot.csproj.DotSettings" />
+    <None Update="Resources\Twemoji\274c.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Twemoji\1f494.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Twemoji\2764.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Twemoji\1f49d.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Twemoji\1f49b.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Twemoji\1f496.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Twemoji\1f497.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -77,6 +98,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SammBot.Library\SammBot.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Twemoji\" />
   </ItemGroup>
   
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
