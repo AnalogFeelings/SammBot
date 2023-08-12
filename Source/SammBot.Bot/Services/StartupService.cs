@@ -114,7 +114,7 @@ public class StartupService
         _ = Task.Run(() => WarmUpDatabase());
 
         BotLogger.Log("Initializing command handler...", LogSeverity.Information);
-        await ServiceProvider.GetRequiredService<CommandHandler>().InitializeHandlerAsync();
+        await ServiceProvider.GetRequiredService<CommandService>().InitializeHandlerAsync();
         BotLogger.Log("Succesfully initialized command handler.", LogSeverity.Success);
     }
 

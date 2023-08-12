@@ -170,7 +170,7 @@ public class MainProgram
         Services.AddSingleton(_ShardedClient)
             .AddSingleton(_InteractionService)
             .AddSingleton<HttpService>()
-            .AddSingleton<CommandHandler>()
+            .AddSingleton<CommandService>()
             .AddSingleton<InteractiveService>()
             .AddSingleton<StartupService>()
             .AddSingleton<Logger>()

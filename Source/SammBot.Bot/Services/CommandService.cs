@@ -19,36 +19,33 @@
 #endregion
 
 using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using SammBot.Bot.Core;
+using SammBot.Library.Extensions;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using Discord.Interactions;
-using Fergun.Interactive;
-using SammBot.Bot.Services;
-using SammBot.Library.Extensions;
 
-namespace SammBot.Bot.Core;
+namespace SammBot.Bot.Services;
 
-public class CommandHandler
+public class CommandService
 {
-    private DiscordShardedClient ShardedClient { get; set; }
-    private IServiceProvider ServiceProvider { get; set; }
-    private Logger BotLogger { get; set; }
+    private DiscordShardedClient ShardedClient { get; }
+    private IServiceProvider ServiceProvider { get; }
+    private Logger BotLogger { get; }
 
-    private InteractionService InteractionService { get; set; }
-    private InteractiveService InteractiveService { get; set; }
-    private EventLoggingService EventLoggingService { get; set; }
+    private InteractionService InteractionService { get; }
+    private EventLoggingService EventLoggingService { get; }
 
-    public CommandHandler(DiscordShardedClient Client, InteractionService InteractionService, IServiceProvider Services, Logger Logger)
+    public CommandService(IServiceProvider Services)
     {
-        this.InteractionService = InteractionService;
-        ShardedClient = Client;
         ServiceProvider = Services;
-        BotLogger = Logger;
         
-        InteractiveService = ServiceProvider.GetRequiredService<InteractiveService>();
+        InteractionService = ServiceProvider.GetRequiredService<InteractionService>();
+        ShardedClient = ServiceProvider.GetRequiredService<DiscordShardedClient>();
+        BotLogger = ServiceProvider.GetRequiredService<Logger>();
         EventLoggingService = ServiceProvider.GetRequiredService<EventLoggingService>();
     }
 
@@ -56,7 +53,6 @@ public class CommandHandler
     {
         await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
 
-        ShardedClient.MessageReceived += OnMessageReceivedAsync;
         ShardedClient.InteractionCreated += HandleInteractionAsync;
             
         InteractionService.InteractionExecuted += OnInteractionExecutedAsync;
@@ -68,8 +64,6 @@ public class CommandHandler
     {
         try
         {
-            AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-
             if (!Result.IsSuccess)
             {
                 string finalMessage;
@@ -90,33 +84,9 @@ public class CommandHandler
                 replyEmbed.Description = finalMessage;
 
                 if (Context.Interaction.HasResponded)
-                {
-                    await Context.Interaction.FollowupAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
-                }
+                    await Context.Interaction.FollowupAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
                 else
-                {
-                    await Context.Interaction.RespondAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: allowedMentions);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            BotLogger.LogException(ex);
-        }
-    }
-        
-    private async Task OnMessageReceivedAsync(SocketMessage ReceivedMessage)
-    {
-        try
-        {
-            if (ReceivedMessage.Content.StartsWith($"<@{ShardedClient.CurrentUser.Id}>"))
-            {
-                MessageReference messageReference = new MessageReference(ReceivedMessage.Id, ReceivedMessage.Channel.Id, null, false);
-                AllowedMentions allowedMentions = new AllowedMentions(AllowedMentionTypes.Users);
-
-                await ReceivedMessage.Channel.SendMessageAsync($"Hi! I'm **{SettingsManager.BOT_NAME}**!\n" + 
-                                                               $"You can use `/help` to see a list of my available commands!", 
-                    allowedMentions: allowedMentions, messageReference: messageReference);
+                    await Context.Interaction.RespondAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
             }
         }
         catch (Exception ex)
