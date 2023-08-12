@@ -21,7 +21,6 @@
 using Discord;
 using Discord.WebSocket;
 using SkiaSharp;
-using Svg.Skia;
 using System;
 using System.IO;
 using System.Linq;
