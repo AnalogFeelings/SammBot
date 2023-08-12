@@ -1,6 +1,5 @@
 ﻿{
   "RotatingStatus": true,
-  "RotatingAvatar": false,
   "WaitForDebugger": false,
   "OnlyOwnerMode": false,
   "BotToken": null,
@@ -11,8 +10,6 @@
   "OwnerUserId": null,
   "CommandLogFormat": "User %username% is executing a command at channel #%channelname%.",
   "HttpUserAgent": "My User Agent",
-  "AvatarRotationTime": 1,
-  "AvatarRecentQueueSize": 10, 
   "MessageCacheSize": 2000,
   "TagDistance": 3,
   "ShipBarStartEmpty": "<:FirstSegmentEmpty:999755752644280331>",

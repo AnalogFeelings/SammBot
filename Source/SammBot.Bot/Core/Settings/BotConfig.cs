@@ -43,9 +43,6 @@ public class BotConfig
     public int TagDistance { get; set; } = 3;
     public bool OnlyOwnerMode { get; set; } = false;
     public bool RotatingStatus { get; set; } = false;
-    public bool RotatingAvatar { get; set; } = false;
-    public int AvatarRotationTime { get; set; } = 1;
-    public int AvatarRecentQueueSize { get; set; } = 10;
     public bool WaitForDebugger { get; set; } = false;
     public string TwitchUrl { get; set; } = "https://www.twitch.tv/coreaesthetics";
     public string CommandLogFormat { get; set; } = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
