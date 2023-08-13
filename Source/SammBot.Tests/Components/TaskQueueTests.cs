@@ -23,12 +23,7 @@ namespace SammBot.Tests.Components;
 [TestClass]
 public class TaskQueueTests
 {
-    private readonly TaskQueue _TaskQueue;
-
-    public TaskQueueTests()
-    {
-        _TaskQueue = new TaskQueue(1, TimeSpan.Zero);
-    }
+    private readonly TaskQueue _TaskQueue = new TaskQueue(1, TimeSpan.Zero);
 
     [TestMethod]
     public async Task ConcurrencyTest()
