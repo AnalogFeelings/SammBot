@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         configuration: [ Debug, Release ]
-        target-platform: [ AnyCPU ]
+        target-platform: [ Any CPU ]
         dotnet-version: [ '7.0.x' ]
 
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
         run: dotnet restore
         
       - name: Build Tests
-        run: dotnet build --configuration ${{ matrix.configuration }} --no-restore /p:Platform=${{ matrix.target-platform }}
+        run: dotnet build --configuration ${{ matrix.configuration }} --no-restore /p:Platform="${{ matrix.target-platform }}"
         
       - name: Run Tests
         run: dotnet test --no-restore --verbosity normal
