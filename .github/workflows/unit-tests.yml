@@ -1,0 +1,50 @@
+﻿name: .NET 7.0.x
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+  workflow_dispatch:
+
+jobs:
+  run-unit-tests:
+    strategy:
+      matrix:
+        configuration: [ Debug, Release ]
+        target-platform: [ AnyCPU ]
+        dotnet-version: [ '7.0.x' ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3.5.2
+
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Check Dependency Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: Install Dependencies
+        run: dotnet restore
+        
+      - name: Build Tests
+        run: dotnet build --configuration ${{ matrix.configuration }} --no-restore /p:Platform=${{ matrix.target-platform }}
+        
+      - name: Run Tests
+        run: dotnet test --no-restore --verbosity normal
