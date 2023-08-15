@@ -74,10 +74,12 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
                 //thanks stack overflow lol
                 int textPosVertical = imageInfo.Height / 2;
+                float textX = imageInfo.Width / 2f;
                 float textY = textPosVertical + (((-paint.FontMetrics.Ascent + paint.FontMetrics.Descent) / 2) - paint.FontMetrics.Descent);
 
-                surface.Canvas.DrawText(parsedColor.ToHexString().ToUpper(), imageInfo.Width / 2f, textY,
-                    new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48), paint);
+                SKFont textFont = new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48);
+
+                surface.Canvas.DrawText(parsedColor.ToHexString(), textX, textY, textFont, paint);
             }
 
             using (SKImage image = surface.Snapshot())
@@ -110,8 +112,8 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
                          "Also converts it to HEX, CMYK, HSV and HSL.")]
     [RateLimit(3, 2)]
     public async Task<RuntimeResult> VisualizeColorRgb([Summary(description: "The amount of red. Ranges between 0 to 255.")] byte Red, 
-        [Summary(description: "The amount of green. Ranges between 0 to 255.")] byte Green,
-        [Summary(description: "The amount of blue. Ranges between 0 to 255.")] byte Blue)
+                                                       [Summary(description: "The amount of green. Ranges between 0 to 255.")] byte Green,
+                                                       [Summary(description: "The amount of blue. Ranges between 0 to 255.")] byte Blue)
     {
         const string fileName = "colorView.png";
         
@@ -135,10 +137,12 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
                 //thanks stack overflow lol
                 int textPosVertical = imageInfo.Height / 2;
+                float textX = imageInfo.Width / 2f;
                 float textY = textPosVertical + (((-paint.FontMetrics.Ascent + paint.FontMetrics.Descent) / 2) - paint.FontMetrics.Descent);
 
-                surface.Canvas.DrawText(parsedColor.ToRgbString().ToUpper(), imageInfo.Width / 2f, textY,
-                    new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 42), paint);
+                SKFont textFont = new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 42);
+
+                surface.Canvas.DrawText(parsedColor.ToRgbString(), textX, textY, textFont, paint);
             }
 
             using (SKImage image = surface.Snapshot())
@@ -167,8 +171,8 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     }
 
     [SlashCommand("avatar", "Gets the avatar of a user.")]
-    [DetailedDescription("Gets the avatar of a user. If **User** is a server user, it will display the per-guild avatar (if they have any), and send a link to the global one in " +
-                         "the embed description.")]
+    [DetailedDescription("Gets the avatar of a user. If **User** is a server user, it will display the per-guild avatar " +
+                         "(if they have any), and send a link to the global one in the embed description.")]
     [RateLimit(3, 2)]
     public async Task<RuntimeResult> GetProfilePicAsync([Summary(description: "Leave empty to get your own profile picture.")] SocketUser? User = null)
     {
