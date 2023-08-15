@@ -35,6 +35,10 @@ using System.Text.Json;
 
 namespace SammBot.Bot.Core;
 
+/// <summary>
+/// A class containing all the startup logic
+/// for the bot.
+/// </summary>
 public class MainProgram
 {
     private DiscordShardedClient _ShardedClient = default!;
@@ -47,6 +51,9 @@ public class MainProgram
         AsyncHelper.RunSync(() => mainProgram.MainAsync());
     }
 
+    /// <summary>
+    /// The actual entry point for the application.
+    /// </summary>
     private async Task MainAsync()
     {
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
@@ -152,30 +159,36 @@ public class MainProgram
 
         bootLogger.Log("Configuring service provider...", LogSeverity.Information);
 
-        ServiceCollection serviceCollection = new ServiceCollection();
-        ConfigureServices(serviceCollection);
-
-        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+        ServiceProvider serviceProvider = ConfigureServiceProvider();
 
         bootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
 
         bootLogger.Log("Starting the startup service...", LogSeverity.Information);
         await serviceProvider.GetRequiredService<StartupService>().StartAsync();
 
+        // Never exit unless a critical exception occurs.
         await Task.Delay(-1);
     }
 
-    private void ConfigureServices(IServiceCollection Services)
+    /// <summary>
+    /// Configures a new <see cref="ServiceProvider"/> for use.
+    /// </summary>
+    /// <returns>A new service provider.</returns>
+    private ServiceProvider ConfigureServiceProvider()
     {
-        Services.AddSingleton(_ShardedClient)
-            .AddSingleton(_InteractionService)
-            .AddSingleton<HttpService>()
-            .AddSingleton<CommandService>()
-            .AddSingleton<InteractiveService>()
-            .AddSingleton<StartupService>()
-            .AddSingleton<Logger>()
-            .AddSingleton<RandomService>()
-            .AddSingleton<NsfwService>()
-            .AddSingleton<EventLoggingService>();
+        ServiceCollection serviceCollection = new ServiceCollection();
+        
+        serviceCollection.AddSingleton(_ShardedClient)
+                         .AddSingleton(_InteractionService)
+                         .AddSingleton<HttpService>()
+                         .AddSingleton<CommandService>()
+                         .AddSingleton<InteractiveService>()
+                         .AddSingleton<StartupService>()
+                         .AddSingleton<Logger>()
+                         .AddSingleton<RandomService>()
+                         .AddSingleton<NsfwService>()
+                         .AddSingleton<EventLoggingService>();
+
+        return serviceCollection.BuildServiceProvider();
     }
 }
