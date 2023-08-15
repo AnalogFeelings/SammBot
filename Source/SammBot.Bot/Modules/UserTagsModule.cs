@@ -54,11 +54,15 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             UserTag? retrievedTag;
 
             if ((Context.User as SocketGuildUser)!.GuildPermissions.Has(GuildPermission.ManageMessages))
+            {
                 retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == Name && x.GuildId == Context.Guild.Id);
+            }
             else
+            {
                 retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == Name &&
                                                                                     x.AuthorId == Context.User.Id &&
                                                                                     x.GuildId == Context.Guild.Id);
+            }
 
             if (retrievedTag == default)
                 return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
