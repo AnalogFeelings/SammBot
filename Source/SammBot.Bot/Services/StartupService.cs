@@ -106,14 +106,14 @@ public class StartupService
             Logger.Log($"Only Owner Mode is active. {SettingsManager.BOT_NAME} will only handle commands sent by the bot account owner.", LogSeverity.Warning);
             
         Logger.Log("Thawing the bot database...", LogSeverity.Information);
-        _ = Task.Run(() => WarmUpDatabase());
+        _ = Task.Run(() => ThawBotDatabase());
 
         Logger.Log("Initializing command handler...", LogSeverity.Information);
         await ServiceProvider.GetRequiredService<CommandService>().InitializeHandlerAsync();
         Logger.Log("Succesfully initialized command handler.", LogSeverity.Success);
     }
 
-    private Task WarmUpDatabase()
+    private Task ThawBotDatabase()
     {
         try
         {
