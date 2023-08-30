@@ -16,18 +16,20 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System;
+using SammBot.Library.Attributes;
 
-namespace SammBot.Bot.Services;
+namespace SammBot.Library.Rest.E621;
 
-public class NsfwService
+/// <summary>
+/// A class used to pass search parameters to the e621
+/// API.
+/// </summary>
+public class E621SearchParameters
 {
-    private const string _R34_DOMAIN = "api.rule34.xxx";
-    private const string _E621_DOMAIN = "e621.net";
-    
-    public NsfwService(HttpService HttpService)
-    {
-        HttpService.RegisterDomainQueue(_R34_DOMAIN, 3, TimeSpan.FromSeconds(2));
-        HttpService.RegisterDomainQueue(_E621_DOMAIN, 1, TimeSpan.FromSeconds(1));
-    }
+    [UglyName("limit")]
+    public int Limit { get; set; }
+    [UglyName("tags")]
+    public string Tags { get; set; }
+    [UglyName("page")]
+    public string PageNumber { get; set; }
 }

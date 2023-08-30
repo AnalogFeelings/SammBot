@@ -16,18 +16,19 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System;
+using System.Text.Json.Serialization;
 
-namespace SammBot.Bot.Services;
+namespace SammBot.Library.Rest.E621;
 
-public class NsfwService
+/// <summary>
+/// A class containing a post's score in e621.
+/// </summary>
+public class E621Score
 {
-    private const string _R34_DOMAIN = "api.rule34.xxx";
-    private const string _E621_DOMAIN = "e621.net";
-    
-    public NsfwService(HttpService HttpService)
-    {
-        HttpService.RegisterDomainQueue(_R34_DOMAIN, 3, TimeSpan.FromSeconds(2));
-        HttpService.RegisterDomainQueue(_E621_DOMAIN, 1, TimeSpan.FromSeconds(1));
-    }
+    [JsonPropertyName("up")]
+    public int Upvotes { get; set; }
+    [JsonPropertyName("down")]
+    public int Downvotes { get; set; }
+    [JsonPropertyName("total")]
+    public int TotalVotes { get; set; }
 }

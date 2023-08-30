@@ -16,18 +16,15 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System;
+using System.Text.Json.Serialization;
 
-namespace SammBot.Bot.Services;
+namespace SammBot.Library.Rest.E621;
 
-public class NsfwService
+/// <summary>
+/// A class that contains a post query reply from e621.
+/// </summary>
+public class E621Reply
 {
-    private const string _R34_DOMAIN = "api.rule34.xxx";
-    private const string _E621_DOMAIN = "e621.net";
-    
-    public NsfwService(HttpService HttpService)
-    {
-        HttpService.RegisterDomainQueue(_R34_DOMAIN, 3, TimeSpan.FromSeconds(2));
-        HttpService.RegisterDomainQueue(_E621_DOMAIN, 1, TimeSpan.FromSeconds(1));
-    }
+    [JsonPropertyName("posts")]
+    public List<E621Post> Posts { get; set; }
 }
