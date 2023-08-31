@@ -39,7 +39,7 @@ namespace SammBot.Bot.Modules;
 
 [PrettyName("Information")]
 [Group("info", "Bot information and statistics.")]
-[ModuleEmoji("\u2139")]
+[ModuleEmoji("\u2139\uFE0F")]
 public class InformationModule : InteractionModuleBase<ShardedInteractionContext>
 {
     [UsedImplicitly]  public DiscordShardedClient ShardedClient { get; init; } = default!;
