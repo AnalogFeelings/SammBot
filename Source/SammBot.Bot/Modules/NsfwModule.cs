@@ -36,9 +36,9 @@ using SammBot.Library.Rest.Rule34;
 
 namespace SammBot.Bot.Modules;
 
-[PrettyName("NSFW")]
-[Group("nsfw", "NSFW commands such as rule34 search, and more. Requires NSFW channel.")]
-[ModuleEmoji("\U0001f51e")]
+[PrettyName("Booru")]
+[Group("booru", "Commands to retrieve images from Booru-style sites.")]
+[ModuleEmoji("\U0001f5bc\uFE0F")]
 public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
 {
     [UsedImplicitly] public HttpService HttpService { get; init; } = default!;

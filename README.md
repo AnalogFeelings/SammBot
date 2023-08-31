@@ -52,7 +52,7 @@ This is a list of all the people who maintain Samm-Bot's development.
 * :information_source: **Information Module**: Shows information about the bot and can also show information about a user or server.
 * :slot_machine: **Random Module**: Retrieve random content from the cat, dog, fox or duck APIs.
 * :wrench: **Utils Module**: Allows you to view RGB or HEX colors, get a user's avatar, or the weather forecast of your city.
-* :underage: **NSFW Module**: Allows you to retrieve NSFW (or SFW) images from popular sites such as rule34.
+* :framed_picture: **Booru Module**: Allows you to retrieve NSFW (or SFW) images from popular image boards.
  
 ## :package: Building
 
