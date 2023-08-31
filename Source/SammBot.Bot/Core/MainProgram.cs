@@ -186,7 +186,7 @@ public class MainProgram
                          .AddSingleton<StartupService>()
                          .AddSingleton<Logger>()
                          .AddSingleton<RandomService>()
-                         .AddSingleton<NsfwService>()
+                         .AddSingleton<BooruService>()
                          .AddSingleton<EventLoggingService>();
 
         return serviceCollection.BuildServiceProvider();

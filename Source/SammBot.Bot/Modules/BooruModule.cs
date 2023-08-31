@@ -39,7 +39,7 @@ namespace SammBot.Bot.Modules;
 [PrettyName("Booru")]
 [Group("booru", "Commands to retrieve images from Booru-style sites.")]
 [ModuleEmoji("\U0001f5bc\uFE0F")]
-public class NsfwModule : InteractionModuleBase<ShardedInteractionContext>
+public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 {
     [UsedImplicitly] public HttpService HttpService { get; init; } = default!;
     [UsedImplicitly] public InteractiveService InteractiveService { get; init; } = default!;
