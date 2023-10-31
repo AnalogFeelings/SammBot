@@ -81,16 +81,12 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.Description = moduleHeader;
                 replyEmbed.Color = new Color(85, 172, 238);
 
-                // Check permissions of containing commands. If the command doesn't pass the check, the command
+                // Check attributes of containing commands. If the command doesn't pass the check, the command
                 // doesn't get added to the output embed.
                 bool foundCommand = false;
                 foreach (SlashCommandInfo command in moduleInfo.SlashCommands)
                 {
                     if (command.Attributes.Any(x => x is HideInHelp)) continue;
-
-                    PreconditionResult preconditionResult = await command.CheckPreconditionsAsync(Context, ServiceProvider);
-
-                    if (!preconditionResult.IsSuccess) continue;
 
                     replyEmbed.AddField(command.Name, $"{(string.IsNullOrWhiteSpace(command.Description) ? "No summary." : command.Description)}", true);
                     foundCommand = true;
@@ -186,15 +182,13 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
             {
                 bool foundCommand = false;
 
-                // Check permissions of each command. If no commands pass this check, the module
+                // Check attributes of each command. If no commands pass this check, the module
                 // doesn't get added to the output embed.
                 foreach (SlashCommandInfo command in moduleInfo.SlashCommands)
                 {
-                    PreconditionResult preconditionResult = await command.CheckPreconditionsAsync(Context, ServiceProvider);
-
                     if (command.Attributes.Any(x => x is HideInHelp)) continue;
 
-                    if (preconditionResult.IsSuccess) foundCommand = true;
+                    foundCommand = true;
                 }
 
                 if (foundCommand)
