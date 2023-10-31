@@ -60,67 +60,23 @@ public static class ColorExtensions
 
     public static string ToHsvString(this SKColor Color)
     {
-        //Convert 0 to 255 to 0 to 1
-        float red = Color.Red / 255f;
-        float green = Color.Green / 255f;
-        float blue = Color.Blue / 255f;
+        Color.ToHsv(out float h, out float s, out float v);
 
-        double cMax = Math.Max(red, Math.Max(green, blue));
-        double cMin = Math.Min(red, Math.Min(green, blue));
-        double cDifference = cMax - cMin;
+        double roundedHue = Math.Round(h, 0);
+        double roundedSaturation = Math.Round(s, 0);
+        double roundedValue = Math.Round(v, 0);
 
-        double h = -1;
-        double s = -1;
-        double v = 0;
-
-        if (cMax == cMin) h = 0;
-        else if (cMax == red) h = (60 * ((green - blue) / cDifference) + 360) % 360;
-        else if (cMax == green) h = (60 * ((blue - red) / cDifference) + 120) % 360;
-        else if (cMax == blue) h = (60 * ((red - green) / cDifference) + 240) % 360;
-
-        if (cMax == 0) s = 0;
-        else s = (cDifference / cMax) * 100;
-
-        v = cMax * 100;
-
-        h = Math.Round(h, 0);
-        s = Math.Round(s, 0);
-        v = Math.Round(v, 0);
-
-        return $"hsv({h}, {s}%, {v}%)";
+        return $"hsv({roundedHue}, {roundedSaturation}%, {roundedValue}%)";
     }
 
     public static string ToHslString(this SKColor Color)
     {
-        //Convert 0 to 255 to 0 to 1
-        float red = Color.Red / 255f;
-        float green = Color.Green / 255f;
-        float blue = Color.Blue / 255f;
+        Color.ToHsl(out float h, out float s, out float l);
 
-        double cMax = Math.Max(red, Math.Max(green, blue));
-        double cMin = Math.Min(red, Math.Min(green, blue));
-        double cDifference = cMax - cMin;
+        double roundedHue = Math.Round(h, 0);
+        double roundedSaturation = Math.Round(s, 0);
+        double roundedLuminosity = Math.Round(l, 0);
 
-        double h = 0;
-        double s = 0;
-        double l = (cMax + cMin) / 2f;
-
-        if (cDifference != 0)
-        {
-            if (l <= 0.5f) s = cDifference / (cMax + cMin);
-            else s = cDifference / (2f - cDifference);
-
-            if (cMax == red) h = (green - blue) / cDifference + (green < blue ? 6 : 0);
-            else if (cMax == green) h = 2f + (blue - red) / cDifference;
-            else if (cMax == blue) h = 4f + (red - green) / cDifference;
-
-            h /= 6;
-        }
-
-        h *= 360; h = Math.Round(h, 0);
-        s *= 100; s = Math.Round(s, 0);
-        l *= 100; l = Math.Round(l, 0);
-
-        return $"hsl({h}, {s}%, {l}%)";
+        return $"hsl({roundedHue}, {roundedSaturation}%, {roundedLuminosity}%)";
     }
 }
