@@ -33,7 +33,6 @@ namespace SammBot.Bot.Modules;
 
 [PrettyName("Bot Administration")]
 [Group("badmin", "Bot management commands. Bot owner only.")]
-[ModuleEmoji("\U0001f4be")]
 [RequireOwner]
 public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
 {
@@ -42,6 +41,7 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("listservers", "Shows a list of all the servers the bot is in.")]
     [DetailedDescription("Shows a list of the servers the bot is in, and their corresponding IDs.")]
     [RateLimit(3, 1)]
+    [HideInHelp]
     public async Task<RuntimeResult> ServersAsync()
     {
         string builtMessage = "I am invited in the following servers:\n";
@@ -64,6 +64,7 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("shutdown", "Shuts the bot down.")]
     [DetailedDescription("Shuts the bot down. That's it.")]
     [RateLimit(1, 1)]
+    [HideInHelp]
     public async Task<RuntimeResult> ShutdownAsync()
     {
         await RespondAsync($"{SettingsManager.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
@@ -75,23 +76,10 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
         return ExecutionResult.Succesful();
     }
 
-    [SlashCommand("restart", "Restarts the bot.")]
-    [DetailedDescription("Restarts the bot. That's it.")]
-    [RateLimit(1, 1)]
-    public async Task<RuntimeResult> RestartAsync()
-    {
-        await RespondAsync($"{SettingsManager.BOT_NAME} will restart.", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
-
-        Logger.Log($"{SettingsManager.BOT_NAME} will restart.\n\n", LogSeverity.Warning);
-
-        BotGlobals.RestartBot();
-
-        return ExecutionResult.Succesful();
-    }
-
     [SlashCommand("leaveserver", "Leaves the specified server.")]
     [DetailedDescription("Forces the bot to leave the specified guild.")]
     [RateLimit(3, 1)]
+    [HideInHelp]
     public async Task<RuntimeResult> LeaveAsync([Summary(description: "The ID of the guild you want the bot to leave.")] ulong ServerId)
     {
         SocketGuild targetGuild = Context.Client.GetGuild(ServerId);
