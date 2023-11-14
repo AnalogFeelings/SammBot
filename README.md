@@ -1,22 +1,22 @@
 [i14]: https://github.com/AnalogFeelings/SammBot/issues/14
 
-<div>
-  <img align="left" src="/Branding/SammBot.svg" width="96" height="96"/>
+<div align="center">
+  <img src="/Branding/SammBot.svg" width="256" height="256"/>
   <h1>
     Samm-Bot
     <br>
     A free and open-source Discord bot.
   </h1>
-</div>
 
-![Lines of code](https://img.shields.io/tokei/lines/github/analogfeelings/sammbot?label=Lines%20Of%20Code&style=flat-square)
-[![GitHub issues](https://img.shields.io/github/issues/analogfeelings/sammbot?label=Issues&style=flat-square)](https://github.com/AnalogFeelings/sammbot/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/analogfeelings/sammbot?label=Pull%20Requests&style=flat-square)](https://github.com/AnalogFeelings/sammbot/pulls)
-[![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/analogfeelings/sammbot/unit-tests.yml?branch=master&label=Build&style=flat-square)](https://github.com/AnalogFeelings/SammBot/actions)
-[![GitHub](https://img.shields.io/github/license/analogfeelings/sammbot?label=License&style=flat-square)](https://github.com/AnalogFeelings/sammbot/blob/master/LICENSE)
-[![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot/master?label=Commit%20Activity&style=flat-square)](https://github.com/AnalogFeelings/sammbot/graphs/commit-activity)
-[![GitHub Repo stars](https://img.shields.io/github/stars/analogfeelings/sammbot?label=Stargazers&style=flat-square)](https://github.com/AnalogFeelings/sammbot/stargazers)
-[![Mastodon Follow](https://img.shields.io/mastodon/follow/109309123442839534?domain=https%3A%2F%2Ftech.lgbt&style=social)](https://tech.lgbt/@analog_feelings)
+  ![Lines of code](https://img.shields.io/tokei/lines/github/analogfeelings/sammbot?label=Lines%20Of%20Code&style=flat-square)
+  [![GitHub issues](https://img.shields.io/github/issues/analogfeelings/sammbot?label=Issues&style=flat-square)](https://github.com/AnalogFeelings/sammbot/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/analogfeelings/sammbot?label=Pull%20Requests&style=flat-square)](https://github.com/AnalogFeelings/sammbot/pulls)
+  [![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/analogfeelings/sammbot/unit-tests.yml?branch=master&label=Build&style=flat-square)](https://github.com/AnalogFeelings/SammBot/actions)
+  [![GitHub](https://img.shields.io/github/license/analogfeelings/sammbot?label=License&style=flat-square)](https://github.com/AnalogFeelings/sammbot/blob/master/LICENSE)
+  [![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot/master?label=Commit%20Activity&style=flat-square)](https://github.com/AnalogFeelings/sammbot/graphs/commit-activity)
+  [![GitHub Repo stars](https://img.shields.io/github/stars/analogfeelings/sammbot?label=Stargazers&style=flat-square)](https://github.com/AnalogFeelings/sammbot/stargazers)
+  [![Mastodon Follow](https://img.shields.io/mastodon/follow/109309123442839534?domain=https%3A%2F%2Ftech.lgbt&style=social)](https://tech.lgbt/@analog_feelings)
+</div>
 
 Samm-Bot rewritten for the fourth time, but in C# and [Discord.Net](https://github.com/discord-net/Discord.Net) instead of TypeScript and [discord.js](https://github.com/discordjs/discord.js). In constant evolution!  
 It uses [Matcha](https://github.com/AnalogFeelings/Matcha) for event logging!
