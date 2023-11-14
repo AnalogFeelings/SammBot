@@ -1,4 +1,4 @@
-﻿name: .NET 7.0.x
+﻿name: Run Unit Tests
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         configuration: [ Debug, Release ]
-        dotnet-version: [ '7.0.x' ]
+        dotnet-version: [ '8.0.x' ]
 
     runs-on: ubuntu-latest
 
