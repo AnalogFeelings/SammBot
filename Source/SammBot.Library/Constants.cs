@@ -17,11 +17,13 @@
 #endregion
 
 using Discord;
+using System.Diagnostics;
+using System.Text.Json;
 
 namespace SammBot.Library;
 
 /// <summary>
-/// Class that contains some constants.
+/// Container class for constant or readonly fields.
 /// </summary>
 public static class Constants
 {
@@ -39,4 +41,37 @@ public static class Constants
     /// Color to represent an error.
     /// </summary>
     public static readonly Color VeryBadColor = new Color(221, 46, 68);
+    
+    /// <summary>
+    /// The bot's name.
+    /// </summary>
+    public const string BOT_NAME = "Samm-Bot";
+    
+    /// <summary>
+    /// The bot's config file's filename.
+    /// </summary>
+    public const string CONFIG_FILE = "config.json";
+    
+    /// <summary>
+    /// A stopwatch that keeps track of the bot's uptime.
+    /// </summary>
+    public static readonly Stopwatch RuntimeStopwatch = new Stopwatch();
+    
+    /// <summary>
+    /// Allows only users to be notified from a message.
+    /// </summary>
+    public static readonly AllowedMentions AllowOnlyUsers = new AllowedMentions(AllowedMentionTypes.Users);
+
+    /// <summary>
+    /// The path to the bot's data storage directory.
+    /// </summary>
+    public static readonly string BotDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), BOT_NAME);
+    
+    /// <summary>
+    /// Default JSON serialization settings.
+    /// </summary>
+    public static readonly JsonSerializerOptions JsonSettings = new JsonSerializerOptions()
+    {
+        WriteIndented = true
+    };
 }

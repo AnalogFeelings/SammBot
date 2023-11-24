@@ -18,6 +18,8 @@
  */
 #endregion
 
+global using LogSeverity = Matcha.LogSeverity;
+
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,14 +32,14 @@ using System.Threading.Tasks;
 using Discord.Interactions;
 using Fergun.Interactive;
 using SammBot.Bot.Services;
+using SammBot.Library;
 using SammBot.Library.Helpers;
 using System.Text.Json;
 
 namespace SammBot.Bot.Core;
 
 /// <summary>
-/// A class containing all the startup logic
-/// for the bot.
+/// A class containing all of the startup logic.
 /// </summary>
 public class MainProgram
 {
@@ -46,6 +48,8 @@ public class MainProgram
 
     public static void Main()
     {
+        Constants.RuntimeStopwatch.Start();
+        
         MainProgram mainProgram = new MainProgram();
 
         AsyncHelper.RunSync(() => mainProgram.MainAsync());
@@ -58,20 +62,18 @@ public class MainProgram
     {
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
         
-        BotGlobals.Instance.RuntimeStopwatch.Start();
-
         BootLogger bootLogger = new BootLogger();
 
         bootLogger.Log($"Loading {SettingsManager.CONFIG_FILE}...", LogSeverity.Information);
         if (!SettingsManager.Instance.LoadConfiguration())
         {
             string fullPath = SettingsManager.Instance.BotDataDirectory;
-            string serializedSettings = JsonSerializer.Serialize(SettingsManager.Instance.LoadedConfig, BotGlobals.Instance.JsonSettings);
+            string serializedSettings = JsonSerializer.Serialize(SettingsManager.Instance.LoadedConfig, Constants.JsonSettings);
 
-            bootLogger.Log($"Could not load {SettingsManager.CONFIG_FILE} correctly! Make sure the path \"{fullPath}\" exists.\n" +
+            bootLogger.Log($"Could not load {SettingsManager.CONFIG_FILE} correctly! Make sure the path \"{Constants.BotDataDirectory}\" exists.\n" +
                            $"A template {SettingsManager.CONFIG_FILE} file has been written to that path.", LogSeverity.Fatal);
 
-            await File.WriteAllTextAsync(Path.Combine(fullPath, SettingsManager.CONFIG_FILE), serializedSettings);
+            await File.WriteAllTextAsync(Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE), serializedSettings);
 
             bootLogger.Log("Press any key to exit...", LogSeverity.Information);
             Console.ReadKey();

@@ -75,7 +75,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Color = new Color(255, 204, 77);
         replyEmbed.ImageUrl = retrievedImage.Url;
 
-        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -111,7 +111,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Color = new Color(217, 158, 130);
         replyEmbed.ImageUrl = retrievedImage.Url;
 
-        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -134,7 +134,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Color = new Color(241, 143, 38);
         replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
-        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -157,7 +157,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.Color = new Color(62, 114, 29);
         replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
-        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }

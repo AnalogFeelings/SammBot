@@ -56,7 +56,7 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
 
         builtMessage += Format.Code(codeBlock);
 
-        await RespondAsync(builtMessage, ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(builtMessage, ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -67,7 +67,7 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
     [HideInHelp]
     public async Task<RuntimeResult> ShutdownAsync()
     {
-        await RespondAsync($"{SettingsManager.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync($"{SettingsManager.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
 
         Logger.Log($"{SettingsManager.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
 
@@ -89,7 +89,7 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
         string targetGuildName = targetGuild.Name;
         await targetGuild.LeaveAsync();
 
-        await RespondAsync($"Left the server \"{targetGuildName}\".", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync($"Left the server \"{targetGuildName}\".", ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }

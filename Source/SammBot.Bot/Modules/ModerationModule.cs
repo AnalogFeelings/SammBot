@@ -61,7 +61,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.AddField("\U0001f914 Reason", banReason);
         replyEmbed.AddField("\U0001f5d3\uFE0F Prune Days", $"{PruneDays} day(s).");
 
-        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -84,7 +84,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
         replyEmbed.AddField("\U0001f914 Reason", kickReason);
 
-        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -140,7 +140,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.Description += "\nI could not message the user about this warning.";
             }
 
-            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -167,7 +167,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             await botDatabase.SaveChangesAsync();
 
             await FollowupAsync($":white_check_mark: Removed warning \"{WarningId}\" from user <@{specificWarning.UserId}>.",
-                allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                allowedMentions: Constants.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -200,7 +200,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.Description += $"**· Reason**: {warning.Reason.Truncate(48)}\n\n";
             }
 
-            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -230,7 +230,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             replyEmbed.AddField("Date", $"<t:{specificWarning.Date}:F>");
             replyEmbed.AddField("Reason", specificWarning.Reason);
 
-            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -267,7 +267,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
         replyEmbed.AddField("\u23F1\uFE0F Duration", $"{days} day(s), {hours} hour(s), {minutes} minute(s) and {seconds} second(s).");
         replyEmbed.AddField("\u23F0 Expires In", $"<t:{untilDate}:F>");
 
-        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -284,7 +284,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
         await (Context.Channel as SocketTextChannel)!.DeleteMessagesAsync(retrievedMessages);
 
-        await RespondAsync($":white_check_mark: Cleared `{Count}` message/s.", ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync($":white_check_mark: Cleared `{Count}` message/s.", ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }

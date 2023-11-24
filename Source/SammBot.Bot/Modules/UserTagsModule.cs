@@ -72,7 +72,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             await botDatabase.SaveChangesAsync();
         }
 
-        await FollowupAsync("Success!", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync("Success!", allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -95,7 +95,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             string builtMessage = $"\u2611\uFE0F Here is the tag named `{Name}`:\n" +
                                   retrievedTag.Reply;
 
-            await FollowupAsync(builtMessage, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(builtMessage, allowedMentions: Constants.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -131,7 +131,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.AddField($"`{tag.Name}`", $"By: **{userName}**");
             }
 
-            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -174,7 +174,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             await botDatabase.SaveChangesAsync();
         }
 
-        await FollowupAsync($"Tag created succesfully! Use `/tags get {Name}` to use it!", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync($"Tag created succesfully! Use `/tags get {Name}` to use it!", allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }

@@ -90,7 +90,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             replyEmbed.WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[0].Id}");
             replyEmbed.WithImageUrl(filteredPosts[0].FileUrl);
 
-            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
         }
         else
         {
@@ -180,7 +180,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             replyEmbed.WithUrl($"https://e621.net/posts/{post.Id}");
             replyEmbed.WithImageUrl(post.File.FileUrl);
 
-            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
         }
         else
         {

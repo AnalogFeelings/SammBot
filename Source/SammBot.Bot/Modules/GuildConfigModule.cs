@@ -102,7 +102,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
             }
         }
             
-        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -154,7 +154,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
                                                     .WithDescription($"Successfully set setting **{SettingName}** to value `{newValue}`.");
             
-        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
             
         return ExecutionResult.Succesful();
     }

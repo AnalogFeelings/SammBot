@@ -76,7 +76,7 @@ public class StartupService
         ShardedClient.ShardReady += OnShardReady;
         ShardedClient.ShardDisconnected += OnShardDisconnect;
             
-        BotGlobals.Instance.RuntimeStopwatch.Stop();
+        Constants.RuntimeStopwatch.Stop();
 
         Console.Title = $"{SettingsManager.BOT_NAME} v{SettingsManager.GetBotVersion()}";
 
@@ -93,10 +93,9 @@ public class StartupService
         
         Logger.Log($"Using MatchaLogger {matchaVersion}.", LogSeverity.Information);
 
-        Logger.Log($"{SettingsManager.BOT_NAME} took" +
-                      $" {BotGlobals.Instance.RuntimeStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
+        Logger.Log($"{SettingsManager.BOT_NAME} took {Constants.RuntimeStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
 
-        BotGlobals.Instance.RuntimeStopwatch.Restart();
+        Constants.RuntimeStopwatch.Restart();
             
 #if DEBUG
         Logger.Log($"{SettingsManager.BOT_NAME} has been built on Debug configuration. Extra logging will be available.", LogSeverity.Warning);

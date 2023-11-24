@@ -52,9 +52,9 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         string elapsedUptime = string.Format("{0:00} days,\n{1:00} hours,\n{2:00} minutes",
-            BotGlobals.Instance.RuntimeStopwatch.Elapsed.Days,
-            BotGlobals.Instance.RuntimeStopwatch.Elapsed.Hours,
-            BotGlobals.Instance.RuntimeStopwatch.Elapsed.Minutes);
+            Constants.RuntimeStopwatch.Elapsed.Days,
+            Constants.RuntimeStopwatch.Elapsed.Hours,
+            Constants.RuntimeStopwatch.Elapsed.Minutes);
         long memoryUsage = Process.GetCurrentProcess().PrivateMemorySize64 / 1000000;
 
 #if DEBUG
@@ -85,7 +85,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.AddField("\U0001f5a5\uFE0F Host System", FriendlySystemName(), true);
         replyEmbed.AddField("\U0001f4ca Working Set", $"{memoryUsage} megabytes", true);
 
-        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -134,7 +134,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.AddField("\U0001f465 Member Count", memberCount, true);
         replyEmbed.AddField("\U0001f4e6 Role Count", roleCount, true);
 
-        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -187,7 +187,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.AddField("\U0001f680 Booster Since", boostingSince, true);
         replyEmbed.AddField("\U0001f4e6 Roles", roles);
             
-        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }

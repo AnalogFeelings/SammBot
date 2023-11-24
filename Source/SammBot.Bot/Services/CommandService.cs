@@ -23,6 +23,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Core;
+using SammBot.Library;
 using SammBot.Library.Extensions;
 using System;
 using System.Reflection;
@@ -84,9 +85,9 @@ public class CommandService
                 replyEmbed.Description = finalMessage;
 
                 if (Context.Interaction.HasResponded)
-                    await Context.Interaction.FollowupAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                    await Context.Interaction.FollowupAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
                 else
-                    await Context.Interaction.RespondAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                    await Context.Interaction.RespondAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
             }
         }
         catch (Exception ex)

@@ -82,7 +82,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         string chosenAnswer = _MagicBallAnswers.PickRandom();
 
         await RespondAsync($":8ball: Asking the magic 8-ball...\n" +
-                           $"**• Question**: {Question}", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                           $"**• Question**: {Question}", allowedMentions: Constants.AllowOnlyUsers);
 
         await Task.Delay(2000);
 
@@ -109,7 +109,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         IInviteMetadata invite = await author.VoiceChannel.CreateInviteToApplicationAsync(ActivityType);
         
         await RespondAsync($":warning: **Most activities only work if the server has a Nitro Boost level of at least 1.**\n\n" +
-                           $"{invite.Url}", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                           $"{invite.Url}", allowedMentions: Constants.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
     }
@@ -124,7 +124,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         
         int chosenNumber = Random.Shared.Next(1, FaceCount + 1);
         
-        await RespondAsync(":game_die: Rolling the die...", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(":game_die: Rolling the die...", allowedMentions: Constants.AllowOnlyUsers);
         
         await Task.Delay(1500);
         
@@ -144,7 +144,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
         
         await RespondAsync($"Warm hugs from **{authorGuildUser.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>",
-            allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            allowedMentions: Constants.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
     }
@@ -157,7 +157,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     {
         SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
         
-        await RespondAsync($"Pats from **{authorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync($"Pats from **{authorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: Constants.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
     }
@@ -174,7 +174,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         int fourthSegment = Random.Shared.Next(0, 256);
         
         await RespondAsync($"**{User.GetUsernameOrNick()}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`",
-            allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+            allowedMentions: Constants.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
     }
@@ -191,7 +191,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorUser.GetUsernameOrNick()}**");
         chosenMessage = chosenMessage.Replace("{Victim}", $"**{TargetUser.GetUsernameOrNick()}**");
         
-        await RespondAsync(chosenMessage, allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(chosenMessage, allowedMentions: Constants.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
     }
@@ -412,7 +412,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         
                 // Use SendFileAsync to be able to upload the stream to Discord's servers. The file name has to be the same as the one set in ImageUrl.
                 await FollowupWithFileAsync(finalImageStream, "shipImage.png", preEmbedText,
-                        embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                        embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
             }
         }
         
@@ -468,7 +468,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             
         replyEmbed.WithUrl(chosenDefinition.Permalink);
         
-        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
     }

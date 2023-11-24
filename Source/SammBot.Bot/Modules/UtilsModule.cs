@@ -100,7 +100,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.Description += $"• **HSV**: {parsedColor.ToHsvString()}\n";
                 replyEmbed.Description += $"• **HSL**: {parsedColor.ToHslString()}\n";
 
-                await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
             }
         }
 
@@ -163,7 +163,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
                 replyEmbed.Description += $"• **HSV**: {parsedColor.ToHsvString()}\n";
                 replyEmbed.Description += $"• **HSL**: {parsedColor.ToHslString()}\n";
 
-                await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                await RespondWithFileAsync(stream, fileName, embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
             }
         }
 
@@ -203,7 +203,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
                 replyEmbed.ImageUrl = serverAvatar;
 
-                await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+                await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
                 return ExecutionResult.Succesful();
             }
@@ -215,7 +215,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
         replyEmbed.ImageUrl = userAvatar;
 
-        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -344,7 +344,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
         replyEmbed.Description = embedDescription;
 
-        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: BotGlobals.Instance.AllowOnlyUsers);
+        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
