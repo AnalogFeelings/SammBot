@@ -64,9 +64,6 @@ For Linux and macOS users, this [tiny script](https://gist.github.com/AnalogFeel
 > [!WARNING]  
 > The file config.json must be filled in manually! Run the bot, and it will create a template config.json file for you.
 
-> [!IMPORTANT]  
-> ([#14][i14]) JetBrains Mono Regular is needed for the `viewhex` and `viewrgb` commands in the Utils module to work!
-
 ## :cd: Database Setup
 
 Here is a small TL;DR on how to update the database in Samm-Bot.  
