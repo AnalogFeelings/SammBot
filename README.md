@@ -99,7 +99,7 @@ Adding an automatic `.editorconfig` file to enforce these is of low priority rig
 
 ## :balance_scale: License
 
-© Copyright 2021-2023 Analog Feelings.  
+© Copyright 2021-2024 Analog Feelings.  
 Licensed under the [GPL v3.0 license](LICENSE).
 
 ## :sparkles: Special Thanks
