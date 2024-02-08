@@ -45,7 +45,9 @@ public class TaskQueueTests
 
             Task finishedTask = await Task.WhenAny(firstEnqueue, secondEnqueue, thirdEnqueue);
         
-            Assert.IsTrue(finishedTask == firstEnqueue, $"Second task finished before the first at attempt {i}.");
+            Assert.IsTrue(finishedTask == firstEnqueue, $"Secondary task finished before the first at attempt {i}.");
+
+            Task.WaitAll(firstEnqueue, secondEnqueue, thirdEnqueue);
         }
     }
 }
