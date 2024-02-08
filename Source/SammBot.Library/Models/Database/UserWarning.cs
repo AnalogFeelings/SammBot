@@ -16,14 +16,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+namespace SammBot.Library.Models.Database;
 
-namespace SammBot.Library.Database;
-
-public class DatabaseEntity
+public class UserWarning : DatabaseEntity
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public ulong UserId { get; set; }
+    public ulong GuildId { get; set; }
+    public string Reason { get; set; }
+    public long Date { get; set; }
 }

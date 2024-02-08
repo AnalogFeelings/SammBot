@@ -16,7 +16,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-namespace SammBot.Library.Database.Models;
+namespace SammBot.Library.Models.Database;
 
 public class UserTag : DatabaseEntity
 {

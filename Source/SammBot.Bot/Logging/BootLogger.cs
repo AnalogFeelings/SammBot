@@ -20,7 +20,7 @@ using Pastel;
 using System;
 using System.Drawing;
 
-namespace SammBot.Bot.Core;
+namespace SammBot.Bot.Logging;
 
 /// <summary>
 /// Simple logger for the pre-StartupService state of the bot for when Matcha isn't available.

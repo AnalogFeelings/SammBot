@@ -29,17 +29,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord.Interactions;
 using Fergun.Interactive;
+using SammBot.Bot.Logging;
 using SammBot.Bot.Services;
+using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Helpers;
 using System.Text.Json;
 
-namespace SammBot.Bot.Core;
+namespace SammBot.Bot;
 
 /// <summary>
 /// A class containing all of the startup logic.
 /// </summary>
-public class MainProgram
+public class EntryPoint
 {
     private DiscordShardedClient _ShardedClient = default!;
     private InteractionService _InteractionService = default!;
@@ -48,9 +50,9 @@ public class MainProgram
     {
         Constants.RuntimeStopwatch.Start();
         
-        MainProgram mainProgram = new MainProgram();
+        EntryPoint entryPoint = new EntryPoint();
 
-        AsyncHelper.RunSync(() => mainProgram.MainAsync());
+        AsyncHelper.RunSync(() => entryPoint.MainAsync());
     }
 
     /// <summary>

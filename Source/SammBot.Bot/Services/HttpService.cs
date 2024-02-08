@@ -16,12 +16,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using SammBot.Bot.Settings;
 using System;
 using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using SammBot.Bot.Core;
 using SammBot.Library.Components;
 using SammBot.Library.Extensions;
 using SammBot.Library.Services;

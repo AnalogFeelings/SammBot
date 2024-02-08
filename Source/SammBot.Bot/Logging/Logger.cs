@@ -17,14 +17,15 @@
 #endregion
 
 using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using Matcha;
+using SammBot.Bot.Settings;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Discord.Interactions;
 
-namespace SammBot.Bot.Core;
+namespace SammBot.Bot.Logging;
 
 public class Logger
 {

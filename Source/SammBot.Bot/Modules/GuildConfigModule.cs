@@ -25,12 +25,12 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Library;
 using SammBot.Library.Attributes;
-using SammBot.Library.Database.Models;
 using SammBot.Library.Extensions;
+using SammBot.Library.Models;
+using SammBot.Library.Models.Database;
 using SammBot.Library.Preconditions;
 
 namespace SammBot.Bot.Modules;

@@ -18,7 +18,7 @@
 
 using Discord.Interactions;
 
-namespace SammBot.Library;
+namespace SammBot.Library.Models;
 
 /// <summary>
 /// Represents the result of an interaction execution.

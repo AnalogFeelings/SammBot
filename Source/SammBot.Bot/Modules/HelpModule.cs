@@ -22,10 +22,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
 using JetBrains.Annotations;
-using SammBot.Bot.Core;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
+using SammBot.Library.Models;
 using SammBot.Library.Preconditions;
 
 namespace SammBot.Bot.Modules;

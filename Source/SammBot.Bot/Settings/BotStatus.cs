@@ -16,10 +16,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-namespace SammBot.Bot.Core;
+namespace SammBot.Bot.Settings;
 
-public class BotStatus
+public record BotStatus
 {
-    public string Content { get; set; }
-    public int Type { get; set; }
+    public string Content { get; init; }
+    public int Type { get; init; }
 }

@@ -21,7 +21,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 
-namespace SammBot.Bot.Core;
+namespace SammBot.Bot.Settings;
 
 public class SettingsManager
 {

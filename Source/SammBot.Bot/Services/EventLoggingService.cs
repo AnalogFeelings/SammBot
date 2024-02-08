@@ -21,11 +21,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Library;
-using SammBot.Library.Database.Models;
 using SammBot.Library.Extensions;
+using SammBot.Library.Models.Database;
 
 namespace SammBot.Bot.Services;
 

@@ -16,10 +16,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using SammBot.Library.Attributes;
+using System.Collections.Generic;
 
-namespace SammBot.Bot.Core;
+namespace SammBot.Bot.Settings;
 
 public class BotConfig
 {

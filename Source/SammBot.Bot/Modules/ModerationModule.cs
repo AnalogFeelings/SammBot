@@ -24,12 +24,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Interactions;
-using SammBot.Bot.Core;
 using SammBot.Bot.Database;
 using SammBot.Library;
 using SammBot.Library.Attributes;
-using SammBot.Library.Database.Models;
 using SammBot.Library.Extensions;
+using SammBot.Library.Models;
+using SammBot.Library.Models.Database;
 using SammBot.Library.Preconditions;
 
 namespace SammBot.Bot.Modules;

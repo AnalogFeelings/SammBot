@@ -18,10 +18,10 @@
 
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Core;
 using System.IO;
 using JetBrains.Annotations;
-using SammBot.Library.Database.Models;
+using SammBot.Bot.Settings;
+using SammBot.Library.Models.Database;
 
 namespace SammBot.Bot.Database;
 
