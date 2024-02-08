@@ -54,7 +54,9 @@ public class TaskQueue
         }
         finally
         {
-            _ = Task.Run(() => TimedRelease(_ReleaseAfter), CancellationToken.None);
+            await Task.Delay(_ReleaseAfter);
+
+            _Semaphore.Release();
         }
     }
     
@@ -73,19 +75,9 @@ public class TaskQueue
         }
         finally
         {
-            _ = Task.Run(() => TimedRelease(_ReleaseAfter), CancellationToken.None);
+            await Task.Delay(_ReleaseAfter);
+
+            _Semaphore.Release();
         }
-    }
-
-    /// <summary>
-    /// Releases the semaphore after a period of time.
-    /// </summary>
-    /// <param name="releaseAfter">How much time to wait before releasing.</param>
-    private async Task TimedRelease(TimeSpan releaseAfter)
-    {
-        if(releaseAfter != TimeSpan.Zero)
-            await Task.Delay(releaseAfter);
-
-        _Semaphore.Release();
     }
 }

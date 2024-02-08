@@ -30,18 +30,9 @@ public class TaskQueueTests
     {
         for (int i = 0; i < 10; i++)
         {
-            Task firstEnqueue = _TaskQueue.Enqueue(() => Task.Run(() =>
-            {
-                Task.Delay(750);
-            }), CancellationToken.None);
-            Task secondEnqueue = _TaskQueue.Enqueue(() => Task.Run(() =>
-            {
-                Task.Delay(500);
-            }), CancellationToken.None);
-            Task thirdEnqueue = _TaskQueue.Enqueue(() => Task.Run(() =>
-            {
-                Task.Delay(800);
-            }), CancellationToken.None);
+            Task firstEnqueue = _TaskQueue.Enqueue(() => Task.Delay(75), CancellationToken.None);
+            Task secondEnqueue = _TaskQueue.Enqueue(() => Task.Delay(75), CancellationToken.None);
+            Task thirdEnqueue = _TaskQueue.Enqueue(() => Task.Delay(75), CancellationToken.None);
 
             Task finishedTask = await Task.WhenAny(firstEnqueue, secondEnqueue, thirdEnqueue);
         
