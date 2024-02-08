@@ -17,10 +17,10 @@ jobs:
   run-unit-tests:
     strategy:
       matrix:
-        configuration: [ Debug, Release ]
+        os: [ ubuntu-latest, windows-latest ]
         dotnet-version: [ '8.0.x' ]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout Repository
@@ -43,7 +43,7 @@ jobs:
         run: dotnet restore
         
       - name: Build Tests
-        run: dotnet build --configuration ${{ matrix.configuration }} --no-restore
+        run: dotnet build --configuration Release --no-restore
         
       - name: Run Tests
         run: dotnet test --no-restore --verbosity normal
