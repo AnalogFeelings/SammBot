@@ -30,9 +30,9 @@ using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models;
+using SammBot.Library.Models.E621;
+using SammBot.Library.Models.Rule34;
 using SammBot.Library.Preconditions;
-using SammBot.Library.Rest.E621;
-using SammBot.Library.Rest.Rule34;
 
 namespace SammBot.Bot.Modules;
 

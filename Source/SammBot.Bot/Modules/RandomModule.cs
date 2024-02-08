@@ -29,8 +29,8 @@ using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models;
+using SammBot.Library.Models.Animal;
 using SammBot.Library.Preconditions;
-using SammBot.Library.Rest;
 
 namespace SammBot.Bot.Modules;
 

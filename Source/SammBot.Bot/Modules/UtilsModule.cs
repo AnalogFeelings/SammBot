@@ -31,9 +31,9 @@ using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models;
+using SammBot.Library.Models.OpenWeather.Forecast;
+using SammBot.Library.Models.OpenWeather.Geolocation;
 using SammBot.Library.Preconditions;
-using SammBot.Library.Rest.OpenWeather.Forecast;
-using SammBot.Library.Rest.OpenWeather.Geolocation;
 
 namespace SammBot.Bot.Modules;
 
