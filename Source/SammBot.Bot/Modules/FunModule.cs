@@ -91,27 +91,6 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             
         return ExecutionResult.Succesful();
     }
-
-    [SlashCommand("activity", "Creates an invite for a voice channel activity!")]
-    [DetailedDescription("Creates an activity invite for your current voice channel.")]
-    [RateLimit(6, 1)]
-    [RequireContext(ContextType.Guild)]
-    [RequireBotPermission(GuildPermission.CreateInstantInvite)]
-    [RequireUserPermission(GuildPermission.CreateInstantInvite)]
-    public async Task<RuntimeResult> CreateActivityAsync([Summary(description: "The name of the activity you want to start.")] DefaultApplications ActivityType)
-    {
-        SocketGuildUser author = (Context.User as SocketGuildUser)!;
-        
-        if (author.VoiceChannel == null)
-            return ExecutionResult.FromError("You must be in a voice channel to create an activity!");
-        
-        IInviteMetadata invite = await author.VoiceChannel.CreateInviteToApplicationAsync(ActivityType);
-        
-        await RespondAsync($":warning: **Most activities only work if the server has a Nitro Boost level of at least 1.**\n\n" +
-                           $"{invite.Url}", allowedMentions: Constants.AllowOnlyUsers);
-        
-        return ExecutionResult.Succesful();
-    }
         
     [SlashCommand("dice", "Roll the dice, and get a random number!")]
     [DetailedDescription("Roll the dice! It returns a random number between 1 and **FaceCount**. **FaceCount** must be larger than 3!")]
