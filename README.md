@@ -1,7 +1,7 @@
 [i14]: https://github.com/AnalogFeelings/SammBot/issues/14
 
 <div align="center">
-  <img src="/Branding/SammBot.svg" width="256" height="256"/>
+  <img src="/Branding/SammBot.png" width="256" height="256"/>
   <h1>
     Samm-Bot
     <br>
