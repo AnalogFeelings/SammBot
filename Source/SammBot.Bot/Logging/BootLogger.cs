@@ -29,14 +29,14 @@ public class BootLogger
 {
     private object _LogLock = new object();
 
-    public void Log(string Message, LogSeverity Severity)
+    public void Log(string message, LogSeverity severity)
     {
         lock (_LogLock)
         {
             string assembledMessage = "[".Pastel(Color.White);
 
             Color messageColor = Color.LightBlue;
-            switch (Severity)
+            switch (severity)
             {
                 case LogSeverity.Debug:
                     assembledMessage += "DBG".Pastel(Color.Teal);
@@ -64,7 +64,7 @@ public class BootLogger
             }
 
             assembledMessage += "] ".Pastel(Color.White);
-            assembledMessage += Message.Pastel(messageColor);
+            assembledMessage += message.Pastel(messageColor);
 
             Console.WriteLine(assembledMessage);
         }

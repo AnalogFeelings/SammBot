@@ -35,7 +35,7 @@ public class PrettyName : Attribute
     /// <summary>
     /// Creates a new instance of the <see cref="PrettyName"/> class.
     /// </summary>
-    /// <param name="Name">The pretty name of the class or property.</param>
-    public PrettyName(string Name) => 
-        this.Name = Name;
+    /// <param name="name">The pretty name of the class or property.</param>
+    public PrettyName(string name) => 
+        this.Name = name;
 }

@@ -39,9 +39,9 @@ public class CommandService
     private InteractionService InteractionService { get; }
     private EventLoggingService EventLoggingService { get; }
 
-    public CommandService(IServiceProvider Services)
+    public CommandService(IServiceProvider services)
     {
-        ServiceProvider = Services;
+        ServiceProvider = services;
         
         InteractionService = ServiceProvider.GetRequiredService<InteractionService>();
         ShardedClient = ServiceProvider.GetRequiredService<DiscordShardedClient>();
@@ -60,33 +60,33 @@ public class CommandService
         AddEventHandlersAsync();
     }
 
-    private async Task OnInteractionExecutedAsync(ICommandInfo SlashCommand, IInteractionContext Context, IResult Result)
+    private async Task OnInteractionExecutedAsync(ICommandInfo slashCommand, IInteractionContext context, IResult result)
     {
         try
         {
-            if (!Result.IsSuccess)
+            if (!result.IsSuccess)
             {
                 string finalMessage;
 
-                EmbedBuilder replyEmbed = new EmbedBuilder().BuildErrorEmbed((ShardedInteractionContext)Context);
+                EmbedBuilder replyEmbed = new EmbedBuilder().BuildErrorEmbed((ShardedInteractionContext)context);
 
-                switch (Result.Error)
+                switch (result.Error)
                 {
                     case InteractionCommandError.BadArgs:
                         finalMessage = $"You provided an incorrect number of parameters!\nUse the `/help " +
-                                       $"{SlashCommand.Module.Name} {SlashCommand.Name}` command to see all of the parameters.";
+                                       $"{slashCommand.Module.Name} {slashCommand.Name}` command to see all of the parameters.";
                         break;
                     default:
-                        finalMessage = Result.ErrorReason;
+                        finalMessage = result.ErrorReason;
                         break;
                 }
 
                 replyEmbed.Description = finalMessage;
 
-                if (Context.Interaction.HasResponded)
-                    await Context.Interaction.FollowupAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
+                if (context.Interaction.HasResponded)
+                    await context.Interaction.FollowupAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
                 else
-                    await Context.Interaction.RespondAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
+                    await context.Interaction.RespondAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
             }
         }
         catch (Exception ex)
@@ -95,19 +95,19 @@ public class CommandService
         }
     }
 
-    private async Task HandleInteractionAsync(SocketInteraction Interaction)
+    private async Task HandleInteractionAsync(SocketInteraction interaction)
     {
-        ShardedInteractionContext context = new ShardedInteractionContext(ShardedClient, Interaction);
+        ShardedInteractionContext context = new ShardedInteractionContext(ShardedClient, interaction);
 
         if (SettingsManager.Instance.LoadedConfig.OnlyOwnerMode)
         {
             IApplication botApplication = await ShardedClient.GetApplicationInfoAsync();
 
-            if (Interaction.User.Id != botApplication.Owner.Id) return;
+            if (interaction.User.Id != botApplication.Owner.Id) return;
         }
 
-        string formattedLog = SettingsManager.Instance.LoadedConfig.CommandLogFormat.Replace("%username%", Interaction.User.GetFullUsername())
-            .Replace("%channelname%", Interaction.Channel.Name);
+        string formattedLog = SettingsManager.Instance.LoadedConfig.CommandLogFormat.Replace("%username%", interaction.User.GetFullUsername())
+            .Replace("%channelname%", interaction.Channel.Name);
         
         BotLogger.Log(formattedLog, LogSeverity.Debug);
 

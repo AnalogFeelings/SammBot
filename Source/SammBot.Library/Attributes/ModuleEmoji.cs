@@ -37,7 +37,7 @@ public class ModuleEmoji : Attribute
     /// <summary>
     /// Creates a new instance of the <see cref="ModuleEmoji"/> class.
     /// </summary>
-    /// <param name="Emoji">The emoji to set.</param>
-    public ModuleEmoji(string Emoji) => 
-        this.Emoji = Emoji;
+    /// <param name="emoji">The emoji to set.</param>
+    public ModuleEmoji(string emoji) => 
+        this.Emoji = emoji;
 }

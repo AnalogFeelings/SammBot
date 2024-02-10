@@ -45,19 +45,19 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.BanMembers)]
     [RequireUserPermission(GuildPermission.BanMembers)]
-    public async Task<RuntimeResult> BanUserAsync([Summary(description: "The user you want to ban.")] SocketGuildUser TargetUser,
-        [Summary(description: "The amount of days the bot will delete.")] int PruneDays,
-        [Summary(description: "The reason of the ban.")] string? Reason = null)
+    public async Task<RuntimeResult> BanUserAsync([Summary("User", "The user you want to ban.")] SocketGuildUser targetUser,
+                                                  [Summary("PruneDays", "The amount of days the bot will delete.")] int pruneDays,
+                                                  [Summary("Reason", "The reason of the ban.")] string? reason = null)
     {
-        string banReason = Reason ?? "No reason specified.";
+        string banReason = reason ?? "No reason specified.";
 
-        await Context.Guild.AddBanAsync(TargetUser, PruneDays, banReason);
+        await Context.Guild.AddBanAsync(targetUser, pruneDays, banReason);
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
-                                                    .WithDescription($"Successfully banned user `{TargetUser.GetFullUsername()}`.");
+                                                    .WithDescription($"Successfully banned user `{targetUser.GetFullUsername()}`.");
 
         replyEmbed.AddField("\U0001f914 Reason", banReason);
-        replyEmbed.AddField("\U0001f5d3\uFE0F Prune Days", $"{PruneDays} day(s).");
+        replyEmbed.AddField("\U0001f5d3\uFE0F Prune Days", $"{pruneDays} day(s).");
 
         await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
@@ -70,15 +70,15 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.KickMembers)]
     [RequireUserPermission(GuildPermission.KickMembers)]
-    public async Task<RuntimeResult> KickUserAsync([Summary(description: "The user you want to kick.")] SocketGuildUser TargetUser,
-        [Summary(description: "The reason of the kick.")] string? Reason = null)
+    public async Task<RuntimeResult> KickUserAsync([Summary("User", "The user you want to kick.")] SocketGuildUser targetUser,
+                                                   [Summary("Reason", "The reason of the kick.")] string? reason = null)
     {
-        string kickReason = Reason ?? "No reason specified.";
+        string kickReason = reason ?? "No reason specified.";
 
-        await TargetUser.KickAsync(kickReason);
+        await targetUser.KickAsync(kickReason);
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
-                                                    .WithDescription($"Successfully kicked user `{TargetUser.GetFullUsername()}`.");
+                                                    .WithDescription($"Successfully kicked user `{targetUser.GetFullUsername()}`.");
 
         replyEmbed.AddField("\U0001f914 Reason", kickReason);
 
@@ -92,10 +92,10 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(1, 2)]
     [RequireContext(ContextType.Guild)]
     [RequireUserPermission(GuildPermission.KickMembers)]
-    public async Task<RuntimeResult> WarnUserAsync([Summary(description: "The user you want to warn.")] SocketGuildUser TargetUser,
-        [Summary(description: "The reason of the warn.")] string Reason)
+    public async Task<RuntimeResult> WarnUserAsync([Summary("User", "The user you want to warn.")] SocketGuildUser targetUser,
+                                                   [Summary("Reason", "The reason of the warn.")] string reason)
     {
-        if (Reason.Length > 512)
+        if (reason.Length > 512)
             return ExecutionResult.FromError("Warning reason must not exceed 512 characters.");
 
         await DeferAsync();
@@ -104,19 +104,19 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
         {
             UserWarning newWarning = new UserWarning
             {
-                UserId = TargetUser.Id,
-                GuildId = Context.Guild.Id,
-                Reason = Reason,
-                Date = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
+                    UserId = targetUser.Id,
+                    GuildId = Context.Guild.Id,
+                    Reason = reason,
+                    Date = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
             };
 
             await botDatabase.UserWarnings.AddAsync(newWarning);
             await botDatabase.SaveChangesAsync();
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
-                                                        .WithDescription($"Successfully warned user <@{TargetUser.Id}>.");
+                                                        .WithDescription($"Successfully warned user <@{targetUser.Id}>.");
 
-            replyEmbed.AddField("\U0001f914 Reason", Reason);
+            replyEmbed.AddField("\U0001f914 Reason", reason);
             replyEmbed.AddField("\U0001f6c2 Warn ID", newWarning.Id);
 
             //DM the user about it.
@@ -128,10 +128,10 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
                                                                     .WithColor(Constants.BadColor);
 
                 directMessageEmbed.AddField("\U0001faaa Server", Context.Guild.Name);
-                directMessageEmbed.AddField("\U0001f914 Reason", Reason);
+                directMessageEmbed.AddField("\U0001f914 Reason", reason);
                 directMessageEmbed.AddField("\U0001f6c2 Warn ID", newWarning.Id);
 
-                await TargetUser.SendMessageAsync(embed: directMessageEmbed.Build());
+                await targetUser.SendMessageAsync(embed: directMessageEmbed.Build());
             }
             catch (Exception)
             {
@@ -149,13 +149,13 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(1, 2)]
     [RequireContext(ContextType.Guild)]
     [RequireUserPermission(GuildPermission.KickMembers)]
-    public async Task<RuntimeResult> RemoveWarnAsync([Summary(description: "The ID of the warn you want to remove.")] int WarningId)
+    public async Task<RuntimeResult> RemoveWarnAsync([Summary("WarnId", "The ID of the warn you want to remove.")] int warnId)
     {
         await DeferAsync(true);
-            
+
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            UserWarning? specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
+            UserWarning? specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == warnId && x.GuildId == Context.Guild.Id);
 
             if (specificWarning == default(UserWarning))
                 return ExecutionResult.FromError("There are no warnings with the specified ID.");
@@ -164,8 +164,8 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
             await botDatabase.SaveChangesAsync();
 
-            await FollowupAsync($":white_check_mark: Removed warning \"{WarningId}\" from user <@{specificWarning.UserId}>.",
-                allowedMentions: Constants.AllowOnlyUsers);
+            await FollowupAsync($":white_check_mark: Removed warning \"{warnId}\" from user <@{specificWarning.UserId}>.",
+                    allowedMentions: Constants.AllowOnlyUsers);
         }
 
         return ExecutionResult.Succesful();
@@ -175,13 +175,13 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Replies with a list of warnings given to the specified user.")]
     [RateLimit(2, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> ListWarnsAsync([Summary(description: "The user you want to list the warns for.")] SocketGuildUser TargetUser)
+    public async Task<RuntimeResult> ListWarnsAsync([Summary("User", "The user you want to list the warns for.")] SocketGuildUser targetUser)
     {
         await DeferAsync();
-            
+
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            List<UserWarning> filteredWarnings = botDatabase.UserWarnings.Where(x => x.UserId == TargetUser.Id && x.GuildId == Context.Guild.Id).ToList();
+            List<UserWarning> filteredWarnings = botDatabase.UserWarnings.Where(x => x.UserId == targetUser.Id && x.GuildId == Context.Guild.Id).ToList();
 
             if (!filteredWarnings.Any())
                 return ExecutionResult.FromError("This user has no warnings.");
@@ -208,13 +208,13 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Lists a warning, and the full reason.")]
     [RateLimit(2, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> ListWarnAsync([Summary(description: "The ID of the warn you want to view.")] int WarningId)
+    public async Task<RuntimeResult> ListWarnAsync([Summary("WarnId", "The ID of the warn you want to view.")] int warnId)
     {
         await DeferAsync();
-            
+
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            UserWarning? specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == WarningId && x.GuildId == Context.Guild.Id);
+            UserWarning? specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == warnId && x.GuildId == Context.Guild.Id);
 
             if (specificWarning == default(UserWarning))
                 return ExecutionResult.FromError("There are no warnings with the specified ID.");
@@ -240,26 +240,26 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.ModerateMembers)]
     [RequireUserPermission(GuildPermission.ModerateMembers)]
-    public async Task<RuntimeResult> MuteUserAsync([Summary(description: "The user you want to mute.")] SocketGuildUser TargetUser,
-        [Summary(description: "The duration of the mute.")] TimeSpan Duration,
-        [Summary(description: "The reason of the mute.")] string? Reason = null)
+    public async Task<RuntimeResult> MuteUserAsync([Summary("User", "The user you want to mute.")] SocketGuildUser targetUser,
+                                                   [Summary("Duration", "The duration of the mute.")] TimeSpan duration,
+                                                   [Summary("Reason", "The reason of the mute.")] string? reason = null)
     {
-        string muteReason = Reason ?? "No reason specified.";
+        string muteReason = reason ?? "No reason specified.";
 
-        if (Duration < TimeSpan.Zero)
+        if (duration < TimeSpan.Zero)
             return ExecutionResult.FromError("Mute duration must not be negative.");
 
-        await TargetUser.SetTimeOutAsync(Duration, new RequestOptions() { AuditLogReason = muteReason });
+        await targetUser.SetTimeOutAsync(duration, new RequestOptions() { AuditLogReason = muteReason });
 
-        string days = Format.Bold(Duration.ToString("%d"));
-        string hours = Format.Bold(Duration.ToString("%h"));
-        string minutes = Format.Bold(Duration.ToString("%m"));
-        string seconds = Format.Bold(Duration.ToString("%s"));
+        string days = Format.Bold(duration.ToString("%d"));
+        string hours = Format.Bold(duration.ToString("%h"));
+        string minutes = Format.Bold(duration.ToString("%m"));
+        string seconds = Format.Bold(duration.ToString("%s"));
 
-        long untilDate = (DateTimeOffset.Now + Duration).ToUnixTimeSeconds();
+        long untilDate = (DateTimeOffset.Now + duration).ToUnixTimeSeconds();
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
-                                                    .WithDescription($"Successfully timed out user `{TargetUser.GetFullUsername()}`.");
+                                                    .WithDescription($"Successfully timed out user `{targetUser.GetFullUsername()}`.");
 
         replyEmbed.AddField("\U0001f914 Reason", muteReason);
         replyEmbed.AddField("\u23F1\uFE0F Duration", $"{days} day(s), {hours} hour(s), {minutes} minute(s) and {seconds} second(s).");
@@ -276,13 +276,13 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.ManageMessages)]
     [RequireUserPermission(GuildPermission.ManageMessages)]
-    public async Task<RuntimeResult> PurgeMessagesAsync([Summary(description: "The amount of messages you want to purge.")] int Count)
+    public async Task<RuntimeResult> PurgeMessagesAsync([Summary("Count", "The amount of messages you want to purge.")] int count)
     {
-        IEnumerable<IMessage> retrievedMessages = await Context.Interaction.Channel.GetMessagesAsync(Count + 1).FlattenAsync();
+        IEnumerable<IMessage> retrievedMessages = await Context.Interaction.Channel.GetMessagesAsync(count + 1).FlattenAsync();
 
         await (Context.Channel as SocketTextChannel)!.DeleteMessagesAsync(retrievedMessages);
 
-        await RespondAsync($":white_check_mark: Cleared `{Count}` message/s.", ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
+        await RespondAsync($":white_check_mark: Cleared `{count}` message/s.", ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }

@@ -76,17 +76,17 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("8ball", "Ask the magic 8-ball!")]
     [DetailedDescription("Ask a question to the magic 8-ball! Not guaranteed to answer first try!")]
     [RateLimit(2, 1)]
-    public async Task<RuntimeResult> MagicBallAsync([Summary(description: "The question you want to ask to the magic 8-ball.")] string Question)
+    public async Task<RuntimeResult> MagicBallAsync([Summary("Question", "The question you want to ask to the magic 8-ball.")] string question)
     {
         string chosenAnswer = _MagicBallAnswers.PickRandom();
 
         await RespondAsync($":8ball: Asking the magic 8-ball...\n" +
-                           $"**• Question**: {Question}", allowedMentions: Constants.AllowOnlyUsers);
+                           $"**• Question**: {question}", allowedMentions: Constants.AllowOnlyUsers);
 
         await Task.Delay(2000);
 
         await ModifyOriginalResponseAsync(x => x.Content = $":8ball: The magic 8-ball has answered!\n" +
-                                                           $"**• Question**: {Question}\n" +
+                                                           $"**• Question**: {question}\n" +
                                                            $"**• Answer**: {chosenAnswer}");
             
         return ExecutionResult.Succesful();
@@ -95,12 +95,12 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("dice", "Roll the dice, and get a random number!")]
     [DetailedDescription("Roll the dice! It returns a random number between 1 and **FaceCount**. **FaceCount** must be larger than 3!")]
     [RateLimit(2, 1)]
-    public async Task<RuntimeResult> RollDiceAsync([Summary(description: "The amount of faces the die will have.")] int FaceCount = 6)
+    public async Task<RuntimeResult> RollDiceAsync([Summary("FaceCount", "The amount of faces the die will have.")] int faceCount = 6)
     {
-        if (FaceCount < 3)
+        if (faceCount < 3)
             return ExecutionResult.FromError("The die must have at least 3 faces!");
         
-        int chosenNumber = Random.Shared.Next(1, FaceCount + 1);
+        int chosenNumber = Random.Shared.Next(1, faceCount + 1);
         
         await RespondAsync(":game_die: Rolling the die...", allowedMentions: Constants.AllowOnlyUsers);
         
@@ -115,13 +115,13 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Hugs are good for everyone! Spread the joy with this command.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> HugUserAsync([Summary(description: "The user you want to hug.")] SocketGuildUser User)
+    public async Task<RuntimeResult> HugUserAsync([Summary("User", "The user you want to hug.")] SocketGuildUser targetUser)
     {
         string chosenKaomoji = SettingsManager.Instance.LoadedConfig.HugKaomojis.PickRandom();
         
         SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
         
-        await RespondAsync($"Warm hugs from **{authorGuildUser.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{User.Id}>",
+        await RespondAsync($"Warm hugs from **{authorGuildUser.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{targetUser.Id}>",
             allowedMentions: Constants.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
@@ -131,11 +131,9 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Pets are ALSO good for everyone! Spread the joy with this command.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> PatUserAsync([Summary(description: "The user you want to pat.")] IUser User)
+    public async Task<RuntimeResult> PatUserAsync([Summary("User", "The user you want to pat.")] SocketGuildUser targetUser)
     {
-        SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
-        
-        await RespondAsync($"Pats from **{authorGuildUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{User.Id}>", allowedMentions: Constants.AllowOnlyUsers);
+        await RespondAsync($"Pats from **{targetUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{targetUser.Id}>", allowedMentions: Constants.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
     }
@@ -144,14 +142,14 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> DoxUserAsync([Summary(description: "The user you want to \"dox\".")] SocketGuildUser User)
+    public async Task<RuntimeResult> DoxUserAsync([Summary("User", "The user you want to \"dox\".")] SocketGuildUser targetUser)
     {
         int firstSegment = Random.Shared.Next(0, 256);
         int secondSegment = Random.Shared.Next(0, 256);
         int thirdSegment = Random.Shared.Next(0, 256);
         int fourthSegment = Random.Shared.Next(0, 256);
         
-        await RespondAsync($"**{User.GetUsernameOrNick()}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`",
+        await RespondAsync($"**{targetUser.GetUsernameOrNick()}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`",
             allowedMentions: Constants.AllowOnlyUsers);
         
         return ExecutionResult.Succesful();
@@ -161,13 +159,13 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Commit first degree murder! Don't worry, its fictional, the police isn't after you.")]
     [RateLimit(4, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> FirstDegreeMurderAsync([Summary(description: "The user you want to kill.")] SocketGuildUser TargetUser)
+    public async Task<RuntimeResult> FirstDegreeMurderAsync([Summary("User", "The user you want to kill.")] SocketGuildUser targetUser)
     {
         SocketGuildUser authorUser = (Context.Interaction.User as SocketGuildUser)!;
         
         string chosenMessage = SettingsManager.Instance.LoadedConfig.KillMessages.PickRandom();
         chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorUser.GetUsernameOrNick()}**");
-        chosenMessage = chosenMessage.Replace("{Victim}", $"**{TargetUser.GetUsernameOrNick()}**");
+        chosenMessage = chosenMessage.Replace("{Victim}", $"**{targetUser.GetUsernameOrNick()}**");
         
         await RespondAsync(chosenMessage, allowedMentions: Constants.AllowOnlyUsers);
         
@@ -180,29 +178,29 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(5, 1)]
     [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.UseExternalEmojis)]
-    public async Task<RuntimeResult> ShipUsersAsync([Summary(description: "The first user you want to ship.")] SocketGuildUser? FirstUser = null,
-                                                    [Summary(description: "The second user you want to ship.")] SocketGuildUser? SecondUser = null)
+    public async Task<RuntimeResult> ShipUsersAsync([Summary("FirstUser", "The first user you want to ship.")] SocketGuildUser? firstUser = null,
+                                                    [Summary("SecondUser", "The second user you want to ship.")] SocketGuildUser? secondUser = null)
     {
         await DeferAsync();
         
         // If both users are null, ship the author with a random user.
-        if(FirstUser == null && SecondUser == null)
+        if(firstUser == null && secondUser == null)
         {
             if(Context.Guild.Users.Count != Context.Guild.MemberCount) await Context.Guild.DownloadUsersAsync();
         
             SocketGuildUser chosenUser = Context.Guild.Users.Where(x => x.Id != Context.Interaction.User.Id).ToList().PickRandom();
         
-            SecondUser = chosenUser;
-            FirstUser = Context.Interaction.User as SocketGuildUser;
+            secondUser = chosenUser;
+            firstUser = Context.Interaction.User as SocketGuildUser;
         }
-        else if (FirstUser != null && SecondUser == null) //If only the second user is null, ship the author with the first user.
+        else if (firstUser != null && secondUser == null) //If only the second user is null, ship the author with the first user.
         {
-            SecondUser = FirstUser;
-            FirstUser = Context.Interaction.User as SocketGuildUser;
+            secondUser = firstUser;
+            firstUser = Context.Interaction.User as SocketGuildUser;
         }
         
         // Do not allow people to ship the same 2 people, thats Sweetheart from OMORI levels of weird.
-        if (FirstUser!.Id == SecondUser!.Id)
+        if (firstUser!.Id == secondUser!.Id)
             return ExecutionResult.FromError("You can't ship the same 2 people!");
         
         // Get random ship percentage and text.
@@ -243,8 +241,8 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         }
         
         // Split usernames into halves, then sanitize them.
-        string firstUserName = FirstUser.GetUsernameOrNick();
-        string secondUserName = SecondUser.GetUsernameOrNick();
+        string firstUserName = firstUser.GetUsernameOrNick();
+        string secondUserName = secondUser.GetUsernameOrNick();
         
         string nameFirstHalf = string.Empty;
         string nameSecondHalf = string.Empty;
@@ -301,8 +299,8 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         
         // Download their profile pictures and store into memory stream.
         // Then, load the emoji file into a stream.
-        using (MemoryStream firstUserAvatarStream = await DownloadToMemoryStream(FirstUser.GetGuildGlobalOrDefaultAvatar(2048)))
-        using (MemoryStream secondUserAvatarStream = await DownloadToMemoryStream(SecondUser.GetGuildGlobalOrDefaultAvatar(2048)))
+        using (MemoryStream firstUserAvatarStream = await DownloadToMemoryStream(firstUser.GetGuildGlobalOrDefaultAvatar(2048)))
+        using (MemoryStream secondUserAvatarStream = await DownloadToMemoryStream(secondUser.GetGuildGlobalOrDefaultAvatar(2048)))
         using (FileStream emojiStream = File.Open(emojiFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
         using (SKSurface surface = SKSurface.Create(imageInfo))
         {
@@ -397,9 +395,9 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         return ExecutionResult.Succesful();
     }
         
-    private async Task<MemoryStream> DownloadToMemoryStream(string Url)
+    private async Task<MemoryStream> DownloadToMemoryStream(string url)
     {
-        byte[] rawData = await HttpService.Client.GetByteArrayAsync(Url);
+        byte[] rawData = await HttpService.Client.GetByteArrayAsync(url);
         
         return new MemoryStream(rawData);
     }
@@ -407,11 +405,11 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("urban", "Gets a definition from the urban dictionary!")]
     [DetailedDescription("Gets a definition from the urban dictionary. Click the embed's title to open the definition in your browser.")]
     [RateLimit(6, 1)]
-    public async Task<RuntimeResult> UrbanAsync([Summary(description: "The term you want to search.")] string Term)
+    public async Task<RuntimeResult> UrbanAsync([Summary("Term", "The term you want to search.")] string term)
     {
         UrbanSearchParameters searchParameters = new UrbanSearchParameters()
         {
-            Term = Term
+            Term = term
         };
 
         await DeferAsync();
@@ -419,7 +417,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         UrbanDefinitionList? urbanDefinitions = await HttpService.GetObjectFromJsonAsync<UrbanDefinitionList>("https://api.urbandictionary.com/v0/define", searchParameters);
         
         if (urbanDefinitions == null || urbanDefinitions.List.Count == 0)
-            return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{Term}\"!");
+            return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{term}\"!");
         
         UrbanDefinition chosenDefinition = urbanDefinitions.List.PickRandom();
         

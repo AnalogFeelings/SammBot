@@ -32,7 +32,7 @@ public class DetailedDescription : Attribute
     /// <summary>
     /// Creates a new instance of the <see cref="DetailedDescription"/> class.
     /// </summary>
-    /// <param name="Description">The extended description of the method or property.</param>
-    public DetailedDescription(string Description) => 
-        this.Description = Description;
+    /// <param name="description">The extended description of the method or property.</param>
+    public DetailedDescription(string description) => 
+        this.Description = description;
 }

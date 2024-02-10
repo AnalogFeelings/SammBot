@@ -41,8 +41,8 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\u2139\uFE0F")]
 public class InformationModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    [UsedImplicitly]  public DiscordShardedClient ShardedClient { get; init; } = default!;
-        
+    [UsedImplicitly] public DiscordShardedClient ShardedClient { get; init; } = default!;
+
     [SlashCommand("bot", "Shows information about the bot.")]
     [DetailedDescription("Shows information about the bot such as version, uptime, ping, etc...")]
     [RateLimit(3, 1)]
@@ -51,9 +51,9 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         string elapsedUptime = string.Format("{0:00} days,\n{1:00} hours,\n{2:00} minutes",
-            Constants.RuntimeStopwatch.Elapsed.Days,
-            Constants.RuntimeStopwatch.Elapsed.Hours,
-            Constants.RuntimeStopwatch.Elapsed.Minutes);
+                Constants.RuntimeStopwatch.Elapsed.Days,
+                Constants.RuntimeStopwatch.Elapsed.Hours,
+                Constants.RuntimeStopwatch.Elapsed.Minutes);
         long memoryUsage = Process.GetCurrentProcess().PrivateMemorySize64 / 1000000;
 
 #if DEBUG
@@ -61,7 +61,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
 #elif RELEASE
         string releaseConfig = "Release";
 #endif
-            
+
         string formattedWebsite = Format.Url("website", "https://analogfeelings.github.io/SammBot/");
         string formattedGithub = Format.Url("repository", "https://github.com/AnalogFeelings/SammBot");
 
@@ -79,7 +79,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.AddField("\U0001f4e1 Ping", $"{Context.Client.Latency} milliseconds", true);
         replyEmbed.AddField("\U0001f5c2\uFE0F Server Count", $"{Context.Client.Guilds.Count} server(s)", true);
         replyEmbed.AddField("\U0001f9f1 Shard Count", $"{ShardedClient.Shards.Count} shard(s)", true);
-            
+
         replyEmbed.AddField("\u23F1\uFE0F Bot Uptime", elapsedUptime, true);
         replyEmbed.AddField("\U0001f5a5\uFE0F Host System", FriendlySystemName(), true);
         replyEmbed.AddField("\U0001f4ca Working Set", $"{memoryUsage} megabytes", true);
@@ -99,16 +99,16 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
 
         string serverBanner = Context.Guild.BannerUrl != null ? Format.Url("Banner URL", Context.Guild.BannerUrl) : "None";
         string discoverySplash = Context.Guild.DiscoverySplashUrl != null ? Format.Url("Splash URL", Context.Guild.DiscoverySplashId) : "None";
-        
+
         int channelCount = Context.Guild.Channels.Count;
         int emoteCount = Context.Guild.Emotes.Count;
         int stickerCount = Context.Guild.Stickers.Count;
         int memberCount = Context.Guild.MemberCount;
-        
+
         int boostTier = (int)Context.Guild.PremiumTier;
         int roleCount = Context.Guild.Roles.Count;
         string boostCount = Context.Guild.PremiumSubscriptionCount != 0 ? Context.Guild.PremiumSubscriptionCount.ToString() : "No Boosts";
-        
+
         string creationDate = $"<t:{Context.Guild.CreatedAt.ToUnixTimeSeconds()}>";
         string serverName = Context.Guild.Name;
         string serverOwnerName = serverOwner.GetFullUsername();
@@ -142,9 +142,9 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
     [DetailedDescription("Gets all the public information about the provided user.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> UserInfoAsync([Summary(description: "The user you want to get the information from.")] SocketGuildUser? User = null)
+    public async Task<RuntimeResult> UserInfoAsync([Summary("User", "The user you want to get the information from.")] SocketGuildUser? targetUser = null)
     {
-        SocketGuildUser targetUser = User ?? (Context.Interaction.User as SocketGuildUser)!;
+        targetUser ??= (Context.Interaction.User as SocketGuildUser)!;
 
         string userAvatar = targetUser.GetAvatarOrDefault(2048);
         string userName = targetUser.GetFullUsername();
@@ -156,26 +156,26 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         string signUpDate = $"<t:{targetUser.CreatedAt.ToUnixTimeSeconds()}>";
         string boostingSince = targetUser.PremiumSince != null ? $"<t:{targetUser.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
         string roles = targetUser.Roles.Count > 1 ?
-            string.Join(", ", targetUser.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
-            : "None";
+                string.Join(", ", targetUser.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
+                : "None";
         string onlineStatus = targetUser.GetStatusString();
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-            
+
         replyEmbed.Title = "\u2139\uFE0F User Information";
         replyEmbed.Description = $"Here's some information about {targetUser.Mention}.";
         replyEmbed.WithColor(59, 136, 195);
 
         replyEmbed.WithThumbnailUrl(userAvatar);
         replyEmbed.AddField("\U0001faaa Username", userName, true);
-        
+
         if (targetUser.HasPomelo())
         {
             string globalName = targetUser.GlobalName;
-            
+
             replyEmbed.AddField("\U0001f310 Global Name", globalName, true);
         }
-        
+
         replyEmbed.AddField("\U0001f3ad Nickname", userNickname, true);
         replyEmbed.AddField("\U0001f6c2 User ID", userId, true);
         replyEmbed.AddField("\U0001f518 Status", onlineStatus, true);
@@ -185,7 +185,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.AddField("\U0001f382 Sign Up Date", signUpDate, true);
         replyEmbed.AddField("\U0001f680 Booster Since", boostingSince, true);
         replyEmbed.AddField("\U0001f4e6 Roles", roles);
-            
+
         await RespondAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
@@ -203,10 +203,10 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
                 case 6:
                     osName = version.Minor switch
                     {
-                        1 => "Windows 7",
-                        2 => "Windows 8",
-                        3 => "Windows 8.1",
-                        _ => "Unknown Windows",
+                            1 => "Windows 7",
+                            2 => "Windows 8",
+                            3 => "Windows 8.1",
+                            _ => "Unknown Windows",
                     };
                     break;
                 case 10:
@@ -217,7 +217,9 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
                             else osName = "Windows 10";
 
                             break;
-                        default: osName = "Unknown Windows"; break;
+                        default:
+                            osName = "Unknown Windows";
+                            break;
                     }
                     break;
                 default:

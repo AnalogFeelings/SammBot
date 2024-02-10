@@ -20,8 +20,8 @@ namespace SammBot.Library.Extensions;
 
 public static class ListExtensions
 {
-    public static T PickRandom<T>(this IList<T> TargetList)
+    public static T PickRandom<T>(this IList<T> targetList)
     {
-        return TargetList[Random.Shared.Next(TargetList.Count)];
+        return targetList[Random.Shared.Next(targetList.Count)];
     }
 }

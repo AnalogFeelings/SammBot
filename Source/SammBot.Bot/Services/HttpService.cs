@@ -90,16 +90,16 @@ public class HttpService : IHttpService
     }
 
     /// <inheritdoc/>
-    public async Task<T?> GetObjectFromJsonAsync<T>(string Url, object? Parameters = null)
+    public async Task<T?> GetObjectFromJsonAsync<T>(string url, object? parameters = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(Url, nameof(Url));
+        ArgumentException.ThrowIfNullOrEmpty(url, nameof(url));
         
-        UriBuilder uriBuilder = new UriBuilder(Url);
+        UriBuilder uriBuilder = new UriBuilder(url);
 
-        if (Parameters != null)
+        if (parameters != null)
         {
             NameValueCollection uriQuery = HttpUtility.ParseQueryString(uriBuilder.Query);
-            NameValueCollection newQuery = HttpUtility.ParseQueryString(Parameters.ToQueryString());
+            NameValueCollection newQuery = HttpUtility.ParseQueryString(parameters.ToQueryString());
             
             uriQuery.Add(newQuery);
 

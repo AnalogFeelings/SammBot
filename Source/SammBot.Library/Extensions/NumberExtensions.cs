@@ -20,28 +20,28 @@ namespace SammBot.Library.Extensions;
 
 public static class NumberExtensions
 {
-    public static float RoundTo(this float Number, int DecimalCount)
+    public static float RoundTo(this float number, int decimalCount)
     {
-        return (float)Math.Round(Number, DecimalCount);
+        return (float)Math.Round(number, decimalCount);
     }
 
-    public static float ToFahrenheit(this float Number)
+    public static float ToFahrenheit(this float number)
     {
-        return ((Number * 9 / 5) + 32).RoundTo(1);
+        return ((number * 9 / 5) + 32).RoundTo(1);
     }
 
-    public static float ToPsi(this float Number)
+    public static float ToPsi(this float number)
     {
-        return (Number / 68.948f).RoundTo(2);
+        return (number / 68.948f).RoundTo(2);
     }
 
-    public static float KmhToMph(this float Number)
+    public static float KmhToMph(this float number)
     {
-        return (Number / 1.609f).RoundTo(1);
+        return (number / 1.609f).RoundTo(1);
     }
 
-    public static float MpsToKmh(this float Number)
+    public static float MpsToKmh(this float number)
     {
-        return (Number * 3.6f).RoundTo(1);
+        return (number * 3.6f).RoundTo(1);
     }
 }

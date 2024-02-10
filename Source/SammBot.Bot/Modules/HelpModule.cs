@@ -40,8 +40,8 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Provides a list of all the commands and modules available.")]
     [RateLimit(1, 3)]
     [HideInHelp]
-    public async Task<RuntimeResult> HelpAsync([Summary(description: "Leave empty to list all modules. " +
-                                                                     "Add a command name to list help for that command.")] string? ModuleName = null)
+    public async Task<RuntimeResult> HelpAsync([Summary("Module", "Leave empty to list all modules. Add a command name to list help for that command.")]
+                                               string? module = null)
     {
         // Hoh boy, this is QUITE a bumpy ride. Be ready!
         await DeferAsync();
@@ -49,23 +49,23 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
         EmbedBuilder replyEmbed;
 
         // User passed a module name and probably command name too.
-        if (ModuleName != null)
+        if (module != null)
         {
             // Split the name.
-            string[] splittedName = ModuleName.Split(' ');
+            string[] splittedName = module.Split(' ');
 
             // If the splittedName array contains 1 element, the user is looking for a module.
             if (splittedName.Length == 1)
             {
-                ModuleInfo? moduleInfo = InteractionService.Modules.SingleOrDefault(x => x.Name == ModuleName || x.SlashGroupName == ModuleName);
+                ModuleInfo? moduleInfo = InteractionService.Modules.SingleOrDefault(x => x.Name == module || x.SlashGroupName == module);
 
                 if (moduleInfo == default(ModuleInfo))
-                    return ExecutionResult.FromError($"The module \"{ModuleName}\" doesn't exist.");
+                    return ExecutionResult.FromError($"The module \"{module}\" doesn't exist.");
 
                 // Get the module emoji, if it has any.
                 ModuleEmoji? moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
                 string stringifiedEmoji = moduleEmoji != default(ModuleEmoji) ? moduleEmoji.Emoji + " " : string.Empty;
-                
+
                 // It's impossible to have more than one PrettyName attribute, so use Single().
                 PrettyName moduleName = moduleInfo.Attributes.OfType<PrettyName>().Single();
 
@@ -96,11 +96,11 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
             }
             else // splittedName array contains more than 1 element, user is looking for a command.
             {
-                SlashCommandInfo? searchResult = InteractionService.SlashCommands.FirstOrDefault(x => x.Module.SlashGroupName == splittedName[0] 
-                                                                                                     && x.Name == splittedName[1]);
+                SlashCommandInfo? searchResult = InteractionService.SlashCommands.FirstOrDefault(x => x.Module.SlashGroupName == splittedName[0]
+                                                                                                      && x.Name == splittedName[1]);
 
                 if (searchResult == null)
-                    return ExecutionResult.FromError($"There is no command named \"{ModuleName}\". Check your spelling.");
+                    return ExecutionResult.FromError($"There is no command named \"{module}\". Check your spelling.");
 
                 replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
@@ -115,12 +115,12 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                     formattedDescription = commandDescription.Description;
                 else
                     formattedDescription = "No description.";
-                
+
                 // Check if the command needs to be executed in guild or not.
                 RequireContextAttribute? requiredContexts = searchResult.Preconditions.FirstOrDefault(x => x is RequireContextAttribute) as RequireContextAttribute;
 
-                bool requiresGuild = requiredContexts != default(RequireContextAttribute) && 
-                                     requiredContexts.Contexts.HasFlag(ContextType.Guild) && 
+                bool requiresGuild = requiredContexts != default(RequireContextAttribute) &&
+                                     requiredContexts.Contexts.HasFlag(ContextType.Guild) &&
                                      !requiredContexts.Contexts.HasFlag(ContextType.DM);
 
                 replyEmbed.AddField("\U0001f3f7\uFE0F Name", searchResult.Name, true);
@@ -169,7 +169,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
         {
             string replyDescription = $"These are all the modules available to you.\n" +
                                       $"Use `/help <Group Name>` to see its commands.";
-                
+
             replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
             replyEmbed.Title = "\U0001f4c1 Module List";
@@ -194,7 +194,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                     // Get module emoji, if any.
                     ModuleEmoji? moduleEmoji = moduleInfo.Attributes.FirstOrDefault(x => x is ModuleEmoji) as ModuleEmoji;
                     string stringifiedEmoji = moduleEmoji != null ? moduleEmoji.Emoji + " " : string.Empty;
-                    
+
                     // It's impossible to have more than one PrettyName attribute, so use Single().
                     PrettyName moduleName = moduleInfo.Attributes.OfType<PrettyName>().Single();
 
@@ -207,7 +207,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
                 }
             }
         }
-            
+
         await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();

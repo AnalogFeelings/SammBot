@@ -22,22 +22,22 @@ namespace SammBot.Library.Extensions;
 
 public static class ColorExtensions
 {
-    public static string ToHexString(this SKColor Color)
+    public static string ToHexString(this SKColor color)
     {
-        return "#" + Color.Red.ToString("X2") + Color.Green.ToString("X2") + Color.Blue.ToString("X2");
+        return "#" + color.Red.ToString("X2") + color.Green.ToString("X2") + color.Blue.ToString("X2");
     }
 
-    public static string ToRgbString(this SKColor Color)
+    public static string ToRgbString(this SKColor color)
     {
-        return "rgb(" + Color.Red + ", " + Color.Green + ", " + Color.Blue + ")";
+        return "rgb(" + color.Red + ", " + color.Green + ", " + color.Blue + ")";
     }
 
-    public static string ToCmykString(this SKColor Color)
+    public static string ToCmykString(this SKColor color)
     {
         //Convert 0 to 255 to 0 to 1
-        float red = Color.Red / 255f;
-        float green = Color.Green / 255f;
-        float blue = Color.Blue / 255f;
+        float red = color.Red / 255f;
+        float green = color.Green / 255f;
+        float blue = color.Blue / 255f;
             
         if(red == 0 && green == 0 && blue == 0) 
             return "cmyk(0%, 0%, 0%, 100)";
@@ -56,9 +56,9 @@ public static class ColorExtensions
         return $"cmyk({ci}%, {mi}%, {yi}%, {ki})";
     }
 
-    public static string ToHsvString(this SKColor Color)
+    public static string ToHsvString(this SKColor color)
     {
-        Color.ToHsv(out float h, out float s, out float v);
+        color.ToHsv(out float h, out float s, out float v);
 
         double roundedHue = Math.Round(h, 0);
         double roundedSaturation = Math.Round(s, 0);
@@ -67,9 +67,9 @@ public static class ColorExtensions
         return $"hsv({roundedHue}, {roundedSaturation}%, {roundedValue}%)";
     }
 
-    public static string ToHslString(this SKColor Color)
+    public static string ToHslString(this SKColor color)
     {
-        Color.ToHsl(out float h, out float s, out float l);
+        color.ToHsl(out float h, out float s, out float l);
 
         double roundedHue = Math.Round(h, 0);
         double roundedSaturation = Math.Round(s, 0);

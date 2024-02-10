@@ -29,18 +29,18 @@ public class ExecutionResult : RuntimeResult
     /// <summary>
     /// Creates a new instance of the <see cref="ExecutionResult"/> class.
     /// </summary>
-    /// <param name="Error">The interaction error, if any.</param>
-    /// <param name="Reason">The reason or explanation of the error or success.</param>
-    /// <remarks>If <paramref name="Error"/> is null, this will be interpreted as successful.</remarks>
-    public ExecutionResult(InteractionCommandError? Error, string Reason) : base(Error, Reason) { }
+    /// <param name="error">The interaction error, if any.</param>
+    /// <param name="reason">The reason or explanation of the error or success.</param>
+    /// <remarks>If <paramref name="error"/> is null, this will be interpreted as successful.</remarks>
+    public ExecutionResult(InteractionCommandError? error, string reason) : base(error, reason) { }
         
     /// <summary>
     /// Convenience method to create an unsuccessful <see cref="ExecutionResult"/>.
     /// </summary>
-    /// <param name="Reason">The error reason or explanation.</param>
-    /// <returns>A new <see cref="ExecutionResult"/> object with <paramref name="Reason"/>.</returns>
-    public static ExecutionResult FromError(string Reason) =>
-        new ExecutionResult(InteractionCommandError.Unsuccessful, Reason);
+    /// <param name="reason">The error reason or explanation.</param>
+    /// <returns>A new <see cref="ExecutionResult"/> object with <paramref name="reason"/>.</returns>
+    public static ExecutionResult FromError(string reason) =>
+        new ExecutionResult(InteractionCommandError.Unsuccessful, reason);
         
     /// <summary>
     /// Convenience method to create a successful <see cref="ExecutionResult"/>.

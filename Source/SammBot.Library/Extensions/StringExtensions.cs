@@ -20,43 +20,43 @@ namespace SammBot.Library.Extensions;
 
 public static class StringExtensions
 {
-    public static string Truncate(this string TargetString, int MaxCharacters)
+    public static string Truncate(this string targetString, int maxCharacters)
     {
-        return TargetString.Length <= MaxCharacters ? TargetString : TargetString.Substring(0, MaxCharacters) + "...";
+        return targetString.Length <= maxCharacters ? targetString : targetString.Substring(0, maxCharacters) + "...";
     }
 
-    public static string CountryCodeToFlag(this string CountryCode)
+    public static string CountryCodeToFlag(this string countryCode)
     {
-        return string.Concat(CountryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
+        return string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
     }
 
-    public static string CapitalizeFirst(this string Target)
+    public static string CapitalizeFirst(this string target)
     {
-        if (string.IsNullOrEmpty(Target)) throw new ArgumentException("Target string is null or empty.");
+        if (string.IsNullOrEmpty(target)) throw new ArgumentException("Target string is null or empty.");
 
-        string resultString = char.ToUpper(Target.First()) + Target.Substring(1).ToLower();
+        string resultString = char.ToUpper(target.First()) + target.Substring(1).ToLower();
 
         return resultString;
     }
 
     //Thanks Joshua Honig from StackOverflow :)
-    public static int DamerauDistance(this string Source, string Target, int Threshold)
+    public static int DamerauDistance(this string source, string target, int threshold)
     {
-        void Swap<T>(ref T Arg1, ref T Arg2)
+        void Swap<T>(ref T arg1, ref T arg2)
         {
-            (Arg1, Arg2) = (Arg2, Arg1);
+            (arg1, arg2) = (arg2, arg1);
         }
 
-        int sourceLength = Source.Length;
-        int targetLength = Target.Length;
+        int sourceLength = source.Length;
+        int targetLength = target.Length;
 
         // Return trivial case - difference in string lengths exceeds threshhold
-        if (Math.Abs(sourceLength - targetLength) > Threshold) { return int.MaxValue; }
+        if (Math.Abs(sourceLength - targetLength) > threshold) { return int.MaxValue; }
 
         // Ensure arrays [i] / length1 use shorter length 
         if (sourceLength > targetLength)
         {
-            Swap(ref Target, ref Source);
+            Swap(ref target, ref source);
             Swap(ref sourceLength, ref targetLength);
         }
 
@@ -88,7 +88,7 @@ public static class StringExtensions
 
             for (int i = 1; i <= maxI; i++)
             {
-                int cost = Source[im1] == Target[jm1] ? 0 : 1;
+                int cost = source[im1] == target[jm1] ? 0 : 1;
 
                 int del = dCurrent[im1] + 1;
                 int ins = dMinus1[i] + 1;
@@ -97,7 +97,7 @@ public static class StringExtensions
                 //Fastest execution for min value of 3 integers
                 int min = (del > ins) ? (ins > sub ? sub : ins) : (del > sub ? sub : del);
 
-                if (i > 1 && j > 1 && Source[im2] == Target[jm1] && Source[im1] == Target[j - 2])
+                if (i > 1 && j > 1 && source[im2] == target[jm1] && source[im1] == target[j - 2])
                     min = Math.Min(min, dMinus2[im2] + cost);
 
                 dCurrent[i] = min;
@@ -106,10 +106,10 @@ public static class StringExtensions
                 im2++;
             }
             jm1++;
-            if (minDistance > Threshold) { return int.MaxValue; }
+            if (minDistance > threshold) { return int.MaxValue; }
         }
 
         int result = dCurrent[maxI];
-        return (result > Threshold) ? int.MaxValue : result;
+        return (result > threshold) ? int.MaxValue : result;
     }
 }

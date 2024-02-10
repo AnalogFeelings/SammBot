@@ -49,22 +49,22 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
     public async Task<RuntimeResult> ListSettingsAsync()
     {
         await DeferAsync(true);
-            
+
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         replyEmbed.Title = "\u2699\uFE0F Server Settings";
         replyEmbed.Description = "These are all the server settings available.\n" +
                                  "Their real names and current values will also be listed.";
         replyEmbed.Color = new Color(102, 117, 127);
-            
+
         List<PropertyInfo> propertyList = typeof(GuildConfig).GetProperties().Where(x => x.Name != "Id" && x.Name != "GuildId").ToList();
-            
+
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            GuildConfig serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id) 
+            GuildConfig serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id)
                                          ?? new GuildConfig()
                                          {
-                                             GuildId = Context.Guild.Id
+                                                 GuildId = Context.Guild.Id
                                          };
 
             foreach (PropertyInfo property in propertyList)
@@ -79,19 +79,19 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
                     valueString = string.Join(", ", propertyValue);
                 }
                 else valueString = propertyValue!.ToString()!; // ???
-                
+
                 // It's impossible to have more than one PrettyName attribute, so use Single().
                 PrettyName propertyFullName = property.GetCustomAttributes(false).OfType<PrettyName>().Single();
-                
+
                 // Small blue diamond emoji.
                 string propertyName = "\U0001f539 ";
 
                 propertyName += !string.IsNullOrEmpty(propertyFullName.Name) ? propertyFullName.Name : property.Name;
                 propertyName += $"\n(Name: `{property.Name}`)";
-                
+
                 // It's also impossible to have more than one DetailedDescription attribute, so use Single().
                 DetailedDescription propertyFullDescription = property.GetCustomAttributes(false).OfType<DetailedDescription>().Single();
-                
+
                 string propertyDescription = !string.IsNullOrEmpty(propertyFullDescription.Description) ? propertyFullDescription.Description : "No description.";
 
                 propertyDescription += $"\n**• Current Value**: `{valueString}`";
@@ -99,7 +99,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
                 replyEmbed.AddField(propertyName, propertyDescription);
             }
         }
-            
+
         await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
@@ -111,49 +111,49 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
     [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.ManageChannels)]
     [RequireUserPermission(GuildPermission.Administrator)]
-    public async Task<RuntimeResult> SetSettingAsync([Summary(description: "The name of the setting you want to set.")] string SettingName,
-        [Summary(description: "The value you want to set it to.")] string SettingValue)
+    public async Task<RuntimeResult> SetSettingAsync([Summary("Setting", "The name of the setting you want to set.")] string settingName,
+                                                     [Summary("Value", "The value you want to set it to.")] string settingValue)
     {
-        if (SettingName == "GuildId") return ExecutionResult.FromError("You cannot modify this setting.");
+        if (settingName == "GuildId") return ExecutionResult.FromError("You cannot modify this setting.");
 
-        PropertyInfo? targetProperty = typeof(GuildConfig).GetProperty(SettingName);
+        PropertyInfo? targetProperty = typeof(GuildConfig).GetProperty(settingName);
         object? newValue;
-            
+
         if (targetProperty == null) return ExecutionResult.FromError("This setting does not exist! Check your spelling.");
-            
+
         await DeferAsync(true);
-            
+
         using (BotDatabase botDatabase = new BotDatabase())
         {
             GuildConfig? serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id);
-                
+
             if (serverSettings == default(GuildConfig))
             {
                 serverSettings = new GuildConfig()
                 {
-                    GuildId = Context.Guild.Id
+                        GuildId = Context.Guild.Id
                 };
 
                 await botDatabase.AddAsync(serverSettings);
             }
-                
+
             // Convert.ChangeType cannot handle enums well.
             // Add special case.
-            if(targetProperty.PropertyType.IsEnum)
-                targetProperty.SetValue(serverSettings, Enum.Parse(targetProperty.PropertyType, SettingValue, true));
+            if (targetProperty.PropertyType.IsEnum)
+                targetProperty.SetValue(serverSettings, Enum.Parse(targetProperty.PropertyType, settingValue, true));
             else
-                targetProperty.SetValue(serverSettings, Convert.ChangeType(SettingValue, targetProperty.PropertyType));
-                
+                targetProperty.SetValue(serverSettings, Convert.ChangeType(settingValue, targetProperty.PropertyType));
+
             newValue = targetProperty.GetValue(serverSettings);
 
             await botDatabase.SaveChangesAsync();
         }
-            
+
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
-                                                    .WithDescription($"Successfully set setting **{SettingName}** to value `{newValue}`.");
-            
+                                                    .WithDescription($"Successfully set setting **{settingName}** to value `{newValue}`.");
+
         await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
-            
+
         return ExecutionResult.Succesful();
     }
 }

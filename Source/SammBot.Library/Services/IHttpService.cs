@@ -43,13 +43,13 @@ public interface IHttpService
     public void UnregisterDomainQueue(string domain);
 
     /// <summary>
-    /// Retrieves a JSON string from <paramref name="Url"/>, appending <paramref name="Parameters"/> as a query string if not null, and
+    /// Retrieves a JSON string from <paramref name="url"/>, appending <paramref name="parameters"/> as a query string if not null, and
     /// returns them as <typeparamref name="T"/>.
     /// </summary>
-    /// <param name="Url">The URL to retrieve the JSON data from.</param>
-    /// <param name="Parameters">The parameters object that will get turned into a query string.</param>
+    /// <param name="url">The URL to retrieve the JSON data from.</param>
+    /// <param name="parameters">The parameters object that will get turned into a query string.</param>
     /// <typeparam name="T">The type of the object to be returned.</typeparam>
-    /// <exception cref="ArgumentException">Thrown if <paramref name="Url"/> is empty or null.</exception>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is empty or null.</exception>
     /// <returns>An object of type <typeparamref name="T"/> containing the deserialized data.</returns>
-    public Task<T?> GetObjectFromJsonAsync<T>(string Url, object? Parameters = null);
+    public Task<T?> GetObjectFromJsonAsync<T>(string url, object? parameters = null);
 }

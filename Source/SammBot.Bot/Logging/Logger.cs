@@ -31,7 +31,7 @@ public class Logger
 {
     private readonly MatchaLogger _LoggerInstance;
 
-    public Logger(DiscordShardedClient Client, InteractionService InteractionService)
+    public Logger(DiscordShardedClient discordClient, InteractionService interactionService)
     {
         //Default settings.
         MatchaLoggerSettings loggerSettings = new MatchaLoggerSettings()
@@ -44,38 +44,38 @@ public class Logger
 
         _LoggerInstance = new MatchaLogger(loggerSettings);
 
-        Client.Log += LogAsync;
-        InteractionService.Log += LogAsync;
+        discordClient.Log += LogAsync;
+        interactionService.Log += LogAsync;
     }
 
-    public void Log(string? Message, LogSeverity Severity)
+    public void Log(string? message, LogSeverity severity)
     {
-        if(Message != null)
-            _LoggerInstance.Log(Message, Severity);
+        if(message != null)
+            _LoggerInstance.Log(message, severity);
     }
 
-    public void LogException(Exception TargetException) =>
-        Log(TargetException.ToString(), LogSeverity.Error);
+    public void LogException(Exception exception) =>
+        Log(exception.ToString(), LogSeverity.Error);
 
     //Used by the client and the command handler.
-    private Task LogAsync(LogMessage Message)
+    private Task LogAsync(LogMessage message)
     {
-        switch (Message.Severity)
+        switch (message.Severity)
         {
             case Discord.LogSeverity.Debug:
-                Log(Message.Message, LogSeverity.Debug);
+                Log(message.Message, LogSeverity.Debug);
                 break;
             case Discord.LogSeverity.Critical:
-                Log(Message.Message, LogSeverity.Fatal);
+                Log(message.Message, LogSeverity.Fatal);
                 break;
             case Discord.LogSeverity.Error:
-                Log(Message.Message, LogSeverity.Error);
+                Log(message.Message, LogSeverity.Error);
                 break;
             case Discord.LogSeverity.Warning:
-                Log(Message.Message, LogSeverity.Warning);
+                Log(message.Message, LogSeverity.Warning);
                 break;
             default:
-                Log(Message.Message, LogSeverity.Information);
+                Log(message.Message, LogSeverity.Information);
                 break;
         }
 

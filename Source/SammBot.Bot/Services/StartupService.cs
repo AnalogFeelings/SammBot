@@ -55,9 +55,9 @@ public class StartupService
     private bool _EventsSetUp;
     private int _ShardsReady;
         
-    public StartupService(IServiceProvider Provider)
+    public StartupService(IServiceProvider provider)
     {
-        ServiceProvider = Provider;
+        ServiceProvider = provider;
         
         ShardedClient = ServiceProvider.GetRequiredService<DiscordShardedClient>();
         InteractionService = ServiceProvider.GetRequiredService<InteractionService>();
@@ -131,16 +131,16 @@ public class StartupService
         return Task.CompletedTask;
     }
 
-    private Task OnShardConnected(DiscordSocketClient ShardClient)
+    private Task OnShardConnected(DiscordSocketClient shardClient)
     {
-        Logger.Log($"Shard #{ShardClient.ShardId} has connected to the gateway.", LogSeverity.Debug);
+        Logger.Log($"Shard #{shardClient.ShardId} has connected to the gateway.", LogSeverity.Debug);
 
         return Task.CompletedTask;
     }
 
-    private async Task OnShardReady(DiscordSocketClient ShardClient)
+    private async Task OnShardReady(DiscordSocketClient shardClient)
     {
-        Logger.Log($"Shard #{ShardClient.ShardId} is ready to run.", LogSeverity.Debug);
+        Logger.Log($"Shard #{shardClient.ShardId} is ready to run.", LogSeverity.Debug);
             
         if (!_EventsSetUp)
         {
@@ -160,14 +160,14 @@ public class StartupService
         }
     }
 
-    private Task OnShardDisconnect(Exception IncludedException, DiscordSocketClient ShardClient)
+    private Task OnShardDisconnect(Exception includedException, DiscordSocketClient shardClient)
     {
-        Logger.Log($"Shard #{ShardClient.ShardId} has disconnected from the gateway! Reason: " + IncludedException.Message, LogSeverity.Warning);
+        Logger.Log($"Shard #{shardClient.ShardId} has disconnected from the gateway! Reason: " + includedException.Message, LogSeverity.Warning);
 
         return Task.CompletedTask;
     }
 
-    private async void RotateStatus(object? State)
+    private async void RotateStatus(object? state)
     {
         try
         {

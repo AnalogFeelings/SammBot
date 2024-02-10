@@ -34,7 +34,7 @@ public class UglyName : Attribute
     /// <summary>
     /// Creates a new instance of the <see cref="UglyName"/> class.
     /// </summary>
-    /// <param name="Name">The ugly name of the property.</param>
-    public UglyName(string Name) => 
-        this.Name = Name;
+    /// <param name="name">The ugly name of the property.</param>
+    public UglyName(string name) => 
+        this.Name = name;
 }

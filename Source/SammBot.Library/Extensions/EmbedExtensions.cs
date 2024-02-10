@@ -29,35 +29,35 @@ public static class EmbedExtensions
     /// <summary>
     /// Generates a generic embed.
     /// </summary>
-    /// <param name="Builder">The embed builder.</param>
-    /// <param name="Context">The interaction context.</param>
+    /// <param name="builder">The embed builder.</param>
+    /// <param name="context">The interaction context.</param>
     /// <returns>The new embed.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="Context"/> is null.</exception>
-    public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="context"/> is null.</exception>
+    public static EmbedBuilder BuildDefaultEmbed(this EmbedBuilder builder, ShardedInteractionContext context)
     {
-        if (Context == null)
-            throw new ArgumentNullException(nameof(Context));
+        if (context == null)
+            throw new ArgumentNullException(nameof(context));
 
-        Builder.WithFooter(x =>
+        builder.WithFooter(x =>
         {
-            x.Text = $"Requested by {Context.Interaction.User.GetFullUsername()}"; 
-            x.IconUrl = Context.Interaction.User.GetGuildGlobalOrDefaultAvatar(256);
+            x.Text = $"Requested by {context.Interaction.User.GetFullUsername()}"; 
+            x.IconUrl = context.Interaction.User.GetGuildGlobalOrDefaultAvatar(256);
         });
-        Builder.WithCurrentTimestamp();
+        builder.WithCurrentTimestamp();
 
-        return Builder;
+        return builder;
     }
 
     /// <summary>
     /// Generates a generic embed that represents the success of an operation.
     /// </summary>
-    /// <param name="Builder">The embed builder.</param>
-    /// <param name="Context">The interaction context.</param>
+    /// <param name="builder">The embed builder.</param>
+    /// <param name="context">The interaction context.</param>
     /// <returns>The new embed.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="Context"/> is null.</exception>
-    public static EmbedBuilder BuildSuccessEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="context"/> is null.</exception>
+    public static EmbedBuilder BuildSuccessEmbed(this EmbedBuilder builder, ShardedInteractionContext context)
     {
-        EmbedBuilder defaultEmbed = Builder.BuildDefaultEmbed(Context);
+        EmbedBuilder defaultEmbed = builder.BuildDefaultEmbed(context);
         
         defaultEmbed.Title = "\u2705 Success";
         defaultEmbed.Color = Constants.GoodColor;
@@ -68,12 +68,12 @@ public static class EmbedExtensions
     /// <summary>
     /// Generates a generic embed that represents the failure of an operation.
     /// </summary>
-    /// <param name="Builder">The embed builder.</param>
-    /// <param name="Context">The interaction context.</param>
+    /// <param name="builder">The embed builder.</param>
+    /// <param name="context">The interaction context.</param>
     /// <returns>The new embed.</returns>
-    public static EmbedBuilder BuildErrorEmbed(this EmbedBuilder Builder, ShardedInteractionContext Context)
+    public static EmbedBuilder BuildErrorEmbed(this EmbedBuilder builder, ShardedInteractionContext context)
     {
-        EmbedBuilder defaultEmbed = Builder.BuildDefaultEmbed(Context);
+        EmbedBuilder defaultEmbed = builder.BuildDefaultEmbed(context);
         
         defaultEmbed.Title = "\u26A0\uFE0F An error has occurred";
         defaultEmbed.Color = Constants.BadColor;

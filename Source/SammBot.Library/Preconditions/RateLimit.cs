@@ -46,27 +46,27 @@ public class RateLimit : PreconditionAttribute
     /// <summary>
     /// The constructor for the <see cref="RateLimit"/> class.
     /// </summary>
-    /// <param name="TimeoutDuration">The amount of seconds that the user will have to wait to execute the command again once they are timed out.</param>
-    /// <param name="RequestLimit">The amount of times a user can execute a command until they hit the rate limit.</param>
-    public RateLimit(int TimeoutDuration, int RequestLimit)
+    /// <param name="timeoutDuration">The amount of seconds that the user will have to wait to execute the command again once they are timed out.</param>
+    /// <param name="requestLimit">The amount of times a user can execute a command until they hit the rate limit.</param>
+    public RateLimit(int timeoutDuration, int requestLimit)
     {
-        this.RequestLimit = RequestLimit;
-        this.TimeoutDuration = TimeoutDuration;
+        this.RequestLimit = requestLimit;
+        this.TimeoutDuration = timeoutDuration;
     }
         
     /// <summary>
     /// Checks if the user executing the command is timed out or not.
     /// </summary>
-    /// <param name="Context">The command's interaction context.</param>
-    /// <param name="CommandInfo">The command's information.</param>
-    /// <param name="Services">The bot's service provider.</param>
+    /// <param name="context">The command's interaction context.</param>
+    /// <param name="commandInfo">The command's information.</param>
+    /// <param name="services">The bot's service provider.</param>
     /// <returns>A successful <see cref="PreconditionResult"/> if the user is not timed out.</returns>
-    public override Task<PreconditionResult> CheckRequirementsAsync(IInteractionContext Context, ICommandInfo CommandInfo, IServiceProvider Services)
+    public override Task<PreconditionResult> CheckRequirementsAsync(IInteractionContext context, ICommandInfo commandInfo, IServiceProvider services)
     {
-        string command = CommandInfo.Module.Name + " " + CommandInfo.Name;
+        string command = commandInfo.Module.Name + " " + commandInfo.Name;
         DateTime dateNow = DateTime.UtcNow;
 
-        List<RateLimitItem> targetItem = _Items.GetOrAdd(Context.User.Id, new List<RateLimitItem>());
+        List<RateLimitItem> targetItem = _Items.GetOrAdd(context.User.Id, new List<RateLimitItem>());
         List<RateLimitItem> rateLimitItems = targetItem.Where(x => x.Command == command).ToList();
 
         foreach (RateLimitItem item in rateLimitItems)

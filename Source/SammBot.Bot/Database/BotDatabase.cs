@@ -31,26 +31,26 @@ public class BotDatabase : DbContext
     [UsedImplicitly] public DbSet<UserWarning> UserWarnings { get; set; } = default!;
     [UsedImplicitly] public DbSet<GuildConfig> GuildConfigs { get; set; } = default!;
 
-    protected override void OnModelCreating(ModelBuilder ModelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        ModelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimit).HasDefaultValue(3);
-        ModelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimitAction).HasDefaultValue(WarnLimitAction.None);
+        modelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimit).HasDefaultValue(3);
+        modelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimitAction).HasDefaultValue(WarnLimitAction.None);
             
-        ModelBuilder.Entity<GuildConfig>().Property(x => x.EnableLogging).HasDefaultValue(false);
-        ModelBuilder.Entity<GuildConfig>().Property(x => x.LogChannel).HasDefaultValue(0);
+        modelBuilder.Entity<GuildConfig>().Property(x => x.EnableLogging).HasDefaultValue(false);
+        modelBuilder.Entity<GuildConfig>().Property(x => x.LogChannel).HasDefaultValue(0);
             
-        ModelBuilder.Entity<GuildConfig>().Property(x => x.EnableWelcome).HasDefaultValue(false);
-        ModelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeChannel).HasDefaultValue(0);
-        ModelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeMessage).HasDefaultValue("%usermention%, welcome to %servername%! Remember to read the rules before chatting!");
+        modelBuilder.Entity<GuildConfig>().Property(x => x.EnableWelcome).HasDefaultValue(false);
+        modelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeChannel).HasDefaultValue(0);
+        modelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeMessage).HasDefaultValue("%usermention%, welcome to %servername%! Remember to read the rules before chatting!");
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder OptionsBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string databaseFile = Path.Combine(SettingsManager.Instance.BotDataDirectory, "bot.db");
 
         SqliteConnectionStringBuilder connectionStringBuilder = new SqliteConnectionStringBuilder() { DataSource = databaseFile };
         SqliteConnection connection = new SqliteConnection(connectionStringBuilder.ToString());
 
-        OptionsBuilder.UseSqlite(connection);
+        optionsBuilder.UseSqlite(connection);
     }
 }

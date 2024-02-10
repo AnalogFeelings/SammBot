@@ -44,30 +44,30 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Delets a user tag that you own. If you have permission to manage messages in the server, you can delete any tag without owning it.")]
     [RateLimit(3, 2)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> DeleteTagAsync([Summary(description: "Self-explanatory.")] string Name)
+    public async Task<RuntimeResult> DeleteTagAsync([Summary("Name", "Self-explanatory.")] string tagName)
     {
         await DeferAsync(true);
-            
+
         using (BotDatabase botDatabase = new BotDatabase())
         {
             UserTag? retrievedTag;
 
             if ((Context.User as SocketGuildUser)!.GuildPermissions.Has(GuildPermission.ManageMessages))
             {
-                retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == Name && x.GuildId == Context.Guild.Id);
+                retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == tagName && x.GuildId == Context.Guild.Id);
             }
             else
             {
-                retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == Name &&
+                retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == tagName &&
                                                                                     x.AuthorId == Context.User.Id &&
                                                                                     x.GuildId == Context.Guild.Id);
             }
 
             if (retrievedTag == default)
-                return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist, or you don't have permission to delete it.");
+                return ExecutionResult.FromError($"The tag **\"{tagName}\"** does not exist, or you don't have permission to delete it.");
 
             botDatabase.UserTags.Remove(retrievedTag);
-            
+
             await botDatabase.SaveChangesAsync();
         }
 
@@ -80,18 +80,18 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Retrieve a tag by its name, and sends its content on the chat.")]
     [RateLimit(2, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> GetTagAsync([Summary(description: "Self-explanatory.")] string Name)
+    public async Task<RuntimeResult> GetTagAsync([Summary("Name", "Self-explanatory.")] string tagName)
     {
         await DeferAsync();
-            
+
         using (BotDatabase botDatabase = new BotDatabase())
         {
-            UserTag? retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.GuildId == Context.Guild.Id && x.Name == Name);
+            UserTag? retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.GuildId == Context.Guild.Id && x.Name == tagName);
 
             if (retrievedTag == default)
-                return ExecutionResult.FromError($"The tag **\"{Name}\"** does not exist!");
+                return ExecutionResult.FromError($"The tag **\"{tagName}\"** does not exist!");
 
-            string builtMessage = $"\u2611\uFE0F Here is the tag named `{Name}`:\n" +
+            string builtMessage = $"\u2611\uFE0F Here is the tag named `{tagName}`:\n" +
                                   retrievedTag.Reply;
 
             await FollowupAsync(builtMessage, allowedMentions: Constants.AllowOnlyUsers);
@@ -104,22 +104,22 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Searches for tags with a similar name.")]
     [RateLimit(2, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> SearchTagsAsync([Summary(description: "The search term.")] string Name)
+    public async Task<RuntimeResult> SearchTagsAsync([Summary("Term", "The search term.")] string searchTerm)
     {
         await DeferAsync();
-            
+
         using (BotDatabase botDatabase = new BotDatabase())
         {
             List<UserTag> allTags = await botDatabase.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToListAsync();
-            List<UserTag> filteredTags = allTags.Where(x => Name.DamerauDistance(x.Name, SettingsManager.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
+            List<UserTag> filteredTags = allTags.Where(x => searchTerm.DamerauDistance(x.Name, SettingsManager.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
             if (!filteredTags.Any())
-                return ExecutionResult.FromError($"No tags found with a name similar to \"{Name}\".");
+                return ExecutionResult.FromError($"No tags found with a name similar to \"{searchTerm}\".");
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
             replyEmbed.Title = "\U0001f50d Search Results";
-            replyEmbed.Description = $"All of the tags similar to \"{Name}\".";
+            replyEmbed.Description = $"All of the tags similar to \"{searchTerm}\".";
             replyEmbed.Color = new Color(187, 221, 245);
 
             foreach (UserTag tag in filteredTags)
@@ -140,14 +140,14 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Creates a new tag with the specified reply.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> CreateTagAsync([Summary(description: "Self-explanatory.")] string Name, 
-        [Summary(description: "The text the bot will reply with when retrieving the tag.")] string Reply)
+    public async Task<RuntimeResult> CreateTagAsync([Summary("Name", "Self-explanatory.")] string tagName,
+                                                    [Summary("Reply", "The text the bot will reply with when retrieving the tag.")] string tagReply)
     {
-        if (Name.Length >= 15)
+        if (tagName.Length >= 15)
             return ExecutionResult.FromError("Please make the tag name shorter than 15 characters!");
-        if (Reply.Length >= 128)
+        if (tagReply.Length >= 128)
             return ExecutionResult.FromError("Please make the tag reply shorter than 128 characters!");
-        if (Name.Contains(' '))
+        if (tagName.Contains(' '))
             return ExecutionResult.FromError("Tag names cannot contain spaces!");
 
         await DeferAsync();
@@ -156,24 +156,24 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
         {
             List<UserTag> tagList = botDatabase.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToList();
 
-            if (tagList.Any(x => x.Name == Name))
-                return ExecutionResult.FromError($"There's already a tag called **\"{Name}\"**!");
+            if (tagList.Any(x => x.Name == tagName))
+                return ExecutionResult.FromError($"There's already a tag called **\"{tagName}\"**!");
 
             UserTag newTag = new UserTag
             {
-                Name = Name,
-                AuthorId = Context.Interaction.User.Id,
-                GuildId = Context.Guild.Id,
-                Reply = Reply,
-                CreatedAt = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
+                    Name = tagName,
+                    AuthorId = Context.Interaction.User.Id,
+                    GuildId = Context.Guild.Id,
+                    Reply = tagReply,
+                    CreatedAt = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
             };
 
             await botDatabase.UserTags.AddAsync(newTag);
-                
+
             await botDatabase.SaveChangesAsync();
         }
 
-        await FollowupAsync($"Tag created succesfully! Use `/tags get {Name}` to use it!", allowedMentions: Constants.AllowOnlyUsers);
+        await FollowupAsync($"Tag created succesfully! Use `/tags get {tagName}` to use it!", allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }

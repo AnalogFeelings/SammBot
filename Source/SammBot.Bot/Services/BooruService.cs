@@ -25,9 +25,9 @@ public class BooruService
     private const string _R34_DOMAIN = "api.rule34.xxx";
     private const string _E621_DOMAIN = "e621.net";
     
-    public BooruService(HttpService HttpService)
+    public BooruService(HttpService httpService)
     {
-        HttpService.RegisterDomainQueue(_R34_DOMAIN, 3, TimeSpan.FromSeconds(2));
-        HttpService.RegisterDomainQueue(_E621_DOMAIN, 1, TimeSpan.FromSeconds(1));
+        httpService.RegisterDomainQueue(_R34_DOMAIN, 3, TimeSpan.FromSeconds(2));
+        httpService.RegisterDomainQueue(_E621_DOMAIN, 1, TimeSpan.FromSeconds(1));
     }
 }

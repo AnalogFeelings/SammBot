@@ -20,8 +20,8 @@ namespace SammBot.Library.Extensions;
 
 public static class BoolExtensions
 {
-    public static string ToYesNo(this bool Boolean)
+    public static string ToYesNo(this bool boolean)
     {
-        return Boolean ? "Yes" : "No";
+        return boolean ? "Yes" : "No";
     }
 }

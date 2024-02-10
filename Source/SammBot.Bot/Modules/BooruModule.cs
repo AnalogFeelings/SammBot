@@ -49,15 +49,15 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(3, 2)]
     [RequireContext(ContextType.Guild)]
     [RequireNsfw]
-    public async Task<RuntimeResult> GetRule34Async([Summary(description: "The tags you want to use for the search.")] string Tags)
+    public async Task<RuntimeResult> GetRule34Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
     {
-        if(string.IsNullOrWhiteSpace(Tags))
+        if(string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
         
         Rule34SearchParameters searchParameters = new Rule34SearchParameters()
         {
             Limit = 1000,
-            Tags = Tags,
+            Tags = postTags,
             UseJson = 1
         };
 
@@ -75,11 +75,11 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 
         if (filteredPosts.Count == 1)
         {
-            string embedDescription = $"\U0001f50d **Search Terms**: `{Tags.Truncate(1024)}`\n\n";
+            string embedDescription = $"\U0001f50d **Search Terms**: `{postTags.Truncate(1024)}`\n\n";
             embedDescription += $"\U0001f464 **Author**: `{filteredPosts[0].Owner}`\n";
             embedDescription += $"\U0001f44d **Score**: `{filteredPosts[0].Score}`\n";
             embedDescription += $"\U0001f51e **Rating**: `{filteredPosts[0].Rating.CapitalizeFirst()}`\n";
-            embedDescription += $"\U0001f3f7\uFE0F **Tags**: `{filteredPosts[0].Tags.Truncate(512)}`\n";
+            embedDescription += $"\U0001f3f7\uFE0F **postTags**: `{filteredPosts[0].Tags.Truncate(512)}`\n";
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
             
@@ -108,22 +108,22 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 
         return ExecutionResult.Succesful();
 
-        PageBuilder GeneratePage(int Index)
+        PageBuilder GeneratePage(int index)
         {
-            string embedDescription = $"\U0001f50d **Search Terms**: `{Tags.Truncate(1024)}`\n\n";
-            embedDescription += $"\U0001f464 **Author**: `{filteredPosts[Index].Owner}`\n";
-            embedDescription += $"\U0001f44d **Score**: `{filteredPosts[Index].Score}`\n";
-            embedDescription += $"\U0001f51e **Rating**: `{filteredPosts[Index].Rating.CapitalizeFirst()}`\n";
-            embedDescription += $"\U0001f3f7\uFE0F **Tags**: `{filteredPosts[Index].Tags.Truncate(512)}`\n";
+            string embedDescription = $"\U0001f50d **Search Terms**: `{postTags.Truncate(1024)}`\n\n";
+            embedDescription += $"\U0001f464 **Author**: `{filteredPosts[index].Owner}`\n";
+            embedDescription += $"\U0001f44d **Score**: `{filteredPosts[index].Score}`\n";
+            embedDescription += $"\U0001f51e **Rating**: `{filteredPosts[index].Rating.CapitalizeFirst()}`\n";
+            embedDescription += $"\U0001f3f7\uFE0F **postTags**: `{filteredPosts[index].Tags.Truncate(512)}`\n";
 
             return new PageBuilder()
                 .WithTitle("\U0001f633 Rule34 Search Results")
                 .WithDescription(embedDescription)
-                .WithFooter($"Post {Index + 1}/{filteredPosts.Count}")
+                .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
                 .WithCurrentTimestamp()
                 .WithColor(new Color(170, 229, 164))
-                .WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[Index].Id}")
-                .WithImageUrl(filteredPosts[Index].FileUrl);
+                .WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[index].Id}")
+                .WithImageUrl(filteredPosts[index].FileUrl);
         }
     }
     
@@ -132,15 +132,15 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(2, 1)]
     [RequireContext(ContextType.Guild)]
     [RequireNsfw]
-    public async Task<RuntimeResult> GetE621Async([Summary(description: "The tags you want to use for the search.")] string Tags)
+    public async Task<RuntimeResult> GetE621Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
     {
-        if(string.IsNullOrWhiteSpace(Tags))
+        if(string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
         
         E621SearchParameters searchParameters = new E621SearchParameters()
         {
             Limit = 320,
-            Tags = Tags
+            Tags = postTags
         };
 
         await DeferAsync();
@@ -167,7 +167,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             string embedDescription = $"\U0001f9d1\u200D\U0001f3a8 **Artist**: {artist}\n";
             embedDescription += $"\U0001f4d6 **Characters**: `{character.Truncate(512)}`\n";
             embedDescription += $"\U0001f9ec **Species**: `{species.Truncate(512)}`\n";
-            embedDescription += $"\U0001f3f7\uFE0F **Tags**: `{tags.Truncate(512)}`\n";
+            embedDescription += $"\U0001f3f7\uFE0F **postTags**: `{tags.Truncate(512)}`\n";
             embedDescription += $"\U0001f44d **Likes**: `{post.Score.Upvotes}`\n";
             embedDescription += $"\U0001f44e **Dislikes**: `{Math.Abs(post.Score.Downvotes)}`\n";
 
@@ -198,9 +198,9 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 
         return ExecutionResult.Succesful();
 
-        PageBuilder GeneratePage(int Index)
+        PageBuilder GeneratePage(int index)
         {
-            E621Post post = filteredPosts[Index];
+            E621Post post = filteredPosts[index];
             
             string artist = post.Tags.Artist.Any() ? string.Join(", ", post.Tags.Artist) : "Unknown";
             string tags = string.Join(", ", post.Tags.General);
@@ -210,14 +210,14 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             string embedDescription = $"\U0001f9d1\u200D\U0001f3a8 **Artist**: {artist}\n";
             embedDescription += $"\U0001f4d6 **Characters**: `{character.Truncate(512)}`\n";
             embedDescription += $"\U0001f9ec **Species**: `{species.Truncate(512)}`\n";
-            embedDescription += $"\U0001f3f7\uFE0F **Tags**: `{tags.Truncate(512)}`\n";
+            embedDescription += $"\U0001f3f7\uFE0F **postTags**: `{tags.Truncate(512)}`\n";
             embedDescription += $"\U0001f44d **Likes**: `{post.Score.Upvotes}`\n";
             embedDescription += $"\U0001f44e **Dislikes**: `{Math.Abs(post.Score.Downvotes)}`\n";
 
             return new PageBuilder()
                 .WithTitle("\U0001f98a e621 Search Results")
                 .WithDescription(embedDescription)
-                .WithFooter($"Post {Index + 1}/{filteredPosts.Count}")
+                .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
                 .WithCurrentTimestamp()
                 .WithColor(new Color(0, 73, 150))
                 .WithUrl($"https://e621.net/posts/{post.Id}")

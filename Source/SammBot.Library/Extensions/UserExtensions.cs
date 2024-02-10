@@ -23,48 +23,48 @@ namespace SammBot.Library.Extensions;
 
 public static class UserExtensions
 {
-    public static string GetAvatarOrDefault(this SocketUser User, ushort Size)
+    public static string GetAvatarOrDefault(this SocketUser user, ushort size)
     {
-        return User.GetAvatarUrl(size: Size) ?? User.GetDefaultAvatarUrl();
+        return user.GetAvatarUrl(size: size) ?? user.GetDefaultAvatarUrl();
     }
 
-    public static string GetGuildOrGlobalAvatar(this SocketGuildUser User, ushort Size)
+    public static string GetGuildOrGlobalAvatar(this SocketGuildUser user, ushort size)
     {
-        return User.GetGuildAvatarUrl(size: Size) ?? User.GetAvatarUrl(size: Size);
+        return user.GetGuildAvatarUrl(size: size) ?? user.GetAvatarUrl(size: size);
     }
 
-    public static string GetGuildGlobalOrDefaultAvatar(this SocketUser User, ushort Size)
+    public static string GetGuildGlobalOrDefaultAvatar(this SocketUser user, ushort size)
     {
-        if (User is SocketGuildUser targetUser)
-            return targetUser.GetGuildAvatarUrl(size: Size) ?? targetUser.GetAvatarOrDefault(Size);
+        if (user is SocketGuildUser targetUser)
+            return targetUser.GetGuildAvatarUrl(size: size) ?? targetUser.GetAvatarOrDefault(size);
 
-        return User.GetAvatarOrDefault(Size);
+        return user.GetAvatarOrDefault(size);
     }
 
-    public static string GetUsernameOrNick(this SocketGuildUser User)
+    public static string GetUsernameOrNick(this SocketGuildUser user)
     {
-        if (!User.HasPomelo())
-            return User.Nickname ?? User.Username;
+        if (!user.HasPomelo())
+            return user.Nickname ?? user.Username;
 
-        return User.DisplayName;
+        return user.DisplayName;
     }
 
-    public static string GetFullUsername(this IUser User)
+    public static string GetFullUsername(this IUser user)
     {
-        if (!User.HasPomelo())
-            return $"{User.Username}#{User.Discriminator}";
+        if (!user.HasPomelo())
+            return $"{user.Username}#{user.Discriminator}";
 
-        return $"@{User.Username}";
+        return $"@{user.Username}";
     }
 
-    public static bool HasPomelo(this IUser User)
+    public static bool HasPomelo(this IUser user)
     {
-        return User.DiscriminatorValue == 0;
+        return user.DiscriminatorValue == 0;
     }
 
-    public static string GetStatusString(this SocketUser User)
+    public static string GetStatusString(this SocketUser user)
     {
-        string onlineStatus = User.Status switch
+        string onlineStatus = user.Status switch
         {
             UserStatus.DoNotDisturb => "Do Not Disturb",
             UserStatus.Idle => "Idle",

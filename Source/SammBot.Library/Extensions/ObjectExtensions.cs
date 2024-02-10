@@ -24,12 +24,12 @@ namespace SammBot.Library.Extensions;
 
 public static class ObjectExtensions
 {
-    public static string ToQueryString(this object TargetObject)
+    public static string ToQueryString(this object targetObject)
     {
-        IEnumerable<string> formattedProperties = from p in TargetObject.GetType().GetProperties()
-            where p.GetValue(TargetObject, null) != null
+        IEnumerable<string> formattedProperties = from p in targetObject.GetType().GetProperties()
+            where p.GetValue(targetObject, null) != null
             where p.GetCustomAttribute<UglyName>() != null
-            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(TargetObject, null).ToString());
+            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(targetObject, null).ToString());
 
         return string.Join("&", formattedProperties.ToArray());
     }

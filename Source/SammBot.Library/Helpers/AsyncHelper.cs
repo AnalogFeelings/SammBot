@@ -32,9 +32,9 @@ public static class AsyncHelper
     /// Runs an async method under a synchronous context.
     /// </summary>
     /// <typeparam name="T">The return type of the async function.</typeparam>
-    /// <param name="Function">The function to call.</param>
+    /// <param name="function">The function to call.</param>
     /// <returns>The returned object of the async method.</returns>
-    public static T RunSync<T>(Func<Task<T>> Function)
+    public static T RunSync<T>(Func<Task<T>> function)
     {
         CultureInfo uiCulture = CultureInfo.CurrentUICulture;
         CultureInfo generalCulture = CultureInfo.CurrentCulture;
@@ -44,15 +44,15 @@ public static class AsyncHelper
             Thread.CurrentThread.CurrentUICulture = uiCulture;
             Thread.CurrentThread.CurrentCulture = generalCulture;
 
-            return Function();
+            return function();
         }).Unwrap().GetAwaiter().GetResult();
     }
 
     /// <summary>
     /// Runs an async method under a synchronous context.
     /// </summary>
-    /// <param name="Function">The function to call.</param>
-    public static void RunSync(Func<Task> Function)
+    /// <param name="function">The function to call.</param>
+    public static void RunSync(Func<Task> function)
     {
         CultureInfo uiCulture = CultureInfo.CurrentUICulture;
         CultureInfo generalCulture = CultureInfo.CurrentCulture;
@@ -62,7 +62,7 @@ public static class AsyncHelper
             Thread.CurrentThread.CurrentUICulture = uiCulture;
             Thread.CurrentThread.CurrentCulture = generalCulture;
 
-            return Function();
+            return function();
         }).Unwrap().GetAwaiter().GetResult();
     }
 }
