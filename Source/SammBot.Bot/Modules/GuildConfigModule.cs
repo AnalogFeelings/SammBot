@@ -16,12 +16,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +26,12 @@ using SammBot.Library.Extensions;
 using SammBot.Library.Models;
 using SammBot.Library.Models.Database;
 using SammBot.Library.Preconditions;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot.Modules;
 

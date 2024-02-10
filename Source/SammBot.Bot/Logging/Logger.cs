@@ -36,7 +36,7 @@ public class Logger
         //Default settings.
         MatchaLoggerSettings loggerSettings = new MatchaLoggerSettings()
         {
-            LogFilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs"), 
+                LogFilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs"),
 #if !DEBUG
             AllowedSeverities = LogSeverity.Information | LogSeverity.Warning | LogSeverity.Error | LogSeverity.Fatal | LogSeverity.Success
 #endif
@@ -50,12 +50,12 @@ public class Logger
 
     public void Log(string? message, LogSeverity severity)
     {
-        if(message != null)
+        if (message != null)
             _LoggerInstance.Log(message, severity);
     }
 
     public void LogException(Exception exception) =>
-        Log(exception.ToString(), LogSeverity.Error);
+            Log(exception.ToString(), LogSeverity.Error);
 
     //Used by the client and the command handler.
     private Task LogAsync(LogMessage message)

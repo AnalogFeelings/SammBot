@@ -17,14 +17,9 @@
 #endregion
 
 using Discord;
-using Discord.WebSocket;
-using SkiaSharp;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Discord.Interactions;
-using JetBrains.Annotations;
+using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
 using SammBot.Bot.Settings;
 using SammBot.Library;
@@ -34,6 +29,12 @@ using SammBot.Library.Models;
 using SammBot.Library.Models.OpenWeather.Forecast;
 using SammBot.Library.Models.OpenWeather.Geolocation;
 using SammBot.Library.Preconditions;
+using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot.Modules;
 
@@ -42,7 +43,12 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f527")]
 public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    [UsedImplicitly] public HttpService HttpService { get; init; } = default!;
+    private HttpService HttpService { get; set; }
+
+    public UtilsModule(IServiceProvider provider)
+    {
+        HttpService = provider.GetRequiredService<HttpService>();
+    }
 
     [SlashCommand("viewhex", "Displays a HEX color, and converts it in other formats.")]
     [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +

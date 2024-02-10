@@ -1,108 +1,112 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-	<Company>Analog Feelings</Company>
-	<Product>Samm-Bot</Product>
-	<AssemblyVersion>8.0</AssemblyVersion>
-	<FileVersion>8.0</FileVersion>
-	<LangVersion>11</LangVersion>
-	<Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+        <Company>Analog Feelings</Company>
+        <Product>Samm-Bot</Product>
+        <AssemblyVersion>8.0</AssemblyVersion>
+        <FileVersion>8.0</FileVersion>
+        <LangVersion>11</LangVersion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <FileAlignment>512</FileAlignment>
-    <OutputPath>..\bin\Debug\</OutputPath>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <FileAlignment>512</FileAlignment>
+        <OutputPath>..\bin\Debug\</OutputPath>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <FileAlignment>512</FileAlignment>
-    <Optimize>True</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <FileAlignment>512</FileAlignment>
+        <Optimize>True</Optimize>
+        <OutputPath>..\bin\Release\</OutputPath>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Source\obj\**" />
-    <EmbeddedResource Remove="Source\obj\**" />
-    <None Remove="Source\obj\**" />
-    <None Remove="SammBot.Bot.csproj.DotSettings" />
-    <None Update="Resources\Twemoji\274c.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Twemoji\1f494.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Twemoji\2764.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Twemoji\1f49d.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Twemoji\1f49b.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Twemoji\1f496.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Twemoji\1f497.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Source\obj\**"/>
+        <EmbeddedResource Remove="Source\obj\**"/>
+        <None Remove="Source\obj\**"/>
+        <None Remove="SammBot.Bot.csproj.DotSettings"/>
+        <None Update="Resources\Twemoji\274c.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\Twemoji\1f494.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\Twemoji\2764.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\Twemoji\1f49d.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\Twemoji\1f49b.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\Twemoji\1f496.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\Twemoji\1f497.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove=".gitattributes" />
-    <None Remove=".gitignore" />
-    <None Remove="CODE_OF_CONDUCT.md" />
-    <None Remove="customcmds.db" />
-    <None Remove="emotional.db" />
-    <None Remove="LICENSE" />
-    <None Remove="peone.db" />
-    <None Remove="PeoneDatabaseItems.csv" />
-    <None Remove="phrases.db" />
-    <None Remove="pronouns.db" />
-    <None Remove="README.md" />
-    <None Remove="SammBot.png" />
-    <None Remove="SharpCat.deps.json" />
-    <None Remove="SharpCat.dll" />
-    <None Remove="Source\peone.db" />
-    <None Remove="Source\PeoneDatabaseItems.csv" />
-    <None Remove="Source\phrases.db" />
-    <None Remove="Source\pronouns.db" />
-    <None Remove="Source\usertags.db" />
-    <None Remove="STYLE_GUIDELINES.md" />
-    <None Remove="usertags.db" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove=".gitattributes"/>
+        <None Remove=".gitignore"/>
+        <None Remove="CODE_OF_CONDUCT.md"/>
+        <None Remove="customcmds.db"/>
+        <None Remove="emotional.db"/>
+        <None Remove="LICENSE"/>
+        <None Remove="peone.db"/>
+        <None Remove="PeoneDatabaseItems.csv"/>
+        <None Remove="phrases.db"/>
+        <None Remove="pronouns.db"/>
+        <None Remove="README.md"/>
+        <None Remove="SammBot.png"/>
+        <None Remove="SharpCat.deps.json"/>
+        <None Remove="SharpCat.dll"/>
+        <None Remove="Source\peone.db"/>
+        <None Remove="Source\PeoneDatabaseItems.csv"/>
+        <None Remove="Source\phrases.db"/>
+        <None Remove="Source\pronouns.db"/>
+        <None Remove="Source\usertags.db"/>
+        <None Remove="STYLE_GUIDELINES.md"/>
+        <None Remove="usertags.db"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="3.13.0" />
-    <PackageReference Include="Fergun.Interactive" Version="1.7.5" />
-    <PackageReference Include="Figgle" Version="0.5.1" />
-    <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
-    <PackageReference Include="MatchaLogger" Version="1.2.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Pastel" Version="4.2.0" />
-    <PackageReference Include="SharpCat" Version="1.0.0" />
-    <PackageReference Include="SkiaSharp" Version="2.88.7" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.7" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Discord.Net" Version="3.13.0"/>
+        <PackageReference Include="Fergun.Interactive" Version="1.7.5"/>
+        <PackageReference Include="Figgle" Version="0.5.1"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2023.3.0"/>
+        <PackageReference Include="MatchaLogger" Version="1.2.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
+        <PackageReference Include="Pastel" Version="4.2.0"/>
+        <PackageReference Include="SharpCat" Version="1.0.0"/>
+        <PackageReference Include="SkiaSharp" Version="2.88.7"/>
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.7"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SammBot.Library\SammBot.Library.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\SammBot.Library\SammBot.Library.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resources\Twemoji\" />
-  </ItemGroup>
-  
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+    <ItemGroup>
+        <Folder Include="Resources\Twemoji\"/>
+    </ItemGroup>
+
+    <ProjectExtensions>
+        <VisualStudio>
+            <UserProperties/>
+        </VisualStudio>
+    </ProjectExtensions>
 
 </Project>

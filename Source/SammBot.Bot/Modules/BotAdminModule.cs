@@ -17,17 +17,17 @@
 #endregion
 
 using Discord;
-using Discord.WebSocket;
-using System;
-using System.Threading.Tasks;
 using Discord.Interactions;
-using JetBrains.Annotations;
+using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Logging;
 using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Models;
 using SammBot.Library.Preconditions;
+using System;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot.Modules;
 
@@ -36,7 +36,12 @@ namespace SammBot.Bot.Modules;
 [RequireOwner]
 public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    [UsedImplicitly] public Logger Logger { get; init; } = default!;
+    private Logger Logger { get; set; }
+
+    public BotAdminModule(IServiceProvider provider)
+    {
+        Logger = provider.GetRequiredService<Logger>();
+    }
 
     [SlashCommand("listservers", "Shows a list of all the servers the bot is in.")]
     [DetailedDescription("Shows a list of the servers the bot is in, and their corresponding IDs.")]

@@ -17,17 +17,17 @@
 #endregion
 
 using SammBot.Bot.Settings;
-using System;
-using System.Collections.Specialized;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
 using SammBot.Library.Components;
 using SammBot.Library.Extensions;
 using SammBot.Library.Services;
-using System.Text.Json;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Specialized;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace SammBot.Bot.Services;
 
@@ -47,7 +47,7 @@ public class HttpService : IHttpService
     {
         Client = new HttpClient();
         _QueueDictionary = new ConcurrentDictionary<string, TaskQueue>();
-        
+
         Client.DefaultRequestHeaders.Add("User-Agent", SettingsManager.Instance.LoadedConfig.HttpUserAgent);
     }
 
@@ -93,14 +93,14 @@ public class HttpService : IHttpService
     public async Task<T?> GetObjectFromJsonAsync<T>(string url, object? parameters = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(url, nameof(url));
-        
+
         UriBuilder uriBuilder = new UriBuilder(url);
 
         if (parameters != null)
         {
             NameValueCollection uriQuery = HttpUtility.ParseQueryString(uriBuilder.Query);
             NameValueCollection newQuery = HttpUtility.ParseQueryString(parameters.ToQueryString());
-            
+
             uriQuery.Add(newQuery);
 
             uriBuilder.Query = uriQuery.ToString();
@@ -109,7 +109,7 @@ public class HttpService : IHttpService
         // This domain has a queue.
         if (_QueueDictionary.TryGetValue(uriBuilder.Host, out TaskQueue? queue) && queue != default)
             return await queue.Enqueue(GetJsonRemote, CancellationToken.None);
-        
+
         return await GetJsonRemote();
 
         async Task<T?> GetJsonRemote()
@@ -129,12 +129,12 @@ public class HttpService : IHttpService
     private async Task<string> GetStringFromRemote(string remoteUrl)
     {
         string stringReply;
-        
+
         using (HttpResponseMessage responseMessage = await Client.GetAsync(remoteUrl))
         {
             stringReply = await responseMessage.Content.ReadAsStringAsync();
         }
-        
+
         return stringReply;
     }
 }

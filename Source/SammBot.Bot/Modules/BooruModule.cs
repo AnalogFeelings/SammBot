@@ -16,15 +16,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
 using Fergun.Interactive;
 using Fergun.Interactive.Pagination;
-using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
 using SammBot.Library;
 using SammBot.Library.Attributes;
@@ -33,6 +29,10 @@ using SammBot.Library.Models;
 using SammBot.Library.Models.E621;
 using SammBot.Library.Models.Rule34;
 using SammBot.Library.Preconditions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot.Modules;
 
@@ -41,9 +41,15 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f5bc\uFE0F")]
 public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    [UsedImplicitly] public HttpService HttpService { get; init; } = default!;
-    [UsedImplicitly] public InteractiveService InteractiveService { get; init; } = default!;
-    
+    private HttpService HttpService { get; set; }
+    private InteractiveService InteractiveService { get; set; }
+
+    public BooruModule(IServiceProvider provider)
+    {
+        HttpService = provider.GetRequiredService<HttpService>();
+        InteractiveService = provider.GetRequiredService<InteractiveService>();
+    }
+
     [SlashCommand("r34", "Gets a list of images from rule34.")]
     [DetailedDescription("Gets a list of images from rule34. Maximum amount is 1000 images per command.")]
     [RateLimit(3, 2)]
@@ -51,21 +57,21 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireNsfw]
     public async Task<RuntimeResult> GetRule34Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
     {
-        if(string.IsNullOrWhiteSpace(postTags))
+        if (string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
-        
+
         Rule34SearchParameters searchParameters = new Rule34SearchParameters()
         {
-            Limit = 1000,
-            Tags = postTags,
-            UseJson = 1
+                Limit = 1000,
+                Tags = postTags,
+                UseJson = 1
         };
 
         await DeferAsync();
 
         List<Rule34Post>? nsfwPosts = await HttpService.GetObjectFromJsonAsync<List<Rule34Post>>("https://api.rule34.xxx/index.php?page=dapi&s=post&q=index", searchParameters);
-        
-        if(nsfwPosts == null || nsfwPosts.Count == 0)
+
+        if (nsfwPosts == null || nsfwPosts.Count == 0)
             return ExecutionResult.FromError("Rule34 returned no posts! The API could be down for maintenance, or one of your tags is invalid.");
 
         List<Rule34Post> filteredPosts = nsfwPosts.Where(x => !x.FileUrl.EndsWith(".mp4") && !x.FileUrl.EndsWith(".webm")).ToList();
@@ -82,10 +88,10 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             embedDescription += $"\U0001f3f7\uFE0F **postTags**: `{filteredPosts[0].Tags.Truncate(512)}`\n";
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-            
+
             replyEmbed.Title = "\U0001f633 Rule34 Search Results";
             replyEmbed.Description = embedDescription;
-            
+
             replyEmbed.WithColor(new Color(170, 229, 164));
             replyEmbed.WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[0].Id}");
             replyEmbed.WithImageUrl(filteredPosts[0].FileUrl);
@@ -95,13 +101,13 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
         else
         {
             LazyPaginator lazyPaginator = new LazyPaginatorBuilder()
-                .AddUser(Context.User)
-                .WithPageFactory(GeneratePage)
-                .WithMaxPageIndex(filteredPosts.Count - 1)
-                .WithFooter(PaginatorFooter.None)
-                .WithActionOnTimeout(ActionOnStop.DisableInput)
-                .WithActionOnCancellation(ActionOnStop.DisableInput)
-                .Build();
+                                          .AddUser(Context.User)
+                                          .WithPageFactory(GeneratePage)
+                                          .WithMaxPageIndex(filteredPosts.Count - 1)
+                                          .WithFooter(PaginatorFooter.None)
+                                          .WithActionOnTimeout(ActionOnStop.DisableInput)
+                                          .WithActionOnCancellation(ActionOnStop.DisableInput)
+                                          .Build();
 
             await InteractiveService.SendPaginatorAsync(lazyPaginator, Context.Interaction, TimeSpan.FromMinutes(8), InteractionResponseType.DeferredChannelMessageWithSource);
         }
@@ -117,16 +123,16 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             embedDescription += $"\U0001f3f7\uFE0F **postTags**: `{filteredPosts[index].Tags.Truncate(512)}`\n";
 
             return new PageBuilder()
-                .WithTitle("\U0001f633 Rule34 Search Results")
-                .WithDescription(embedDescription)
-                .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
-                .WithCurrentTimestamp()
-                .WithColor(new Color(170, 229, 164))
-                .WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[index].Id}")
-                .WithImageUrl(filteredPosts[index].FileUrl);
+                   .WithTitle("\U0001f633 Rule34 Search Results")
+                   .WithDescription(embedDescription)
+                   .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
+                   .WithCurrentTimestamp()
+                   .WithColor(new Color(170, 229, 164))
+                   .WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[index].Id}")
+                   .WithImageUrl(filteredPosts[index].FileUrl);
         }
     }
-    
+
     [SlashCommand("e621", "Gets a list of images from e621.")]
     [DetailedDescription("Gets a list of images from e621. Maximum amount is 320 images per command.")]
     [RateLimit(2, 1)]
@@ -134,20 +140,20 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireNsfw]
     public async Task<RuntimeResult> GetE621Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
     {
-        if(string.IsNullOrWhiteSpace(postTags))
+        if (string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
-        
+
         E621SearchParameters searchParameters = new E621SearchParameters()
         {
-            Limit = 320,
-            Tags = postTags
+                Limit = 320,
+                Tags = postTags
         };
 
         await DeferAsync();
 
         E621Reply? nsfwPosts = await HttpService.GetObjectFromJsonAsync<E621Reply>("https://e621.net/posts.json", searchParameters);
-        
-        if(nsfwPosts == null || nsfwPosts.Posts == null || nsfwPosts.Posts.Count == 0)
+
+        if (nsfwPosts == null || nsfwPosts.Posts == null || nsfwPosts.Posts.Count == 0)
             return ExecutionResult.FromError("e621 returned no posts! The API could be down for maintenance, or one of your tags is invalid.");
 
         List<E621Post> filteredPosts = nsfwPosts.Posts.Where(x => x.File.Extension != "mp4" && x.File.Extension != "webm").ToList();
@@ -158,12 +164,12 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
         if (filteredPosts.Count == 1)
         {
             E621Post post = filteredPosts[0];
-            
+
             string artist = post.Tags.Artist.Any() ? string.Join(", ", post.Tags.Artist) : "Unknown";
             string tags = string.Join(", ", post.Tags.General);
             string species = post.Tags.Species.Any() ? string.Join(", ", post.Tags.Species) : "Unknown";
             string character = post.Tags.Character.Any() ? string.Join(", ", post.Tags.Character) : "Unknown";
-            
+
             string embedDescription = $"\U0001f9d1\u200D\U0001f3a8 **Artist**: {artist}\n";
             embedDescription += $"\U0001f4d6 **Characters**: `{character.Truncate(512)}`\n";
             embedDescription += $"\U0001f9ec **Species**: `{species.Truncate(512)}`\n";
@@ -172,10 +178,10 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             embedDescription += $"\U0001f44e **Dislikes**: `{Math.Abs(post.Score.Downvotes)}`\n";
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-            
+
             replyEmbed.Title = "\U0001f98a e621 Search Results";
             replyEmbed.Description = embedDescription;
-            
+
             replyEmbed.WithColor(new Color(0, 73, 150));
             replyEmbed.WithUrl($"https://e621.net/posts/{post.Id}");
             replyEmbed.WithImageUrl(post.File.FileUrl);
@@ -185,13 +191,13 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
         else
         {
             LazyPaginator lazyPaginator = new LazyPaginatorBuilder()
-                .AddUser(Context.User)
-                .WithPageFactory(GeneratePage)
-                .WithMaxPageIndex(filteredPosts.Count - 1)
-                .WithFooter(PaginatorFooter.None)
-                .WithActionOnTimeout(ActionOnStop.DeleteInput)
-                .WithActionOnCancellation(ActionOnStop.DeleteInput)
-                .Build();
+                                          .AddUser(Context.User)
+                                          .WithPageFactory(GeneratePage)
+                                          .WithMaxPageIndex(filteredPosts.Count - 1)
+                                          .WithFooter(PaginatorFooter.None)
+                                          .WithActionOnTimeout(ActionOnStop.DeleteInput)
+                                          .WithActionOnCancellation(ActionOnStop.DeleteInput)
+                                          .Build();
 
             await InteractiveService.SendPaginatorAsync(lazyPaginator, Context.Interaction, TimeSpan.FromMinutes(8), InteractionResponseType.DeferredChannelMessageWithSource);
         }
@@ -201,12 +207,12 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
         PageBuilder GeneratePage(int index)
         {
             E621Post post = filteredPosts[index];
-            
+
             string artist = post.Tags.Artist.Any() ? string.Join(", ", post.Tags.Artist) : "Unknown";
             string tags = string.Join(", ", post.Tags.General);
             string species = post.Tags.Species.Any() ? string.Join(", ", post.Tags.Species) : "Unknown";
             string character = post.Tags.Character.Any() ? string.Join(", ", post.Tags.Character) : "Unknown";
-            
+
             string embedDescription = $"\U0001f9d1\u200D\U0001f3a8 **Artist**: {artist}\n";
             embedDescription += $"\U0001f4d6 **Characters**: `{character.Truncate(512)}`\n";
             embedDescription += $"\U0001f9ec **Species**: `{species.Truncate(512)}`\n";
@@ -215,13 +221,13 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             embedDescription += $"\U0001f44e **Dislikes**: `{Math.Abs(post.Score.Downvotes)}`\n";
 
             return new PageBuilder()
-                .WithTitle("\U0001f98a e621 Search Results")
-                .WithDescription(embedDescription)
-                .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
-                .WithCurrentTimestamp()
-                .WithColor(new Color(0, 73, 150))
-                .WithUrl($"https://e621.net/posts/{post.Id}")
-                .WithImageUrl(post.File.FileUrl);
+                   .WithTitle("\U0001f98a e621 Search Results")
+                   .WithDescription(embedDescription)
+                   .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
+                   .WithCurrentTimestamp()
+                   .WithColor(new Color(0, 73, 150))
+                   .WithUrl($"https://e621.net/posts/{post.Id}")
+                   .WithImageUrl(post.File.FileUrl);
         }
     }
 }

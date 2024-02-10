@@ -16,15 +16,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using SammBot.Bot.Database;
 using SammBot.Library;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models.Database;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot.Services;
 
@@ -35,7 +35,7 @@ public class EventLoggingService
         using (BotDatabase botDatabase = new BotDatabase())
         {
             SocketGuild currentGuild = newUser.Guild;
-                
+
             GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
 
             if (serverConfig == default(GuildConfig)) return;
@@ -47,7 +47,7 @@ public class EventLoggingService
                 if (welcomeChannel != null)
                 {
                     string formattedMessage = serverConfig.WelcomeMessage.Replace("%usermention%", newUser.Mention)
-                        .Replace("%servername%", Format.Bold(currentGuild.Name));
+                                                          .Replace("%servername%", Format.Bold(currentGuild.Name));
 
                     await welcomeChannel.SendMessageAsync(formattedMessage);
                 }
@@ -81,7 +81,7 @@ public class EventLoggingService
             }
         }
     }
-        
+
     public async Task OnUserLeftAsync(SocketGuild currentGuild, SocketUser user)
     {
         using (BotDatabase botDatabase = new BotDatabase())
@@ -118,13 +118,13 @@ public class EventLoggingService
             }
         }
     }
-        
+
     public async Task OnMessageDeleted(Cacheable<IMessage, ulong> cachedMessage, Cacheable<IMessageChannel, ulong> cachedChannel)
     {
         if (!cachedMessage.HasValue || !cachedChannel.HasValue) return; // ??? why, if the message should contain a channel already?
         if (cachedChannel.Value is not SocketGuildChannel) return;
         if (cachedMessage.Value.Author.IsBot) return;
-            
+
         SocketGuildChannel? targetChannel = cachedChannel.Value as SocketGuildChannel;
 
         using (BotDatabase botDatabase = new BotDatabase())
@@ -151,7 +151,7 @@ public class EventLoggingService
                     if (cachedMessage.Value.Attachments.Count > 0)
                     {
                         attachments = "\n";
-                            
+
                         foreach (IAttachment attachment in cachedMessage.Value.Attachments)
                         {
                             attachments += attachment.Url + "\n";
@@ -160,7 +160,7 @@ public class EventLoggingService
                     if (!string.IsNullOrEmpty(cachedMessage.Value.Content))
                     {
                         string sanitizedContent = Format.Sanitize(cachedMessage.Value.Content);
-                            
+
                         messageContent = sanitizedContent.Truncate(1021); // TODO: Make Truncate take in account the final "..." when using substring.
                     }
 
@@ -182,12 +182,12 @@ public class EventLoggingService
             }
         }
     }
-        
+
     public async Task OnMessagesBulkDeleted(IReadOnlyCollection<Cacheable<IMessage, ulong>> cachedMessages, Cacheable<IMessageChannel, ulong> cachedChannel)
     {
         if (!cachedChannel.HasValue) return; // ??? why, if the message should contain a channel already?
         if (cachedChannel.Value is not SocketGuildChannel) return;
-            
+
         SocketGuildChannel? targetChannel = cachedChannel.Value as SocketGuildChannel;
 
         using (BotDatabase botDatabase = new BotDatabase())
@@ -223,7 +223,7 @@ public class EventLoggingService
             }
         }
     }
-        
+
     public async Task OnRoleCreated(SocketRole newRole)
     {
         using (BotDatabase botDatabase = new BotDatabase())
@@ -243,7 +243,7 @@ public class EventLoggingService
                     replyEmbed.Title = "\U0001f4e6 Role Created";
                     replyEmbed.Description = "A new role has been created.";
                     replyEmbed.WithColor(Constants.GoodColor);
-                        
+
                     replyEmbed.AddField("\U0001f465 Role", newRole.Mention);
                     replyEmbed.AddField("\U0001faaa Role ID", newRole.Id);
                     replyEmbed.AddField("\U0001f3a8 Role Color", $"RGB({newRole.Color.R}, {newRole.Color.G}, {newRole.Color.B})");
@@ -260,13 +260,13 @@ public class EventLoggingService
             }
         }
     }
-        
+
     public async Task OnRoleUpdated(SocketRole outdatedRole, SocketRole updatedRole)
     {
         if (outdatedRole.Name == updatedRole.Name && outdatedRole.Color == updatedRole.Color) return;
-            
+
         SocketGuild currentGuild = updatedRole.Guild;
-            
+
         using (BotDatabase botDatabase = new BotDatabase())
         {
             GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
@@ -304,7 +304,7 @@ public class EventLoggingService
                     {
                         replyEmbed.AddField("\U0001f3a8 Role Color", $"RGB({updatedRole.Color.R}, {updatedRole.Color.G}, {updatedRole.Color.B})");
                     }
-                        
+
                     replyEmbed.AddField("\U0001faaa Role ID", updatedRole.Id);
 
                     replyEmbed.WithFooter(x =>
@@ -339,7 +339,7 @@ public class EventLoggingService
                     replyEmbed.Title = "\U0001f528 User Banned";
                     replyEmbed.Description = "A user has been banned from the server.";
                     replyEmbed.WithColor(Constants.VeryBadColor);
-                        
+
                     replyEmbed.AddField("\U0001f464 User", bannedUser.GetFullUsername());
                     replyEmbed.AddField("\U0001faaa User ID", bannedUser.Id);
                     replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{bannedUser.CreatedAt.ToUnixTimeSeconds()}:F>");
@@ -356,7 +356,7 @@ public class EventLoggingService
             }
         }
     }
-        
+
     public async Task OnUserUnbanned(SocketUser unbannedUser, SocketGuild sourceGuild)
     {
         using (BotDatabase botDatabase = new BotDatabase())
@@ -376,7 +376,7 @@ public class EventLoggingService
                     replyEmbed.Title = "\u2705 User Unbanned";
                     replyEmbed.Description = "A user has been unbanned from the server.";
                     replyEmbed.WithColor(Constants.GoodColor);
-                        
+
                     replyEmbed.AddField("\U0001f464 User", unbannedUser.GetFullUsername());
                     replyEmbed.AddField("\U0001faaa User ID", unbannedUser.Id);
                     replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{unbannedUser.CreatedAt.ToUnixTimeSeconds()}:F>");

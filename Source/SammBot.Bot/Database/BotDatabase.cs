@@ -16,12 +16,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using JetBrains.Annotations;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-using JetBrains.Annotations;
 using SammBot.Bot.Settings;
 using SammBot.Library.Models.Database;
+using System.IO;
 
 namespace SammBot.Bot.Database;
 
@@ -35,10 +35,10 @@ public class BotDatabase : DbContext
     {
         modelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimit).HasDefaultValue(3);
         modelBuilder.Entity<GuildConfig>().Property(x => x.WarningLimitAction).HasDefaultValue(WarnLimitAction.None);
-            
+
         modelBuilder.Entity<GuildConfig>().Property(x => x.EnableLogging).HasDefaultValue(false);
         modelBuilder.Entity<GuildConfig>().Property(x => x.LogChannel).HasDefaultValue(0);
-            
+
         modelBuilder.Entity<GuildConfig>().Property(x => x.EnableWelcome).HasDefaultValue(false);
         modelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeChannel).HasDefaultValue(0);
         modelBuilder.Entity<GuildConfig>().Property(x => x.WelcomeMessage).HasDefaultValue("%usermention%, welcome to %servername%! Remember to read the rules before chatting!");

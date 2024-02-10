@@ -17,13 +17,9 @@
 #endregion
 
 using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Discord.Interactions;
 using SammBot.Bot.Database;
 using SammBot.Library;
 using SammBot.Library.Attributes;
@@ -31,6 +27,10 @@ using SammBot.Library.Extensions;
 using SammBot.Library.Models;
 using SammBot.Library.Models.Database;
 using SammBot.Library.Preconditions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot.Modules;
 

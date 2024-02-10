@@ -17,24 +17,23 @@
 #endregion
 
 global using LogSeverity = Matcha.LogSeverity;
-
 using Discord;
-using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using Discord.Interactions;
+using Discord.WebSocket;
 using Fergun.Interactive;
+using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Logging;
 using SammBot.Bot.Services;
 using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Helpers;
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot;
 
@@ -49,7 +48,7 @@ public class EntryPoint
     public static void Main()
     {
         Constants.RuntimeStopwatch.Start();
-        
+
         EntryPoint entryPoint = new EntryPoint();
 
         AsyncHelper.RunSync(() => entryPoint.MainAsync());
@@ -61,7 +60,7 @@ public class EntryPoint
     private async Task MainAsync()
     {
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-        
+
         BootLogger bootLogger = new BootLogger();
 
         bootLogger.Log($"Loading {SettingsManager.CONFIG_FILE}...", LogSeverity.Information);
@@ -82,17 +81,17 @@ public class EntryPoint
         }
 
         bootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
-            
+
 #if DEBUG
         if (SettingsManager.Instance.LoadedConfig.WaitForDebugger && !Debugger.IsAttached)
         {
             bootLogger.Log("Waiting for debugger to attach...", LogSeverity.Information);
-                    
+
             while (!Debugger.IsAttached)
             {
                 Thread.Sleep(100);
             }
-                
+
             bootLogger.Log("Debugger has been attached!", LogSeverity.Success);
         }
 #endif
@@ -145,16 +144,16 @@ public class EntryPoint
 
         _ShardedClient = new DiscordShardedClient(new DiscordSocketConfig
         {
-            LogLevel = Discord.LogSeverity.Warning,
-            MessageCacheSize = SettingsManager.Instance.LoadedConfig.MessageCacheSize,
-            AlwaysDownloadUsers = true,
-            GatewayIntents = GatewayIntents.All,
-            LogGatewayIntentWarnings = false
+                LogLevel = Discord.LogSeverity.Warning,
+                MessageCacheSize = SettingsManager.Instance.LoadedConfig.MessageCacheSize,
+                AlwaysDownloadUsers = true,
+                GatewayIntents = GatewayIntents.All,
+                LogGatewayIntentWarnings = false
         });
         _InteractionService = new InteractionService(_ShardedClient, new InteractionServiceConfig()
         {
-            LogLevel = Discord.LogSeverity.Info,
-            DefaultRunMode = RunMode.Async,
+                LogLevel = Discord.LogSeverity.Info,
+                DefaultRunMode = RunMode.Async,
         });
 
         bootLogger.Log("Created Discord client successfully.", LogSeverity.Success);
@@ -179,7 +178,7 @@ public class EntryPoint
     private ServiceProvider ConfigureServiceProvider()
     {
         ServiceCollection serviceCollection = new ServiceCollection();
-        
+
         serviceCollection.AddSingleton(_ShardedClient)
                          .AddSingleton(_InteractionService)
                          .AddSingleton<HttpService>()

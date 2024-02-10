@@ -55,7 +55,7 @@ public class SettingsManager
         }
 
         string configContent = File.ReadAllText(configFilePath);
-        
+
         LoadedConfig = JsonSerializer.Deserialize<BotConfig>(configContent);
 
         return LoadedConfig != null;

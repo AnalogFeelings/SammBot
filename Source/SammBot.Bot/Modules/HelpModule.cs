@@ -16,32 +16,35 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using Discord;
-using System.Linq;
-using System.Threading.Tasks;
 using Discord.Interactions;
-using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models;
 using SammBot.Library.Preconditions;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot.Modules;
 
 [PrettyName("Help")]
 public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    [UsedImplicitly] public InteractionService InteractionService { get; init; } = default!;
-    [UsedImplicitly] public IServiceProvider ServiceProvider { get; init; } = default!;
+    private InteractionService InteractionService { get; set; }
+
+    public HelpModule(IServiceProvider provider)
+    {
+        InteractionService = provider.GetRequiredService<InteractionService>();
+    }
 
     [SlashCommand("help", "Provides all commands and modules available.")]
     [DetailedDescription("Provides a list of all the commands and modules available.")]
     [RateLimit(1, 3)]
     [HideInHelp]
-    public async Task<RuntimeResult> HelpAsync([Summary("Module", "Leave empty to list all modules. Add a command name to list help for that command.")]
-                                               string? module = null)
+    public async Task<RuntimeResult> HelpAsync([Summary("Module", "Leave empty to list all modules. Add a command name to list help for that command.")] string? module = null)
     {
         // Hoh boy, this is QUITE a bumpy ride. Be ready!
         await DeferAsync();

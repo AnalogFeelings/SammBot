@@ -17,22 +17,22 @@
 #endregion
 
 using Discord;
+using Discord.Interactions;
 using Discord.Rest;
 using Discord.WebSocket;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using Discord.Interactions;
-using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models;
 using SammBot.Library.Preconditions;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot.Modules;
 
@@ -41,7 +41,12 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\u2139\uFE0F")]
 public class InformationModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    [UsedImplicitly] public DiscordShardedClient ShardedClient { get; init; } = default!;
+    private DiscordShardedClient ShardedClient { get; set; }
+
+    public InformationModule(IServiceProvider provider)
+    {
+        ShardedClient = provider.GetRequiredService<DiscordShardedClient>();
+    }
 
     [SlashCommand("bot", "Shows information about the bot.")]
     [DetailedDescription("Shows information about the bot such as version, uptime, ping, etc...")]

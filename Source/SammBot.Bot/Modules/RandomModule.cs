@@ -17,13 +17,8 @@
 #endregion
 
 using Discord;
-using SharpCat.Types.Cat;
-using SharpCat.Types.Dog;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Discord.Interactions;
-using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
 using SammBot.Library;
 using SammBot.Library.Attributes;
@@ -31,6 +26,12 @@ using SammBot.Library.Extensions;
 using SammBot.Library.Models;
 using SammBot.Library.Models.Animal;
 using SammBot.Library.Preconditions;
+using SharpCat.Types.Cat;
+using SharpCat.Types.Dog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SammBot.Bot.Modules;
 
@@ -39,8 +40,14 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f3b0")]
 public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    [UsedImplicitly] public RandomService RandomService { get; init; } = default!;
-    [UsedImplicitly] public HttpService HttpService { get; init; } = default!;
+    private RandomService RandomService { get; set; }
+    private HttpService HttpService { get; set; }
+
+    public RandomModule(IServiceProvider provider)
+    {
+        RandomService = provider.GetRequiredService<RandomService>();
+        HttpService = provider.GetRequiredService<HttpService>();
+    }
 
     [SlashCommand("cat", "Returns a random cat!")]
     [DetailedDescription("Gets a random cat image from The Cat API!")]
@@ -48,17 +55,17 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     public async Task<RuntimeResult> GetCatAsync()
     {
         await DeferAsync();
-            
+
         CatImageSearchParams searchParameters = new CatImageSearchParams()
         {
-            has_breeds = true,
-            mime_types = "jpg,png,gif",
-            size = "small",
-            limit = 1
+                has_breeds = true,
+                mime_types = "jpg,png,gif",
+                size = "small",
+                limit = 1
         };
 
         List<CatImage> retrievedImages = await RandomService.CatRequester.GetImageAsync(searchParameters);
-            
+
         CatImage retrievedImage = retrievedImages.First();
         CatBreed? retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
 
@@ -66,10 +73,10 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 
         replyEmbed.Title = "\U0001f431 Random Cat";
         replyEmbed.Description = retrievedBreed != default(CatBreed) ?
-            $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
-            $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}" 
-            : string.Empty;
-            
+                $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
+                $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}"
+                : string.Empty;
+
         replyEmbed.Color = new Color(255, 204, 77);
         replyEmbed.ImageUrl = retrievedImage.Url;
 
@@ -84,13 +91,13 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     public async Task<RuntimeResult> GetDogAsync()
     {
         await DeferAsync();
-            
+
         DogImageSearchParams searchParameters = new DogImageSearchParams()
         {
-            has_breeds = true,
-            mime_types = "jpg,png,gif",
-            size = "small",
-            limit = 1
+                has_breeds = true,
+                mime_types = "jpg,png,gif",
+                size = "small",
+                limit = 1
         };
 
         List<DogImage> retrievedImages = await RandomService.DogRequester.GetImageAsync(searchParameters);
@@ -102,10 +109,10 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 
         replyEmbed.Title = "\U0001f436 Random Dog";
         replyEmbed.Description = retrievedBreed != default(DogBreed) ?
-            $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
-            $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}" 
-            : string.Empty;
-            
+                $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
+                $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}"
+                : string.Empty;
+
         replyEmbed.Color = new Color(217, 158, 130);
         replyEmbed.ImageUrl = retrievedImage.Url;
 
@@ -127,7 +134,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
             return ExecutionResult.FromError("Could not retrieve a fox image! The service may be unavailable.");
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-            
+
         replyEmbed.Title = "\U0001f98a Random Fox";
         replyEmbed.Color = new Color(241, 143, 38);
         replyEmbed.ImageUrl = repliedImage.ImageUrl;
@@ -145,12 +152,12 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         await DeferAsync();
 
         DuckImage? repliedImage = await HttpService.GetObjectFromJsonAsync<DuckImage>("https://random-d.uk/api/v2/random");
-        
+
         if (repliedImage == null)
             return ExecutionResult.FromError("Could not retrieve a duck image! The service may be unavailable.");
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-            
+
         replyEmbed.Title = "\U0001f986 Random Duck";
         replyEmbed.Color = new Color(62, 114, 29);
         replyEmbed.ImageUrl = repliedImage.ImageUrl;

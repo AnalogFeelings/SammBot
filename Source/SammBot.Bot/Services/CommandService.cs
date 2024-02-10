@@ -42,7 +42,7 @@ public class CommandService
     public CommandService(IServiceProvider services)
     {
         ServiceProvider = services;
-        
+
         InteractionService = ServiceProvider.GetRequiredService<InteractionService>();
         ShardedClient = ServiceProvider.GetRequiredService<DiscordShardedClient>();
         BotLogger = ServiceProvider.GetRequiredService<Logger>();
@@ -54,7 +54,7 @@ public class CommandService
         await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
 
         ShardedClient.InteractionCreated += HandleInteractionAsync;
-            
+
         InteractionService.InteractionExecuted += OnInteractionExecutedAsync;
 
         AddEventHandlersAsync();
@@ -107,21 +107,21 @@ public class CommandService
         }
 
         string formattedLog = SettingsManager.Instance.LoadedConfig.CommandLogFormat.Replace("%username%", interaction.User.GetFullUsername())
-            .Replace("%channelname%", interaction.Channel.Name);
-        
+                                             .Replace("%channelname%", interaction.Channel.Name);
+
         BotLogger.Log(formattedLog, LogSeverity.Debug);
 
         await InteractionService.ExecuteCommandAsync(context, ServiceProvider);
     }
-        
+
     private void AddEventHandlersAsync()
     {
         ShardedClient.UserJoined += EventLoggingService.OnUserJoinedAsync;
         ShardedClient.UserLeft += EventLoggingService.OnUserLeftAsync;
-            
+
         ShardedClient.MessageDeleted += EventLoggingService.OnMessageDeleted;
         ShardedClient.MessagesBulkDeleted += EventLoggingService.OnMessagesBulkDeleted;
-            
+
         ShardedClient.RoleCreated += EventLoggingService.OnRoleCreated;
         ShardedClient.RoleUpdated += EventLoggingService.OnRoleUpdated;
 
