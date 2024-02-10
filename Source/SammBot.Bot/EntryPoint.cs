@@ -29,6 +29,7 @@ using SammBot.Library;
 using SammBot.Library.Helpers;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text.Json;
@@ -44,12 +45,14 @@ public class EntryPoint
 {
     private DiscordShardedClient _ShardedClient = default!;
     private InteractionService _InteractionService = default!;
+    private BootLogger _BootLogger = default!;
 
     public static void Main()
     {
         Constants.RuntimeStopwatch.Start();
 
         EntryPoint entryPoint = new EntryPoint();
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
         AsyncHelper.RunSync(() => entryPoint.MainAsync());
     }
@@ -59,40 +62,33 @@ public class EntryPoint
     /// </summary>
     private async Task MainAsync()
     {
-        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+        _BootLogger = new BootLogger();
 
-        BootLogger bootLogger = new BootLogger();
-
-        bootLogger.Log($"Loading {SettingsManager.CONFIG_FILE}...", LogSeverity.Information);
+        _BootLogger.Log($"Loading {SettingsManager.CONFIG_FILE}...", LogSeverity.Information);
         if (!SettingsManager.Instance.LoadConfiguration())
         {
-            string fullPath = SettingsManager.Instance.BotDataDirectory;
             string serializedSettings = JsonSerializer.Serialize(SettingsManager.Instance.LoadedConfig, Constants.JsonSettings);
 
-            bootLogger.Log($"Could not load {SettingsManager.CONFIG_FILE} correctly! Make sure the path \"{Constants.BotDataDirectory}\" exists.\n" +
-                           $"A template {SettingsManager.CONFIG_FILE} file has been written to that path.", LogSeverity.Fatal);
+            _BootLogger.Log($"Could not load {SettingsManager.CONFIG_FILE}. An empty template has been written.", LogSeverity.Fatal);
 
             await File.WriteAllTextAsync(Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE), serializedSettings);
 
-            bootLogger.Log("Press any key to exit...", LogSeverity.Information);
-            Console.ReadKey();
-
-            Environment.Exit(1);
+            PromptExit(1);
         }
 
-        bootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
+        _BootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
 
 #if DEBUG
         if (SettingsManager.Instance.LoadedConfig.WaitForDebugger && !Debugger.IsAttached)
         {
-            bootLogger.Log("Waiting for debugger to attach...", LogSeverity.Information);
+            _BootLogger.Log("Waiting for debugger to attach...", LogSeverity.Information);
 
             while (!Debugger.IsAttached)
             {
                 Thread.Sleep(100);
             }
 
-            bootLogger.Log("Debugger has been attached!", LogSeverity.Success);
+            _BootLogger.Log("Debugger has been attached!", LogSeverity.Success);
         }
 #endif
 
@@ -100,71 +96,49 @@ public class EntryPoint
 
         if (!Directory.Exists(logsDirectory))
         {
-            bootLogger.Log("Logs folder did not exist. Creating...", LogSeverity.Warning);
+            _BootLogger.Log("Logs directory did not exist. Creating...", LogSeverity.Warning);
 
             try
             {
                 Directory.CreateDirectory(logsDirectory);
-                bootLogger.Log("Created Logs folder successfully.", LogSeverity.Success);
+                _BootLogger.Log("Created Logs directory successfully.", LogSeverity.Success);
             }
             catch (Exception ex)
             {
-                bootLogger.Log("Could not create Logs folder. Running the bot without file logging has yet to be implemented.\n" +
-                               $"Exception Message: {ex.Message}", LogSeverity.Error);
+                _BootLogger.Log("Could not create Logs folder. Running the bot without file logging has yet to be implemented.\n" +
+                                $"Exception Message: {ex.Message}", LogSeverity.Error);
 
-                bootLogger.Log("Press any key to exit...", LogSeverity.Information);
-                Console.ReadKey();
-
-                Environment.Exit(1);
+                PromptExit(1);
             }
         }
 
-        string avatarsDirectory = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Avatars");
+        _BootLogger.Log("Creating Discord client...", LogSeverity.Information);
 
-        if (!Directory.Exists(avatarsDirectory))
-        {
-            bootLogger.Log("Avatars folder did not exist. Creating...", LogSeverity.Warning);
-
-            try
-            {
-                Directory.CreateDirectory(avatarsDirectory);
-                bootLogger.Log("Created Avatars folder successfully.", LogSeverity.Success);
-            }
-            catch (Exception ex)
-            {
-                bootLogger.Log("Could not create Avatars folder. Rotating avatars will not be available.\n" +
-                               $"Exception Message: {ex.Message}", LogSeverity.Error);
-
-                bootLogger.Log("Press any key to continue...", LogSeverity.Information);
-                Console.ReadKey();
-            }
-        }
-
-        bootLogger.Log("Creating Discord client...", LogSeverity.Information);
-
-        _ShardedClient = new DiscordShardedClient(new DiscordSocketConfig
+        DiscordSocketConfig socketConfig = new DiscordSocketConfig()
         {
                 LogLevel = Discord.LogSeverity.Warning,
                 MessageCacheSize = SettingsManager.Instance.LoadedConfig.MessageCacheSize,
                 AlwaysDownloadUsers = true,
                 GatewayIntents = GatewayIntents.All,
                 LogGatewayIntentWarnings = false
-        });
-        _InteractionService = new InteractionService(_ShardedClient, new InteractionServiceConfig()
+        };
+        InteractionServiceConfig interactionConfig = new InteractionServiceConfig()
         {
                 LogLevel = Discord.LogSeverity.Info,
                 DefaultRunMode = RunMode.Async,
-        });
+        };
 
-        bootLogger.Log("Created Discord client successfully.", LogSeverity.Success);
+        _ShardedClient = new DiscordShardedClient(socketConfig);
+        _InteractionService = new InteractionService(_ShardedClient, interactionConfig);
 
-        bootLogger.Log("Configuring service provider...", LogSeverity.Information);
+        _BootLogger.Log("Created Discord client successfully.", LogSeverity.Success);
+        _BootLogger.Log("Configuring service provider...", LogSeverity.Information);
 
         ServiceProvider serviceProvider = ConfigureServiceProvider();
 
-        bootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
-
-        bootLogger.Log("Starting the startup service...", LogSeverity.Information);
+        _BootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
+        _BootLogger.Log("Starting the startup service...", LogSeverity.Information);
+        
         await serviceProvider.GetRequiredService<StartupService>().StartAsync();
 
         // Never exit unless a critical exception occurs.
@@ -191,5 +165,18 @@ public class EntryPoint
                          .AddSingleton<EventLoggingService>();
 
         return serviceCollection.BuildServiceProvider();
+    }
+
+    /// <summary>
+    /// Prompts the user to press any key to exit.
+    /// </summary>
+    /// <param name="exitCode">The exit code to use.</param>
+    [DoesNotReturn]
+    private void PromptExit(int exitCode)
+    {
+        _BootLogger.Log("Press any key to exit...", LogSeverity.Information);
+        Console.ReadKey();
+
+        Environment.Exit(exitCode);
     }
 }
