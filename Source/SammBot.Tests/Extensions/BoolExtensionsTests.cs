@@ -24,10 +24,20 @@ namespace SammBot.Tests.Extensions;
 public class BoolExtensionsTests
 {
     [TestMethod]
-    public void ToYesTest() => 
-            Assert.IsTrue(true.ToYesNo() == "Yes");
+    public void ToYesTest()
+    {
+        string actual = true.ToYesNo();
+        string expected = "Yes";
+        
+        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
+    }
 
     [TestMethod]
-    public void ToNoTest() =>
-            Assert.IsTrue(false.ToYesNo() == "No");
+    public void ToNoTest()
+    {
+        string actual = false.ToYesNo();
+        string expected = "No";
+        
+        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
+    }
 }
