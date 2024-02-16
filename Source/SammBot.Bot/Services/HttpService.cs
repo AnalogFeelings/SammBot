@@ -19,7 +19,6 @@
 using SammBot.Bot.Settings;
 using SammBot.Library.Components;
 using SammBot.Library.Extensions;
-using SammBot.Library.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -31,10 +30,14 @@ using System.Web;
 
 namespace SammBot.Bot.Services;
 
-/// <inheritdoc/>
-public class HttpService : IHttpService
+/// <summary>
+/// A service containing utility methods for HTTP requests.
+/// </summary>
+public class HttpService
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// The client used for making HTTP requests inside the service.
+    /// </summary>
     public HttpClient Client { get; init; }
 
     /// <summary>
@@ -89,7 +92,15 @@ public class HttpService : IHttpService
             _QueueDictionary.TryRemove(domain, out _);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Retrieves a JSON string from <paramref name="url"/>, appending <paramref name="parameters"/> as a query string if not null, and
+    /// returns them as <typeparamref name="T"/>.
+    /// </summary>
+    /// <param name="url">The URL to retrieve the JSON data from.</param>
+    /// <param name="parameters">The parameters object that will get turned into a query string.</param>
+    /// <typeparam name="T">The type of the object to be returned.</typeparam>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is empty or null.</exception>
+    /// <returns>An object of type <typeparamref name="T"/> containing the deserialized data.</returns>
     public async Task<T?> GetObjectFromJsonAsync<T>(string url, object? parameters = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(url, nameof(url));
