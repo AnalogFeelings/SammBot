@@ -33,10 +33,12 @@ public static class UserExtensions
     /// <returns>The user's formatted username.</returns>
     public static string GetFullUsername(this IUser user)
     {
-        if (!user.HasPomelo())
-            return $"{user.Username}#{user.Discriminator}";
+        string formattedUsername = user.ToString()!;
 
-        return $"@{user.Username}";
+        if (user.HasPomelo())
+            return $"@{formattedUsername}";
+
+        return formattedUsername;
     }
 
     /// <summary>
