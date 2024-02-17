@@ -26,37 +26,6 @@ namespace SammBot.Library.Extensions;
 /// </summary>
 public static class UserExtensions
 {
-    public static string GetAvatarOrDefault(this SocketUser user, ushort size)
-    {
-        return user.GetAvatarUrl(size: size) ?? user.GetDefaultAvatarUrl();
-    }
-
-    public static string GetGuildOrGlobalAvatar(this SocketGuildUser user, ushort size)
-    {
-        return user.GetGuildAvatarUrl(size: size) ?? user.GetAvatarUrl(size: size);
-    }
-
-    public static string GetGuildGlobalOrDefaultAvatar(this SocketUser user, ushort size)
-    {
-        if (user is SocketGuildUser targetUser)
-            return targetUser.GetGuildAvatarUrl(size: size) ?? targetUser.GetAvatarOrDefault(size);
-
-        return user.GetAvatarOrDefault(size);
-    }
-
-    /// <summary>
-    /// Gets the user's username, or nickname if available.
-    /// </summary>
-    /// <param name="user">The target user.</param>
-    /// <returns>The user's display name.</returns>
-    public static string GetUsernameOrNick(this SocketGuildUser user)
-    {
-        if (!user.HasPomelo())
-            return user.Nickname ?? user.Username;
-
-        return user.DisplayName;
-    }
-
     /// <summary>
     /// Returns the user's formatted username.
     /// </summary>

@@ -41,7 +41,7 @@ public static class EmbedExtensions
         builder.WithFooter(x =>
         {
             x.Text = $"Requested by {context.Interaction.User.GetFullUsername()}"; 
-            x.IconUrl = context.Interaction.User.GetGuildGlobalOrDefaultAvatar(256);
+            x.IconUrl = context.Interaction.User.GetDisplayAvatarUrl();
         });
         builder.WithCurrentTimestamp();
 

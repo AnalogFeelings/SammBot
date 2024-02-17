@@ -151,7 +151,8 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
     {
         targetUser ??= (Context.Interaction.User as SocketGuildUser)!;
 
-        string userAvatar = targetUser.GetAvatarOrDefault(2048);
+        // Cast to SocketUser to ignore guild-specific avatar.
+        string userAvatar = (targetUser as SocketUser).GetDisplayAvatarUrl(size: 2048);
         string userName = targetUser.GetFullUsername();
         string userId = targetUser.Id.ToString();
         string userNickname = targetUser.Nickname ?? "None";

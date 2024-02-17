@@ -126,7 +126,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 
         SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
 
-        await RespondAsync($"Warm hugs from **{authorGuildUser.GetUsernameOrNick()}**!\n{chosenKaomoji} <@{targetUser.Id}>",
+        await RespondAsync($"Warm hugs from **{authorGuildUser.DisplayName}**!\n{chosenKaomoji} <@{targetUser.Id}>",
                 allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
@@ -138,7 +138,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> PatUserAsync([Summary("User", "The user you want to pat.")] SocketGuildUser targetUser)
     {
-        await RespondAsync($"Pats from **{targetUser.GetUsernameOrNick()}**!\n(c・_・)ノ”<@{targetUser.Id}>", allowedMentions: Constants.AllowOnlyUsers);
+        await RespondAsync($"Pats from **{targetUser.DisplayName}**!\n(c・_・)ノ”<@{targetUser.Id}>", allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -154,7 +154,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         int thirdSegment = Random.Shared.Next(0, 256);
         int fourthSegment = Random.Shared.Next(0, 256);
 
-        await RespondAsync($"**{targetUser.GetUsernameOrNick()}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`",
+        await RespondAsync($"**{targetUser.DisplayName}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`",
                 allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
@@ -169,8 +169,8 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         SocketGuildUser authorUser = (Context.Interaction.User as SocketGuildUser)!;
 
         string chosenMessage = SettingsManager.Instance.LoadedConfig.KillMessages.PickRandom();
-        chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorUser.GetUsernameOrNick()}**");
-        chosenMessage = chosenMessage.Replace("{Victim}", $"**{targetUser.GetUsernameOrNick()}**");
+        chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorUser.DisplayName}**");
+        chosenMessage = chosenMessage.Replace("{Victim}", $"**{targetUser.DisplayName}**");
 
         await RespondAsync(chosenMessage, allowedMentions: Constants.AllowOnlyUsers);
 
@@ -246,8 +246,8 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         }
 
         // Split usernames into halves, then sanitize them.
-        string firstUserName = firstUser.GetUsernameOrNick();
-        string secondUserName = secondUser.GetUsernameOrNick();
+        string firstUserName = firstUser.DisplayName;
+        string secondUserName = secondUser.DisplayName;
 
         string nameFirstHalf = string.Empty;
         string nameSecondHalf = string.Empty;
@@ -304,8 +304,8 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 
         // Download their profile pictures and store into memory stream.
         // Then, load the emoji file into a stream.
-        using (MemoryStream firstUserAvatarStream = await DownloadToMemoryStream(firstUser.GetGuildGlobalOrDefaultAvatar(2048)))
-        using (MemoryStream secondUserAvatarStream = await DownloadToMemoryStream(secondUser.GetGuildGlobalOrDefaultAvatar(2048)))
+        using (MemoryStream firstUserAvatarStream = await DownloadToMemoryStream(firstUser.GetDisplayAvatarUrl(size: 2048)))
+        using (MemoryStream secondUserAvatarStream = await DownloadToMemoryStream(secondUser.GetDisplayAvatarUrl(size: 2048)))
         using (FileStream emojiStream = File.Open(emojiFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
         using (SKSurface surface = SKSurface.Create(imageInfo))
         {
