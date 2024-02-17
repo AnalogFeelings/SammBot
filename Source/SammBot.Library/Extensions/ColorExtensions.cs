@@ -20,18 +20,39 @@ using SkiaSharp;
 
 namespace SammBot.Library.Extensions;
 
+/// <summary>
+/// Contains extension methods for Skia colors.
+/// </summary>
 public static class ColorExtensions
 {
+    /// <summary>
+    /// Converts <paramref name="color"/> to a hex string representation.
+    /// </summary>
+    /// <param name="color">The color to convert.</param>
+    /// <returns>The hex string representation.</returns>
+    /// <remarks>The returned string is in CSS-style format.</remarks>
     public static string ToHexString(this SKColor color)
     {
         return "#" + color.Red.ToString("X2") + color.Green.ToString("X2") + color.Blue.ToString("X2");
     }
 
+    /// <summary>
+    /// Converts <paramref name="color"/> to an RGB string representation.
+    /// </summary>
+    /// <param name="color">The color to convert.</param>
+    /// <returns>The RGB string representation.</returns>
+    /// <remarks>The returned string is in CSS-style format.</remarks>
     public static string ToRgbString(this SKColor color)
     {
         return "rgb(" + color.Red + ", " + color.Green + ", " + color.Blue + ")";
     }
 
+    /// <summary>
+    /// Converts <paramref name="color"/> to a CMYK string representation.
+    /// </summary>
+    /// <param name="color">The color to convert.</param>
+    /// <returns>The CMYK string representation.</returns>
+    /// <remarks>The returned string is in CSS-style format.</remarks>
     public static string ToCmykString(this SKColor color)
     {
         //Convert 0 to 255 to 0 to 1
@@ -56,6 +77,12 @@ public static class ColorExtensions
         return $"cmyk({ci}%, {mi}%, {yi}%, {ki})";
     }
 
+    /// <summary>
+    /// Converts <paramref name="color"/> to an HSV string representation.
+    /// </summary>
+    /// <param name="color">The color to convert.</param>
+    /// <returns>The rgb string representation.</returns>
+    /// <remarks>The returned string is in CSS-style format.</remarks>
     public static string ToHsvString(this SKColor color)
     {
         color.ToHsv(out float h, out float s, out float v);
@@ -67,6 +94,12 @@ public static class ColorExtensions
         return $"hsv({roundedHue}, {roundedSaturation}%, {roundedValue}%)";
     }
 
+    /// <summary>
+    /// Converts <paramref name="color"/> to an HSL string representation.
+    /// </summary>
+    /// <param name="color">The color to convert.</param>
+    /// <returns>The HSL string representation.</returns>
+    /// <remarks>The returned string is in CSS-style format.</remarks>
     public static string ToHslString(this SKColor color)
     {
         color.ToHsl(out float h, out float s, out float l);

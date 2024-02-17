@@ -18,8 +18,16 @@
 
 namespace SammBot.Library.Extensions;
 
+/// <summary>
+/// Contains extension methods for lists.
+/// </summary>
 public static class ListExtensions
 {
+    /// <summary>
+    /// Picks a random element in <paramref name="targetList"/> and returns it.
+    /// </summary>
+    /// <param name="targetList">The list to grab the element from.</param>
+    /// <returns>The picked element.</returns>
     public static T PickRandom<T>(this IList<T> targetList)
     {
         return targetList[Random.Shared.Next(targetList.Count)];

@@ -21,6 +21,9 @@ using Discord.WebSocket;
 
 namespace SammBot.Library.Extensions;
 
+/// <summary>
+/// Contains extension methods for Discord users.
+/// </summary>
 public static class UserExtensions
 {
     public static string GetAvatarOrDefault(this SocketUser user, ushort size)
@@ -41,6 +44,11 @@ public static class UserExtensions
         return user.GetAvatarOrDefault(size);
     }
 
+    /// <summary>
+    /// Gets the user's username, or nickname if available.
+    /// </summary>
+    /// <param name="user">The target user.</param>
+    /// <returns>The user's display name.</returns>
     public static string GetUsernameOrNick(this SocketGuildUser user)
     {
         if (!user.HasPomelo())
@@ -49,6 +57,11 @@ public static class UserExtensions
         return user.DisplayName;
     }
 
+    /// <summary>
+    /// Returns the user's formatted username.
+    /// </summary>
+    /// <param name="user">The target user.</param>
+    /// <returns>The user's formatted username.</returns>
     public static string GetFullUsername(this IUser user)
     {
         if (!user.HasPomelo())
@@ -57,11 +70,21 @@ public static class UserExtensions
         return $"@{user.Username}";
     }
 
+    /// <summary>
+    /// Checks if the user has the new username system.
+    /// </summary>
+    /// <param name="user">The target user.</param>
+    /// <returns><see langword="true"/> if the user has it.</returns>
     public static bool HasPomelo(this IUser user)
     {
         return user.DiscriminatorValue == 0;
     }
 
+    /// <summary>
+    /// Gets the user's online status as a string.
+    /// </summary>
+    /// <param name="user">The target user.</param>
+    /// <returns>The user's online status.</returns>
     public static string GetStatusString(this SocketUser user)
     {
         string onlineStatus = user.Status switch

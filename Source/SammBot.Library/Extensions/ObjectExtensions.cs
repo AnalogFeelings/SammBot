@@ -22,8 +22,17 @@ using SammBot.Library.Attributes;
 
 namespace SammBot.Library.Extensions;
 
+/// <summary>
+/// Contains extension methods for objects.
+/// </summary>
 public static class ObjectExtensions
 {
+    /// <summary>
+    /// Converts an object into a URL query string representation.
+    /// </summary>
+    /// <param name="targetObject">The object to convert.</param>
+    /// <returns>The resulting query string.</returns>
+    /// <remarks>The returned string does not include the "?" prefix.</remarks>
     public static string ToQueryString(this object targetObject)
     {
         IEnumerable<string> formattedProperties = from p in targetObject.GetType().GetProperties()

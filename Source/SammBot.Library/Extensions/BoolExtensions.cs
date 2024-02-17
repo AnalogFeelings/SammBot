@@ -18,8 +18,16 @@
 
 namespace SammBot.Library.Extensions;
 
+/// <summary>
+/// Contains extension methods for bool types.
+/// </summary>
 public static class BoolExtensions
 {
+    /// <summary>
+    /// Converts <paramref name="boolean"/>'s value to "Yes" or "No".
+    /// </summary>
+    /// <param name="boolean">The bool to convert.</param>
+    /// <returns>The converted string.</returns>
     public static string ToYesNo(this bool boolean)
     {
         return boolean ? "Yes" : "No";

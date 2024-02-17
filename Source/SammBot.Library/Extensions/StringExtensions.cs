@@ -18,18 +18,39 @@
 
 namespace SammBot.Library.Extensions;
 
+/// <summary>
+/// Contains extension methods for strings.
+/// </summary>
 public static class StringExtensions
 {
+    /// <summary>
+    /// Truncates a string to a certain amount of characters and appends "..." to it.
+    /// </summary>
+    /// <param name="targetString">The string to truncate.</param>
+    /// <param name="maxCharacters">The maximum amount of characters allowed.</param>
+    /// <returns>The truncated string.</returns>
+    /// <remarks>The function doesn't take into account the extra characters added by the dots.</remarks>
     public static string Truncate(this string targetString, int maxCharacters)
     {
         return targetString.Length <= maxCharacters ? targetString : targetString.Substring(0, maxCharacters) + "...";
     }
 
+    /// <summary>
+    /// Converts a country code such as "ES" to its unicode emoji codepoint.
+    /// </summary>
+    /// <param name="countryCode">The country code string to convert.</param>
+    /// <returns>The unicode codepoint for the country's flag.</returns>
     public static string CountryCodeToFlag(this string countryCode)
     {
         return string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
     }
 
+    /// <summary>
+    /// Makes the first letter of a string uppercase.
+    /// </summary>
+    /// <param name="target">The string to capitalize.</param>
+    /// <returns>The capitalized string.</returns>
+    /// <exception cref="ArgumentException">Thrown if the string is null or empty.</exception>
     public static string CapitalizeFirst(this string target)
     {
         if (string.IsNullOrEmpty(target)) throw new ArgumentException("Target string is null or empty.");
@@ -38,10 +59,21 @@ public static class StringExtensions
 
         return resultString;
     }
-
-    //Thanks Joshua Honig from StackOverflow :)
+    
+    /// <summary>
+    /// Calculates the Damerau-Levenshtein distance between a source and a target
+    /// string, based on a threshold value.
+    /// </summary>
+    /// <param name="source">The source string.</param>
+    /// <param name="target">The string to compare the source to.</param>
+    /// <param name="threshold">The threshold value.</param>
+    /// <returns>
+    /// The distance between the two strings, or <see cref="int.MaxValue"/> if the
+    /// distance exceeds the threshold.
+    /// </returns>
     public static int DamerauDistance(this string source, string target, int threshold)
     {
+        //Thanks Joshua Honig from StackOverflow :)
         void Swap<T>(ref T arg1, ref T arg2)
         {
             (arg1, arg2) = (arg2, arg1);

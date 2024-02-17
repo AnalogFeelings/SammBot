@@ -22,7 +22,7 @@ using Discord.Interactions;
 namespace SammBot.Library.Extensions;
 
 /// <summary>
-/// Extension methods for working with rich embeds.
+/// Contains extension methods for working with rich embeds.
 /// </summary>
 public static class EmbedExtensions
 {
