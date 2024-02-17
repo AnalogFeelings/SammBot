@@ -50,10 +50,10 @@ public static class StringExtensions
     /// </summary>
     /// <param name="target">The string to capitalize.</param>
     /// <returns>The capitalized string.</returns>
-    /// <exception cref="ArgumentException">Thrown if the string is null or empty.</exception>
+    /// <exception cref="ArgumentException">Thrown if the string is null or white-space.</exception>
     public static string CapitalizeFirst(this string target)
     {
-        if (string.IsNullOrEmpty(target)) throw new ArgumentException("Target string is null or empty.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(target, nameof(target));
 
         string resultString = char.ToUpper(target.First()) + target.Substring(1).ToLower();
 
