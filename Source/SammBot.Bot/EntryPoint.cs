@@ -174,8 +174,11 @@ public class EntryPoint
     [DoesNotReturn]
     private void PromptExit(int exitCode)
     {
-        _BootLogger.Log("Press any key to exit...", LogSeverity.Information);
-        Console.ReadKey();
+        if (Console.IsInputRedirected)
+        {
+            _BootLogger.Log("Press any key to exit...", LogSeverity.Information);
+            Console.ReadKey();
+        }
 
         Environment.Exit(exitCode);
     }
