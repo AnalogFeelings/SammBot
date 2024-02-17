@@ -26,7 +26,6 @@ using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models;
-using SammBot.Library.Models.UrbanDictionary;
 using SammBot.Library.Preconditions;
 using SkiaSharp;
 using System;
@@ -405,52 +404,5 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         byte[] rawData = await HttpService.Client.GetByteArrayAsync(url);
 
         return new MemoryStream(rawData);
-    }
-
-    [SlashCommand("urban", "Gets a definition from the urban dictionary!")]
-    [DetailedDescription("Gets a definition from the urban dictionary. Click the embed's title to open the definition in your browser.")]
-    [RateLimit(6, 1)]
-    public async Task<RuntimeResult> UrbanAsync([Summary("Term", "The term you want to search.")] string term)
-    {
-        UrbanSearchParameters searchParameters = new UrbanSearchParameters()
-        {
-                Term = term
-        };
-
-        await DeferAsync();
-
-        UrbanDefinitionList? urbanDefinitions = await HttpService.GetObjectFromJsonAsync<UrbanDefinitionList>("https://api.urbandictionary.com/v0/define", searchParameters);
-
-        if (urbanDefinitions == null || urbanDefinitions.List.Count == 0)
-            return ExecutionResult.FromError($"Urban Dictionary returned no definitions for \"{term}\"!");
-
-        UrbanDefinition chosenDefinition = urbanDefinitions.List.PickRandom();
-
-        chosenDefinition.Definition = chosenDefinition.Definition.Replace("[", "");
-        chosenDefinition.Definition = chosenDefinition.Definition.Replace("]", "");
-
-        if (!string.IsNullOrEmpty(chosenDefinition.Example))
-        {
-            chosenDefinition.Example = chosenDefinition.Example.Replace("[", "");
-            chosenDefinition.Example = chosenDefinition.Example.Replace("]", "");
-        }
-
-        string embedDescription = $"\U0001f4c4 **Definition** : *{chosenDefinition.Definition.Truncate(1024)}*\n\n";
-        embedDescription += $"\U0001f4dd **Example** : {(string.IsNullOrEmpty(chosenDefinition.Example) ? "No Example" : chosenDefinition.Example)}\n\n";
-        embedDescription += $"\U0001f464 **Author** : {chosenDefinition.Author}\n";
-        embedDescription += $"\U0001f44d **Thumbs Up** : {chosenDefinition.ThumbsUp}\n";
-        embedDescription += $"\U0001f44e **Thumbs Down** : {chosenDefinition.ThumbsDown}\n";
-
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
-
-        replyEmbed.Title = $"\U0001f4d6 Urban Definition Of \"{chosenDefinition.Word}\"";
-        replyEmbed.Description = embedDescription;
-        replyEmbed.Color = new Color(34, 102, 153);
-
-        replyEmbed.WithUrl(chosenDefinition.Permalink);
-
-        await FollowupAsync(embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
-
-        return ExecutionResult.Succesful();
     }
 }
