@@ -46,8 +46,12 @@ public class EventLoggingService
 
                 if (welcomeChannel != null)
                 {
-                    string formattedMessage = serverConfig.WelcomeMessage.Replace("%usermention%", newUser.Mention)
-                                                          .Replace("%servername%", Format.Bold(currentGuild.Name));
+                    Dictionary<string, object> templateDict = new Dictionary<string, object>()
+                    {
+                            ["usermention"] = newUser.Mention,
+                            ["servername"] = Format.Bold(currentGuild.Name)
+                    };
+                    string formattedMessage = serverConfig.WelcomeMessage.TemplateReplace(templateDict);
 
                     await welcomeChannel.SendMessageAsync(formattedMessage);
                 }

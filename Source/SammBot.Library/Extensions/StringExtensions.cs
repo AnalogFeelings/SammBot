@@ -36,6 +36,23 @@ public static class StringExtensions
     }
 
     /// <summary>
+    /// Replaces a string's templates with the values specified in <paramref name="templateDictionary"/>.
+    /// </summary>
+    /// <param name="targetString">The target string to process.</param>
+    /// <param name="templateDictionary">A dictionary of template strings with the objects to replace them with.</param>
+    /// <returns>The processed string.</returns>
+    /// <remarks>The template dictionary's keys must not be surrounded with "%".</remarks>
+    public static string TemplateReplace(this string targetString, Dictionary<string, object> templateDictionary)
+    {
+        foreach (KeyValuePair<string, object> pair in templateDictionary)
+        {
+            targetString = targetString.Replace($"%{pair.Key}%", pair.Value.ToString());
+        }
+
+        return targetString;
+    }
+
+    /// <summary>
     /// Converts a country code such as "ES" to its unicode emoji codepoint.
     /// </summary>
     /// <param name="countryCode">The country code string to convert.</param>
