@@ -72,6 +72,7 @@ public static class Constants
     /// </summary>
     public static readonly JsonSerializerOptions JsonSettings = new JsonSerializerOptions()
     {
-        WriteIndented = true
+        WriteIndented = true,
+        IncludeFields = true
     };
 }

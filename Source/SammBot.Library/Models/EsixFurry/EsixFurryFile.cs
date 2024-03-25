@@ -16,20 +16,27 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Library.Attributes;
+using System.Text.Json.Serialization;
 
-namespace SammBot.Library.Models.E621;
+namespace SammBot.Library.Models.EsixFurry;
 
 /// <summary>
-/// A class used to pass search parameters to the e621
-/// API.
+/// A class that contains a file from the e621 CDN.
 /// </summary>
-public class E621SearchParameters
+public record EsixFurryFile
 {
-    [UglyName("limit")]
-    public int Limit { get; set; }
-    [UglyName("tags")]
-    public string Tags { get; set; }
-    [UglyName("page")]
-    public string PageNumber { get; set; }
+    [JsonPropertyName("width")]
+    public int Width;
+    [JsonPropertyName("height")]
+    public int Height;
+    
+    [JsonPropertyName("ext")]
+    public required string Extension;
+    [JsonPropertyName("size")]
+    public ulong Size;
+    
+    [JsonPropertyName("md5")]
+    public required string HashMd5;
+    [JsonPropertyName("url")]
+    public required string FileUrl;
 }

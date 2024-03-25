@@ -18,17 +18,36 @@
 
 using System.Text.Json.Serialization;
 
-namespace SammBot.Library.Models.E621;
+namespace SammBot.Library.Models.EsixFurry;
 
 /// <summary>
-/// A class containing a post's score in e621.
+/// A class that contains a post from the e621 API.
 /// </summary>
-public class E621Score
+public record EsixFurryPost
 {
-    [JsonPropertyName("up")]
-    public int Upvotes { get; set; }
-    [JsonPropertyName("down")]
-    public int Downvotes { get; set; }
-    [JsonPropertyName("total")]
-    public int TotalVotes { get; set; }
+    [JsonPropertyName("id")]
+    public long Id;
+    
+    [JsonPropertyName("created_at")]
+    public required string CreatedAt;
+    [JsonPropertyName("updated_at")]
+    public string? UpdatedAt;
+    
+    [JsonPropertyName("file")]
+    public required EsixFurryFile File;
+    
+    [JsonPropertyName("score")]
+    public required EsixFurryScore Score;
+    [JsonPropertyName("tags")]
+    public required EsixFurryTags Tags;
+    
+    [JsonPropertyName("rating")]
+    public required string Rating;
+    [JsonPropertyName("fav_count")]
+    public long FavoriteCount;
+    
+    [JsonPropertyName("description")]
+    public required string Description;
+    [JsonPropertyName("comment_count")]
+    public int CommentCount;
 }

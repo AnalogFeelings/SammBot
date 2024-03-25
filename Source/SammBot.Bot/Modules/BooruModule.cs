@@ -26,7 +26,7 @@ using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models;
-using SammBot.Library.Models.E621;
+using SammBot.Library.Models.EsixFurry;
 using SammBot.Library.Models.Rule34;
 using SammBot.Library.Preconditions;
 using System;
@@ -143,7 +143,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
         if (string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
 
-        E621SearchParameters searchParameters = new E621SearchParameters()
+        EsixFurrySearchParameters searchParameters = new EsixFurrySearchParameters()
         {
                 Limit = 320,
                 Tags = postTags
@@ -151,19 +151,19 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 
         await DeferAsync();
 
-        E621Reply? nsfwPosts = await HttpService.GetObjectFromJsonAsync<E621Reply>("https://e621.net/posts.json", searchParameters);
+        EsixFurryReply? nsfwPosts = await HttpService.GetObjectFromJsonAsync<EsixFurryReply>("https://e621.net/posts.json", searchParameters);
 
-        if (nsfwPosts == null || nsfwPosts.Posts == null || nsfwPosts.Posts.Count == 0)
+        if (nsfwPosts == null || nsfwPosts.Posts.Count == 0)
             return ExecutionResult.FromError("e621 returned no posts! The API could be down for maintenance, or one of your tags is invalid.");
 
-        List<E621Post> filteredPosts = nsfwPosts.Posts.Where(x => x.File.Extension != "mp4" && x.File.Extension != "webm").ToList();
+        List<EsixFurryPost> filteredPosts = nsfwPosts.Posts.Where(x => x.File.Extension != "mp4" && x.File.Extension != "webm").ToList();
 
         if (filteredPosts.Count == 0)
             return ExecutionResult.FromError("All of the posts returned were videos! Please try another tag combination.");
 
         if (filteredPosts.Count == 1)
         {
-            E621Post post = filteredPosts[0];
+            EsixFurryPost post = filteredPosts[0];
 
             string artist = post.Tags.Artist.Any() ? string.Join(", ", post.Tags.Artist) : "Unknown";
             string tags = string.Join(", ", post.Tags.General);
@@ -173,7 +173,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             string embedDescription = $"\U0001f9d1\u200D\U0001f3a8 **Artist**: {artist}\n";
             embedDescription += $"\U0001f4d6 **Characters**: `{character.Truncate(512)}`\n";
             embedDescription += $"\U0001f9ec **Species**: `{species.Truncate(512)}`\n";
-            embedDescription += $"\U0001f3f7\uFE0F **postTags**: `{tags.Truncate(512)}`\n";
+            embedDescription += $"\U0001f3f7\uFE0F **Post Tags**: `{tags.Truncate(512)}`\n";
             embedDescription += $"\U0001f44d **Likes**: `{post.Score.Upvotes}`\n";
             embedDescription += $"\U0001f44e **Dislikes**: `{Math.Abs(post.Score.Downvotes)}`\n";
 
@@ -206,7 +206,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 
         PageBuilder GeneratePage(int index)
         {
-            E621Post post = filteredPosts[index];
+            EsixFurryPost post = filteredPosts[index];
 
             string artist = post.Tags.Artist.Any() ? string.Join(", ", post.Tags.Artist) : "Unknown";
             string tags = string.Join(", ", post.Tags.General);
@@ -216,7 +216,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             string embedDescription = $"\U0001f9d1\u200D\U0001f3a8 **Artist**: {artist}\n";
             embedDescription += $"\U0001f4d6 **Characters**: `{character.Truncate(512)}`\n";
             embedDescription += $"\U0001f9ec **Species**: `{species.Truncate(512)}`\n";
-            embedDescription += $"\U0001f3f7\uFE0F **postTags**: `{tags.Truncate(512)}`\n";
+            embedDescription += $"\U0001f3f7\uFE0F **Post Tags**: `{tags.Truncate(512)}`\n";
             embedDescription += $"\U0001f44d **Likes**: `{post.Score.Upvotes}`\n";
             embedDescription += $"\U0001f44e **Dislikes**: `{Math.Abs(post.Score.Downvotes)}`\n";
 

@@ -23,7 +23,7 @@ namespace SammBot.Library.Attributes;
 /// <para/>
 /// An example would be when exposing REST parameters to C#.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class UglyName : Attribute
 {
     /// <summary>

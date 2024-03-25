@@ -19,6 +19,7 @@
 using System.Reflection;
 using System.Web;
 using SammBot.Library.Attributes;
+using System.Collections;
 
 namespace SammBot.Library.Extensions;
 
@@ -35,11 +36,22 @@ public static class ObjectExtensions
     /// <remarks>The returned string does not include the "?" prefix.</remarks>
     public static string ToQueryString(this object targetObject)
     {
-        IEnumerable<string> formattedProperties = from p in targetObject.GetType().GetProperties()
-            where p.GetValue(targetObject, null) != null
-            where p.GetCustomAttribute<UglyName>() != null
-            select p.GetCustomAttribute<UglyName>()!.Name + "=" + HttpUtility.UrlEncode(p.GetValue(targetObject, null).ToString());
+        Type targetType = targetObject.GetType();
+        IEnumerable<string> formattedFields = from p in targetType.GetFields()
+                                              let value = p.GetValue(targetObject)
+                                              where value != null
+                                              let uglyName = p.GetCustomAttribute<UglyName>()
+                                              where uglyName != null
+                                              select uglyName.Name + "=" + HttpUtility.UrlEncode(value.ToString());
+        IEnumerable<string> formattedProperties = from p in targetType.GetProperties()
+                                                  let value = p.GetValue(targetObject)
+                                                  where value != null
+                                                  let uglyName = p.GetCustomAttribute<UglyName>()
+                                                  where uglyName != null
+                                                  select uglyName.Name + "=" + HttpUtility.UrlEncode(value.ToString());
 
-        return string.Join("&", formattedProperties.ToArray());
+        IEnumerable<string> formattedMembers = formattedFields.Concat(formattedProperties);
+
+        return string.Join("&", formattedMembers);
     }
 }

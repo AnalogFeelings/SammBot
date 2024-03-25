@@ -18,13 +18,25 @@
 
 using System.Text.Json.Serialization;
 
-namespace SammBot.Library.Models.E621;
+namespace SammBot.Library.Models.EsixFurry;
 
 /// <summary>
-/// A class that contains a post query reply from e621.
+/// A class that contains a post's tags on e621.
 /// </summary>
-public class E621Reply
+public record EsixFurryTags
 {
-    [JsonPropertyName("posts")]
-    public List<E621Post> Posts { get; set; }
+    [JsonPropertyName("general")]
+    public List<string>? General;
+    [JsonPropertyName("species")]
+    public List<string>? Species;
+    [JsonPropertyName("character")]
+    public List<string>? Character;
+    [JsonPropertyName("artist")]
+    public List<string>? Artist;
+    [JsonPropertyName("invalid")]
+    public List<string>? Invalid;
+    [JsonPropertyName("lore")]
+    public List<string>? Lore;
+    [JsonPropertyName("meta")]
+    public List<string>? Meta;
 }

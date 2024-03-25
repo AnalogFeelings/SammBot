@@ -17,6 +17,7 @@
 #endregion
 
 using SammBot.Bot.Settings;
+using SammBot.Library;
 using SammBot.Library.Components;
 using SammBot.Library.Extensions;
 using System;
@@ -126,7 +127,7 @@ public class HttpService
         async Task<T?> GetJsonRemote()
         {
             string jsonReply = await GetStringFromRemote(uriBuilder.ToString());
-            T? parsedReply = JsonSerializer.Deserialize<T>(jsonReply);
+            T? parsedReply = JsonSerializer.Deserialize<T>(jsonReply, Constants.JsonSettings);
 
             return parsedReply;
         }
