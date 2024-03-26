@@ -1,6 +1,10 @@
 # Samm-Bot Style Guidelines
 
-This document will aid you in the (rare) case that you decide to create a pull request for this repository.
+This document will aid you in the case that you decide to create a pull request for this repository.
+
+> [!TIP]
+> Almost everything described in this document is automatically applied by any IDE that
+> supports .editorconfig files or ReSharper settings.
 
 ## Indentation Style
 
@@ -24,6 +28,7 @@ A command is defined by 2 or more function attributes. They may appear in this o
 * `RequireContext` (Optional)
 * `RequireBotPermission` (Optional)
 * `RequireUserPermission` (Optional)
+* `RequireNsfw` (Optional)
 
 ## New Lines/Spacing
 
@@ -33,10 +38,9 @@ You may group a statement (i.e. an `if` statement) group if it makes sense to do
 
 ## Variable/Class Naming
 
-Use `PascalCase` for class names, variables and parameters, but use `camelCase` for local variables.
-Use `SCREAMING_SNAKE_CASE` for const variables.
-
-Anything private must use the `_PascalCase` or `_SCREAMING_SNAKE_CASE` convention.
+Use `PascalCase` for class names and public fields, but use `camelCase` for local variables and parameters.  
+Use `SCREAMING_SNAKE_CASE` for public const variables, `_SCREAMING_SNAKE_CASE` for private consts.  
+Use `_PascalCase` for private properties, but `_camelCase` for private fields.
 
 ## Strings
 
@@ -46,10 +50,9 @@ Read more about string interpolation [here](https://docs.microsoft.com/en-us/dot
 
 ## Comments
 
-Comments are only needed when the action the code is performing is obscure. Excessive commenting is highly discouraged.
+Comments are only needed when the action the code is performing is obscure or hard to follow. Excessive commenting is highly discouraged.  
+XML documentation for functions, properties, fields and classes are encouraged.
 
 ## Types
 
 Please use the keyword version of types when possible, this means using `string` instead of `String` (looking at you, Java users), `int` instead of `Int32`, `uint` instead of `UInt32` and so on.
-
-Do the exact opposite when working with Binary files, where knowing the datatype in detail is crucial.

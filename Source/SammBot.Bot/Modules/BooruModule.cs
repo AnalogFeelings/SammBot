@@ -20,6 +20,7 @@ using Discord;
 using Discord.Interactions;
 using Fergun.Interactive;
 using Fergun.Interactive.Pagination;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
 using SammBot.Library;
@@ -28,7 +29,6 @@ using SammBot.Library.Extensions;
 using SammBot.Library.Models;
 using SammBot.Library.Models.EsixFurry;
 using SammBot.Library.Models.Rule34;
-using SammBot.Library.Preconditions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,22 +39,19 @@ namespace SammBot.Bot.Modules;
 [PrettyName("Booru")]
 [Group("booru", "Commands to retrieve images from Booru-style sites.")]
 [ModuleEmoji("\U0001f5bc\uFE0F")]
-public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
+public partial class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private HttpService HttpService { get; set; }
-    private InteractiveService InteractiveService { get; set; }
+    private readonly HttpService _httpService;
+    private readonly InteractiveService _interactiveService;
 
     public BooruModule(IServiceProvider provider)
     {
-        HttpService = provider.GetRequiredService<HttpService>();
-        InteractiveService = provider.GetRequiredService<InteractiveService>();
+        _httpService = provider.GetRequiredService<HttpService>();
+        _interactiveService = provider.GetRequiredService<InteractiveService>();
     }
 
-    [SlashCommand("r34", "Gets a list of images from rule34.")]
-    [DetailedDescription("Gets a list of images from rule34. Maximum amount is 1000 images per command.")]
-    [RateLimit(3, 2)]
-    [RequireNsfw]
-    public async Task<RuntimeResult> GetRule34Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
+    [UsedImplicitly]
+    public partial async Task<RuntimeResult> GetRule34Async(string postTags)
     {
         if (string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
@@ -68,7 +65,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 
         await DeferAsync();
 
-        List<Rule34Post>? nsfwPosts = await HttpService.GetObjectFromJsonAsync<List<Rule34Post>>("https://api.rule34.xxx/index.php?page=dapi&s=post&q=index", searchParameters);
+        List<Rule34Post>? nsfwPosts = await _httpService.GetObjectFromJsonAsync<List<Rule34Post>>("https://api.rule34.xxx/index.php?page=dapi&s=post&q=index", searchParameters);
 
         if (nsfwPosts == null || nsfwPosts.Count == 0)
             return ExecutionResult.FromError("Rule34 returned no posts! The API could be down for maintenance, or one of your tags is invalid.");
@@ -107,7 +104,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
                                                                     .WithActionOnCancellation(ActionOnStop.DisableInput)
                                                                     .Build();
 
-            await InteractiveService.SendPaginatorAsync(lazyPaginator, Context.Interaction, TimeSpan.FromMinutes(8), InteractionResponseType.DeferredChannelMessageWithSource);
+            await _interactiveService.SendPaginatorAsync(lazyPaginator, Context.Interaction, TimeSpan.FromMinutes(8), InteractionResponseType.DeferredChannelMessageWithSource);
         }
 
         return ExecutionResult.Succesful();
@@ -129,12 +126,9 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
                                     .WithImageUrl(filteredPosts[index].FileUrl);
         }
     }
-
-    [SlashCommand("e621", "Gets a list of images from e621.")]
-    [DetailedDescription("Gets a list of images from e621. Maximum amount is 320 images per command.")]
-    [RateLimit(2, 1)]
-    [RequireNsfw]
-    public async Task<RuntimeResult> GetE621Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
+    
+    [UsedImplicitly]
+    public partial async Task<RuntimeResult> GetE621Async(string postTags)
     {
         if (string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
@@ -147,7 +141,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 
         await DeferAsync();
 
-        EsixFurryReply? nsfwPosts = await HttpService.GetObjectFromJsonAsync<EsixFurryReply>("https://e621.net/posts.json", searchParameters);
+        EsixFurryReply? nsfwPosts = await _httpService.GetObjectFromJsonAsync<EsixFurryReply>("https://e621.net/posts.json", searchParameters);
 
         if (nsfwPosts == null || nsfwPosts.Posts.Count == 0)
             return ExecutionResult.FromError("e621 returned no posts! The API could be down for maintenance, or one of your tags is invalid.");
@@ -194,7 +188,7 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
                                                                     .WithActionOnCancellation(ActionOnStop.DeleteInput)
                                                                     .Build();
 
-            await InteractiveService.SendPaginatorAsync(lazyPaginator, Context.Interaction, TimeSpan.FromMinutes(8), InteractionResponseType.DeferredChannelMessageWithSource);
+            await _interactiveService.SendPaginatorAsync(lazyPaginator, Context.Interaction, TimeSpan.FromMinutes(8), InteractionResponseType.DeferredChannelMessageWithSource);
         }
 
         return ExecutionResult.Succesful();
