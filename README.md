@@ -5,13 +5,12 @@
   <h1>
     Samm-Bot
     <br>
-    A free and open-source Discord bot.
+    An open-source Discord bot.
   </h1>
 
-  ![Lines of code](https://img.shields.io/tokei/lines/github/analogfeelings/sammbot?label=Lines%20Of%20Code&style=flat-square)
   [![GitHub issues](https://img.shields.io/github/issues/analogfeelings/sammbot?label=Issues&style=flat-square)](https://github.com/AnalogFeelings/sammbot/issues)
   [![GitHub pull requests](https://img.shields.io/github/issues-pr/analogfeelings/sammbot?label=Pull%20Requests&style=flat-square)](https://github.com/AnalogFeelings/sammbot/pulls)
-  [![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/analogfeelings/sammbot/unit-tests.yml?branch=master&label=Build&style=flat-square)](https://github.com/AnalogFeelings/SammBot/actions)
+  [![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/analogfeelings/sammbot/unit-tests.yml?branch=master&label=Unit%20Tests&style=flat-square)](https://github.com/AnalogFeelings/SammBot/actions)
   [![GitHub](https://img.shields.io/github/license/analogfeelings/sammbot?label=License&style=flat-square)](https://github.com/AnalogFeelings/sammbot/blob/master/LICENSE)
   [![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot/master?label=Commit%20Activity&style=flat-square)](https://github.com/AnalogFeelings/sammbot/graphs/commit-activity)
   [![GitHub Repo stars](https://img.shields.io/github/stars/analogfeelings/sammbot?label=Stargazers&style=flat-square)](https://github.com/AnalogFeelings/sammbot/stargazers)
