@@ -53,7 +53,6 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("r34", "Gets a list of images from rule34.")]
     [DetailedDescription("Gets a list of images from rule34. Maximum amount is 1000 images per command.")]
     [RateLimit(3, 2)]
-    [RequireContext(ContextType.Guild)]
     [RequireNsfw]
     public async Task<RuntimeResult> GetRule34Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
     {
@@ -134,7 +133,6 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("e621", "Gets a list of images from e621.")]
     [DetailedDescription("Gets a list of images from e621. Maximum amount is 320 images per command.")]
     [RateLimit(2, 1)]
-    [RequireContext(ContextType.Guild)]
     [RequireNsfw]
     public async Task<RuntimeResult> GetE621Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
     {
