@@ -16,12 +16,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace SammBot.Library.Extensions;
 
 /// <summary>
 /// Contains extension methods for lists.
 /// </summary>
-public static class ListExtensions
+public static class CollectionExtensions
 {
     /// <summary>
     /// Picks a random element in <paramref name="targetList"/> and returns it.
@@ -31,5 +33,15 @@ public static class ListExtensions
     public static T PickRandom<T>(this IList<T> targetList)
     {
         return targetList[Random.Shared.Next(targetList.Count)];
+    }
+
+    /// <summary>
+    /// Checks if a collection is null or empty.
+    /// </summary>
+    /// <param name="targetCollection">The collection to check.</param>
+    /// <returns>True if the collection was null or empty, false if otherwise.</returns>
+    public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? targetCollection)
+    {
+        return targetCollection == null || !targetCollection.Any();
     }
 }

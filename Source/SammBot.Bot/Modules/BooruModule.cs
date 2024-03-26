@@ -100,14 +100,13 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
         }
         else
         {
-            LazyPaginator lazyPaginator = new LazyPaginatorBuilder()
-                                          .AddUser(Context.User)
-                                          .WithPageFactory(GeneratePage)
-                                          .WithMaxPageIndex(filteredPosts.Count - 1)
-                                          .WithFooter(PaginatorFooter.None)
-                                          .WithActionOnTimeout(ActionOnStop.DisableInput)
-                                          .WithActionOnCancellation(ActionOnStop.DisableInput)
-                                          .Build();
+            LazyPaginator lazyPaginator = new LazyPaginatorBuilder().AddUser(Context.User)
+                                                                    .WithPageFactory(GeneratePage)
+                                                                    .WithMaxPageIndex(filteredPosts.Count - 1)
+                                                                    .WithFooter(PaginatorFooter.None)
+                                                                    .WithActionOnTimeout(ActionOnStop.DisableInput)
+                                                                    .WithActionOnCancellation(ActionOnStop.DisableInput)
+                                                                    .Build();
 
             await InteractiveService.SendPaginatorAsync(lazyPaginator, Context.Interaction, TimeSpan.FromMinutes(8), InteractionResponseType.DeferredChannelMessageWithSource);
         }
@@ -122,14 +121,13 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             embedDescription += $"\U0001f51e **Rating**: `{filteredPosts[index].Rating.CapitalizeFirst()}`\n";
             embedDescription += $"\U0001f3f7\uFE0F **postTags**: `{filteredPosts[index].Tags.Truncate(512)}`\n";
 
-            return new PageBuilder()
-                   .WithTitle("\U0001f633 Rule34 Search Results")
-                   .WithDescription(embedDescription)
-                   .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
-                   .WithCurrentTimestamp()
-                   .WithColor(new Color(170, 229, 164))
-                   .WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[index].Id}")
-                   .WithImageUrl(filteredPosts[index].FileUrl);
+            return new PageBuilder().WithTitle("\U0001f633 Rule34 Search Results")
+                                    .WithDescription(embedDescription)
+                                    .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
+                                    .WithCurrentTimestamp()
+                                    .WithColor(new Color(170, 229, 164))
+                                    .WithUrl($"https://rule34.xxx/index.php?page=post&s=view&id={filteredPosts[index].Id}")
+                                    .WithImageUrl(filteredPosts[index].FileUrl);
         }
     }
 
@@ -165,10 +163,10 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
         {
             EsixFurryPost post = filteredPosts[0];
 
-            string artist = post.Tags.Artist.Any() ? string.Join(", ", post.Tags.Artist) : "Unknown";
-            string tags = string.Join(", ", post.Tags.General);
-            string species = post.Tags.Species.Any() ? string.Join(", ", post.Tags.Species) : "Unknown";
-            string character = post.Tags.Character.Any() ? string.Join(", ", post.Tags.Character) : "Unknown";
+            string artist = post.Tags.Artist.IsNullOrEmpty() ? "Unknown" : string.Join(", ", post.Tags.Artist);
+            string tags = post.Tags.General.IsNullOrEmpty() ? "Unknown" : string.Join(", ", post.Tags.General);
+            string species = post.Tags.Species.IsNullOrEmpty() ? "Unknown" : string.Join(", ", post.Tags.Species);
+            string character = post.Tags.Character.IsNullOrEmpty() ? "Unknown" : string.Join(", ", post.Tags.Character);
 
             string embedDescription = $"\U0001f9d1\u200D\U0001f3a8 **Artist**: {artist}\n";
             embedDescription += $"\U0001f4d6 **Characters**: `{character.Truncate(512)}`\n";
@@ -190,14 +188,13 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
         }
         else
         {
-            LazyPaginator lazyPaginator = new LazyPaginatorBuilder()
-                                          .AddUser(Context.User)
-                                          .WithPageFactory(GeneratePage)
-                                          .WithMaxPageIndex(filteredPosts.Count - 1)
-                                          .WithFooter(PaginatorFooter.None)
-                                          .WithActionOnTimeout(ActionOnStop.DeleteInput)
-                                          .WithActionOnCancellation(ActionOnStop.DeleteInput)
-                                          .Build();
+            LazyPaginator lazyPaginator = new LazyPaginatorBuilder().AddUser(Context.User)
+                                                                    .WithPageFactory(GeneratePage)
+                                                                    .WithMaxPageIndex(filteredPosts.Count - 1)
+                                                                    .WithFooter(PaginatorFooter.None)
+                                                                    .WithActionOnTimeout(ActionOnStop.DeleteInput)
+                                                                    .WithActionOnCancellation(ActionOnStop.DeleteInput)
+                                                                    .Build();
 
             await InteractiveService.SendPaginatorAsync(lazyPaginator, Context.Interaction, TimeSpan.FromMinutes(8), InteractionResponseType.DeferredChannelMessageWithSource);
         }
@@ -208,10 +205,10 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
         {
             EsixFurryPost post = filteredPosts[index];
 
-            string artist = post.Tags.Artist.Any() ? string.Join(", ", post.Tags.Artist) : "Unknown";
-            string tags = string.Join(", ", post.Tags.General);
-            string species = post.Tags.Species.Any() ? string.Join(", ", post.Tags.Species) : "Unknown";
-            string character = post.Tags.Character.Any() ? string.Join(", ", post.Tags.Character) : "Unknown";
+            string artist = post.Tags.Artist.IsNullOrEmpty() ? "Unknown" : string.Join(", ", post.Tags.Artist);
+            string tags = post.Tags.General.IsNullOrEmpty() ? "Unknown" : string.Join(", ", post.Tags.General);
+            string species = post.Tags.Species.IsNullOrEmpty() ? "Unknown" : string.Join(", ", post.Tags.Species);
+            string character = post.Tags.Character.IsNullOrEmpty() ? "Unknown" : string.Join(", ", post.Tags.Character);
 
             string embedDescription = $"\U0001f9d1\u200D\U0001f3a8 **Artist**: {artist}\n";
             embedDescription += $"\U0001f4d6 **Characters**: `{character.Truncate(512)}`\n";
@@ -220,14 +217,13 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
             embedDescription += $"\U0001f44d **Likes**: `{post.Score.Upvotes}`\n";
             embedDescription += $"\U0001f44e **Dislikes**: `{Math.Abs(post.Score.Downvotes)}`\n";
 
-            return new PageBuilder()
-                   .WithTitle("\U0001f98a e621 Search Results")
-                   .WithDescription(embedDescription)
-                   .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
-                   .WithCurrentTimestamp()
-                   .WithColor(new Color(0, 73, 150))
-                   .WithUrl($"https://e621.net/posts/{post.Id}")
-                   .WithImageUrl(post.File.FileUrl);
+            return new PageBuilder().WithTitle("\U0001f98a e621 Search Results")
+                                    .WithDescription(embedDescription)
+                                    .WithFooter($"Post {index + 1}/{filteredPosts.Count}")
+                                    .WithCurrentTimestamp()
+                                    .WithColor(new Color(0, 73, 150))
+                                    .WithUrl($"https://e621.net/posts/{post.Id}")
+                                    .WithImageUrl(post.File.FileUrl);
         }
     }
 }
