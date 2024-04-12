@@ -16,13 +16,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-global using LogSeverity = Matcha.LogSeverity;
+global using LogSeverity = AnalogFeelings.Matcha.Enums.LogSeverity;
+using AnalogFeelings.Matcha;
+using AnalogFeelings.Matcha.Sinks.Console;
+using AnalogFeelings.Matcha.Sinks.File;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Fergun.Interactive;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Bot.Logging;
 using SammBot.Bot.Services;
 using SammBot.Bot.Settings;
 using SammBot.Library;
@@ -43,9 +45,9 @@ namespace SammBot.Bot;
 /// </summary>
 public class EntryPoint
 {
-    private DiscordShardedClient _ShardedClient = default!;
-    private InteractionService _InteractionService = default!;
-    private BootLogger _BootLogger = default!;
+    private DiscordShardedClient _shardedClient = default!;
+    private InteractionService _interactionService = default!;
+    private MatchaLogger _matchaLogger = default!;
 
     public static void Main()
     {
@@ -62,33 +64,32 @@ public class EntryPoint
     /// </summary>
     private async Task MainAsync()
     {
-        _BootLogger = new BootLogger();
-
-        _BootLogger.Log($"Loading {SettingsManager.CONFIG_FILE}...", LogSeverity.Information);
         if (!SettingsManager.Instance.LoadConfiguration())
         {
             string serializedSettings = JsonSerializer.Serialize(SettingsManager.Instance.LoadedConfig, Constants.JsonSettings);
 
-            _BootLogger.Log($"Could not load {SettingsManager.CONFIG_FILE}. An empty template has been written.", LogSeverity.Fatal);
+            Console.WriteLine($"Could not load {SettingsManager.CONFIG_FILE}. An empty template has been written.");
 
             await File.WriteAllTextAsync(Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE), serializedSettings);
 
             PromptExit(1);
         }
 
-        _BootLogger.Log("Loaded configuration successfully.", LogSeverity.Success);
+        Console.WriteLine("Initializing logger...");
+        
+        InitializeLogger();
 
 #if DEBUG
         if (SettingsManager.Instance.LoadedConfig.WaitForDebugger && !Debugger.IsAttached)
         {
-            _BootLogger.Log("Waiting for debugger to attach...", LogSeverity.Information);
+            await _matchaLogger.LogAsync(LogSeverity.Information, "Waiting for debugger to attach...");
 
             while (!Debugger.IsAttached)
             {
                 Thread.Sleep(100);
             }
 
-            _BootLogger.Log("Debugger has been attached!", LogSeverity.Success);
+            await _matchaLogger.LogAsync(LogSeverity.Success, "Debugger has been attached!");
         }
 #endif
 
@@ -96,23 +97,21 @@ public class EntryPoint
 
         if (!Directory.Exists(logsDirectory))
         {
-            _BootLogger.Log("Logs directory did not exist. Creating...", LogSeverity.Warning);
+            await _matchaLogger.LogAsync(LogSeverity.Warning, "Logs directory did not exist. Creating...");
 
             try
             {
                 Directory.CreateDirectory(logsDirectory);
-                _BootLogger.Log("Created Logs directory successfully.", LogSeverity.Success);
+                
+                await _matchaLogger.LogAsync(LogSeverity.Success, "Created Logs directory successfully.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _BootLogger.Log("Could not create Logs folder. Running the bot without file logging has yet to be implemented.\n" +
-                                $"Exception Message: {ex.Message}", LogSeverity.Error);
-
-                PromptExit(1);
+                // Ignored
             }
         }
 
-        _BootLogger.Log("Creating Discord client...", LogSeverity.Information);
+        await _matchaLogger.LogAsync(LogSeverity.Information, "Creating Discord client...");
 
         DiscordSocketConfig socketConfig = new DiscordSocketConfig()
         {
@@ -128,16 +127,16 @@ public class EntryPoint
                 DefaultRunMode = RunMode.Async,
         };
 
-        _ShardedClient = new DiscordShardedClient(socketConfig);
-        _InteractionService = new InteractionService(_ShardedClient, interactionConfig);
+        _shardedClient = new DiscordShardedClient(socketConfig);
+        _interactionService = new InteractionService(_shardedClient, interactionConfig);
 
-        _BootLogger.Log("Created Discord client successfully.", LogSeverity.Success);
-        _BootLogger.Log("Configuring service provider...", LogSeverity.Information);
-
+        await _matchaLogger.LogAsync(LogSeverity.Success, "Created Discord client successfully.");
+        await _matchaLogger.LogAsync(LogSeverity.Information, "Configuring service provider...");
+        
         ServiceProvider serviceProvider = ConfigureServiceProvider();
 
-        _BootLogger.Log("Configured service provider successfully.", LogSeverity.Success);
-        _BootLogger.Log("Starting the startup service...", LogSeverity.Information);
+        await _matchaLogger.LogAsync(LogSeverity.Success, "Configured service provider successfully.");
+        await _matchaLogger.LogAsync(LogSeverity.Information, "Starting the startup service...");
         
         await serviceProvider.GetRequiredService<StartupService>().StartAsync();
 
@@ -153,18 +152,53 @@ public class EntryPoint
     {
         ServiceCollection serviceCollection = new ServiceCollection();
 
-        serviceCollection.AddSingleton(_ShardedClient)
-                         .AddSingleton(_InteractionService)
+        serviceCollection.AddSingleton(_shardedClient)
+                         .AddSingleton(_interactionService)
+                         .AddSingleton(_matchaLogger)
                          .AddSingleton<HttpService>()
                          .AddSingleton<CommandService>()
                          .AddSingleton<InteractiveService>()
                          .AddSingleton<StartupService>()
-                         .AddSingleton<Logger>()
                          .AddSingleton<RandomService>()
                          .AddSingleton<BooruService>()
                          .AddSingleton<EventLoggingService>();
 
         return serviceCollection.BuildServiceProvider();
+    }
+
+    /// <summary>
+    /// Initializes the logger and its sinks.
+    /// </summary>
+    private void InitializeLogger()
+    {
+        LogSeverity filterLevel;
+        
+#if DEBUG
+        filterLevel = LogSeverity.Debug;
+#else
+        filterLevel = LogSeverity.Information;
+#endif
+        
+        ConsoleSinkConfig consoleConfig = new ConsoleSinkConfig()
+        {
+                SeverityFilterLevel = filterLevel
+        };
+        FileSinkConfig fileConfig = new FileSinkConfig()
+        {
+                SeverityFilterLevel = filterLevel,
+                FilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs")
+        };
+
+        ConsoleSink consoleSink = new ConsoleSink()
+        {
+                Config = consoleConfig
+        };
+        FileSink fileSink = new FileSink()
+        {
+                Config = fileConfig
+        };
+
+        _matchaLogger = new MatchaLogger(consoleSink, fileSink);
     }
 
     /// <summary>
@@ -174,9 +208,9 @@ public class EntryPoint
     [DoesNotReturn]
     private void PromptExit(int exitCode)
     {
-        if (Console.IsInputRedirected)
+        if (!Console.IsInputRedirected)
         {
-            _BootLogger.Log("Press any key to exit...", LogSeverity.Information);
+            Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
         }
 

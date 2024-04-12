@@ -16,11 +16,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using AnalogFeelings.Matcha;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Bot.Logging;
 using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Extensions;
@@ -34,7 +34,7 @@ public class CommandService
 {
     private DiscordShardedClient ShardedClient { get; }
     private IServiceProvider ServiceProvider { get; }
-    private Logger BotLogger { get; }
+    private MatchaLogger Logger { get; }
 
     private InteractionService InteractionService { get; }
     private EventLoggingService EventLoggingService { get; }
@@ -45,7 +45,7 @@ public class CommandService
 
         InteractionService = ServiceProvider.GetRequiredService<InteractionService>();
         ShardedClient = ServiceProvider.GetRequiredService<DiscordShardedClient>();
-        BotLogger = ServiceProvider.GetRequiredService<Logger>();
+        Logger = ServiceProvider.GetRequiredService<MatchaLogger>();
         EventLoggingService = ServiceProvider.GetRequiredService<EventLoggingService>();
     }
 
@@ -91,7 +91,7 @@ public class CommandService
         }
         catch (Exception ex)
         {
-            BotLogger.LogException(ex);
+            await Logger.LogAsync(LogSeverity.Error, "An exception occurred during post-execution handling: {0}", ex);
         }
     }
 
@@ -109,7 +109,7 @@ public class CommandService
         string formattedLog = SettingsManager.Instance.LoadedConfig.CommandLogFormat.Replace("%username%", interaction.User.GetFullUsername())
                                              .Replace("%channelname%", interaction.Channel.Name);
 
-        BotLogger.Log(formattedLog, LogSeverity.Debug);
+        await Logger.LogAsync(LogSeverity.Debug, formattedLog);
 
         await InteractionService.ExecuteCommandAsync(context, ServiceProvider);
     }

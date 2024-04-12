@@ -16,21 +16,21 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using AnalogFeelings.Matcha;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Figgle;
 using JetBrains.Annotations;
-using Matcha;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Pastel;
 using SammBot.Bot.Database;
-using SammBot.Bot.Logging;
 using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,7 +43,7 @@ public class StartupService
     private CommandService CommandService { get; }
     private DiscordShardedClient ShardedClient { get; }
     private InteractionService InteractionService { get; }
-    private Logger Logger { get; }
+    private MatchaLogger Logger { get; }
 
     [UsedImplicitly]
     private Timer? _StatusTimer;
@@ -51,24 +51,37 @@ public class StartupService
     private bool _EventsSetUp;
     private int _ShardsReady;
 
+    private readonly Dictionary<Discord.LogSeverity, LogSeverity> _severityDictionary = new Dictionary<Discord.LogSeverity, LogSeverity>()
+    {
+        [Discord.LogSeverity.Debug] = LogSeverity.Debug,
+        [Discord.LogSeverity.Error] = LogSeverity.Error,
+        [Discord.LogSeverity.Critical] = LogSeverity.Fatal,
+        [Discord.LogSeverity.Warning] = LogSeverity.Warning,
+        [Discord.LogSeverity.Info] = LogSeverity.Information,
+        [Discord.LogSeverity.Verbose] = LogSeverity.Debug
+    };
+
     public StartupService(IServiceProvider provider)
     {
         CommandService = provider.GetRequiredService<CommandService>();
         ShardedClient = provider.GetRequiredService<DiscordShardedClient>();
         InteractionService = provider.GetRequiredService<InteractionService>();
-        Logger = provider.GetRequiredService<Logger>();
+        Logger = provider.GetRequiredService<MatchaLogger>();
     }
 
     public async Task StartAsync()
     {
-        Logger.Log("Logging in as a bot...", LogSeverity.Information);
+        await Logger.LogAsync(LogSeverity.Information, "Logging in as a bot...");
         await ShardedClient.LoginAsync(TokenType.Bot, SettingsManager.Instance.LoadedConfig.BotToken);
         await ShardedClient.StartAsync();
-        Logger.Log("Succesfully connected to web socket.", LogSeverity.Success);
+        await Logger.LogAsync(LogSeverity.Success, "Succesfully connected to web socket.");
 
         ShardedClient.ShardConnected += OnShardConnected;
         ShardedClient.ShardReady += OnShardReady;
         ShardedClient.ShardDisconnected += OnShardDisconnect;
+
+        ShardedClient.Log += DiscordLogAsync;
+        InteractionService.Log += DiscordLogAsync;
 
         Constants.RuntimeStopwatch.Stop();
 
@@ -85,28 +98,28 @@ public class StartupService
         Console.WriteLine("===========".Pastel(Color.CadetBlue));
         Console.WriteLine();
 
-        Logger.Log($"Using MatchaLogger {matchaVersion}.", LogSeverity.Information);
+        await Logger.LogAsync(LogSeverity.Information, "Using Matcha {0}.", matchaVersion);
 
-        Logger.Log($"{SettingsManager.BOT_NAME} took {Constants.RuntimeStopwatch.ElapsedMilliseconds}ms to boot.", LogSeverity.Information);
+        await Logger.LogAsync(LogSeverity.Information, "{0} took {1}ms to boot.", SettingsManager.BOT_NAME, Constants.RuntimeStopwatch.ElapsedMilliseconds);
 
         Constants.RuntimeStopwatch.Restart();
 
 #if DEBUG
-        Logger.Log($"{SettingsManager.BOT_NAME} has been built on Debug configuration. Extra logging will be available.", LogSeverity.Warning);
+        await Logger.LogAsync(LogSeverity.Warning, "{0} has been built on Debug configuration. Extra logging will be available.", SettingsManager.BOT_NAME);
 #endif
 
         if (SettingsManager.Instance.LoadedConfig.OnlyOwnerMode)
-            Logger.Log($"Only Owner Mode is active. {SettingsManager.BOT_NAME} will only handle commands sent by the bot account owner.", LogSeverity.Warning);
+            await Logger.LogAsync(LogSeverity.Warning, "Only Owner Mode is active. {0} will only handle commands sent by the bot account owner.", SettingsManager.BOT_NAME);
 
-        Logger.Log("Thawing the bot database...", LogSeverity.Information);
+        await Logger.LogAsync(LogSeverity.Information, "Thawing the bot database...");
         _ = Task.Run(() => ThawBotDatabase());
 
-        Logger.Log("Initializing command handler...", LogSeverity.Information);
+        await Logger.LogAsync(LogSeverity.Information, "Initializing command handler...");
         await CommandService.InitializeHandlerAsync();
-        Logger.Log("Succesfully initialized command handler.", LogSeverity.Success);
+        await Logger.LogAsync(LogSeverity.Success, "Succesfully initialized command handler.");
     }
 
-    private Task ThawBotDatabase()
+    private async Task ThawBotDatabase()
     {
         try
         {
@@ -116,26 +129,22 @@ public class StartupService
                 IModel model = botDatabase.Model;
             }
 
-            Logger.Log("Database has been thawed successfully!", LogSeverity.Success);
+            await Logger.LogAsync(LogSeverity.Success, "Database has been thawed successfully!");
         }
         catch (Exception ex)
         {
-            Logger.Log($"Database could not be thawed: {ex.Message}", LogSeverity.Error);
+            await Logger.LogAsync(LogSeverity.Error, "Database could not be thawed: {0}", ex);
         }
-
-        return Task.CompletedTask;
     }
 
-    private Task OnShardConnected(DiscordSocketClient shardClient)
+    private async Task OnShardConnected(DiscordSocketClient shardClient)
     {
-        Logger.Log($"Shard #{shardClient.ShardId} has connected to the gateway.", LogSeverity.Debug);
-
-        return Task.CompletedTask;
+        await Logger.LogAsync(LogSeverity.Debug, "Shard #{0} has connected to the gateway.", shardClient.ShardId);
     }
 
     private async Task OnShardReady(DiscordSocketClient shardClient)
     {
-        Logger.Log($"Shard #{shardClient.ShardId} is ready to run.", LogSeverity.Debug);
+        await Logger.LogAsync(LogSeverity.Debug, "Shard #{0} is ready to run.", shardClient.ShardId);
 
         if (!_EventsSetUp)
         {
@@ -148,18 +157,16 @@ public class StartupService
 
                 await InteractionService.RegisterCommandsGloballyAsync();
 
-                Logger.Log($"{SettingsManager.BOT_NAME} is ready to run.", LogSeverity.Success);
+                await Logger.LogAsync(LogSeverity.Success, "{0} is ready to run.", SettingsManager.BOT_NAME);
 
                 _EventsSetUp = true;
             }
         }
     }
 
-    private Task OnShardDisconnect(Exception includedException, DiscordSocketClient shardClient)
+    private async Task OnShardDisconnect(Exception includedException, DiscordSocketClient shardClient)
     {
-        Logger.Log($"Shard #{shardClient.ShardId} has disconnected from the gateway! Reason: " + includedException.Message, LogSeverity.Warning);
-
-        return Task.CompletedTask;
+        await Logger.LogAsync(LogSeverity.Warning, "Shard #{0} has disconnected from the gateway! Reason: {1}", shardClient.ShardId, includedException.Message);
     }
 
     private async void RotateStatus(object? state)
@@ -177,7 +184,14 @@ public class StartupService
         }
         catch (Exception ex)
         {
-            Logger.Log($"An exception has ocurred when rotating the status: {ex}", LogSeverity.Error);
+            await Logger.LogAsync(LogSeverity.Error, "An exception has ocurred when rotating the status: {0}", ex);
         }
+    }
+
+    private async Task DiscordLogAsync(LogMessage message)
+    {
+        LogSeverity severity = _severityDictionary[message.Severity];
+
+        await Logger.LogAsync(severity, message.Message);
     }
 }

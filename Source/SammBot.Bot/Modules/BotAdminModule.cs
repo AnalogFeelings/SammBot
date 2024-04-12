@@ -16,11 +16,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using AnalogFeelings.Matcha;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Bot.Logging;
 using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Attributes;
@@ -36,11 +36,11 @@ namespace SammBot.Bot.Modules;
 [RequireOwner]
 public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private Logger Logger { get; set; }
+    private MatchaLogger Logger { get; set; }
 
     public BotAdminModule(IServiceProvider provider)
     {
-        Logger = provider.GetRequiredService<Logger>();
+        Logger = provider.GetRequiredService<MatchaLogger>();
     }
 
     [SlashCommand("listservers", "Shows a list of all the servers the bot is in.")]
@@ -74,7 +74,7 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await RespondAsync($"{SettingsManager.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
 
-        Logger.Log($"{SettingsManager.BOT_NAME} will shut down.\n\n", LogSeverity.Warning);
+        await Logger.LogAsync(LogSeverity.Warning, "{0} will shut down.\n", SettingsManager.BOT_NAME);
 
         Environment.Exit(0);
 
