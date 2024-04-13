@@ -75,7 +75,7 @@ public class EntryPoint
         }
 
         Console.WriteLine("Initializing logger...");
-        
+
         InitializeLogger();
 
 #if DEBUG
@@ -96,16 +96,16 @@ public class EntryPoint
 
         DiscordSocketConfig socketConfig = new DiscordSocketConfig()
         {
-                LogLevel = Discord.LogSeverity.Warning,
-                MessageCacheSize = SettingsManager.Instance.LoadedConfig.MessageCacheSize,
-                AlwaysDownloadUsers = true,
-                GatewayIntents = GatewayIntents.All,
-                LogGatewayIntentWarnings = false
+            LogLevel = Discord.LogSeverity.Warning,
+            MessageCacheSize = SettingsManager.Instance.LoadedConfig.MessageCacheSize,
+            AlwaysDownloadUsers = true,
+            GatewayIntents = GatewayIntents.All,
+            LogGatewayIntentWarnings = false
         };
         InteractionServiceConfig interactionConfig = new InteractionServiceConfig()
         {
-                LogLevel = Discord.LogSeverity.Info,
-                DefaultRunMode = RunMode.Async,
+            LogLevel = Discord.LogSeverity.Info,
+            DefaultRunMode = RunMode.Async,
         };
 
         _shardedClient = new DiscordShardedClient(socketConfig);
@@ -113,12 +113,12 @@ public class EntryPoint
 
         await _matchaLogger.LogAsync(LogSeverity.Success, "Created Discord client successfully.");
         await _matchaLogger.LogAsync(LogSeverity.Information, "Configuring service provider...");
-        
+
         ServiceProvider serviceProvider = ConfigureServiceProvider();
 
         await _matchaLogger.LogAsync(LogSeverity.Success, "Configured service provider successfully.");
         await _matchaLogger.LogAsync(LogSeverity.Information, "Starting the startup service...");
-        
+
         await serviceProvider.GetRequiredService<StartupService>().StartAsync();
 
         // Never exit unless a critical exception occurs.
@@ -153,30 +153,30 @@ public class EntryPoint
     private void InitializeLogger()
     {
         LogSeverity filterLevel;
-        
+
 #if DEBUG
         filterLevel = LogSeverity.Debug;
 #else
         filterLevel = LogSeverity.Information;
 #endif
-        
+
         ConsoleSinkConfig consoleConfig = new ConsoleSinkConfig()
         {
-                SeverityFilterLevel = filterLevel
+            SeverityFilterLevel = filterLevel
         };
         FileSinkConfig fileConfig = new FileSinkConfig()
         {
-                SeverityFilterLevel = filterLevel,
-                FilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs")
+            SeverityFilterLevel = filterLevel,
+            FilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs")
         };
 
         ConsoleSink consoleSink = new ConsoleSink()
         {
-                Config = consoleConfig
+            Config = consoleConfig
         };
         FileSink fileSink = new FileSink()
         {
-                Config = fileConfig
+            Config = fileConfig
         };
 
         _matchaLogger = new MatchaLogger(consoleSink, fileSink);
