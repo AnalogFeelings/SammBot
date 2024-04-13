@@ -92,24 +92,6 @@ public class EntryPoint
         }
 #endif
 
-        string logsDirectory = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs");
-
-        if (!Directory.Exists(logsDirectory))
-        {
-            await _matchaLogger.LogAsync(LogSeverity.Warning, "Logs directory did not exist. Creating...");
-
-            try
-            {
-                Directory.CreateDirectory(logsDirectory);
-                
-                await _matchaLogger.LogAsync(LogSeverity.Success, "Created Logs directory successfully.");
-            }
-            catch (Exception)
-            {
-                // Ignored
-            }
-        }
-
         await _matchaLogger.LogAsync(LogSeverity.Information, "Creating Discord client...");
 
         DiscordSocketConfig socketConfig = new DiscordSocketConfig()
