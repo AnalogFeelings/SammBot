@@ -28,7 +28,6 @@ using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
 using SammBot.Bot.Settings;
 using SammBot.Library;
-using SammBot.Library.Helpers;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -49,14 +48,14 @@ public class EntryPoint
     private InteractionService _interactionService = default!;
     private MatchaLogger _matchaLogger = default!;
 
-    public static void Main()
+    public static async Task Main()
     {
         Constants.RuntimeStopwatch.Start();
 
         EntryPoint entryPoint = new EntryPoint();
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
-        AsyncHelper.RunSync(() => entryPoint.MainAsync());
+        await entryPoint.MainAsync();
     }
 
     /// <summary>
