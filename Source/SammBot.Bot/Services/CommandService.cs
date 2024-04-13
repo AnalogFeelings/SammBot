@@ -25,6 +25,7 @@ using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -32,32 +33,40 @@ namespace SammBot.Bot.Services;
 
 public class CommandService
 {
-    private DiscordShardedClient ShardedClient { get; }
-    private IServiceProvider ServiceProvider { get; }
-    private MatchaLogger Logger { get; }
-
-    private InteractionService InteractionService { get; }
-    private EventLoggingService EventLoggingService { get; }
+    private readonly DiscordShardedClient _shardedClient;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly MatchaLogger _logger;
+    private readonly InteractionService _interactionService;
+    private readonly EventLoggingService _eventLoggingService;
 
     public CommandService(IServiceProvider services)
     {
-        ServiceProvider = services;
+        _serviceProvider = services;
 
-        InteractionService = ServiceProvider.GetRequiredService<InteractionService>();
-        ShardedClient = ServiceProvider.GetRequiredService<DiscordShardedClient>();
-        Logger = ServiceProvider.GetRequiredService<MatchaLogger>();
-        EventLoggingService = ServiceProvider.GetRequiredService<EventLoggingService>();
+        _interactionService = _serviceProvider.GetRequiredService<InteractionService>();
+        _shardedClient = _serviceProvider.GetRequiredService<DiscordShardedClient>();
+        _logger = _serviceProvider.GetRequiredService<MatchaLogger>();
+        _eventLoggingService = _serviceProvider.GetRequiredService<EventLoggingService>();
     }
 
     public async Task InitializeHandlerAsync()
     {
-        await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
+        await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
 
-        ShardedClient.InteractionCreated += HandleInteractionAsync;
+        _shardedClient.InteractionCreated += HandleInteractionAsync;
+        _interactionService.InteractionExecuted += OnInteractionExecutedAsync;
 
-        InteractionService.InteractionExecuted += OnInteractionExecutedAsync;
+        _shardedClient.UserJoined += _eventLoggingService.OnUserJoinedAsync;
+        _shardedClient.UserLeft += _eventLoggingService.OnUserLeftAsync;
 
-        AddEventHandlersAsync();
+        _shardedClient.MessageDeleted += _eventLoggingService.OnMessageDeleted;
+        _shardedClient.MessagesBulkDeleted += _eventLoggingService.OnMessagesBulkDeleted;
+
+        _shardedClient.RoleCreated += _eventLoggingService.OnRoleCreated;
+        _shardedClient.RoleUpdated += _eventLoggingService.OnRoleUpdated;
+
+        _shardedClient.UserBanned += _eventLoggingService.OnUserBanned;
+        _shardedClient.UserUnbanned += _eventLoggingService.OnUserUnbanned;
     }
 
     private async Task OnInteractionExecutedAsync(ICommandInfo slashCommand, IInteractionContext context, IResult result)
@@ -66,23 +75,15 @@ public class CommandService
         {
             if (!result.IsSuccess)
             {
-                string finalMessage;
-
                 EmbedBuilder replyEmbed = new EmbedBuilder().BuildErrorEmbed((ShardedInteractionContext)context);
 
-                switch (result.Error)
+                replyEmbed.Description = result.Error switch
                 {
-                    case InteractionCommandError.BadArgs:
-                        finalMessage = $"You provided an incorrect number of parameters!\nUse the `/help " +
-                                       $"{slashCommand.Module.Name} {slashCommand.Name}` command to see all of the parameters.";
-                        break;
-                    default:
-                        finalMessage = result.ErrorReason;
-                        break;
-                }
-
-                replyEmbed.Description = finalMessage;
-
+                    InteractionCommandError.BadArgs => $"You provided an incorrect number of parameters!\nUse the `/help " +
+                                                       $"{slashCommand.Module.Name} {slashCommand.Name}` command to see all of the parameters.",
+                    _ => result.ErrorReason
+                };
+                
                 if (context.Interaction.HasResponded)
                     await context.Interaction.FollowupAsync(embed: replyEmbed.Build(), ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
                 else
@@ -91,41 +92,32 @@ public class CommandService
         }
         catch (Exception ex)
         {
-            await Logger.LogAsync(LogSeverity.Error, "An exception occurred during post-execution handling: {0}", ex);
+            await _logger.LogAsync(LogSeverity.Error, "An exception occurred during post-execution handling: {0}", ex);
         }
     }
 
     private async Task HandleInteractionAsync(SocketInteraction interaction)
     {
-        ShardedInteractionContext context = new ShardedInteractionContext(ShardedClient, interaction);
+        ShardedInteractionContext context = new ShardedInteractionContext(_shardedClient, interaction);
 
         if (SettingsManager.Instance.LoadedConfig.OnlyOwnerMode)
         {
-            IApplication botApplication = await ShardedClient.GetApplicationInfoAsync();
+            IApplication botApplication = await _shardedClient.GetApplicationInfoAsync();
 
             if (interaction.User.Id != botApplication.Owner.Id) return;
         }
 
-        string formattedLog = SettingsManager.Instance.LoadedConfig.CommandLogFormat.Replace("%username%", interaction.User.GetFullUsername())
-                                             .Replace("%channelname%", interaction.Channel.Name);
+#if DEBUG
+        Dictionary<string, object> template = new Dictionary<string, object>()
+        {
+            ["username"] = interaction.User.GetFullUsername(),
+            ["channelname"] = interaction.Channel.Name
+        };
+        string formattedLog = SettingsManager.Instance.LoadedConfig.CommandLogFormat.TemplateReplace(template);
 
-        await Logger.LogAsync(LogSeverity.Debug, formattedLog);
+        await _logger.LogAsync(LogSeverity.Debug, formattedLog);
+#endif
 
-        await InteractionService.ExecuteCommandAsync(context, ServiceProvider);
-    }
-
-    private void AddEventHandlersAsync()
-    {
-        ShardedClient.UserJoined += EventLoggingService.OnUserJoinedAsync;
-        ShardedClient.UserLeft += EventLoggingService.OnUserLeftAsync;
-
-        ShardedClient.MessageDeleted += EventLoggingService.OnMessageDeleted;
-        ShardedClient.MessagesBulkDeleted += EventLoggingService.OnMessagesBulkDeleted;
-
-        ShardedClient.RoleCreated += EventLoggingService.OnRoleCreated;
-        ShardedClient.RoleUpdated += EventLoggingService.OnRoleUpdated;
-
-        ShardedClient.UserBanned += EventLoggingService.OnUserBanned;
-        ShardedClient.UserUnbanned += EventLoggingService.OnUserUnbanned;
+        await _interactionService.ExecuteCommandAsync(context, _serviceProvider);
     }
 }
