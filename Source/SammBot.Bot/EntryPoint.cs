@@ -44,9 +44,9 @@ namespace SammBot.Bot;
 /// </summary>
 public class EntryPoint
 {
-    private DiscordShardedClient _shardedClient = default!;
-    private InteractionService _interactionService = default!;
-    private MatchaLogger _matchaLogger = default!;
+    private DiscordShardedClient? _shardedClient;
+    private InteractionService? _interactionService;
+    private MatchaLogger? _matchaLogger;
 
     public static async Task Main()
     {
@@ -76,7 +76,7 @@ public class EntryPoint
 
         Console.WriteLine("Initializing logger...");
 
-        InitializeLogger();
+        _matchaLogger = InitializeLogger();
 
 #if DEBUG
         if (SettingsManager.Instance.LoadedConfig.WaitForDebugger && !Debugger.IsAttached)
@@ -133,24 +133,26 @@ public class EntryPoint
     {
         ServiceCollection serviceCollection = new ServiceCollection();
 
-        serviceCollection.AddSingleton(_shardedClient)
-                         .AddSingleton(_interactionService)
-                         .AddSingleton(_matchaLogger)
-                         .AddSingleton<HttpService>()
-                         .AddSingleton<CommandService>()
-                         .AddSingleton<InteractiveService>()
-                         .AddSingleton<StartupService>()
-                         .AddSingleton<RandomService>()
-                         .AddSingleton<BooruService>()
-                         .AddSingleton<EventLoggingService>();
+        // The previous objects are always initialized by this point,
+        // so use a null-forgiving operator to shut the compiler up.
+        serviceCollection.AddSingleton(_shardedClient!);
+        serviceCollection.AddSingleton(_interactionService!);
+        serviceCollection.AddSingleton(_matchaLogger!);
+        serviceCollection.AddSingleton<HttpService>();
+        serviceCollection.AddSingleton<CommandService>();
+        serviceCollection.AddSingleton<InteractiveService>();
+        serviceCollection.AddSingleton<StartupService>();
+        serviceCollection.AddSingleton<RandomService>();
+        serviceCollection.AddSingleton<BooruService>();
+        serviceCollection.AddSingleton<EventLoggingService>();
 
         return serviceCollection.BuildServiceProvider();
     }
 
     /// <summary>
-    /// Initializes the logger and its sinks.
+    /// Initializes a new logger and its sinks.
     /// </summary>
-    private void InitializeLogger()
+    private MatchaLogger InitializeLogger()
     {
         LogSeverity filterLevel;
 
@@ -179,7 +181,7 @@ public class EntryPoint
             Config = fileConfig
         };
 
-        _matchaLogger = new MatchaLogger(consoleSink, fileSink);
+        return new MatchaLogger(consoleSink, fileSink);
     }
 
     /// <summary>
