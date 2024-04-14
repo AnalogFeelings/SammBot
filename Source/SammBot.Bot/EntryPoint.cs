@@ -67,7 +67,7 @@ public class EntryPoint
         {
             string serializedSettings = JsonSerializer.Serialize(SettingsManager.Instance.LoadedConfig, Constants.JsonSettings);
 
-            Console.WriteLine($"Could not load {SettingsManager.CONFIG_FILE}. An empty template has been written.");
+            Console.WriteLine($"Could not load {Constants.CONFIG_FILE}. An empty template has been written.");
 
             await File.WriteAllTextAsync(Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE), serializedSettings);
 

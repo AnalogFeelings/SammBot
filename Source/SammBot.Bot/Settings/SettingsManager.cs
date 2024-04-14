@@ -20,6 +20,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using SammBot.Library;
 
 namespace SammBot.Bot.Settings;
 
@@ -27,21 +28,18 @@ public class SettingsManager
 {
     public BotConfig LoadedConfig = new BotConfig();
 
-    public const string BOT_NAME = "Samm-Bot";
-    public const string CONFIG_FILE = "config.json";
-
     public readonly string BotDataDirectory;
 
     private SettingsManager()
     {
         string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-        BotDataDirectory = Path.Combine(appData, BOT_NAME);
+        BotDataDirectory = Path.Combine(appData, Constants.BOT_NAME);
     }
 
     public bool LoadConfiguration()
     {
-        string configFilePath = Path.Combine(BotDataDirectory, CONFIG_FILE);
+        string configFilePath = Path.Combine(BotDataDirectory, Constants.CONFIG_FILE);
 
         try
         {
@@ -68,12 +66,12 @@ public class SettingsManager
         return botVersion.ToString(2);
     }
 
-    private static SettingsManager? _PrivateInstance;
+    private static SettingsManager? _privateInstance;
     public static SettingsManager Instance
     {
         get
         {
-            return _PrivateInstance ??= new SettingsManager();
+            return _privateInstance ??= new SettingsManager();
         }
     }
 }

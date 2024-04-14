@@ -85,14 +85,14 @@ public class StartupService
 
         Constants.RuntimeStopwatch.Stop();
 
-        Console.Title = $"{SettingsManager.BOT_NAME} v{SettingsManager.GetBotVersion()}";
+        Console.Title = $"{Constants.BOT_NAME} v{SettingsManager.GetBotVersion()}";
 
         string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit))!.GetName().Version!.ToString(3);
         string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger))!.GetName().Version!.ToString(3);
 
         Console.Clear();
 
-        Console.Write(FiggleFonts.Slant.Render(SettingsManager.BOT_NAME).Pastel(Color.SkyBlue));
+        Console.Write(FiggleFonts.Slant.Render(Constants.BOT_NAME).Pastel(Color.SkyBlue));
         Console.Write("===========".Pastel(Color.CadetBlue));
         Console.Write($"Source code v{SettingsManager.GetBotVersion()}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
         Console.WriteLine("===========".Pastel(Color.CadetBlue));
@@ -100,16 +100,16 @@ public class StartupService
 
         await _logger.LogAsync(LogSeverity.Information, "Using Matcha {0}.", matchaVersion);
 
-        await _logger.LogAsync(LogSeverity.Information, "{0} took {1}ms to boot.", SettingsManager.BOT_NAME, Constants.RuntimeStopwatch.ElapsedMilliseconds);
+        await _logger.LogAsync(LogSeverity.Information, "{0} took {1}ms to boot.", Constants.BOT_NAME, Constants.RuntimeStopwatch.ElapsedMilliseconds);
 
         Constants.RuntimeStopwatch.Restart();
 
 #if DEBUG
-        await _logger.LogAsync(LogSeverity.Warning, "{0} has been built on Debug configuration. Extra logging will be available.", SettingsManager.BOT_NAME);
+        await _logger.LogAsync(LogSeverity.Warning, "{0} has been built on Debug configuration. Extra logging will be available.", Constants.BOT_NAME);
 #endif
 
         if (SettingsManager.Instance.LoadedConfig.OnlyOwnerMode)
-            await _logger.LogAsync(LogSeverity.Warning, "Only Owner Mode is active. {0} will only handle commands sent by the bot account owner.", SettingsManager.BOT_NAME);
+            await _logger.LogAsync(LogSeverity.Warning, "Only Owner Mode is active. {0} will only handle commands sent by the bot account owner.", Constants.BOT_NAME);
 
         await _logger.LogAsync(LogSeverity.Information, "Thawing the bot database...");
         _ = Task.Run(() => ThawBotDatabase());
@@ -157,7 +157,7 @@ public class StartupService
 
                 await _interactionService.RegisterCommandsGloballyAsync();
 
-                await _logger.LogAsync(LogSeverity.Success, "{0} is ready to run.", SettingsManager.BOT_NAME);
+                await _logger.LogAsync(LogSeverity.Success, "{0} is ready to run.", Constants.BOT_NAME);
 
                 _eventsSetUp = true;
             }

@@ -72,9 +72,9 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
     [HideInHelp]
     public async Task<RuntimeResult> ShutdownAsync()
     {
-        await RespondAsync($"{SettingsManager.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
+        await RespondAsync($"{Constants.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
 
-        await Logger.LogAsync(LogSeverity.Warning, "{0} will shut down.\n", SettingsManager.BOT_NAME);
+        await Logger.LogAsync(LogSeverity.Warning, "{0} will shut down.\n", Constants.BOT_NAME);
 
         Environment.Exit(0);
 

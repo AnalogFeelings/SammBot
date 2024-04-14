@@ -73,7 +73,7 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.Title = "\u2139\uFE0F Bot Information";
         replyEmbed.WithColor(59, 136, 195);
 
-        replyEmbed.Description += $"Here's some public information about {SettingsManager.BOT_NAME}!\n\n";
+        replyEmbed.Description += $"Here's some public information about {Constants.BOT_NAME}!\n\n";
         replyEmbed.Description += $":globe_with_meridians: Check out the bot's {formattedWebsite}!\n";
         replyEmbed.Description += $":open_file_folder: Also check out the GitHub {formattedGithub}!";
 
