@@ -19,9 +19,9 @@
 using JetBrains.Annotations;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Settings;
 using SammBot.Library.Models.Database;
 using System.IO;
+using SammBot.Library;
 
 namespace SammBot.Bot.Database;
 
@@ -46,7 +46,7 @@ public class BotDatabase : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string databaseFile = Path.Combine(SettingsManager.Instance.BotDataDirectory, "bot.db");
+        string databaseFile = Path.Combine(Constants.BotDataDirectory, "bot.db");
 
         SqliteConnectionStringBuilder connectionStringBuilder = new SqliteConnectionStringBuilder() { DataSource = databaseFile };
         SqliteConnection connection = new SqliteConnection(connectionStringBuilder.ToString());

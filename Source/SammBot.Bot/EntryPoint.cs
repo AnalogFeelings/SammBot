@@ -169,7 +169,7 @@ public class EntryPoint
         FileSinkConfig fileConfig = new FileSinkConfig()
         {
             SeverityFilterLevel = filterLevel,
-            FilePath = Path.Combine(SettingsManager.Instance.BotDataDirectory, "Logs")
+            FilePath = Path.Combine(Constants.BotDataDirectory, "Logs")
         };
 
         ConsoleSink consoleSink = new ConsoleSink()

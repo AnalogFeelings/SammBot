@@ -28,22 +28,13 @@ public class SettingsManager
 {
     public BotConfig LoadedConfig = new BotConfig();
 
-    public readonly string BotDataDirectory;
-
-    private SettingsManager()
-    {
-        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-        BotDataDirectory = Path.Combine(appData, Constants.BOT_NAME);
-    }
-
     public bool LoadConfiguration()
     {
-        string configFilePath = Path.Combine(BotDataDirectory, Constants.CONFIG_FILE);
+        string configFilePath = Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE);
 
         try
         {
-            Directory.CreateDirectory(BotDataDirectory);
+            Directory.CreateDirectory(Constants.BotDataDirectory);
 
             if (!File.Exists(configFilePath)) return false;
         }
