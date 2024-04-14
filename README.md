@@ -1,36 +1,22 @@
-[i14]: https://github.com/AnalogFeelings/SammBot/issues/14
+<img src="/Branding/SammBot.png" width="128" height="128"/>
 
-<div align="center">
-  <img src="/Branding/SammBot.png" width="256" height="256"/>
-  <h1>
-    Samm-Bot
-    <br>
-    An open-source Discord bot.
-  </h1>
+# Samm-Bot
 
-  [![GitHub issues](https://img.shields.io/github/issues/analogfeelings/sammbot?style=flat-square&logo=github&label=Issues)](https://github.com/AnalogFeelings/sammbot/issues)
-  [![GitHub pull requests](https://img.shields.io/github/issues-pr/analogfeelings/sammbot?label=Pull%20Requests&style=flat-square&logo=github)](https://github.com/AnalogFeelings/sammbot/pulls)
-  [![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/analogfeelings/sammbot/unit-tests.yml?branch=master&label=Unit%20Tests&style=flat-square&logo=githubactions&logoColor=white)](https://github.com/AnalogFeelings/SammBot/actions)
-  [![GitHub](https://img.shields.io/github/license/analogfeelings/sammbot?label=License&style=flat-square&logo=opensourceinitiative&logoColor=white)](https://github.com/AnalogFeelings/sammbot/blob/master/LICENSE)
-  [![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot/master?label=Commit%20Activity&style=flat-square&logo=github)](https://github.com/AnalogFeelings/sammbot/graphs/commit-activity)
-  [![GitHub Repo stars](https://img.shields.io/github/stars/analogfeelings/sammbot?label=Stargazers&style=flat-square&logo=github)](https://github.com/AnalogFeelings/sammbot/stargazers)
-  [![Mastodon Follow](https://img.shields.io/mastodon/follow/109309123442839534?domain=https%3A%2F%2Ftech.lgbt%2F&style=flat-square&logo=mastodon&logoColor=white&label=Follow%20Me!&color=6364ff)](https://tech.lgbt/@analog_feelings)
-</div>
+[![GitHub issues](https://img.shields.io/github/issues/analogfeelings/sammbot?style=flat-square&logo=github&label=Issues)](https://github.com/AnalogFeelings/sammbot/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/analogfeelings/sammbot?label=Pull%20Requests&style=flat-square&logo=github)](https://github.com/AnalogFeelings/sammbot/pulls)
+[![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/analogfeelings/sammbot/unit-tests.yml?branch=master&label=Unit%20Tests&style=flat-square&logo=githubactions&logoColor=white)](https://github.com/AnalogFeelings/SammBot/actions)
+[![GitHub](https://img.shields.io/github/license/analogfeelings/sammbot?label=License&style=flat-square&logo=opensourceinitiative&logoColor=white)](https://github.com/AnalogFeelings/sammbot/blob/master/LICENSE)
+[![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot/master?label=Commit%20Activity&style=flat-square&logo=github)](https://github.com/AnalogFeelings/sammbot/graphs/commit-activity)
+[![GitHub Repo stars](https://img.shields.io/github/stars/analogfeelings/sammbot?label=Stargazers&style=flat-square&logo=github)](https://github.com/AnalogFeelings/sammbot/stargazers)
+[![Mastodon Follow](https://img.shields.io/mastodon/follow/109309123442839534?domain=https%3A%2F%2Ftech.lgbt%2F&style=flat-square&logo=mastodon&logoColor=white&label=Follow%20Me!&color=6364ff)](https://tech.lgbt/@analog_feelings)
 
-Samm-Bot rewritten for the fourth time, but in C# and [Discord.Net](https://github.com/discord-net/Discord.Net) instead of TypeScript and [discord.js](https://github.com/discordjs/discord.js). In constant evolution!  
-It uses [Matcha](https://github.com/AnalogFeelings/Matcha) for event logging!
-
-This README file is not updated often, so sometimes it's possible for new commands or modules to be added without them being listed here.
-
-## :grey_question: What is Samm-Bot?
-
-Samm-Bot is a Discord bot that I began developing around 2020 for fun.  
+Samm-Bot is a free and open-source Discord bot that I began developing around 2020 for fun.  
 Its source code was private, was written in TypeScript, and was very feature-lacking.
 
-In 2021, I decided to rewrite it in .NET, open source it and make it much more feature rich. Nowadays, it focuses on being useful, with features such as moderation and fun commands.
+In 2021, I decided to rewrite it in .NET, make it open-source and much more feature rich. Nowadays, it focuses on being useful, with features such as moderation and fun commands.
 
 My main motivation is because currently, most large bots are owned by money-hungry people who like to shove Premium ads everywhere they can.  
-I wanted to make a free and open source bot that people could rely on for simple server-keeping tasks such as warnings, logging and more.
+I wanted to make a free and open-source bot that people could rely on for simple server-keeping tasks such as warnings, logging and more.
 
 > [!IMPORTANT]  
 > Currently, the bot is in a **beta** state and is very unpolished.
@@ -60,8 +46,8 @@ Samm-Bot has currently been tested on **x86-64** and **aarch64**.
 
 For Linux and macOS users, this [tiny script](https://gist.github.com/AnalogFeelings/7969c2af2f87d606b3fd8b72cd8c6432) should make it easier for you to pull and build automatically.
 
-> [!WARNING]  
-> The file config.json must be filled in manually! Run the bot, and it will create a template config.json file for you.
+> [!NOTE]  
+> The script linked above requires Bash.
 
 ## :cd: Database Setup
 
