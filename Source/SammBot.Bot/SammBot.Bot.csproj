@@ -89,7 +89,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1"/>
-        <PackageReference Include="Pastel" Version="5.0.0" />
+        <PackageReference Include="Pastel" Version="5.1.0" />
         <PackageReference Include="SharpCat" Version="1.0.0"/>
         <PackageReference Include="SkiaSharp" Version="2.88.8"/>
         <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.8"/>
