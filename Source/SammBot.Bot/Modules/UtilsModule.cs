@@ -21,7 +21,6 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
-using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
@@ -43,11 +42,13 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f527")]
 public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private HttpService HttpService { get; set; }
+    private readonly HttpService _httpService;
+    private readonly SettingsService _settingsService;
 
     public UtilsModule(IServiceProvider provider)
     {
-        HttpService = provider.GetRequiredService<HttpService>();
+        _httpService = provider.GetRequiredService<HttpService>();
+        _settingsService = provider.GetRequiredService<SettingsService>();
     }
 
     [SlashCommand("viewhex", "Displays a HEX color, and converts it in other formats.")]
@@ -235,11 +236,11 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         GeolocationParameters geolocationParameters = new GeolocationParameters()
         {
                 Location = city,
-                AppId = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
+                AppId = _settingsService.Settings.OpenWeatherKey,
                 Limit = 1,
         };
 
-        List<GeolocationLocation>? retrievedLocations = await HttpService.GetObjectFromJsonAsync<List<GeolocationLocation>>("https://api.openweathermap.org/geo/1.0/direct",
+        List<GeolocationLocation>? retrievedLocations = await _httpService.GetObjectFromJsonAsync<List<GeolocationLocation>>("https://api.openweathermap.org/geo/1.0/direct",
                 geolocationParameters);
 
         if (retrievedLocations == null || retrievedLocations.Count == 0)
@@ -251,11 +252,11 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         {
                 Latitude = finalLocation.Latitude,
                 Longitude = finalLocation.Longitude,
-                AppId = SettingsManager.Instance.LoadedConfig.OpenWeatherKey,
+                AppId = _settingsService.Settings.OpenWeatherKey,
                 Units = "metric"
         };
 
-        CompleteForecast? retrievedWeather = await HttpService.GetObjectFromJsonAsync<CompleteForecast>("https://api.openweathermap.org/data/2.5/weather", weatherParameters);
+        CompleteForecast? retrievedWeather = await _httpService.GetObjectFromJsonAsync<CompleteForecast>("https://api.openweathermap.org/data/2.5/weather", weatherParameters);
 
         if (retrievedWeather == null)
             return ExecutionResult.FromError("There is no weather forecast for that area, or the weather service is currently unavailable.");

@@ -26,14 +26,12 @@ using Discord.WebSocket;
 using Fergun.Interactive;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
-using SammBot.Bot.Settings;
 using SammBot.Library;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,6 +45,7 @@ public class EntryPoint
     private DiscordShardedClient? _shardedClient;
     private InteractionService? _interactionService;
     private MatchaLogger? _matchaLogger;
+    private SettingsService? _settingsService;
 
     public static async Task Main()
     {
@@ -63,13 +62,10 @@ public class EntryPoint
     /// </summary>
     private async Task MainAsync()
     {
-        if (!SettingsManager.Instance.LoadConfiguration())
+        _settingsService = new SettingsService();
+        if (!_settingsService.LoadConfiguration())
         {
-            string serializedSettings = JsonSerializer.Serialize(SettingsManager.Instance.LoadedConfig, Constants.JsonSettings);
-
-            Console.WriteLine($"Could not load {Constants.CONFIG_FILE}. An empty template has been written.");
-
-            await File.WriteAllTextAsync(Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE), serializedSettings);
+            Console.WriteLine($"Could not load {Constants.CONFIG_FILE}. Please check the documentation for an example configuration file.");
 
             PromptExit(1);
         }
@@ -79,7 +75,7 @@ public class EntryPoint
         _matchaLogger = InitializeLogger();
 
 #if DEBUG
-        if (SettingsManager.Instance.LoadedConfig.WaitForDebugger && !Debugger.IsAttached)
+        if (_settingsService.Settings.WaitForDebugger && !Debugger.IsAttached)
         {
             await _matchaLogger.LogAsync(LogSeverity.Information, "Waiting for debugger to attach...");
 
@@ -97,7 +93,7 @@ public class EntryPoint
         DiscordSocketConfig socketConfig = new DiscordSocketConfig()
         {
             LogLevel = Discord.LogSeverity.Warning,
-            MessageCacheSize = SettingsManager.Instance.LoadedConfig.MessageCacheSize,
+            MessageCacheSize = _settingsService.Settings.MessageCacheSize,
             AlwaysDownloadUsers = true,
             GatewayIntents = GatewayIntents.All,
             LogGatewayIntentWarnings = false
@@ -138,10 +134,12 @@ public class EntryPoint
         serviceCollection.AddSingleton(_shardedClient!);
         serviceCollection.AddSingleton(_interactionService!);
         serviceCollection.AddSingleton(_matchaLogger!);
+        serviceCollection.AddSingleton(_settingsService!);
         serviceCollection.AddSingleton<HttpService>();
         serviceCollection.AddSingleton<CommandService>();
         serviceCollection.AddSingleton<InteractiveService>();
         serviceCollection.AddSingleton<StartupService>();
+        serviceCollection.AddSingleton<InformationService>();
         serviceCollection.AddSingleton<RandomService>();
         serviceCollection.AddSingleton<BooruService>();
         serviceCollection.AddSingleton<EventLoggingService>();

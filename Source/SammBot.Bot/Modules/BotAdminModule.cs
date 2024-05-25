@@ -21,7 +21,6 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Models;
@@ -36,11 +35,11 @@ namespace SammBot.Bot.Modules;
 [RequireOwner]
 public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private MatchaLogger Logger { get; set; }
+    private readonly MatchaLogger _logger;
 
     public BotAdminModule(IServiceProvider provider)
     {
-        Logger = provider.GetRequiredService<MatchaLogger>();
+        _logger = provider.GetRequiredService<MatchaLogger>();
     }
 
     [SlashCommand("listservers", "Shows a list of all the servers the bot is in.")]
@@ -74,7 +73,7 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await RespondAsync($"{Constants.BOT_NAME} will shut down.", ephemeral: true, allowedMentions: Constants.AllowOnlyUsers);
 
-        await Logger.LogAsync(LogSeverity.Warning, "{0} will shut down.\n", Constants.BOT_NAME);
+        await _logger.LogAsync(LogSeverity.Warning, "{0} will shut down.\n", Constants.BOT_NAME);
 
         Environment.Exit(0);
 

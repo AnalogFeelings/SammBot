@@ -17,9 +17,8 @@
 #endregion
 
 using SammBot.Library.Attributes;
-using System.Collections.Generic;
 
-namespace SammBot.Bot.Settings;
+namespace SammBot.Library.Models.Data;
 
 public class BotConfig
 {

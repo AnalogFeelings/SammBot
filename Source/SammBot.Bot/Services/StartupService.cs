@@ -26,7 +26,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Pastel;
 using SammBot.Bot.Database;
-using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Extensions;
 using System;
@@ -34,6 +33,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using SammBot.Library.Models.Data;
 using Color = System.Drawing.Color;
 
 namespace SammBot.Bot.Services;
@@ -44,6 +44,8 @@ public class StartupService
     private readonly DiscordShardedClient _shardedClient;
     private readonly InteractionService _interactionService;
     private readonly MatchaLogger _logger;
+    private readonly SettingsService _settingsService;
+    private readonly InformationService _informationService;
 
     [UsedImplicitly]
     private Timer? _statusTimer;
@@ -67,12 +69,14 @@ public class StartupService
         _shardedClient = provider.GetRequiredService<DiscordShardedClient>();
         _interactionService = provider.GetRequiredService<InteractionService>();
         _logger = provider.GetRequiredService<MatchaLogger>();
+        _settingsService = provider.GetRequiredService<SettingsService>();
+        _informationService = provider.GetRequiredService<InformationService>();
     }
 
     public async Task StartAsync()
     {
         await _logger.LogAsync(LogSeverity.Information, "Logging in as a bot...");
-        await _shardedClient.LoginAsync(TokenType.Bot, SettingsManager.Instance.LoadedConfig.BotToken);
+        await _shardedClient.LoginAsync(TokenType.Bot, _settingsService.Settings.BotToken);
         await _shardedClient.StartAsync();
         await _logger.LogAsync(LogSeverity.Success, "Succesfully connected to web socket.");
 
@@ -85,7 +89,9 @@ public class StartupService
 
         Constants.RuntimeStopwatch.Stop();
 
-        Console.Title = $"{Constants.BOT_NAME} v{SettingsManager.GetBotVersion()}";
+        string botVersion = _informationService.Version;
+
+        Console.Title = $"{Constants.BOT_NAME} v{botVersion}";
 
         string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit))!.GetName().Version!.ToString(3);
         string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger))!.GetName().Version!.ToString(3);
@@ -94,7 +100,7 @@ public class StartupService
 
         Console.Write(FiggleFonts.Slant.Render(Constants.BOT_NAME).Pastel(Color.SkyBlue));
         Console.Write("===========".Pastel(Color.CadetBlue));
-        Console.Write($"Source code v{SettingsManager.GetBotVersion()}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
+        Console.Write($"Source code v{botVersion}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
         Console.WriteLine("===========".Pastel(Color.CadetBlue));
         Console.WriteLine();
 
@@ -108,7 +114,7 @@ public class StartupService
         await _logger.LogAsync(LogSeverity.Warning, "{0} has been built on Debug configuration. Extra logging will be available.", Constants.BOT_NAME);
 #endif
 
-        if (SettingsManager.Instance.LoadedConfig.OnlyOwnerMode)
+        if (_settingsService.Settings.OnlyOwnerMode)
             await _logger.LogAsync(LogSeverity.Warning, "Only Owner Mode is active. {0} will only handle commands sent by the bot account owner.", Constants.BOT_NAME);
 
         await _logger.LogAsync(LogSeverity.Information, "Thawing the bot database...");
@@ -152,7 +158,7 @@ public class StartupService
 
             if (_shardsReady == _shardedClient.Shards.Count)
             {
-                if (SettingsManager.Instance.LoadedConfig.StatusList.Count > 0 && SettingsManager.Instance.LoadedConfig.RotatingStatus)
+                if (_settingsService.Settings.StatusList.Count > 0 && _settingsService.Settings.RotatingStatus)
                     _statusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 
                 await _interactionService.RegisterCommandsGloballyAsync();
@@ -173,9 +179,9 @@ public class StartupService
     {
         try
         {
-            BotStatus chosenStatus = SettingsManager.Instance.LoadedConfig.StatusList.PickRandom();
+            BotStatus chosenStatus = _settingsService.Settings.StatusList.PickRandom();
             ActivityType gameType = (ActivityType)chosenStatus.Type;
-            string? gameUrl = gameType == ActivityType.Streaming ? SettingsManager.Instance.LoadedConfig.TwitchUrl : null;
+            string? gameUrl = gameType == ActivityType.Streaming ? _settingsService.Settings.TwitchUrl : null;
 
             if (gameType == ActivityType.CustomStatus)
                 await _shardedClient.SetCustomStatusAsync(chosenStatus.Content);

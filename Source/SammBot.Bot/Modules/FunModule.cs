@@ -21,7 +21,6 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
-using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
@@ -41,7 +40,8 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001F3B2")]
 public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private HttpService HttpService { get; set; }
+    private readonly HttpService _httpService;
+    private readonly SettingsService _settingsService;
 
     private const int _EMOJI_SIZE = 96;
     private readonly int[] _ShipSegments = new int[]
@@ -74,7 +74,8 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 
     public FunModule(IServiceProvider provider)
     {
-        HttpService = provider.GetRequiredService<HttpService>();
+        _httpService = provider.GetRequiredService<HttpService>();
+        _settingsService = provider.GetRequiredService<SettingsService>();
     }
 
     [SlashCommand("8ball", "Ask the magic 8-ball!")]
@@ -121,7 +122,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RequireContext(ContextType.Guild)]
     public async Task<RuntimeResult> HugUserAsync([Summary("User", "The user you want to hug.")] SocketGuildUser targetUser)
     {
-        string chosenKaomoji = SettingsManager.Instance.LoadedConfig.HugKaomojis.PickRandom();
+        string chosenKaomoji = _settingsService.Settings.HugKaomojis.PickRandom();
 
         SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
 
@@ -167,7 +168,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     {
         SocketGuildUser authorUser = (Context.Interaction.User as SocketGuildUser)!;
 
-        string chosenMessage = SettingsManager.Instance.LoadedConfig.KillMessages.PickRandom();
+        string chosenMessage = _settingsService.Settings.KillMessages.PickRandom();
         chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorUser.DisplayName}**");
         chosenMessage = chosenMessage.Replace("{Victim}", $"**{targetUser.DisplayName}**");
 
@@ -272,20 +273,20 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             if (percentage < _ShipSegments[i])
             {
                 if (i == 0)
-                    progressBar += SettingsManager.Instance.LoadedConfig.ShipBarStartEmpty;
+                    progressBar += _settingsService.Settings.ShipBarStartEmpty;
                 else if (i == _ShipSegments.Length - 1)
-                    progressBar += SettingsManager.Instance.LoadedConfig.ShipBarEndEmpty;
+                    progressBar += _settingsService.Settings.ShipBarEndEmpty;
                 else
-                    progressBar += SettingsManager.Instance.LoadedConfig.ShipBarHalfEmpty;
+                    progressBar += _settingsService.Settings.ShipBarHalfEmpty;
             }
             else
             {
                 if (i == 0)
-                    progressBar += SettingsManager.Instance.LoadedConfig.ShipBarStartFull;
+                    progressBar += _settingsService.Settings.ShipBarStartFull;
                 else if (i == _ShipSegments.Length - 1)
-                    progressBar += SettingsManager.Instance.LoadedConfig.ShipBarEndFull;
+                    progressBar += _settingsService.Settings.ShipBarEndFull;
                 else
-                    progressBar += SettingsManager.Instance.LoadedConfig.ShipBarHalfFull;
+                    progressBar += _settingsService.Settings.ShipBarHalfFull;
             }
         }
 
@@ -401,7 +402,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 
     private async Task<MemoryStream> DownloadToMemoryStream(string url)
     {
-        byte[] rawData = await HttpService.Client.GetByteArrayAsync(url);
+        byte[] rawData = await _httpService.Client.GetByteArrayAsync(url);
 
         return new MemoryStream(rawData);
     }

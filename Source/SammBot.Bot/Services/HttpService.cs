@@ -16,7 +16,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Components;
 using SammBot.Library.Extensions;
@@ -28,6 +27,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SammBot.Bot.Services;
 
@@ -41,18 +41,16 @@ public class HttpService
     /// </summary>
     public HttpClient Client { get; init; }
 
-    /// <summary>
-    /// A concurrent dictionary that contains a list of domain names and
-    /// their corresponding task queues.
-    /// </summary>
-    private readonly ConcurrentDictionary<string, TaskQueue> _QueueDictionary;
+    private readonly ConcurrentDictionary<string, TaskQueue> _queueDictionary;
 
-    public HttpService()
+    public HttpService(IServiceProvider provider)
     {
         Client = new HttpClient();
-        _QueueDictionary = new ConcurrentDictionary<string, TaskQueue>();
+        _queueDictionary = new ConcurrentDictionary<string, TaskQueue>();
+        
+        SettingsService settingsService = provider.GetRequiredService<SettingsService>();
 
-        Client.DefaultRequestHeaders.Add("User-Agent", SettingsManager.Instance.LoadedConfig.HttpUserAgent);
+        Client.DefaultRequestHeaders.Add("User-Agent", settingsService.Settings.HttpUserAgent);
     }
 
     /// <summary>
@@ -76,7 +74,7 @@ public class HttpService
 
         TaskQueue newQueue = new TaskQueue(concurrentRequests, releaseAfter);
 
-        _QueueDictionary.AddOrUpdate(domain, newQueue, (_, _) => newQueue);
+        _queueDictionary.AddOrUpdate(domain, newQueue, (_, _) => newQueue);
     }
 
     /// <summary>
@@ -89,8 +87,8 @@ public class HttpService
         if (Uri.CheckHostName(domain) == UriHostNameType.Unknown)
             return;
 
-        if (_QueueDictionary.ContainsKey(domain))
-            _QueueDictionary.TryRemove(domain, out _);
+        if (_queueDictionary.ContainsKey(domain))
+            _queueDictionary.TryRemove(domain, out _);
     }
 
     /// <summary>
@@ -119,7 +117,7 @@ public class HttpService
         }
 
         // This domain has a queue.
-        if (_QueueDictionary.TryGetValue(uriBuilder.Host, out TaskQueue? queue) && queue != default)
+        if (_queueDictionary.TryGetValue(uriBuilder.Host, out TaskQueue? queue) && queue != default)
             return await queue.Enqueue(GetJsonRemote, CancellationToken.None);
 
         return await GetJsonRemote();

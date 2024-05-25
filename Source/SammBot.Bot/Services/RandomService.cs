@@ -16,7 +16,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Bot.Settings;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 using SharpCat.Requester.Cat;
 using SharpCat.Requester.Dog;
 
@@ -27,9 +28,11 @@ public class RandomService
     public readonly SharpCatRequester CatRequester;
     public readonly SharpDogRequester DogRequester;
 
-    public RandomService()
+    public RandomService(IServiceProvider provider)
     {
-        CatRequester = new SharpCatRequester(SettingsManager.Instance.LoadedConfig.CatKey);
-        DogRequester = new SharpDogRequester(SettingsManager.Instance.LoadedConfig.DogKey);
+        SettingsService settingsService = provider.GetRequiredService<SettingsService>();
+        
+        CatRequester = new SharpCatRequester(settingsService.Settings.CatKey);
+        DogRequester = new SharpDogRequester(settingsService.Settings.DogKey);
     }
 }

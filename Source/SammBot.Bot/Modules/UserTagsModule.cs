@@ -16,13 +16,13 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Discord;
 using Discord.Interactions;
 using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using SammBot.Bot.Database;
-using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
@@ -32,6 +32,8 @@ using SammBot.Library.Preconditions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;
 
@@ -40,6 +42,13 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f3f7\uFE0F")]
 public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
 {
+    private readonly SettingsService _settingsService;
+
+    public UserTagsModule(IServiceProvider provider)
+    {
+        _settingsService = provider.GetRequiredService<SettingsService>();
+    }
+    
     [SlashCommand("delete", "Deletes a user tag.")]
     [DetailedDescription("Delets a user tag that you own. If you have permission to manage messages in the server, you can delete any tag without owning it.")]
     [RateLimit(3, 2)]
@@ -111,7 +120,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
         using (BotDatabase botDatabase = new BotDatabase())
         {
             List<UserTag> allTags = await botDatabase.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToListAsync();
-            List<UserTag> filteredTags = allTags.Where(x => searchTerm.DamerauDistance(x.Name, SettingsManager.Instance.LoadedConfig.TagDistance) < int.MaxValue).Take(25).ToList();
+            List<UserTag> filteredTags = allTags.Where(x => searchTerm.DamerauDistance(x.Name, _settingsService.Settings.TagDistance) < int.MaxValue).Take(25).ToList();
 
             if (!filteredTags.Any())
                 return ExecutionResult.FromError($"No tags found with a name similar to \"{searchTerm}\".");

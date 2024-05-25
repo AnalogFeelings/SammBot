@@ -16,7 +16,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-namespace SammBot.Bot.Settings;
+namespace SammBot.Library.Models.Data;
 
 public record BotStatus
 {

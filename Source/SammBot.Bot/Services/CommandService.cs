@@ -21,7 +21,6 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Extensions;
 using System;
@@ -38,6 +37,7 @@ public class CommandService
     private readonly MatchaLogger _logger;
     private readonly InteractionService _interactionService;
     private readonly EventLoggingService _eventLoggingService;
+    private readonly SettingsService _settingsService;
 
     public CommandService(IServiceProvider services)
     {
@@ -47,6 +47,7 @@ public class CommandService
         _shardedClient = _serviceProvider.GetRequiredService<DiscordShardedClient>();
         _logger = _serviceProvider.GetRequiredService<MatchaLogger>();
         _eventLoggingService = _serviceProvider.GetRequiredService<EventLoggingService>();
+        _settingsService = _serviceProvider.GetRequiredService<SettingsService>();
     }
 
     public async Task InitializeHandlerAsync()
@@ -100,7 +101,7 @@ public class CommandService
     {
         ShardedInteractionContext context = new ShardedInteractionContext(_shardedClient, interaction);
 
-        if (SettingsManager.Instance.LoadedConfig.OnlyOwnerMode)
+        if (_settingsService.Settings.OnlyOwnerMode)
         {
             IApplication botApplication = await _shardedClient.GetApplicationInfoAsync();
 
@@ -113,7 +114,7 @@ public class CommandService
             ["username"] = interaction.User.GetFullUsername(),
             ["channelname"] = interaction.Channel.Name
         };
-        string formattedLog = SettingsManager.Instance.LoadedConfig.CommandLogFormat.TemplateReplace(template);
+        string formattedLog = _settingsService.Settings.CommandLogFormat.TemplateReplace(template);
 
         await _logger.LogAsync(LogSeverity.Debug, formattedLog);
 #endif

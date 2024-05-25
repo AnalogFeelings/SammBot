@@ -13,33 +13,29 @@
 // GNU General Public License for more details.
 // 
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
 #endregion
 
-using SammBot.Library.Attributes;
-using SammBot.Library.Extensions;
+using System;
+using System.Reflection;
 
-namespace SammBot.Tests.Extensions;
+namespace SammBot.Bot.Services;
 
-[TestClass]
-public class ObjectExtensionsTests
+/// <summary>
+/// Contains information about the bot.
+/// </summary>
+public class InformationService
 {
-    [TestMethod]
-    public void ToQueryStringTest()
+    /// <summary>
+    /// The bot's current version.
+    /// </summary>
+    public string Version
     {
-        TestClass testObject = new TestClass();
-        string actual = testObject.ToQueryString();
-        string expected = "testString=hello!&testInt=2";
-        
-        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
-    }
-}
+        get
+        {
+            Version botVersion = Assembly.GetEntryAssembly()!.GetName().Version!;
 
-file class TestClass
-{
-    [UglyName("testString")] 
-    public string TestString { get; } = "hello!";
-    
-    [UglyName("testInt")] 
-    public int TestInt { get; } = 2;
+            return botVersion.ToString(2);
+        }
+    }
 }

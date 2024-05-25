@@ -21,7 +21,6 @@ using Discord.Interactions;
 using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Bot.Settings;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
@@ -33,6 +32,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;
 
@@ -41,11 +41,15 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\u2139\uFE0F")]
 public class InformationModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private DiscordShardedClient ShardedClient { get; set; }
+    private readonly DiscordShardedClient _shardedClient;
+    private readonly SettingsService _settingsService;
+    private readonly InformationService _informationService;
 
     public InformationModule(IServiceProvider provider)
     {
-        ShardedClient = provider.GetRequiredService<DiscordShardedClient>();
+        _shardedClient = provider.GetRequiredService<DiscordShardedClient>();
+        _settingsService = provider.GetRequiredService<SettingsService>();
+        _informationService = provider.GetRequiredService<InformationService>();
     }
 
     [SlashCommand("bot", "Shows information about the bot.")]
@@ -77,13 +81,13 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         replyEmbed.Description += $":globe_with_meridians: Check out the bot's {formattedWebsite}!\n";
         replyEmbed.Description += $":open_file_folder: Also check out the GitHub {formattedGithub}!";
 
-        replyEmbed.AddField("\U0001faaa Bot Version", $"Version {SettingsManager.GetBotVersion()}", true);
+        replyEmbed.AddField("\U0001faaa Bot Version", $"Version {_informationService.Version}", true);
         replyEmbed.AddField("\u2699\uFE0F Target Config", $"{releaseConfig} Configuration", true);
         replyEmbed.AddField("\U0001f4e6 .NET Version", $"{RuntimeInformation.FrameworkDescription}", true);
 
         replyEmbed.AddField("\U0001f4e1 Ping", $"{Context.Client.Latency} milliseconds", true);
         replyEmbed.AddField("\U0001f5c2\uFE0F Server Count", $"{Context.Client.Guilds.Count} server(s)", true);
-        replyEmbed.AddField("\U0001f9f1 Shard Count", $"{ShardedClient.Shards.Count} shard(s)", true);
+        replyEmbed.AddField("\U0001f9f1 Shard Count", $"{_shardedClient.Shards.Count} shard(s)", true);
 
         replyEmbed.AddField("\u23F1\uFE0F Bot Uptime", elapsedUptime, true);
         replyEmbed.AddField("\U0001f5a5\uFE0F Host System", FriendlySystemName(), true);

@@ -19,7 +19,6 @@
 using System.Reflection;
 using System.Web;
 using SammBot.Library.Attributes;
-using System.Collections;
 
 namespace SammBot.Library.Extensions;
 
