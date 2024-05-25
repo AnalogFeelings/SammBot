@@ -23,8 +23,8 @@ namespace SammBot.Library.Components;
 /// </summary>
 public class TaskQueue
 {
-    private readonly SemaphoreSlim _Semaphore;
-    private readonly TimeSpan _ReleaseAfter;
+    private readonly SemaphoreSlim _semaphore;
+    private readonly TimeSpan _releaseAfter;
 
     /// <summary>
     /// Creates a new <see cref="TaskQueue"/> instance.
@@ -33,8 +33,8 @@ public class TaskQueue
     /// <param name="releaseAfter">How much time to wait before opening the queue.</param>
     public TaskQueue(int concurrentRequests, TimeSpan releaseAfter)
     {
-        _Semaphore = new SemaphoreSlim(concurrentRequests);
-        _ReleaseAfter = releaseAfter;
+        _semaphore = new SemaphoreSlim(concurrentRequests);
+        _releaseAfter = releaseAfter;
     }
     
     /// <summary>
@@ -46,7 +46,7 @@ public class TaskQueue
     /// <returns>The result of the Task.</returns>
     public async Task<T> Enqueue<T>(Func<Task<T>> taskSource, CancellationToken cancellationToken)
     {
-        await _Semaphore.WaitAsync(cancellationToken);
+        await _semaphore.WaitAsync(cancellationToken);
         
         try
         {
@@ -54,9 +54,9 @@ public class TaskQueue
         }
         finally
         {
-            await Task.Delay(_ReleaseAfter);
+            await Task.Delay(_releaseAfter);
 
-            _Semaphore.Release();
+            _semaphore.Release();
         }
     }
     
@@ -67,7 +67,7 @@ public class TaskQueue
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the queue wait.</param>
     public async Task Enqueue(Func<Task> taskSource, CancellationToken cancellationToken)
     {
-        await _Semaphore.WaitAsync(cancellationToken);
+        await _semaphore.WaitAsync(cancellationToken);
         
         try
         {
@@ -75,9 +75,9 @@ public class TaskQueue
         }
         finally
         {
-            await Task.Delay(_ReleaseAfter);
+            await Task.Delay(_releaseAfter);
 
-            _Semaphore.Release();
+            _semaphore.Release();
         }
     }
 }

@@ -23,16 +23,16 @@ namespace SammBot.Tests.Components;
 [TestClass]
 public class TaskQueueTests
 {
-    private readonly TaskQueue _TaskQueue = new TaskQueue(1, TimeSpan.Zero);
+    private readonly TaskQueue _taskQueue = new TaskQueue(1, TimeSpan.Zero);
 
     [TestMethod]
     public async Task ConcurrencyTest()
     {
         for (int i = 0; i < 10; i++)
         {
-            Task firstEnqueue = _TaskQueue.Enqueue(() => Task.Delay(75), CancellationToken.None);
-            Task secondEnqueue = _TaskQueue.Enqueue(() => Task.Delay(75), CancellationToken.None);
-            Task thirdEnqueue = _TaskQueue.Enqueue(() => Task.Delay(75), CancellationToken.None);
+            Task firstEnqueue = _taskQueue.Enqueue(() => Task.Delay(75), CancellationToken.None);
+            Task secondEnqueue = _taskQueue.Enqueue(() => Task.Delay(75), CancellationToken.None);
+            Task thirdEnqueue = _taskQueue.Enqueue(() => Task.Delay(75), CancellationToken.None);
 
             Task finishedTask = await Task.WhenAny(firstEnqueue, secondEnqueue, thirdEnqueue);
         

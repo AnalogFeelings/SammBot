@@ -31,7 +31,7 @@ namespace SammBot.Library.Preconditions;
 /// </summary>
 public class RateLimit : PreconditionAttribute
 {
-    private static ConcurrentDictionary<ulong, List<RateLimitItem>> _Items = new ConcurrentDictionary<ulong, List<RateLimitItem>>();
+    private static ConcurrentDictionary<ulong, List<RateLimitItem>> _items = new ConcurrentDictionary<ulong, List<RateLimitItem>>();
     
     /// <summary>
     /// The amount of times a user can execute a command before being timed out.
@@ -66,7 +66,7 @@ public class RateLimit : PreconditionAttribute
         string command = commandInfo.Module.Name + " " + commandInfo.Name;
         DateTime dateNow = DateTime.UtcNow;
 
-        List<RateLimitItem> targetItem = _Items.GetOrAdd(context.User.Id, new List<RateLimitItem>());
+        List<RateLimitItem> targetItem = _items.GetOrAdd(context.User.Id, new List<RateLimitItem>());
         List<RateLimitItem> rateLimitItems = targetItem.Where(x => x.Command == command).ToList();
 
         foreach (RateLimitItem item in rateLimitItems)
