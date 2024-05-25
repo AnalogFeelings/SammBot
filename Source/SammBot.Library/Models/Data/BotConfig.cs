@@ -16,8 +16,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Library.Attributes;
-
 namespace SammBot.Library.Models.Data;
 
 public class BotConfig
@@ -36,7 +34,7 @@ public class BotConfig
     public string ShipBarEndFull { get; set; } = string.Empty;
 
     // Behavior
-    [RequiresReboot] public int MessageCacheSize { get; set; } = 2000;
+    public int MessageCacheSize { get; set; } = 2000;
     public int TagDistance { get; set; } = 3;
     public bool OnlyOwnerMode { get; set; } = false;
     public bool RotatingStatus { get; set; } = false;
@@ -44,24 +42,11 @@ public class BotConfig
     public string TwitchUrl { get; set; } = "https://www.twitch.tv/coreaesthetics";
     public string CommandLogFormat { get; set; } = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
 
-    [RequiresReboot]
-    [SensitiveSetting]
     public string HttpUserAgent { get; set; } = "Placeholder User Agent (.NET Application)";
 
     // API Tokens
-    [RequiresReboot]
-    [SensitiveSetting]
     public string BotToken { get; set; } = string.Empty;
-
-    [RequiresReboot]
-    [SensitiveSetting]
     public string CatKey { get; set; } = string.Empty;
-
-    [RequiresReboot]
-    [SensitiveSetting]
     public string DogKey { get; set; } = string.Empty;
-
-    [RequiresReboot]
-    [SensitiveSetting]
     public string OpenWeatherKey { get; set; } = string.Empty;
 }
