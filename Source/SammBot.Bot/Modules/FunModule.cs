@@ -390,15 +390,15 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
                 {
                     emojiPaint.IsAntialias = true;
                     emojiPaint.FilterQuality = SKFilterQuality.High;
-                    emojiPaint.ImageFilter = SKImageFilter.CreateDropShadow(0, 0, 4, 4, SKColors.Black.WithAlpha(255));
+                    emojiPaint.ImageFilter = SKImageFilter.CreateDropShadow(0, 0, 6, 6, SKColors.Black.WithAlpha(255));
 
                     // Do some math trickery to get it centered since bitmaps have their origin in the top left corner.
                     SKRect emojiRect = new SKRect()
                     {
-                        Left = imageInfo.Width / 2 - _EMOJI_SIZE,
-                        Top = imageInfo.Height / 2 - _EMOJI_SIZE,
-                        Right = imageInfo.Width / 2 + _EMOJI_SIZE,
-                        Bottom = imageInfo.Height / 2 + _EMOJI_SIZE
+                        Left = imageInfo.Width / 2f - _EMOJI_SIZE,
+                        Top = imageInfo.Height / 2f - _EMOJI_SIZE,
+                        Right = imageInfo.Width / 2f + _EMOJI_SIZE,
+                        Bottom = imageInfo.Height / 2f + _EMOJI_SIZE
                     };
 
                     // Draw the emoji.
