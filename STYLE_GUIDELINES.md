@@ -20,12 +20,7 @@ A module is defined by 4 class attributes. They may appear in this order:
 * `ModuleEmoji`
 * `RequireOwner` (Optional)
 
-> [!IMPORTANT]
-> Modules must be declared partial for reasons explained below.
-
-A command must use the `UsedImplicitly` attribute for code analyzing, and must be marked `partial`.
-
-Place the following attributes in a separate file named `(ModuleName).Definitions.cs` alongside the partial definition of the command.
+A command may have the following attributes, in this order:
 * `SlashCommand`
 * `DetailedDescription`
 * `RateLimit`
@@ -35,7 +30,7 @@ Place the following attributes in a separate file named `(ModuleName).Definition
 * `RequireUserPermission` (Optional)
 * `RequireNsfw` (Optional)
 
-Parameters must also have `Summary` attributes in their partial definition.
+Parameters must also have `Summary` attributes.
 
 ## :page_facing_up: New Lines and Spacing
 

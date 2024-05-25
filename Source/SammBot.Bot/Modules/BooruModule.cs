@@ -20,7 +20,6 @@ using Discord;
 using Discord.Interactions;
 using Fergun.Interactive;
 using Fergun.Interactive.Pagination;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
 using SammBot.Library;
@@ -33,13 +32,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SammBot.Library.Preconditions;
 
 namespace SammBot.Bot.Modules;
 
 [PrettyName("Booru")]
 [Group("booru", "Commands to retrieve images from Booru-style sites.")]
 [ModuleEmoji("\U0001f5bc\uFE0F")]
-public partial class BooruModule : InteractionModuleBase<ShardedInteractionContext>
+public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpService _httpService;
     private readonly InteractiveService _interactiveService;
@@ -50,8 +50,11 @@ public partial class BooruModule : InteractionModuleBase<ShardedInteractionConte
         _interactiveService = provider.GetRequiredService<InteractiveService>();
     }
 
-    [UsedImplicitly]
-    public partial async Task<RuntimeResult> GetRule34Async(string postTags)
+    [SlashCommand("r34", "Gets a list of images from rule34.")]
+    [DetailedDescription("Gets a list of images from rule34. Maximum amount is 1000 images per command.")]
+    [RateLimit(3, 2)]
+    [RequireNsfw]
+    public async Task<RuntimeResult> GetRule34Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
     {
         if (string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
@@ -127,8 +130,11 @@ public partial class BooruModule : InteractionModuleBase<ShardedInteractionConte
         }
     }
     
-    [UsedImplicitly]
-    public partial async Task<RuntimeResult> GetE621Async(string postTags)
+    [SlashCommand("e621", "Gets a list of images from e621.")]
+    [DetailedDescription("Gets a list of images from e621. Maximum amount is 320 images per command.")]
+    [RateLimit(2, 1)]
+    [RequireNsfw]
+    public async Task<RuntimeResult> GetE621Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
     {
         if (string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
