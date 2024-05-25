@@ -55,7 +55,11 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
                          "Also converts it to RGB, CMYK, HSV and HSL.")]
     [RateLimit(3, 2)]
-    public async Task<RuntimeResult> VisualizeColorHex([Summary("Color", "The color you want to view, in hex format.")] string hexColor)
+    public async Task<RuntimeResult> VisualizeColorHex
+    (
+        [Summary("Color", "The color you want to view, in hex format.")]
+        string hexColor
+    )
     {
         const string fileName = "colorView.png";
 
@@ -117,9 +121,15 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
                          "Also converts it to HEX, CMYK, HSV and HSL.")]
     [RateLimit(3, 2)]
-    public async Task<RuntimeResult> VisualizeColorRgb([Summary("Red", "The amount of red. Ranges between 0 to 255.")] byte red,
-                                                       [Summary("Green", "The amount of green. Ranges between 0 to 255.")] byte green,
-                                                       [Summary("Blue", "The amount of blue. Ranges between 0 to 255.")] byte blue)
+    public async Task<RuntimeResult> VisualizeColorRgb
+    (
+        [Summary("Red", "The amount of red. Ranges between 0 to 255.")]
+        byte red,
+        [Summary("Green", "The amount of green. Ranges between 0 to 255.")]
+        byte green,
+        [Summary("Blue", "The amount of blue. Ranges between 0 to 255.")]
+        byte blue
+    )
     {
         const string fileName = "colorView.png";
 
@@ -180,7 +190,11 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Gets the avatar of a user. If **User** is a server user, it will display the per-guild avatar " +
                          "(if they have any), and send a link to the global one in the embed description.")]
     [RateLimit(3, 2)]
-    public async Task<RuntimeResult> GetProfilePicAsync([Summary("User", "Leave empty to get your own profile picture.")] SocketUser? user = null)
+    public async Task<RuntimeResult> GetProfilePicAsync
+    (
+        [Summary("User", "Leave empty to get your own profile picture.")]
+        SocketUser? user = null
+    )
     {
         SocketUser targetUser = user ?? Context.Interaction.User;
 
@@ -229,19 +243,23 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("weather", "Gets the current weather for your city.")]
     [DetailedDescription("Gets the current weather forecast for your city. May not have all the information available, and the location may not be accurate.")]
     [RateLimit(3, 2)]
-    public async Task<RuntimeResult> GetWeatherAsync([Summary("City", "The name of the city you want to get the weather forecast for.")] string city)
+    public async Task<RuntimeResult> GetWeatherAsync
+    (
+        [Summary("City", "The name of the city you want to get the weather forecast for.")]
+        string city
+    )
     {
         await DeferAsync();
 
         GeolocationParameters geolocationParameters = new GeolocationParameters()
         {
-                Location = city,
-                AppId = _settingsService.Settings.OpenWeatherKey,
-                Limit = 1,
+            Location = city,
+            AppId = _settingsService.Settings.OpenWeatherKey,
+            Limit = 1,
         };
 
         List<GeolocationLocation>? retrievedLocations = await _httpService.GetObjectFromJsonAsync<List<GeolocationLocation>>("https://api.openweathermap.org/geo/1.0/direct",
-                geolocationParameters);
+                                                                                                                             geolocationParameters);
 
         if (retrievedLocations == null || retrievedLocations.Count == 0)
             return ExecutionResult.FromError("That location does not exist, or the weather service is currently unavailable.");
@@ -250,10 +268,10 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
         WeatherParameters weatherParameters = new WeatherParameters()
         {
-                Latitude = finalLocation.Latitude,
-                Longitude = finalLocation.Longitude,
-                AppId = _settingsService.Settings.OpenWeatherKey,
-                Units = "metric"
+            Latitude = finalLocation.Latitude,
+            Longitude = finalLocation.Longitude,
+            AppId = _settingsService.Settings.OpenWeatherKey,
+            Units = "metric"
         };
 
         CompleteForecast? retrievedWeather = await _httpService.GetObjectFromJsonAsync<CompleteForecast>("https://api.openweathermap.org/data/2.5/weather", weatherParameters);
@@ -267,36 +285,36 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
         //Good luck.
         string conditionEmoji = actualWeather.Id switch
         {
-                //2XX Thunderbolt group.
-                (>= 200 and <= 202) or (>= 230 and <= 232) => "\u26C8\uFE0F",
-                >= 210 and <= 221 => "\U0001f329\uFE0F",
+            //2XX Thunderbolt group.
+            (>= 200 and <= 202) or (>= 230 and <= 232) => "\u26C8\uFE0F",
+            >= 210 and <= 221 => "\U0001f329\uFE0F",
 
-                //3XX Drizzle group.
-                >= 300 and <= 321 => "\U0001f327\uFE0F",
+            //3XX Drizzle group.
+            >= 300 and <= 321 => "\U0001f327\uFE0F",
 
-                //5XX Rain group.
-                >= 500 and <= 501 => "\U0001f326\uFE0F",
-                (>= 502 and <= 504) or (>= 520 and <= 531) => "\U0001f327\uFE0F",
-                >= 511 and < 520 => "\u2744\uFE0F",
+            //5XX Rain group.
+            >= 500 and <= 501 => "\U0001f326\uFE0F",
+            (>= 502 and <= 504) or (>= 520 and <= 531) => "\U0001f327\uFE0F",
+            >= 511 and < 520 => "\u2744\uFE0F",
 
-                //6XX Snow group.
-                >= 600 and <= 622 => "\U0001f328\uFE0F",
+            //6XX Snow group.
+            >= 600 and <= 622 => "\U0001f328\uFE0F",
 
-                //7XX Atmosphere group.
-                >= 701 and <= 711 => "\U0001f32b\uFE0F",
-                >= 781 and < 782 => "\U0001f32a\uFE0F",
+            //7XX Atmosphere group.
+            >= 701 and <= 711 => "\U0001f32b\uFE0F",
+            >= 781 and < 782 => "\U0001f32a\uFE0F",
 
-                //800 Clear group.
-                >= 800 and < 801 => "\u2600\uFE0F",
+            //800 Clear group.
+            >= 800 and < 801 => "\u2600\uFE0F",
 
-                //8XX Clouds group.
-                >= 801 and < 802 => "\U0001f324\uFE0F",
-                >= 802 and < 803 => "\u26C5",
-                >= 803 and < 804 => "\U0001f325\uFE0F",
-                >= 804 and < 805 => "\u2601\uFE0F",
+            //8XX Clouds group.
+            >= 801 and < 802 => "\U0001f324\uFE0F",
+            >= 802 and < 803 => "\u26C5",
+            >= 803 and < 804 => "\U0001f325\uFE0F",
+            >= 804 and < 805 => "\u2601\uFE0F",
 
-                //Unknown group id.
-                _ => "\u2754"
+            //Unknown group id.
+            _ => "\u2754"
         };
 
         float cloudiness = retrievedWeather.Clouds.Cloudiness;

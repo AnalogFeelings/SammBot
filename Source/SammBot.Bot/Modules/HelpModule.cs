@@ -33,18 +33,22 @@ namespace SammBot.Bot.Modules;
 [PrettyName("Help")]
 public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private InteractionService InteractionService { get; set; }
+    private readonly InteractionService _interactionService;
 
     public HelpModule(IServiceProvider provider)
     {
-        InteractionService = provider.GetRequiredService<InteractionService>();
+        _interactionService = provider.GetRequiredService<InteractionService>();
     }
 
     [SlashCommand("help", "Provides all commands and modules available.")]
     [DetailedDescription("Provides a list of all the commands and modules available.")]
     [RateLimit(1, 3)]
     [HideInHelp]
-    public async Task<RuntimeResult> HelpAsync([Summary("Module", "Leave empty to list all modules. Add a command name to list help for that command.")] string? module = null)
+    public async Task<RuntimeResult> HelpAsync
+    (
+        [Summary("Module", "Leave empty to list all modules. Add a command name to list help for that command.")]
+        string? module = null
+    )
     {
         // Hoh boy, this is QUITE a bumpy ride. Be ready!
         await DeferAsync();
@@ -60,7 +64,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
             // If the splittedName array contains 1 element, the user is looking for a module.
             if (splittedName.Length == 1)
             {
-                ModuleInfo? moduleInfo = InteractionService.Modules.SingleOrDefault(x => x.Name == module || x.SlashGroupName == module);
+                ModuleInfo? moduleInfo = _interactionService.Modules.SingleOrDefault(x => x.Name == module || x.SlashGroupName == module);
 
                 if (moduleInfo == default(ModuleInfo))
                     return ExecutionResult.FromError($"The module \"{module}\" doesn't exist.");
@@ -99,8 +103,8 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
             }
             else // splittedName array contains more than 1 element, user is looking for a command.
             {
-                SlashCommandInfo? searchResult = InteractionService.SlashCommands.FirstOrDefault(x => x.Module.SlashGroupName == splittedName[0]
-                                                                                                      && x.Name == splittedName[1]);
+                SlashCommandInfo? searchResult = _interactionService.SlashCommands.FirstOrDefault(x => x.Module.SlashGroupName == splittedName[0]
+                                                                                                       && x.Name == splittedName[1]);
 
                 if (searchResult == null)
                     return ExecutionResult.FromError($"There is no command named \"{module}\". Check your spelling.");
@@ -179,7 +183,7 @@ public class HelpModule : InteractionModuleBase<ShardedInteractionContext>
             replyEmbed.Description = replyDescription;
             replyEmbed.Color = new Color(85, 172, 238);
 
-            foreach (ModuleInfo moduleInfo in InteractionService.Modules)
+            foreach (ModuleInfo moduleInfo in _interactionService.Modules)
             {
                 bool foundCommand = false;
 

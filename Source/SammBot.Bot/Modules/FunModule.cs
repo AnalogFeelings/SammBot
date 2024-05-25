@@ -43,34 +43,36 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     private readonly HttpService _httpService;
     private readonly SettingsService _settingsService;
 
+    private readonly int[] _shipSegments =
+    [
+        10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+    ];
+
+    private readonly string[] _magicBallAnswers =
+    [
+        "It is certain.",
+        "As I see it, yes.",
+        "Reply hazy, try again.",
+        "Don't count on it.",
+        "It is decidedly so.",
+        "Most likely.",
+        "Ask again later.",
+        "My reply is no.",
+        "Without a doubt.",
+        "Outlook good.",
+        "Better not tell you now.",
+        "My sources say no.",
+        "Yes definitely.",
+        "Yes.",
+        "Cannot predict now.",
+        "Outlook not so good.",
+        "You may rely on it.",
+        "Signs point to yes.",
+        "Concentrate and ask again.",
+        "Very doubtful."
+    ];
+
     private const int _EMOJI_SIZE = 96;
-    private readonly int[] _ShipSegments = new int[]
-    {
-            10, 20, 30, 40, 50, 60, 70, 80, 90, 100
-    };
-    private readonly string[] _MagicBallAnswers = new string[]
-    {
-            "It is certain.",
-            "As I see it, yes.",
-            "Reply hazy, try again.",
-            "Don't count on it.",
-            "It is decidedly so.",
-            "Most likely.",
-            "Ask again later.",
-            "My reply is no.",
-            "Without a doubt.",
-            "Outlook good.",
-            "Better not tell you now.",
-            "My sources say no.",
-            "Yes definitely.",
-            "Yes.",
-            "Cannot predict now.",
-            "Outlook not so good.",
-            "You may rely on it.",
-            "Signs point to yes.",
-            "Concentrate and ask again.",
-            "Very doubtful."
-    };
 
     public FunModule(IServiceProvider provider)
     {
@@ -81,9 +83,13 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("8ball", "Ask the magic 8-ball!")]
     [DetailedDescription("Ask a question to the magic 8-ball! Not guaranteed to answer first try!")]
     [RateLimit(2, 1)]
-    public async Task<RuntimeResult> MagicBallAsync([Summary("Question", "The question you want to ask to the magic 8-ball.")] string question)
+    public async Task<RuntimeResult> MagicBallAsync
+    (
+        [Summary("Question", "The question you want to ask to the magic 8-ball.")]
+        string question
+    )
     {
-        string chosenAnswer = _MagicBallAnswers.PickRandom();
+        string chosenAnswer = _magicBallAnswers.PickRandom();
 
         await RespondAsync($":8ball: Asking the magic 8-ball...\n" +
                            $"**• Question**: {question}", allowedMentions: Constants.AllowOnlyUsers);
@@ -100,7 +106,11 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("dice", "Roll the dice, and get a random number!")]
     [DetailedDescription("Roll the dice! It returns a random number between 1 and **FaceCount**. **FaceCount** must be larger than 3!")]
     [RateLimit(2, 1)]
-    public async Task<RuntimeResult> RollDiceAsync([Summary("FaceCount", "The amount of faces the die will have.")] int faceCount = 6)
+    public async Task<RuntimeResult> RollDiceAsync
+    (
+        [Summary("FaceCount", "The amount of faces the die will have.")]
+        int faceCount = 6
+    )
     {
         if (faceCount < 3)
             return ExecutionResult.FromError("The die must have at least 3 faces!");
@@ -120,14 +130,18 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Hugs are good for everyone! Spread the joy with this command.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> HugUserAsync([Summary("User", "The user you want to hug.")] SocketGuildUser targetUser)
+    public async Task<RuntimeResult> HugUserAsync
+    (
+        [Summary("User", "The user you want to hug.")]
+        SocketGuildUser targetUser
+    )
     {
         string chosenKaomoji = _settingsService.Settings.HugKaomojis.PickRandom();
 
         SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
 
         await RespondAsync($"Warm hugs from **{authorGuildUser.DisplayName}**!\n{chosenKaomoji} <@{targetUser.Id}>",
-                allowedMentions: Constants.AllowOnlyUsers);
+                           allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -136,7 +150,11 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Pets are ALSO good for everyone! Spread the joy with this command.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> PatUserAsync([Summary("User", "The user you want to pat.")] SocketGuildUser targetUser)
+    public async Task<RuntimeResult> PatUserAsync
+    (
+        [Summary("User", "The user you want to pat.")]
+        SocketGuildUser targetUser
+    )
     {
         await RespondAsync($"Pats from **{targetUser.DisplayName}**!\n(c・_・)ノ”<@{targetUser.Id}>", allowedMentions: Constants.AllowOnlyUsers);
 
@@ -147,7 +165,11 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Dox someone! Not guaranteed to be the user's actual IP.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> DoxUserAsync([Summary("User", "The user you want to \"dox\".")] SocketGuildUser targetUser)
+    public async Task<RuntimeResult> DoxUserAsync
+    (
+        [Summary("User", "The user you want to \"dox\".")]
+        SocketGuildUser targetUser
+    )
     {
         int firstSegment = Random.Shared.Next(0, 256);
         int secondSegment = Random.Shared.Next(0, 256);
@@ -155,7 +177,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         int fourthSegment = Random.Shared.Next(0, 256);
 
         await RespondAsync($"**{targetUser.DisplayName}**'s IPv4 address: `{firstSegment}.{secondSegment}.{thirdSegment}.{fourthSegment}`",
-                allowedMentions: Constants.AllowOnlyUsers);
+                           allowedMentions: Constants.AllowOnlyUsers);
 
         return ExecutionResult.Succesful();
     }
@@ -164,7 +186,11 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Commit first degree murder! Don't worry, its fictional, the police isn't after you.")]
     [RateLimit(4, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> FirstDegreeMurderAsync([Summary("User", "The user you want to kill.")] SocketGuildUser targetUser)
+    public async Task<RuntimeResult> FirstDegreeMurderAsync
+    (
+        [Summary("User", "The user you want to kill.")]
+        SocketGuildUser targetUser
+    )
     {
         SocketGuildUser authorUser = (Context.Interaction.User as SocketGuildUser)!;
 
@@ -183,8 +209,13 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(5, 1)]
     [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.UseExternalEmojis)]
-    public async Task<RuntimeResult> ShipUsersAsync([Summary("FirstUser", "The first user you want to ship.")] SocketGuildUser? firstUser = null,
-                                                    [Summary("SecondUser", "The second user you want to ship.")] SocketGuildUser? secondUser = null)
+    public async Task<RuntimeResult> ShipUsersAsync
+    (
+        [Summary("FirstUser", "The first user you want to ship.")]
+        SocketGuildUser? firstUser = null,
+        [Summary("SecondUser", "The second user you want to ship.")]
+        SocketGuildUser? secondUser = null
+    )
     {
         await DeferAsync();
 
@@ -218,30 +249,37 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             case 0:
                 percentageText = "Incompatible!";
                 percentageEmoji = "\u274C";
+
                 break;
             case < 25:
                 percentageText = "Awful!";
                 percentageEmoji = "\U0001f494";
+
                 break;
             case < 50:
                 percentageText = "Not Bad!";
                 percentageEmoji = "\u2764\uFE0F";
+
                 break;
             case < 75:
                 percentageText = "Decent!";
                 percentageEmoji = "\U0001f49d";
+
                 break;
             case < 85:
                 percentageText = "True Love!";
                 percentageEmoji = "\U0001f496";
+
                 break;
             case < 100:
                 percentageText = "AMAZING!";
                 percentageEmoji = "\U0001f49b";
+
                 break;
             case 100:
                 percentageText = "INSANE!";
                 percentageEmoji = "\U0001f497";
+
                 break;
         }
 
@@ -268,13 +306,13 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 
         // Fill up ship progress bar.
         string progressBar = string.Empty;
-        for (int i = 0; i < _ShipSegments.Length; i++)
+        for (int i = 0; i < _shipSegments.Length; i++)
         {
-            if (percentage < _ShipSegments[i])
+            if (percentage < _shipSegments[i])
             {
                 if (i == 0)
                     progressBar += _settingsService.Settings.ShipBarStartEmpty;
-                else if (i == _ShipSegments.Length - 1)
+                else if (i == _shipSegments.Length - 1)
                     progressBar += _settingsService.Settings.ShipBarEndEmpty;
                 else
                     progressBar += _settingsService.Settings.ShipBarHalfEmpty;
@@ -283,7 +321,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             {
                 if (i == 0)
                     progressBar += _settingsService.Settings.ShipBarStartFull;
-                else if (i == _ShipSegments.Length - 1)
+                else if (i == _shipSegments.Length - 1)
                     progressBar += _settingsService.Settings.ShipBarEndFull;
                 else
                     progressBar += _settingsService.Settings.ShipBarHalfFull;
@@ -326,17 +364,17 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
                 // Create the target rects for the profile pictures.
                 SKRect firstUserRect = new SKRect()
                 {
-                        Left = 0,
-                        Top = 0,
-                        Right = imageInfo.Width / 2f,
-                        Bottom = imageInfo.Height
+                    Left = 0,
+                    Top = 0,
+                    Right = imageInfo.Width / 2f,
+                    Bottom = imageInfo.Height
                 };
                 SKRect secondUserRect = new SKRect()
                 {
-                        Left = imageInfo.Width / 2f,
-                        Top = 0,
-                        Right = imageInfo.Width,
-                        Bottom = imageInfo.Height
+                    Left = imageInfo.Width / 2f,
+                    Top = 0,
+                    Right = imageInfo.Width,
+                    Bottom = imageInfo.Height
                 };
 
                 // Set clip path and draw the 2 profile pictures.
@@ -357,10 +395,10 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
                     // Do some math trickery to get it centered since bitmaps have their origin in the top left corner.
                     SKRect emojiRect = new SKRect()
                     {
-                            Left = imageInfo.Width / 2 - _EMOJI_SIZE,
-                            Top = imageInfo.Height / 2 - _EMOJI_SIZE,
-                            Right = imageInfo.Width / 2 + _EMOJI_SIZE,
-                            Bottom = imageInfo.Height / 2 + _EMOJI_SIZE
+                        Left = imageInfo.Width / 2 - _EMOJI_SIZE,
+                        Top = imageInfo.Height / 2 - _EMOJI_SIZE,
+                        Right = imageInfo.Width / 2 + _EMOJI_SIZE,
+                        Bottom = imageInfo.Height / 2 + _EMOJI_SIZE
                     };
 
                     // Draw the emoji.
@@ -393,7 +431,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 
                 // Use SendFileAsync to be able to upload the stream to Discord's servers. The file name has to be the same as the one set in ImageUrl.
                 await FollowupWithFileAsync(finalImageStream, "shipImage.png", preEmbedText,
-                        embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
+                                            embed: replyEmbed.Build(), allowedMentions: Constants.AllowOnlyUsers);
             }
         }
 

@@ -48,12 +48,15 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     {
         _settingsService = provider.GetRequiredService<SettingsService>();
     }
-    
+
     [SlashCommand("delete", "Deletes a user tag.")]
     [DetailedDescription("Delets a user tag that you own. If you have permission to manage messages in the server, you can delete any tag without owning it.")]
     [RateLimit(3, 2)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> DeleteTagAsync([Summary("Name", "Self-explanatory.")] string tagName)
+    public async Task<RuntimeResult> DeleteTagAsync
+    (
+        [Summary("Name", "Self-explanatory.")] string tagName
+    )
     {
         await DeferAsync(true);
 
@@ -89,7 +92,10 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Retrieve a tag by its name, and sends its content on the chat.")]
     [RateLimit(2, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> GetTagAsync([Summary("Name", "Self-explanatory.")] string tagName)
+    public async Task<RuntimeResult> GetTagAsync
+    (
+        [Summary("Name", "Self-explanatory.")] string tagName
+    )
     {
         await DeferAsync();
 
@@ -113,7 +119,10 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Searches for tags with a similar name.")]
     [RateLimit(2, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> SearchTagsAsync([Summary("Term", "The search term.")] string searchTerm)
+    public async Task<RuntimeResult> SearchTagsAsync
+    (
+        [Summary("Term", "The search term.")] string searchTerm
+    )
     {
         await DeferAsync();
 
@@ -149,8 +158,12 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Creates a new tag with the specified reply.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> CreateTagAsync([Summary("Name", "Self-explanatory.")] string tagName,
-                                                    [Summary("Reply", "The text the bot will reply with when retrieving the tag.")] string tagReply)
+    public async Task<RuntimeResult> CreateTagAsync
+    (
+        [Summary("Name", "Self-explanatory.")] string tagName,
+        [Summary("Reply", "The text the bot will reply with when retrieving the tag.")]
+        string tagReply
+    )
     {
         if (tagName.Length >= 15)
             return ExecutionResult.FromError("Please make the tag name shorter than 15 characters!");
@@ -170,11 +183,11 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
 
             UserTag newTag = new UserTag
             {
-                    Name = tagName,
-                    AuthorId = Context.Interaction.User.Id,
-                    GuildId = Context.Guild.Id,
-                    Reply = tagReply,
-                    CreatedAt = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
+                Name = tagName,
+                AuthorId = Context.Interaction.User.Id,
+                GuildId = Context.Guild.Id,
+                Reply = tagReply,
+                CreatedAt = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
             };
 
             await botDatabase.UserTags.AddAsync(newTag);

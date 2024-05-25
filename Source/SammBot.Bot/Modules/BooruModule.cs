@@ -54,16 +54,20 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Gets a list of images from rule34. Maximum amount is 1000 images per command.")]
     [RateLimit(3, 2)]
     [RequireNsfw]
-    public async Task<RuntimeResult> GetRule34Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
+    public async Task<RuntimeResult> GetRule34Async
+    (
+        [Summary("Tags", "The tags you want to use for the search.")]
+        string postTags
+    )
     {
         if (string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
 
         Rule34SearchParameters searchParameters = new Rule34SearchParameters()
         {
-                Limit = 1000,
-                Tags = postTags,
-                UseJson = 1
+            Limit = 1000,
+            Tags = postTags,
+            UseJson = 1
         };
 
         await DeferAsync();
@@ -129,20 +133,24 @@ public class BooruModule : InteractionModuleBase<ShardedInteractionContext>
                                     .WithImageUrl(filteredPosts[index].FileUrl);
         }
     }
-    
+
     [SlashCommand("e621", "Gets a list of images from e621.")]
     [DetailedDescription("Gets a list of images from e621. Maximum amount is 320 images per command.")]
     [RateLimit(2, 1)]
     [RequireNsfw]
-    public async Task<RuntimeResult> GetE621Async([Summary("Tags", "The tags you want to use for the search.")] string postTags)
+    public async Task<RuntimeResult> GetE621Async
+    (
+        [Summary("Tags", "The tags you want to use for the search.")]
+        string postTags
+    )
     {
         if (string.IsNullOrWhiteSpace(postTags))
             return ExecutionResult.FromError("You must provide tags!");
 
         EsixFurrySearchParameters searchParameters = new EsixFurrySearchParameters()
         {
-                Limit = 320,
-                Tags = postTags
+            Limit = 320,
+            Tags = postTags
         };
 
         await DeferAsync();

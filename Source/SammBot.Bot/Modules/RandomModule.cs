@@ -40,13 +40,13 @@ namespace SammBot.Bot.Modules;
 [ModuleEmoji("\U0001f3b0")]
 public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private RandomService RandomService { get; set; }
-    private HttpService HttpService { get; set; }
+    private readonly RandomService _randomService;
+    private readonly HttpService _httpService;
 
     public RandomModule(IServiceProvider provider)
     {
-        RandomService = provider.GetRequiredService<RandomService>();
-        HttpService = provider.GetRequiredService<HttpService>();
+        _randomService = provider.GetRequiredService<RandomService>();
+        _httpService = provider.GetRequiredService<HttpService>();
     }
 
     [SlashCommand("cat", "Returns a random cat!")]
@@ -58,13 +58,13 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 
         CatImageSearchParams searchParameters = new CatImageSearchParams()
         {
-                has_breeds = true,
-                mime_types = "jpg,png,gif",
-                size = "small",
-                limit = 1
+            has_breeds = true,
+            mime_types = "jpg,png,gif",
+            size = "small",
+            limit = 1
         };
 
-        List<CatImage> retrievedImages = await RandomService.CatRequester.GetImageAsync(searchParameters);
+        List<CatImage> retrievedImages = await _randomService.CatRequester.GetImageAsync(searchParameters);
 
         CatImage retrievedImage = retrievedImages.First();
         CatBreed? retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
@@ -72,10 +72,10 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         replyEmbed.Title = "\U0001f431 Random Cat";
-        replyEmbed.Description = retrievedBreed != default(CatBreed) ?
-                $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
-                $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}"
-                : string.Empty;
+        replyEmbed.Description = retrievedBreed != default(CatBreed)
+                                     ? $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
+                                       $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}"
+                                     : string.Empty;
 
         replyEmbed.Color = new Color(255, 204, 77);
         replyEmbed.ImageUrl = retrievedImage.Url;
@@ -94,13 +94,13 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 
         DogImageSearchParams searchParameters = new DogImageSearchParams()
         {
-                has_breeds = true,
-                mime_types = "jpg,png,gif",
-                size = "small",
-                limit = 1
+            has_breeds = true,
+            mime_types = "jpg,png,gif",
+            size = "small",
+            limit = 1
         };
 
-        List<DogImage> retrievedImages = await RandomService.DogRequester.GetImageAsync(searchParameters);
+        List<DogImage> retrievedImages = await _randomService.DogRequester.GetImageAsync(searchParameters);
 
         DogImage retrievedImage = retrievedImages.First();
         DogBreed? retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
@@ -108,10 +108,10 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         replyEmbed.Title = "\U0001f436 Random Dog";
-        replyEmbed.Description = retrievedBreed != default(DogBreed) ?
-                $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
-                $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}"
-                : string.Empty;
+        replyEmbed.Description = retrievedBreed != default(DogBreed)
+                                     ? $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
+                                       $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}"
+                                     : string.Empty;
 
         replyEmbed.Color = new Color(217, 158, 130);
         replyEmbed.ImageUrl = retrievedImage.Url;
@@ -128,7 +128,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
 
-        FoxImage? repliedImage = await HttpService.GetObjectFromJsonAsync<FoxImage>("https://randomfox.ca/floof/");
+        FoxImage? repliedImage = await _httpService.GetObjectFromJsonAsync<FoxImage>("https://randomfox.ca/floof/");
 
         if (repliedImage == null)
             return ExecutionResult.FromError("Could not retrieve a fox image! The service may be unavailable.");
@@ -151,7 +151,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
 
-        DuckImage? repliedImage = await HttpService.GetObjectFromJsonAsync<DuckImage>("https://random-d.uk/api/v2/random");
+        DuckImage? repliedImage = await _httpService.GetObjectFromJsonAsync<DuckImage>("https://random-d.uk/api/v2/random");
 
         if (repliedImage == null)
             return ExecutionResult.FromError("Could not retrieve a duck image! The service may be unavailable.");

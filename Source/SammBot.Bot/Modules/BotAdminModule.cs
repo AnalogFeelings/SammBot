@@ -84,9 +84,14 @@ public class BotAdminModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Forces the bot to leave the specified guild.")]
     [RateLimit(3, 1)]
     [HideInHelp]
-    public async Task<RuntimeResult> LeaveAsync([Summary("ServerId", "The ID of the guild you want the bot to leave.")] ulong serverId)
+    public async Task<RuntimeResult> LeaveAsync
+    (
+        [Summary("ServerId", "The ID of the guild you want the bot to leave.")]
+        ulong serverId
+    )
     {
         SocketGuild targetGuild = Context.Client.GetGuild(serverId);
+
         if (targetGuild == null)
             return ExecutionResult.FromError("I am not currently in this guild!");
 

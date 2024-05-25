@@ -64,7 +64,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
             GuildConfig serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id)
                                          ?? new GuildConfig()
                                          {
-                                                 GuildId = Context.Guild.Id
+                                             GuildId = Context.Guild.Id
                                          };
 
             foreach (PropertyInfo property in propertyList)
@@ -111,8 +111,13 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
     [RequireContext(ContextType.Guild)]
     [RequireBotPermission(GuildPermission.ManageChannels)]
     [RequireUserPermission(GuildPermission.Administrator)]
-    public async Task<RuntimeResult> SetSettingAsync([Summary("Setting", "The name of the setting you want to set.")] string settingName,
-                                                     [Summary("Value", "The value you want to set it to.")] string settingValue)
+    public async Task<RuntimeResult> SetSettingAsync
+    (
+        [Summary("Setting", "The name of the setting you want to set.")]
+        string settingName,
+        [Summary("Value", "The value you want to set it to.")]
+        string settingValue
+    )
     {
         if (settingName == "GuildId") return ExecutionResult.FromError("You cannot modify this setting.");
 
@@ -131,7 +136,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
             {
                 serverSettings = new GuildConfig()
                 {
-                        GuildId = Context.Guild.Id
+                    GuildId = Context.Guild.Id
                 };
 
                 await botDatabase.AddAsync(serverSettings);

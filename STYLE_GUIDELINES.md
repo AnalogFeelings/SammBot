@@ -30,7 +30,20 @@ A command may have the following attributes, in this order:
 * `RequireUserPermission` (Optional)
 * `RequireNsfw` (Optional)
 
-Parameters must also have `Summary` attributes.
+Parameters must also have `Summary` attributes, and be placed like a class initializer. Example:
+```csharp
+[SlashCommand("weather", "Gets the current weather for your city.")]
+[DetailedDescription("Gets the current weather forecast for your city. May not have all the information available, and the location may not be accurate.")]
+[RateLimit(3, 2)]
+public async Task<RuntimeResult> GetWeatherAsync
+(
+    [Summary("City", "The name of the city you want to get the weather forecast for.")]
+    string city
+)
+{
+    // ...
+}
+```
 
 ## :page_facing_up: New Lines and Spacing
 

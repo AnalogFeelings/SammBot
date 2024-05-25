@@ -42,13 +42,11 @@ namespace SammBot.Bot.Modules;
 public class InformationModule : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly DiscordShardedClient _shardedClient;
-    private readonly SettingsService _settingsService;
     private readonly InformationService _informationService;
 
     public InformationModule(IServiceProvider provider)
     {
         _shardedClient = provider.GetRequiredService<DiscordShardedClient>();
-        _settingsService = provider.GetRequiredService<SettingsService>();
         _informationService = provider.GetRequiredService<InformationService>();
     }
 
@@ -60,9 +58,9 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         string elapsedUptime = string.Format("{0:00} days,\n{1:00} hours,\n{2:00} minutes",
-                Constants.RuntimeStopwatch.Elapsed.Days,
-                Constants.RuntimeStopwatch.Elapsed.Hours,
-                Constants.RuntimeStopwatch.Elapsed.Minutes);
+                                             Constants.RuntimeStopwatch.Elapsed.Days,
+                                             Constants.RuntimeStopwatch.Elapsed.Hours,
+                                             Constants.RuntimeStopwatch.Elapsed.Minutes);
         long memoryUsage = Process.GetCurrentProcess().PrivateMemorySize64 / 1000000;
 
 #if DEBUG
@@ -151,7 +149,11 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
     [DetailedDescription("Gets all the public information about the provided user.")]
     [RateLimit(3, 1)]
     [RequireContext(ContextType.Guild)]
-    public async Task<RuntimeResult> UserInfoAsync([Summary("User", "The user you want to get the information from.")] SocketGuildUser? targetUser = null)
+    public async Task<RuntimeResult> UserInfoAsync
+    (
+        [Summary("User", "The user you want to get the information from.")]
+        SocketGuildUser? targetUser = null
+    )
     {
         targetUser ??= (Context.Interaction.User as SocketGuildUser)!;
 
@@ -165,9 +167,9 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         string joinDate = $"<t:{targetUser.JoinedAt!.Value.ToUnixTimeSeconds()}>"; // ??? Why is JoinedAt nullable?
         string signUpDate = $"<t:{targetUser.CreatedAt.ToUnixTimeSeconds()}>";
         string boostingSince = targetUser.PremiumSince != null ? $"<t:{targetUser.PremiumSince.Value.ToUnixTimeSeconds()}:R>" : "Never";
-        string roles = targetUser.Roles.Count > 1 ?
-                string.Join(", ", targetUser.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
-                : "None";
+        string roles = targetUser.Roles.Count > 1
+                           ? string.Join(", ", targetUser.Roles.Skip(1).Select(x => $"<@&{x.Id}>")).Truncate(512)
+                           : "None";
         string onlineStatus = targetUser.GetStatusString();
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
@@ -213,11 +215,12 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
                 case 6:
                     osName = version.Minor switch
                     {
-                            1 => "Windows 7",
-                            2 => "Windows 8",
-                            3 => "Windows 8.1",
-                            _ => "Unknown Windows",
+                        1 => "Windows 7",
+                        2 => "Windows 8",
+                        3 => "Windows 8.1",
+                        _ => "Unknown Windows",
                     };
+
                     break;
                 case 10:
                     switch (version.Minor)
@@ -229,11 +232,14 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
                             break;
                         default:
                             osName = "Unknown Windows";
+
                             break;
                     }
+
                     break;
                 default:
                     osName = "Unknown Windows";
+
                     break;
             }
         }
@@ -246,26 +252,34 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
                     {
                         case 15:
                             osName = "macOS Catalina";
+
                             break;
                         default:
                             osName = "Unknown macOS";
+
                             break;
                     }
+
                     break;
                 case 11:
                     osName = "macOS Big Sur";
+
                     break;
                 case 12:
                     osName = "macOS Monterey";
+
                     break;
                 case 13:
                     osName = "macOS Ventura";
+
                     break;
                 case 14:
                     osName = "macOS Sonoma";
+
                     break;
                 default:
                     osName = "Unknown macOS";
+
                     break;
             }
         }
