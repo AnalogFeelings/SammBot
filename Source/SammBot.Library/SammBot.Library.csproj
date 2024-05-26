@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Discord.Net" Version="3.15.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
-      <PackageReference Include="SkiaSharp" Version="2.88.8" />
+        <PackageReference Include="Discord.Net" Version="3.15.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5"/>
+        <PackageReference Include="SkiaSharp" Version="2.88.8"/>
     </ItemGroup>
 
 </Project>
