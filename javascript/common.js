@@ -8,7 +8,7 @@ async function LoadElements()
     for (const element of includeElements)
     {
         let name = element.getAttribute("data-include");
-        let file = 'elements/' + name + '.html';
+        let file = './elements/' + name + '.html';
 
         let response = await fetch(file);
         let data = await response.text();
