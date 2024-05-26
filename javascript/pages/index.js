@@ -1,8 +1,8 @@
 window.onload = InitPage;
 
-function InitPage()
+async function InitPage()
 {
-    LoadElements();
+    await LoadElements();
 
     window.addEventListener("mouseup", (e) => HandleClick(e));
 }

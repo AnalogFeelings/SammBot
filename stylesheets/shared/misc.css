@@ -1,16 +1,16 @@
 @font-face {
 	font-family: Nunito-Regular;
-	src: url("../../Resources/Fonts/Nunito/Nunito-Regular.ttf");
+	src: url("../../resources/fonts/Nunito/Nunito-Regular.ttf");
 }
 
 @font-face {
 	font-family: Nunito-Bold;
-	src: url("../../Resources/Fonts/Nunito/Nunito-Bold.ttf");
+	src: url("../../resources/fonts/Nunito/Nunito-Bold.ttf");
 }
 
 @font-face {
 	font-family: Nunito-Light;
-	src: url("../../Resources/Fonts/Nunito/Nunito-Light.ttf");
+	src: url("../../resources/fonts/Nunito/Nunito-Light.ttf");
 }
 
 .field-row {

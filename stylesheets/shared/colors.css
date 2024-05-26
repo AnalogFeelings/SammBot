@@ -13,13 +13,13 @@
 
     --separator-background: #565683;
 
-    --button-normal: #41415a;
-    --button-hover: #565683;
-    --button-active: #34344f;
-    --button-focus: #12121c;
+    --button-normal: rgba(65, 65, 90, 0.4);
+    --button-hover: rgba(107, 107, 164, 0.4);
+    --button-active: rgba(52, 52, 79, 0.4);
+    --button-focus: rgba(18, 18, 28, 0.4);
 
     --text-gradient-1: rgba(176, 172, 255, 1);
-    --text-gradient-2: rgba(201, 64, 255, 1);
+    --text-gradient-2: rgb(181, 120, 255);
     --text-gradient-3: rgba(210, 161, 255, 1);
     --text-gradient-4: rgba(255, 118, 201, 1);
 
