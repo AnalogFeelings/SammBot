@@ -36,8 +36,7 @@ This is a list of all the people who maintain Samm-Bot's development.
 * :game_die: **Fun Module**: Hugging, patting, asking the magic 8-ball, and more!
 * :information_source: **Information Module**: Shows information about the bot and can also show information about a user or server.
 * :slot_machine: **Random Module**: Retrieve random content from the cat, dog, fox or duck APIs.
-* :wrench: **Utils Module**: Allows you to view RGB or HEX colors, get a user's avatar, or the weather forecast of your city.
-* :framed_picture: **Booru Module**: Allows you to retrieve NSFW (or SFW) images from popular image boards.
+* :wrench: **Utils Module**: Allows you to view RGB or HEX colors or get a user's avatar.
  
 ## :package: Building
 
