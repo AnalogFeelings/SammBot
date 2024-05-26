@@ -36,7 +36,7 @@ public class StringExtensionsTests
     public void TemplateReplaceTest()
     {
         string templateString = "The favorite food of user %user% is %favoriteFood%.";
-        Dictionary<string, object> templateDict = new Dictionary<string, object>()
+        Dictionary<string, object?> templateDict = new Dictionary<string, object?>()
         {
                 ["user"] = "Analog Feelings",
                 ["favoriteFood"] = "Ramen"

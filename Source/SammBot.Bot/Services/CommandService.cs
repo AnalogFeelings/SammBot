@@ -109,7 +109,7 @@ public class CommandService
         }
 
 #if DEBUG
-        Dictionary<string, object> template = new Dictionary<string, object>()
+        Dictionary<string, object?> template = new Dictionary<string, object?>()
         {
             ["username"] = interaction.User.GetFullUsername(),
             ["channelname"] = interaction.Channel.Name

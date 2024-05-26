@@ -46,7 +46,7 @@ public class EventLoggingService
 
                 if (welcomeChannel != null)
                 {
-                    Dictionary<string, object> templateDict = new Dictionary<string, object>()
+                    Dictionary<string, object?> templateDict = new Dictionary<string, object?>()
                     {
                             ["usermention"] = newUser.Mention,
                             ["servername"] = Format.Bold(currentGuild.Name)

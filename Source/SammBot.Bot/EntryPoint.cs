@@ -23,7 +23,6 @@ using AnalogFeelings.Matcha.Sinks.File;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using Fergun.Interactive;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Bot.Services;
 using SammBot.Library;
@@ -137,7 +136,6 @@ public class EntryPoint
         serviceCollection.AddSingleton(_settingsService!);
         serviceCollection.AddSingleton<HttpService>();
         serviceCollection.AddSingleton<CommandService>();
-        serviceCollection.AddSingleton<InteractiveService>();
         serviceCollection.AddSingleton<StartupService>();
         serviceCollection.AddSingleton<InformationService>();
         serviceCollection.AddSingleton<RandomService>();

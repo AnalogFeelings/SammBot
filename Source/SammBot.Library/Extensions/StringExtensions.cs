@@ -42,11 +42,11 @@ public static class StringExtensions
     /// <param name="templateDictionary">A dictionary of template strings with the objects to replace them with.</param>
     /// <returns>The processed string.</returns>
     /// <remarks>The template dictionary's keys must not be surrounded with "%".</remarks>
-    public static string TemplateReplace(this string targetString, Dictionary<string, object> templateDictionary)
+    public static string TemplateReplace(this string targetString, Dictionary<string, object?> templateDictionary)
     {
-        foreach (KeyValuePair<string, object> pair in templateDictionary)
+        foreach (KeyValuePair<string, object?> pair in templateDictionary)
         {
-            targetString = targetString.Replace($"%{pair.Key}%", pair.Value.ToString());
+            targetString = targetString.Replace($"%{pair.Key}%", pair.Value?.ToString());
         }
 
         return targetString;
