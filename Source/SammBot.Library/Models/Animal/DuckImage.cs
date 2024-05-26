@@ -23,11 +23,11 @@ namespace SammBot.Library.Models.Animal;
 /// <summary>
 /// A class that contains a duck image from the random-d.uk API.
 /// </summary>
-public class DuckImage
+public record DuckImage
 {
     [JsonPropertyName("url")]
-    public string ImageUrl { get; set; }
+    public required string ImageUrl;
 
-    [JsonPropertyName("Message")]
-    public string Message { get; set; }
+    [JsonPropertyName("message")]
+    public required string Message;
 }

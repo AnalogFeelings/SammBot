@@ -23,11 +23,11 @@ namespace SammBot.Library.Models.Animal;
 /// <summary>
 /// A class that contains a fox image from the Random Fox API.
 /// </summary>
-public class FoxImage
+public record FoxImage
 {
     [JsonPropertyName("image")]
-    public string ImageUrl { get; set; }
+    public required string ImageUrl;
 
     [JsonPropertyName("link")]
-    public string Link { get; set; }
+    public required string Link;
 }

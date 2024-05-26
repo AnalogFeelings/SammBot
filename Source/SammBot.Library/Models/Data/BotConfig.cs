@@ -18,7 +18,7 @@
 
 namespace SammBot.Library.Models.Data;
 
-public class BotConfig
+public record BotConfig
 {
     // Lists
     public List<string> HugKaomojis { get; set; } = new List<string>();
@@ -48,5 +48,4 @@ public class BotConfig
     public string BotToken { get; set; } = string.Empty;
     public string CatKey { get; set; } = string.Empty;
     public string DogKey { get; set; } = string.Empty;
-    public string OpenWeatherKey { get; set; } = string.Empty;
 }

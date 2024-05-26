@@ -141,7 +141,6 @@ public class EntryPoint
         serviceCollection.AddSingleton<StartupService>();
         serviceCollection.AddSingleton<InformationService>();
         serviceCollection.AddSingleton<RandomService>();
-        serviceCollection.AddSingleton<BooruService>();
         serviceCollection.AddSingleton<EventLoggingService>();
 
         return serviceCollection.BuildServiceProvider();

@@ -20,6 +20,6 @@ namespace SammBot.Library.Models.Data;
 
 public record BotStatus
 {
-    public string Content { get; init; }
-    public int Type { get; init; }
+    public required string Content;
+    public required int Type;
 }
