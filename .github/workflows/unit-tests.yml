@@ -24,15 +24,15 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3.5.2
+        uses: actions/checkout@v4.1.5
 
       - name: Setup .NET ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4.0.0
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
       - name: Check Dependency Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4.0.2
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
