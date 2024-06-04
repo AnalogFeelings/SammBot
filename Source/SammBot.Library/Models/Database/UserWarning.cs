@@ -20,8 +20,8 @@ namespace SammBot.Library.Models.Database;
 
 public class UserWarning : DatabaseEntity
 {
-    public ulong UserId { get; set; }
-    public ulong GuildId { get; set; }
-    public string Reason { get; set; }
-    public long Date { get; set; }
+    public required ulong UserId { get; set; }
+    public required ulong GuildId { get; set; }
+    public required string Reason { get; set; }
+    public required long Date { get; set; }
 }

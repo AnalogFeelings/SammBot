@@ -33,7 +33,7 @@ public class SettingsService
     /// <summary>
     /// The loaded settings in memory.
     /// </summary>
-    public BotConfig Settings { get; private set; }
+    public BotConfig Settings { get; private set; } = null!;
     
     /// <summary>
     /// Loads the configuration from the bot's data directory into memory.

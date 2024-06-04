@@ -95,7 +95,7 @@ public class RateLimit : PreconditionAttribute
 
     private class RateLimitItem
     {
-        public string Command { get; set; }
-        public DateTime ExpiresAt { get; set; }
+        public required string Command { get; set; }
+        public required DateTime ExpiresAt { get; set; }
     }
 }

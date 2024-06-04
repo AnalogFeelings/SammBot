@@ -20,9 +20,9 @@ namespace SammBot.Library.Models.Database;
 
 public class UserTag : DatabaseEntity
 {
-    public string Name { get; set; }
-    public string Reply { get; set; }
-    public ulong AuthorId { get; set; }
-    public ulong GuildId { get; set; }
-    public long CreatedAt { get; set; }
+    public required string Name { get; set; }
+    public required string Reply { get; set; }
+    public required ulong AuthorId { get; set; }
+    public required ulong GuildId { get; set; }
+    public required long CreatedAt { get; set; }
 }
