@@ -213,12 +213,12 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-            replyEmbed.Title = "📃 List of Warnings";
+            replyEmbed.Title = "\U0001f4c3 List of Warnings";
             replyEmbed.Description = "Reasons longer than 48 characters will be truncated.\n\n";
 
             foreach (UserWarning warning in filteredWarnings)
             {
-                replyEmbed.Description += $"⚠️ **ID**: `{warning.Id}`\n";
+                replyEmbed.Description += $"\u26A0\uFE0F **ID**: `{warning.Id}`\n";
                 replyEmbed.Description += $"**· Creation Date**: <t:{warning.Date}:F>\n";
                 replyEmbed.Description += $"**· Reason**: {warning.Reason.Truncate(48)}\n\n";
             }
