@@ -22,6 +22,7 @@ using SammBot.Library.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -128,6 +129,44 @@ public class HttpService
             T? parsedReply = JsonSerializer.Deserialize<T>(jsonReply, Constants.JsonSettings);
 
             return parsedReply;
+        }
+    }
+
+    /// <summary>
+    /// Retrieves a byte array from <paramref name="url"/>, appending <paramref name="parameters"/> as a query string if not null, and
+    /// returns them as a <see cref="MemoryStream"/>.
+    /// </summary>
+    /// <param name="url">The URL to retrieve the byte array from.</param>
+    /// <param name="parameters">The parameters object that will get turned into a query string.</param>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is empty or null.</exception>
+    /// <returns>An object of type <see cref="MemoryStream"/> containing the downloaded byte array.</returns>
+    public async Task<MemoryStream> GetBytesFromRemoteAsync(string url, object? parameters = null)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(url, nameof(url));
+
+        UriBuilder uriBuilder = new UriBuilder(url);
+
+        if (parameters != null)
+        {
+            NameValueCollection uriQuery = HttpUtility.ParseQueryString(uriBuilder.Query);
+            NameValueCollection newQuery = HttpUtility.ParseQueryString(parameters.ToQueryString());
+
+            uriQuery.Add(newQuery);
+
+            uriBuilder.Query = uriQuery.ToString();
+        }
+        
+        // This domain has a queue.
+        if (_queueDictionary.TryGetValue(uriBuilder.Host, out TaskQueue? queue) && queue != default)
+            return await queue.Enqueue(GetStreamRemote, CancellationToken.None);
+
+        return await GetStreamRemote();
+
+        async Task<MemoryStream> GetStreamRemote()
+        {
+            byte[] rawData = await Client.GetByteArrayAsync(uriBuilder.ToString());
+
+            return new MemoryStream(rawData);
         }
     }
 

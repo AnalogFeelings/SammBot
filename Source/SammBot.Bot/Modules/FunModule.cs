@@ -342,8 +342,8 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 
         // Download their profile pictures and store into memory stream.
         // Then, load the emoji file into a stream.
-        using (MemoryStream firstUserAvatarStream = await DownloadToMemoryStream(firstUser.GetDisplayAvatarUrl(size: 2048)))
-        using (MemoryStream secondUserAvatarStream = await DownloadToMemoryStream(secondUser.GetDisplayAvatarUrl(size: 2048)))
+        using (MemoryStream firstUserAvatarStream = await _httpService.GetBytesFromRemoteAsync(firstUser.GetDisplayAvatarUrl(size: 2048)))
+        using (MemoryStream secondUserAvatarStream = await _httpService.GetBytesFromRemoteAsync(secondUser.GetDisplayAvatarUrl(size: 2048)))
         using (FileStream emojiStream = File.Open(emojiFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
         using (SKSurface surface = SKSurface.Create(imageInfo))
         {
@@ -436,12 +436,5 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         }
 
         return ExecutionResult.Succesful();
-    }
-
-    private async Task<MemoryStream> DownloadToMemoryStream(string url)
-    {
-        byte[] rawData = await _httpService.Client.GetByteArrayAsync(url);
-
-        return new MemoryStream(rawData);
     }
 }
