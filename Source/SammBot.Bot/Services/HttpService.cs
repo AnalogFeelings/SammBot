@@ -124,7 +124,7 @@ public class HttpService
 
         async Task<T?> GetJsonRemote()
         {
-            string jsonReply = await GetStringFromRemote(uriBuilder.ToString());
+            string jsonReply = await GetStringFromRemoteAsync(uriBuilder.ToString());
             T? parsedReply = JsonSerializer.Deserialize<T>(jsonReply, Constants.JsonSettings);
 
             return parsedReply;
@@ -136,7 +136,7 @@ public class HttpService
     /// </summary>
     /// <param name="remoteUrl">The URL to retrieve the string from.</param>
     /// <returns>The returned string.</returns>
-    private async Task<string> GetStringFromRemote(string remoteUrl)
+    private async Task<string> GetStringFromRemoteAsync(string remoteUrl)
     {
         string stringReply;
 
