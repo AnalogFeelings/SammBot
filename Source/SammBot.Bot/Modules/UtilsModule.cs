@@ -51,7 +51,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
                          "Also converts it to RGB, CMYK, HSV and HSL.")]
     [RateLimit(3, 2)]
-    public async Task<RuntimeResult> VisualizeColorHex
+    public async Task<RuntimeResult> VisualizeColorHexAsync
     (
         [Summary("Color", "The color you want to view, in hex format.")]
         string hexColor
@@ -117,7 +117,7 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
     [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
                          "Also converts it to HEX, CMYK, HSV and HSL.")]
     [RateLimit(3, 2)]
-    public async Task<RuntimeResult> VisualizeColorRgb
+    public async Task<RuntimeResult> VisualizeColorRgbAsync
     (
         [Summary("Red", "The amount of red. Ranges between 0 to 255.")]
         byte red,
