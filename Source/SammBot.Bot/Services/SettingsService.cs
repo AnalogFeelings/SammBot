@@ -52,7 +52,7 @@ public class SettingsService
                 return false;
             
             string configContent = File.ReadAllText(configFilePath);
-            BotConfig? config = JsonSerializer.Deserialize<BotConfig>(configContent);
+            BotConfig? config = JsonSerializer.Deserialize<BotConfig>(configContent, Constants.JsonSettings);
 
             if (config == default)
                 return false;
