@@ -172,7 +172,7 @@ public class StartupService
 
     private async Task OnShardDisconnect(Exception includedException, DiscordSocketClient shardClient)
     {
-        await _logger.LogAsync(LogSeverity.Warning, "Shard #{0} has disconnected from the gateway! Reason: {1}", shardClient.ShardId, includedException.Message);
+        await _logger.LogAsync(LogSeverity.Warning, "Shard #{0} has disconnected from the gateway! Reason: {1}", shardClient.ShardId, includedException);
     }
 
     private async void RotateStatus(object? state)
