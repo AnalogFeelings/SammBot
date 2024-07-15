@@ -18,19 +18,27 @@
 
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using SammBot.Bot.Modules;
 using SharpCat.Requester.Cat;
 using SharpCat.Requester.Dog;
 
 namespace SammBot.Bot.Services;
 
+/// <summary>
+/// Stores permanent data for <see cref="RandomModule"/>.
+/// </summary>
 public class RandomService
 {
     public readonly SharpCatRequester CatRequester;
     public readonly SharpDogRequester DogRequester;
 
-    public RandomService(IServiceProvider provider)
+    /// <summary>
+    /// Creates a new <see cref="RandomService"/>.
+    /// </summary>
+    /// <param name="services">The current active service provider.</param>
+    public RandomService(IServiceProvider services)
     {
-        SettingsService settingsService = provider.GetRequiredService<SettingsService>();
+        SettingsService settingsService = services.GetRequiredService<SettingsService>();
         
         CatRequester = new SharpCatRequester(settingsService.Settings.CatKey);
         DogRequester = new SharpDogRequester(settingsService.Settings.DogKey);

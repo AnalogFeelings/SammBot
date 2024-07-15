@@ -30,6 +30,9 @@ using System.Threading.Tasks;
 
 namespace SammBot.Bot.Services;
 
+/// <summary>
+/// Provides handling for incoming interactions.
+/// </summary>
 public class CommandService
 {
     private readonly DiscordShardedClient _shardedClient;
@@ -39,6 +42,10 @@ public class CommandService
     private readonly EventLoggingService _eventLoggingService;
     private readonly SettingsService _settingsService;
 
+    /// <summary>
+    /// Creates a new <see cref="CommandService"/>.
+    /// </summary>
+    /// <param name="services">The current active service provider.</param>
     public CommandService(IServiceProvider services)
     {
         _serviceProvider = services;
@@ -50,6 +57,9 @@ public class CommandService
         _settingsService = _serviceProvider.GetRequiredService<SettingsService>();
     }
 
+    /// <summary>
+    /// Initializes events and adds the assembly's modules to Discord.NET's registry.
+    /// </summary>
     public async Task InitializeHandlerAsync()
     {
         await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
@@ -70,6 +80,13 @@ public class CommandService
         _shardedClient.UserUnbanned += _eventLoggingService.OnUserUnbanned;
     }
 
+    /// <summary>
+    /// Raised when an interaction finishes executing.
+    /// Handles displaying errors to the user ephemerally.
+    /// </summary>
+    /// <param name="slashCommand">The information for the executed interaction.</param>
+    /// <param name="context">The executed interaction's context.</param>
+    /// <param name="result">The result of the executed interaction.</param>
     private async Task OnInteractionExecutedAsync(ICommandInfo slashCommand, IInteractionContext context, IResult result)
     {
         try
@@ -97,6 +114,11 @@ public class CommandService
         }
     }
 
+    /// <summary>
+    /// Raised when an interaction is requested.
+    /// Handles creating the interaction context and executing it.
+    /// </summary>
+    /// <param name="interaction">The interaction sent by Discord.</param>
     private async Task HandleInteractionAsync(SocketInteraction interaction)
     {
         ShardedInteractionContext context = new ShardedInteractionContext(_shardedClient, interaction);

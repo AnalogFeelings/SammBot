@@ -28,8 +28,16 @@ using System.Threading.Tasks;
 
 namespace SammBot.Bot.Services;
 
+/// <summary>
+/// Provides event handlers for many Discord and bot events.
+/// </summary>
 public class EventLoggingService
 {
+    /// <summary>
+    /// Raised when a user joins a guild.
+    /// Sends a welcome message and logs the event to the logs channel.
+    /// </summary>
+    /// <param name="newUser">The new user object.</param>
     public async Task OnUserJoinedAsync(SocketGuildUser newUser)
     {
         using (BotDatabase botDatabase = new BotDatabase())
@@ -86,6 +94,12 @@ public class EventLoggingService
         }
     }
 
+    /// <summary>
+    /// Raised when a user leaves a guild.
+    /// Logs the event to the logs channel.
+    /// </summary>
+    /// <param name="currentGuild">The guild that raised the event.</param>
+    /// <param name="user">The user that left.</param>
     public async Task OnUserLeftAsync(SocketGuild currentGuild, SocketUser user)
     {
         using (BotDatabase botDatabase = new BotDatabase())
@@ -123,6 +137,12 @@ public class EventLoggingService
         }
     }
 
+    /// <summary>
+    /// Raised when a message is deleted.
+    /// Logs the event to the logs channel.
+    /// </summary>
+    /// <param name="cachedMessage">The deleted message's cached data.</param>
+    /// <param name="cachedChannel">The deleted message's cached channel.</param>
     public async Task OnMessageDeleted(Cacheable<IMessage, ulong> cachedMessage, Cacheable<IMessageChannel, ulong> cachedChannel)
     {
         if (!cachedMessage.HasValue || !cachedChannel.HasValue) return; // ??? why, if the message should contain a channel already?
@@ -187,6 +207,12 @@ public class EventLoggingService
         }
     }
 
+    /// <summary>
+    /// Raised when multiple messages are deleted at once.
+    /// Logs the event to the logs channel.
+    /// </summary>
+    /// <param name="cachedMessages">A list of the deleted messages' cached data.</param>
+    /// <param name="cachedChannel">The deleted messages' cached channel.</param>
     public async Task OnMessagesBulkDeleted(IReadOnlyCollection<Cacheable<IMessage, ulong>> cachedMessages, Cacheable<IMessageChannel, ulong> cachedChannel)
     {
         if (!cachedChannel.HasValue) return; // ??? why, if the message should contain a channel already?
@@ -228,6 +254,11 @@ public class EventLoggingService
         }
     }
 
+    /// <summary>
+    /// Raised when a role is created in a guild.
+    /// Logs the event to the logs channel.
+    /// </summary>
+    /// <param name="newRole">The new role data.</param>
     public async Task OnRoleCreated(SocketRole newRole)
     {
         using (BotDatabase botDatabase = new BotDatabase())
@@ -265,6 +296,12 @@ public class EventLoggingService
         }
     }
 
+    /// <summary>
+    /// Raised when a role's properties are changed.
+    /// Logs the event to the logs channel.
+    /// </summary>
+    /// <param name="outdatedRole">The role's previous properties.</param>
+    /// <param name="updatedRole">The role's new properties.</param>
     public async Task OnRoleUpdated(SocketRole outdatedRole, SocketRole updatedRole)
     {
         if (outdatedRole.Name == updatedRole.Name && outdatedRole.Color == updatedRole.Color) return;
@@ -324,6 +361,12 @@ public class EventLoggingService
         }
     }
 
+    /// <summary>
+    /// Raised when a user is banned from a guild.
+    /// Logs the event to the logs channel.
+    /// </summary>
+    /// <param name="bannedUser">The banned user's data.</param>
+    /// <param name="sourceGuild">The guild where the ban happened.</param>
     public async Task OnUserBanned(SocketUser bannedUser, SocketGuild sourceGuild)
     {
         using (BotDatabase botDatabase = new BotDatabase())
@@ -361,6 +404,12 @@ public class EventLoggingService
         }
     }
 
+    /// <summary>
+    /// Raised when a user is unbanned from a guild.
+    /// Logs the event to the logs channel.
+    /// </summary>
+    /// <param name="unbannedUser">The unbanned user's data.</param>
+    /// <param name="sourceGuild">The guild where the unban happened.</param>
     public async Task OnUserUnbanned(SocketUser unbannedUser, SocketGuild sourceGuild)
     {
         using (BotDatabase botDatabase = new BotDatabase())

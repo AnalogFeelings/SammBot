@@ -39,6 +39,9 @@ using Color = System.Drawing.Color;
 
 namespace SammBot.Bot.Services;
 
+/// <summary>
+/// Handles bot kickstart and shard events.
+/// </summary>
 public class StartupService
 {
     private readonly CommandService _commandService;
@@ -54,6 +57,9 @@ public class StartupService
     private bool _eventsSetUp;
     private int _shardsReady;
 
+    /// <summary>
+    /// Provides a fast way to convert between Discord.NET severities and Matcha ones.
+    /// </summary>
     private readonly Dictionary<Discord.LogSeverity, LogSeverity> _severityDictionary = new Dictionary<Discord.LogSeverity, LogSeverity>()
     {
         [Discord.LogSeverity.Debug] = LogSeverity.Debug,
@@ -64,16 +70,24 @@ public class StartupService
         [Discord.LogSeverity.Verbose] = LogSeverity.Debug
     };
 
-    public StartupService(IServiceProvider provider)
+    /// <summary>
+    /// Creates a new <see cref="StartupService"/>.
+    /// </summary>
+    /// <param name="services">The current active service provider.</param>
+    public StartupService(IServiceProvider services)
     {
-        _commandService = provider.GetRequiredService<CommandService>();
-        _shardedClient = provider.GetRequiredService<DiscordShardedClient>();
-        _interactionService = provider.GetRequiredService<InteractionService>();
-        _logger = provider.GetRequiredService<MatchaLogger>();
-        _settingsService = provider.GetRequiredService<SettingsService>();
-        _informationService = provider.GetRequiredService<InformationService>();
+        _commandService = services.GetRequiredService<CommandService>();
+        _shardedClient = services.GetRequiredService<DiscordShardedClient>();
+        _interactionService = services.GetRequiredService<InteractionService>();
+        _logger = services.GetRequiredService<MatchaLogger>();
+        _settingsService = services.GetRequiredService<SettingsService>();
+        _informationService = services.GetRequiredService<InformationService>();
     }
 
+    /// <summary>
+    /// Initializes the Discord client, prints information to the screen
+    /// and thaws the bot database.
+    /// </summary>
     public async Task StartAsync()
     {
         await _logger.LogAsync(LogSeverity.Information, "Logging in as a bot...");
@@ -126,6 +140,12 @@ public class StartupService
         await _logger.LogAsync(LogSeverity.Success, "Succesfully initialized command handler.");
     }
 
+    /// <summary>
+    /// Thaws the bot database.
+    /// </summary>
+    /// <remarks>
+    /// This function should be fired and forgotten for startup performance reasons.
+    /// </remarks>
     private async Task ThawBotDatabase()
     {
         try
@@ -144,11 +164,21 @@ public class StartupService
         }
     }
 
+    /// <summary>
+    /// Raised when a shard gets connected to the gateway.
+    /// Logs the event to the screen if on Debug configuration.
+    /// </summary>
+    /// <param name="shardClient">The shard's Discord client.</param>
     private async Task OnShardConnected(DiscordSocketClient shardClient)
     {
         await _logger.LogAsync(LogSeverity.Debug, "Shard #{0} has connected to the gateway.", shardClient.ShardId);
     }
 
+    /// <summary>
+    /// Raised when a shard is ready to receive events.
+    /// Sets up the status timer and registers commands.
+    /// </summary>
+    /// <param name="shardClient">The shard's Discord client.</param>
     private async Task OnShardReady(DiscordSocketClient shardClient)
     {
         await _logger.LogAsync(LogSeverity.Debug, "Shard #{0} is ready to run.", shardClient.ShardId);
@@ -171,6 +201,12 @@ public class StartupService
         }
     }
 
+    /// <summary>
+    /// Raised when a shard disconnects from the gateway.
+    /// Logs the error if it isn't a scheduled or early disconnect.
+    /// </summary>
+    /// <param name="includedException">The related exception.</param>
+    /// <param name="shardClient">The shard's Discord client.</param>
     private async Task OnShardDisconnect(Exception includedException, DiscordSocketClient shardClient)
     {
         // Prevent spamming logs with reconnect requests.
@@ -182,6 +218,11 @@ public class StartupService
         await _logger.LogAsync(LogSeverity.Warning, "Shard #{0} has disconnected from the gateway! Reason provided below.\n{1}", shardClient.ShardId, includedException);
     }
 
+    /// <summary>
+    /// Raised when <see cref="_statusTimer"/> ticks.
+    /// Picks a random status from the settings and sets it.
+    /// </summary>
+    /// <param name="state">The timer's state.</param>
     private async void RotateStatus(object? state)
     {
         try
@@ -201,6 +242,11 @@ public class StartupService
         }
     }
 
+    /// <summary>
+    /// Raised when Discord.NET logs a message.
+    /// Does conversions for Matcha.
+    /// </summary>
+    /// <param name="message"></param>
     private async Task DiscordLogAsync(LogMessage message)
     {
         LogSeverity severity = _severityDictionary[message.Severity];
