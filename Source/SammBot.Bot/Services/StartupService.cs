@@ -30,6 +30,7 @@ using SammBot.Library;
 using SammBot.Library.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -172,7 +173,13 @@ public class StartupService
 
     private async Task OnShardDisconnect(Exception includedException, DiscordSocketClient shardClient)
     {
-        await _logger.LogAsync(LogSeverity.Warning, "Shard #{0} has disconnected from the gateway! Reason: {1}", shardClient.ShardId, includedException);
+        // Prevent spamming logs with reconnect requests.
+        if (includedException is GatewayReconnectException)
+            return;
+        if (includedException is WebSocketException { WebSocketErrorCode: WebSocketError.ConnectionClosedPrematurely })
+            return;
+
+        await _logger.LogAsync(LogSeverity.Warning, "Shard #{0} has disconnected from the gateway! Reason provided below.\n{1}", shardClient.ShardId, includedException);
     }
 
     private async void RotateStatus(object? state)
