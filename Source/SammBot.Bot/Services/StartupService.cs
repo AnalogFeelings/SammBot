@@ -228,7 +228,7 @@ public class StartupService
         try
         {
             BotStatus chosenStatus = _settingsService.Settings.StatusList.PickRandom();
-            ActivityType gameType = (ActivityType)chosenStatus.Type;
+            ActivityType gameType = chosenStatus.Type;
             string? gameUrl = gameType == ActivityType.Streaming ? _settingsService.Settings.TwitchUrl : null;
 
             if (gameType == ActivityType.CustomStatus)

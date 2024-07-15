@@ -19,6 +19,7 @@
 using Discord;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SammBot.Library;
 
@@ -73,6 +74,10 @@ public static class Constants
     public static readonly JsonSerializerOptions JsonSettings = new JsonSerializerOptions()
     {
         WriteIndented = true,
-        IncludeFields = true
+        IncludeFields = true,
+        Converters =
+        {
+            new JsonStringEnumConverter()
+        }
     };
 }

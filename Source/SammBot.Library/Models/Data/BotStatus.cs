@@ -16,10 +16,25 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using Discord;
+using JetBrains.Annotations;
+
 namespace SammBot.Library.Models.Data;
 
+/// <summary>
+/// Stores a custom status for Discord.
+/// </summary>
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public record BotStatus
 {
+    /// <summary>
+    /// The status content.
+    /// </summary>
+    /// <remarks>Does not include the prefix text.</remarks>
     public required string Content;
-    public required int Type;
+    
+    /// <summary>
+    /// The status type.
+    /// </summary>
+    public required ActivityType Type;
 }
