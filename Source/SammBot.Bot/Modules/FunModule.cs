@@ -28,6 +28,7 @@ using SammBot.Library.Models;
 using SammBot.Library.Preconditions;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -195,8 +196,12 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         SocketGuildUser authorUser = (Context.Interaction.User as SocketGuildUser)!;
 
         string chosenMessage = _settingsService.Settings.KillMessages.PickRandom();
-        chosenMessage = chosenMessage.Replace("{Murderer}", $"**{authorUser.DisplayName}**");
-        chosenMessage = chosenMessage.Replace("{Victim}", $"**{targetUser.DisplayName}**");
+        Dictionary<string, object?> template = new Dictionary<string, object?>()
+        {
+            ["murderer"] = Format.Bold(authorUser.DisplayName),
+            ["victim"] = Format.Bold(targetUser.DisplayName)
+        };
+        chosenMessage = chosenMessage.TemplateReplace(template);
 
         await RespondAsync(chosenMessage, allowedMentions: Constants.AllowOnlyUsers);
 
