@@ -25,47 +25,18 @@
     "(つ´∀｀)つ"
   ],
   "KillMessages": [
-    "{Murderer} liked {Victim}'s cut.",
-    "{Murderer} posted a dead meme and {Victim} died of cringe.",
-    "{Victim} was walking on the street, when {Murderer} stabbed them.",
-    "{Victim} was streaming on Twitch when {Murderer} swatted them.",
-    "{Murderer} sawed through {Victim}'s bones with an Übersaw.",
-    "{Murderer} used the Marksman revolver on {Victim}.",
-    "{Victim} got doxxed and {Murderer} took the opportunity to kill.",
-    "{Murderer} stabbed {Victim}.",
-    "{Murderer} shot {Victim} in the head.",
-    "{Murderer} punched {Victim}, but {Murderer} had a random crit.",
-    "{Murderer} told {Victim} that they will get presents if they throw a rock at Israel's border wall.",
-    "{Murderer} made a hot take and {Victim} cried about it."
+    "%victim% was walking on the street, when %murderer% stabbed them.",
+    "%murderer% stabbed %victim%.",
+    "%murderer% shot %victim% in the head.",
   ],
   "StatusList": [
     {
-      "Content": "indie games.",
-      "Type": 0
+      "Content": "games.",
+      "Type": "Playing"
     },
     {
-      "Content": "the sun shine on the field.",
-      "Type": 3
-    },
-    {
-      "Content": "TV.",
-      "Type": 3
-    },
-    {
-      "Content": "with my console.",
-      "Type": 0
-    },
-    {
-      "Content": "music!",
-      "Type": 2
-    },
-    {
-      "Content": "with Nora.",
-      "Type": 0
-    },
-    {
-      "Content": "with my computer.",
-      "Type": 0
+      "Content": "my favorite streamer.",
+      "Type": "Watching"
     }
   ]
 }
