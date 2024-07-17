@@ -25,7 +25,6 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Pastel;
-using SammBot.Bot.Database;
 using SammBot.Library;
 using SammBot.Library.Extensions;
 using System;
@@ -150,10 +149,10 @@ public class StartupService
     {
         try
         {
-            using (BotDatabase botDatabase = new BotDatabase())
+            using (DatabaseService databaseService = new DatabaseService())
             {
                 // Hack to force EF to load the database.
-                IModel model = botDatabase.Model;
+                IModel model = databaseService.Model;
             }
 
             await _logger.LogAsync(LogSeverity.Success, "Database has been thawed successfully!");

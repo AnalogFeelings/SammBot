@@ -22,7 +22,6 @@ using Discord.Interactions;
 using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Database;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
@@ -60,17 +59,17 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync(true);
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
             UserTag? retrievedTag;
 
             if ((Context.User as SocketGuildUser)!.GuildPermissions.Has(GuildPermission.ManageMessages))
             {
-                retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == tagName && x.GuildId == Context.Guild.Id);
+                retrievedTag = await databaseService.UserTags.SingleOrDefaultAsync(x => x.Name == tagName && x.GuildId == Context.Guild.Id);
             }
             else
             {
-                retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.Name == tagName &&
+                retrievedTag = await databaseService.UserTags.SingleOrDefaultAsync(x => x.Name == tagName &&
                                                                                     x.AuthorId == Context.User.Id &&
                                                                                     x.GuildId == Context.Guild.Id);
             }
@@ -78,9 +77,9 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
             if (retrievedTag == default)
                 return ExecutionResult.FromError($"The tag **\"{tagName}\"** does not exist, or you don't have permission to delete it.");
 
-            botDatabase.UserTags.Remove(retrievedTag);
+            databaseService.UserTags.Remove(retrievedTag);
 
-            await botDatabase.SaveChangesAsync();
+            await databaseService.SaveChangesAsync();
         }
 
         await FollowupAsync("Success!", allowedMentions: Constants.AllowOnlyUsers);
@@ -99,9 +98,9 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
-            UserTag? retrievedTag = await botDatabase.UserTags.SingleOrDefaultAsync(x => x.GuildId == Context.Guild.Id && x.Name == tagName);
+            UserTag? retrievedTag = await databaseService.UserTags.SingleOrDefaultAsync(x => x.GuildId == Context.Guild.Id && x.Name == tagName);
 
             if (retrievedTag == default)
                 return ExecutionResult.FromError($"The tag **\"{tagName}\"** does not exist!");
@@ -126,9 +125,9 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
-            List<UserTag> allTags = await botDatabase.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToListAsync();
+            List<UserTag> allTags = await databaseService.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToListAsync();
             List<UserTag> filteredTags = allTags.Where(x => searchTerm.DamerauDistance(x.Name, _settingsService.Settings.TagDistance) < int.MaxValue).Take(25).ToList();
 
             if (!filteredTags.Any())
@@ -174,9 +173,9 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
 
         await DeferAsync();
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
-            List<UserTag> tagList = botDatabase.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToList();
+            List<UserTag> tagList = databaseService.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToList();
 
             if (tagList.Any(x => x.Name == tagName))
                 return ExecutionResult.FromError($"There's already a tag called **\"{tagName}\"**!");
@@ -190,9 +189,9 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
                 CreatedAt = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
             };
 
-            await botDatabase.UserTags.AddAsync(newTag);
+            await databaseService.UserTags.AddAsync(newTag);
 
-            await botDatabase.SaveChangesAsync();
+            await databaseService.SaveChangesAsync();
         }
 
         await FollowupAsync($"Tag created succesfully! Use `/tags get {tagName}` to use it!", allowedMentions: Constants.AllowOnlyUsers);

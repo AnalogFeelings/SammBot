@@ -19,7 +19,6 @@
 using Discord;
 using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Database;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
@@ -32,6 +31,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;
 
@@ -59,9 +59,9 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
 
         List<PropertyInfo> propertyList = typeof(GuildConfig).GetProperties().Where(x => x.Name != "Id" && x.Name != "GuildId").ToList();
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
-            GuildConfig serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id)
+            GuildConfig serverSettings = await databaseService.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id)
                                          ?? new GuildConfig()
                                          {
                                              GuildId = Context.Guild.Id
@@ -128,9 +128,9 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
 
         await DeferAsync(true);
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
-            GuildConfig? serverSettings = await botDatabase.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id);
+            GuildConfig? serverSettings = await databaseService.GuildConfigs.FirstOrDefaultAsync(x => x.GuildId == Context.Guild.Id);
 
             if (serverSettings == default(GuildConfig))
             {
@@ -139,7 +139,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
                     GuildId = Context.Guild.Id
                 };
 
-                await botDatabase.AddAsync(serverSettings);
+                await databaseService.AddAsync(serverSettings);
             }
 
             // Convert.ChangeType cannot handle enums well.
@@ -151,7 +151,7 @@ public class GuildConfigModule : InteractionModuleBase<ShardedInteractionContext
 
             newValue = targetProperty.GetValue(serverSettings);
 
-            await botDatabase.SaveChangesAsync();
+            await databaseService.SaveChangesAsync();
         }
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)

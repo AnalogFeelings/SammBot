@@ -16,20 +16,23 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
+using System.IO;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Library.Models.Database;
-using System.IO;
 using SammBot.Library;
+using SammBot.Library.Models.Database;
+using SammBot.Library.Services;
 
-namespace SammBot.Bot.Database;
+namespace SammBot.Bot.Services;
 
-public class BotDatabase : DbContext
+/// <summary>
+/// A service for accessing the bot's database tables.
+/// </summary>
+public class DatabaseService : DbContext, IDatabaseService
 {
-    [UsedImplicitly] public DbSet<UserTag> UserTags { get; set; } = default!;
-    [UsedImplicitly] public DbSet<UserWarning> UserWarnings { get; set; } = default!;
-    [UsedImplicitly] public DbSet<GuildConfig> GuildConfigs { get; set; } = default!;
+    public DbSet<UserTag> UserTags { get; set; }
+    public DbSet<UserWarning> UserWarnings { get; set; }
+    public DbSet<GuildConfig> GuildConfigs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

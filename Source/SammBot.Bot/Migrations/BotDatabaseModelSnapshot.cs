@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SammBot.Bot.Database;
+using SammBot.Bot.Services;
 
 #nullable disable
 
 namespace SammBot.Bot.Migrations
 {
-    [DbContext(typeof(BotDatabase))]
+    [DbContext(typeof(DatabaseService))]
     partial class BotDatabaseModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

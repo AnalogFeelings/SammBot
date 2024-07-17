@@ -33,6 +33,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using SammBot.Library.Services;
 
 namespace SammBot.Bot;
 
@@ -140,6 +141,7 @@ public class EntryPoint
         serviceCollection.AddSingleton<InformationService>();
         serviceCollection.AddSingleton<RandomService>();
         serviceCollection.AddSingleton<EventLoggingService>();
+        serviceCollection.AddScoped<IDatabaseService, DatabaseService>();
 
         return serviceCollection.BuildServiceProvider();
     }

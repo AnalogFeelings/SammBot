@@ -20,7 +20,6 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using SammBot.Bot.Database;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
@@ -31,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SammBot.Bot.Services;
 
 namespace SammBot.Bot.Modules;
 
@@ -116,7 +116,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
         await DeferAsync();
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
             UserWarning newWarning = new UserWarning
             {
@@ -126,8 +126,8 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
                 Date = Context.Interaction.CreatedAt.ToUnixTimeSeconds()
             };
 
-            await botDatabase.UserWarnings.AddAsync(newWarning);
-            await botDatabase.SaveChangesAsync();
+            await databaseService.UserWarnings.AddAsync(newWarning);
+            await databaseService.SaveChangesAsync();
 
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
                                                         .WithDescription($"Successfully warned user <@{targetUser.Id}>.");
@@ -174,16 +174,16 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync(true);
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
-            UserWarning? specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == warnId && x.GuildId == Context.Guild.Id);
+            UserWarning? specificWarning = await databaseService.UserWarnings.SingleOrDefaultAsync(x => x.Id == warnId && x.GuildId == Context.Guild.Id);
 
             if (specificWarning == default(UserWarning))
                 return ExecutionResult.FromError("There are no warnings with the specified ID.");
 
-            botDatabase.UserWarnings.Remove(specificWarning);
+            databaseService.UserWarnings.Remove(specificWarning);
 
-            await botDatabase.SaveChangesAsync();
+            await databaseService.SaveChangesAsync();
 
             await FollowupAsync($":white_check_mark: Removed warning \"{warnId}\" from user <@{specificWarning.UserId}>.",
                                 allowedMentions: Constants.AllowOnlyUsers);
@@ -204,9 +204,9 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
-            List<UserWarning> filteredWarnings = botDatabase.UserWarnings.Where(x => x.UserId == targetUser.Id && x.GuildId == Context.Guild.Id).ToList();
+            List<UserWarning> filteredWarnings = databaseService.UserWarnings.Where(x => x.UserId == targetUser.Id && x.GuildId == Context.Guild.Id).ToList();
 
             if (!filteredWarnings.Any())
                 return ExecutionResult.FromError("This user has no warnings.");
@@ -241,9 +241,9 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        using (DatabaseService databaseService = new DatabaseService())
         {
-            UserWarning? specificWarning = await botDatabase.UserWarnings.SingleOrDefaultAsync(x => x.Id == warnId && x.GuildId == Context.Guild.Id);
+            UserWarning? specificWarning = await databaseService.UserWarnings.SingleOrDefaultAsync(x => x.Id == warnId && x.GuildId == Context.Guild.Id);
 
             if (specificWarning == default(UserWarning))
                 return ExecutionResult.FromError("There are no warnings with the specified ID.");

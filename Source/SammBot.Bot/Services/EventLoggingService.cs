@@ -16,15 +16,17 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Discord;
 using Discord.WebSocket;
-using SammBot.Bot.Database;
 using SammBot.Library;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models.Database;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using SammBot.Library.Services;
 
 namespace SammBot.Bot.Services;
 
@@ -33,6 +35,13 @@ namespace SammBot.Bot.Services;
 /// </summary>
 public class EventLoggingService
 {
+    private readonly IServiceProvider _serviceProvider;
+    
+    public EventLoggingService(IServiceProvider services)
+    {
+        _serviceProvider = services;
+    }
+    
     /// <summary>
     /// Raised when a user joins a guild.
     /// Sends a welcome message and logs the event to the logs channel.
@@ -40,56 +49,54 @@ public class EventLoggingService
     /// <param name="newUser">The new user object.</param>
     public async Task OnUserJoinedAsync(SocketGuildUser newUser)
     {
-        using (BotDatabase botDatabase = new BotDatabase())
+        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        SocketGuild currentGuild = newUser.Guild;
+
+        GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
+
+        if (serverConfig == default(GuildConfig)) return;
+
+        if (serverConfig.EnableWelcome && !string.IsNullOrWhiteSpace(serverConfig.WelcomeMessage))
         {
-            SocketGuild currentGuild = newUser.Guild;
+            ISocketMessageChannel? welcomeChannel = currentGuild.GetChannel(serverConfig.WelcomeChannel) as ISocketMessageChannel;
 
-            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
-
-            if (serverConfig == default(GuildConfig)) return;
-
-            if (serverConfig.EnableWelcome && !string.IsNullOrWhiteSpace(serverConfig.WelcomeMessage))
+            if (welcomeChannel != null)
             {
-                ISocketMessageChannel? welcomeChannel = currentGuild.GetChannel(serverConfig.WelcomeChannel) as ISocketMessageChannel;
-
-                if (welcomeChannel != null)
+                Dictionary<string, object?> templateDict = new Dictionary<string, object?>()
                 {
-                    Dictionary<string, object?> templateDict = new Dictionary<string, object?>()
-                    {
-                            ["usermention"] = newUser.Mention,
-                            ["servername"] = Format.Bold(currentGuild.Name)
-                    };
-                    string formattedMessage = serverConfig.WelcomeMessage.TemplateReplace(templateDict);
+                    ["usermention"] = newUser.Mention,
+                    ["servername"] = Format.Bold(currentGuild.Name)
+                };
+                string formattedMessage = serverConfig.WelcomeMessage.TemplateReplace(templateDict);
 
-                    await welcomeChannel.SendMessageAsync(formattedMessage);
-                }
+                await welcomeChannel.SendMessageAsync(formattedMessage);
             }
+        }
 
-            if (serverConfig.EnableLogging)
+        if (serverConfig.EnableLogging)
+        {
+            ISocketMessageChannel? loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+
+            if (loggingChannel != null)
             {
-                ISocketMessageChannel? loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                if (loggingChannel != null)
+                replyEmbed.Title = "\U0001f44b User Joined";
+                replyEmbed.Description = "A new user has joined the server.";
+                replyEmbed.WithColor(Constants.GoodColor);
+
+                replyEmbed.AddField("\U0001f464 User", newUser.Mention);
+                replyEmbed.AddField("\U0001faaa User ID", newUser.Id);
+                replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{newUser.CreatedAt.ToUnixTimeSeconds()}:F>");
+
+                replyEmbed.WithFooter(x =>
                 {
-                    EmbedBuilder replyEmbed = new EmbedBuilder();
+                    x.Text = $"Server ID: {currentGuild.Id}";
+                    x.IconUrl = currentGuild.IconUrl;
+                });
+                replyEmbed.WithCurrentTimestamp();
 
-                    replyEmbed.Title = "\U0001f44b User Joined";
-                    replyEmbed.Description = "A new user has joined the server.";
-                    replyEmbed.WithColor(Constants.GoodColor);
-
-                    replyEmbed.AddField("\U0001f464 User", newUser.Mention);
-                    replyEmbed.AddField("\U0001faaa User ID", newUser.Id);
-                    replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{newUser.CreatedAt.ToUnixTimeSeconds()}:F>");
-
-                    replyEmbed.WithFooter(x =>
-                    {
-                        x.Text = $"Server ID: {currentGuild.Id}";
-                        x.IconUrl = currentGuild.IconUrl;
-                    });
-                    replyEmbed.WithCurrentTimestamp();
-
-                    await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
-                }
+                await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
             }
         }
     }
@@ -102,37 +109,35 @@ public class EventLoggingService
     /// <param name="user">The user that left.</param>
     public async Task OnUserLeftAsync(SocketGuild currentGuild, SocketUser user)
     {
-        using (BotDatabase botDatabase = new BotDatabase())
+        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
+
+        if (serverConfig == default(GuildConfig)) return;
+
+        if (serverConfig.EnableLogging)
         {
-            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
+            ISocketMessageChannel? loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
-            if (serverConfig == default(GuildConfig)) return;
-
-            if (serverConfig.EnableLogging)
+            if (loggingChannel != null)
             {
-                ISocketMessageChannel? loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                if (loggingChannel != null)
+                replyEmbed.Title = "\U0001f590\uFE0F User Left";
+                replyEmbed.Description = "A user has left the server.";
+                replyEmbed.WithColor(Constants.VeryBadColor);
+
+                replyEmbed.AddField("\U0001f464 User", user.Mention);
+                replyEmbed.AddField("\U0001faaa User ID", user.Id);
+                replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{user.CreatedAt.ToUnixTimeSeconds()}:F>");
+
+                replyEmbed.WithFooter(x =>
                 {
-                    EmbedBuilder replyEmbed = new EmbedBuilder();
+                    x.Text = $"Server ID: {currentGuild.Id}";
+                    x.IconUrl = currentGuild.IconUrl;
+                });
+                replyEmbed.WithCurrentTimestamp();
 
-                    replyEmbed.Title = "\U0001f590\uFE0F User Left";
-                    replyEmbed.Description = "A user has left the server.";
-                    replyEmbed.WithColor(Constants.VeryBadColor);
-
-                    replyEmbed.AddField("\U0001f464 User", user.Mention);
-                    replyEmbed.AddField("\U0001faaa User ID", user.Id);
-                    replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{user.CreatedAt.ToUnixTimeSeconds()}:F>");
-
-                    replyEmbed.WithFooter(x =>
-                    {
-                        x.Text = $"Server ID: {currentGuild.Id}";
-                        x.IconUrl = currentGuild.IconUrl;
-                    });
-                    replyEmbed.WithCurrentTimestamp();
-
-                    await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
-                }
+                await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
             }
         }
     }
@@ -151,58 +156,56 @@ public class EventLoggingService
 
         SocketGuildChannel? targetChannel = cachedChannel.Value as SocketGuildChannel;
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
+
+        if (serverConfig == default(GuildConfig)) return;
+
+        if (serverConfig.EnableLogging)
         {
-            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
+            ISocketMessageChannel? loggingChannel = targetChannel!.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
-            if (serverConfig == default(GuildConfig)) return;
-
-            if (serverConfig.EnableLogging)
+            if (loggingChannel != null)
             {
-                ISocketMessageChannel? loggingChannel = targetChannel!.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                if (loggingChannel != null)
+                replyEmbed.Title = "\u274C Message Deleted";
+                replyEmbed.Description = "A message has been deleted.";
+                replyEmbed.WithColor(Constants.VeryBadColor);
+
+                string messageContent = string.Empty;
+                string attachments = string.Empty;
+
+                if (cachedMessage.Value.Attachments.Count > 0)
                 {
-                    EmbedBuilder replyEmbed = new EmbedBuilder();
+                    attachments = "\n";
 
-                    replyEmbed.Title = "\u274C Message Deleted";
-                    replyEmbed.Description = "A message has been deleted.";
-                    replyEmbed.WithColor(Constants.VeryBadColor);
-
-                    string messageContent = string.Empty;
-                    string attachments = string.Empty;
-
-                    if (cachedMessage.Value.Attachments.Count > 0)
+                    foreach (IAttachment attachment in cachedMessage.Value.Attachments)
                     {
-                        attachments = "\n";
-
-                        foreach (IAttachment attachment in cachedMessage.Value.Attachments)
-                        {
-                            attachments += attachment.Url + "\n";
-                        }
+                        attachments += attachment.Url + "\n";
                     }
-                    if (!string.IsNullOrEmpty(cachedMessage.Value.Content))
-                    {
-                        string sanitizedContent = Format.Sanitize(cachedMessage.Value.Content);
-
-                        messageContent = sanitizedContent.Truncate(1021); // TODO: Make Truncate take in account the final "..." when using substring.
-                    }
-
-                    replyEmbed.AddField("\U0001f464 Author", cachedMessage.Value.Author.Mention, true);
-                    replyEmbed.AddField("\U0001faaa Author ID", cachedMessage.Value.Author.Id, true);
-                    replyEmbed.AddField("\u2709\uFE0F Message Content", messageContent + attachments);
-                    replyEmbed.AddField("\U0001f4e2 Message Channel", $"<#{cachedChannel.Value.Id}>", true);
-                    replyEmbed.AddField("\U0001f4c5 Send Date", cachedMessage.Value.CreatedAt.ToString(), true);
-
-                    replyEmbed.WithFooter(x =>
-                    {
-                        x.Text = $"Server ID: {targetChannel.Guild.Id}";
-                        x.IconUrl = targetChannel.Guild.IconUrl;
-                    });
-                    replyEmbed.WithCurrentTimestamp();
-
-                    await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
                 }
+                if (!string.IsNullOrEmpty(cachedMessage.Value.Content))
+                {
+                    string sanitizedContent = Format.Sanitize(cachedMessage.Value.Content);
+
+                    messageContent = sanitizedContent.Truncate(1021); // TODO: Make Truncate take in account the final "..." when using substring.
+                }
+
+                replyEmbed.AddField("\U0001f464 Author", cachedMessage.Value.Author.Mention, true);
+                replyEmbed.AddField("\U0001faaa Author ID", cachedMessage.Value.Author.Id, true);
+                replyEmbed.AddField("\u2709\uFE0F Message Content", messageContent + attachments);
+                replyEmbed.AddField("\U0001f4e2 Message Channel", $"<#{cachedChannel.Value.Id}>", true);
+                replyEmbed.AddField("\U0001f4c5 Send Date", cachedMessage.Value.CreatedAt.ToString(), true);
+
+                replyEmbed.WithFooter(x =>
+                {
+                    x.Text = $"Server ID: {targetChannel.Guild.Id}";
+                    x.IconUrl = targetChannel.Guild.IconUrl;
+                });
+                replyEmbed.WithCurrentTimestamp();
+
+                await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
             }
         }
     }
@@ -220,36 +223,34 @@ public class EventLoggingService
 
         SocketGuildChannel? targetChannel = cachedChannel.Value as SocketGuildChannel;
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
+
+        if (serverConfig == default(GuildConfig)) return;
+
+        if (serverConfig.EnableLogging)
         {
-            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
+            ISocketMessageChannel? loggingChannel = targetChannel!.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
-            if (serverConfig == default(GuildConfig)) return;
-
-            if (serverConfig.EnableLogging)
+            if (loggingChannel != null)
             {
-                ISocketMessageChannel? loggingChannel = targetChannel!.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                if (loggingChannel != null)
+                replyEmbed.Title = "\u274C Messages Bulk Deleted";
+                replyEmbed.Description = "Multiple messages have been deleted at once.";
+                replyEmbed.WithColor(Constants.VeryBadColor);
+
+                replyEmbed.AddField("\U0001f4e8 Message Count", cachedMessages.Count, true);
+                replyEmbed.AddField("\U0001f4e2 Channel", $"<#{cachedChannel.Value.Id}>", true);
+
+                replyEmbed.WithFooter(x =>
                 {
-                    EmbedBuilder replyEmbed = new EmbedBuilder();
+                    x.Text = $"Server ID: {targetChannel.Guild.Id}";
+                    x.IconUrl = targetChannel.Guild.IconUrl;
+                });
+                replyEmbed.WithCurrentTimestamp();
 
-                    replyEmbed.Title = "\u274C Messages Bulk Deleted";
-                    replyEmbed.Description = "Multiple messages have been deleted at once.";
-                    replyEmbed.WithColor(Constants.VeryBadColor);
-
-                    replyEmbed.AddField("\U0001f4e8 Message Count", cachedMessages.Count, true);
-                    replyEmbed.AddField("\U0001f4e2 Channel", $"<#{cachedChannel.Value.Id}>", true);
-
-                    replyEmbed.WithFooter(x =>
-                    {
-                        x.Text = $"Server ID: {targetChannel.Guild.Id}";
-                        x.IconUrl = targetChannel.Guild.IconUrl;
-                    });
-                    replyEmbed.WithCurrentTimestamp();
-
-                    await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
-                }
+                await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
             }
         }
     }
@@ -261,37 +262,35 @@ public class EventLoggingService
     /// <param name="newRole">The new role data.</param>
     public async Task OnRoleCreated(SocketRole newRole)
     {
-        using (BotDatabase botDatabase = new BotDatabase())
+        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == newRole.Guild.Id);
+
+        if (serverConfig == default(GuildConfig)) return;
+
+        if (serverConfig.EnableLogging)
         {
-            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == newRole.Guild.Id);
+            ISocketMessageChannel? loggingChannel = newRole.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
-            if (serverConfig == default(GuildConfig)) return;
-
-            if (serverConfig.EnableLogging)
+            if (loggingChannel != null)
             {
-                ISocketMessageChannel? loggingChannel = newRole.Guild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                if (loggingChannel != null)
+                replyEmbed.Title = "\U0001f4e6 Role Created";
+                replyEmbed.Description = "A new role has been created.";
+                replyEmbed.WithColor(Constants.GoodColor);
+
+                replyEmbed.AddField("\U0001f465 Role", newRole.Mention);
+                replyEmbed.AddField("\U0001faaa Role ID", newRole.Id);
+                replyEmbed.AddField("\U0001f3a8 Role Color", $"RGB({newRole.Color.R}, {newRole.Color.G}, {newRole.Color.B})");
+
+                replyEmbed.WithFooter(x =>
                 {
-                    EmbedBuilder replyEmbed = new EmbedBuilder();
+                    x.Text = $"Server ID: {newRole.Guild.Id}";
+                    x.IconUrl = newRole.Guild.IconUrl;
+                });
+                replyEmbed.WithCurrentTimestamp();
 
-                    replyEmbed.Title = "\U0001f4e6 Role Created";
-                    replyEmbed.Description = "A new role has been created.";
-                    replyEmbed.WithColor(Constants.GoodColor);
-
-                    replyEmbed.AddField("\U0001f465 Role", newRole.Mention);
-                    replyEmbed.AddField("\U0001faaa Role ID", newRole.Id);
-                    replyEmbed.AddField("\U0001f3a8 Role Color", $"RGB({newRole.Color.R}, {newRole.Color.G}, {newRole.Color.B})");
-
-                    replyEmbed.WithFooter(x =>
-                    {
-                        x.Text = $"Server ID: {newRole.Guild.Id}";
-                        x.IconUrl = newRole.Guild.IconUrl;
-                    });
-                    replyEmbed.WithCurrentTimestamp();
-
-                    await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
-                }
+                await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
             }
         }
     }
@@ -308,55 +307,53 @@ public class EventLoggingService
 
         SocketGuild currentGuild = updatedRole.Guild;
 
-        using (BotDatabase botDatabase = new BotDatabase())
+        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
+
+        if (serverConfig == default(GuildConfig)) return;
+
+        if (serverConfig.EnableLogging)
         {
-            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
+            ISocketMessageChannel? loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
-            if (serverConfig == default(GuildConfig)) return;
-
-            if (serverConfig.EnableLogging)
+            if (loggingChannel != null)
             {
-                ISocketMessageChannel? loggingChannel = currentGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                if (loggingChannel != null)
+                replyEmbed.Title = "\U0001f4e6 Role Updated";
+                replyEmbed.Description = "A role has been updated.";
+                replyEmbed.WithColor(Constants.BadColor);
+
+                if (outdatedRole.Name != updatedRole.Name)
                 {
-                    EmbedBuilder replyEmbed = new EmbedBuilder();
-
-                    replyEmbed.Title = "\U0001f4e6 Role Updated";
-                    replyEmbed.Description = "A role has been updated.";
-                    replyEmbed.WithColor(Constants.BadColor);
-
-                    if (outdatedRole.Name != updatedRole.Name)
-                    {
-                        replyEmbed.AddField("\U0001f4e4 Old Name", outdatedRole.Name);
-                        replyEmbed.AddField("\U0001f4e5 New Name", updatedRole.Name);
-                    }
-                    else
-                    {
-                        replyEmbed.AddField("\U0001f465 Role", updatedRole.Mention);
-                    }
-
-                    if (outdatedRole.Color != updatedRole.Color)
-                    {
-                        replyEmbed.AddField("\U0001f3a8 Old Color", $"RGB({outdatedRole.Color.R}, {outdatedRole.Color.G}, {outdatedRole.Color.B})", true);
-                        replyEmbed.AddField("\U0001f3a8 New Color", $"RGB({updatedRole.Color.R}, {updatedRole.Color.G}, {updatedRole.Color.B})", true);
-                    }
-                    else
-                    {
-                        replyEmbed.AddField("\U0001f3a8 Role Color", $"RGB({updatedRole.Color.R}, {updatedRole.Color.G}, {updatedRole.Color.B})");
-                    }
-
-                    replyEmbed.AddField("\U0001faaa Role ID", updatedRole.Id);
-
-                    replyEmbed.WithFooter(x =>
-                    {
-                        x.Text = $"Server ID: {currentGuild.Id}";
-                        x.IconUrl = currentGuild.IconUrl;
-                    });
-                    replyEmbed.WithCurrentTimestamp();
-
-                    await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
+                    replyEmbed.AddField("\U0001f4e4 Old Name", outdatedRole.Name);
+                    replyEmbed.AddField("\U0001f4e5 New Name", updatedRole.Name);
                 }
+                else
+                {
+                    replyEmbed.AddField("\U0001f465 Role", updatedRole.Mention);
+                }
+
+                if (outdatedRole.Color != updatedRole.Color)
+                {
+                    replyEmbed.AddField("\U0001f3a8 Old Color", $"RGB({outdatedRole.Color.R}, {outdatedRole.Color.G}, {outdatedRole.Color.B})", true);
+                    replyEmbed.AddField("\U0001f3a8 New Color", $"RGB({updatedRole.Color.R}, {updatedRole.Color.G}, {updatedRole.Color.B})", true);
+                }
+                else
+                {
+                    replyEmbed.AddField("\U0001f3a8 Role Color", $"RGB({updatedRole.Color.R}, {updatedRole.Color.G}, {updatedRole.Color.B})");
+                }
+
+                replyEmbed.AddField("\U0001faaa Role ID", updatedRole.Id);
+
+                replyEmbed.WithFooter(x =>
+                {
+                    x.Text = $"Server ID: {currentGuild.Id}";
+                    x.IconUrl = currentGuild.IconUrl;
+                });
+                replyEmbed.WithCurrentTimestamp();
+
+                await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
             }
         }
     }
@@ -369,37 +366,35 @@ public class EventLoggingService
     /// <param name="sourceGuild">The guild where the ban happened.</param>
     public async Task OnUserBanned(SocketUser bannedUser, SocketGuild sourceGuild)
     {
-        using (BotDatabase botDatabase = new BotDatabase())
+        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuild.Id);
+
+        if (serverConfig == default(GuildConfig)) return;
+
+        if (serverConfig.EnableLogging)
         {
-            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuild.Id);
+            ISocketMessageChannel? loggingChannel = sourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
-            if (serverConfig == default(GuildConfig)) return;
-
-            if (serverConfig.EnableLogging)
+            if (loggingChannel != null)
             {
-                ISocketMessageChannel? loggingChannel = sourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                if (loggingChannel != null)
+                replyEmbed.Title = "\U0001f528 User Banned";
+                replyEmbed.Description = "A user has been banned from the server.";
+                replyEmbed.WithColor(Constants.VeryBadColor);
+
+                replyEmbed.AddField("\U0001f464 User", bannedUser.GetFullUsername());
+                replyEmbed.AddField("\U0001faaa User ID", bannedUser.Id);
+                replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{bannedUser.CreatedAt.ToUnixTimeSeconds()}:F>");
+
+                replyEmbed.WithFooter(x =>
                 {
-                    EmbedBuilder replyEmbed = new EmbedBuilder();
+                    x.Text = $"Server ID: {sourceGuild.Id}";
+                    x.IconUrl = sourceGuild.IconUrl;
+                });
+                replyEmbed.WithCurrentTimestamp();
 
-                    replyEmbed.Title = "\U0001f528 User Banned";
-                    replyEmbed.Description = "A user has been banned from the server.";
-                    replyEmbed.WithColor(Constants.VeryBadColor);
-
-                    replyEmbed.AddField("\U0001f464 User", bannedUser.GetFullUsername());
-                    replyEmbed.AddField("\U0001faaa User ID", bannedUser.Id);
-                    replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{bannedUser.CreatedAt.ToUnixTimeSeconds()}:F>");
-
-                    replyEmbed.WithFooter(x =>
-                    {
-                        x.Text = $"Server ID: {sourceGuild.Id}";
-                        x.IconUrl = sourceGuild.IconUrl;
-                    });
-                    replyEmbed.WithCurrentTimestamp();
-
-                    await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
-                }
+                await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
             }
         }
     }
@@ -412,37 +407,35 @@ public class EventLoggingService
     /// <param name="sourceGuild">The guild where the unban happened.</param>
     public async Task OnUserUnbanned(SocketUser unbannedUser, SocketGuild sourceGuild)
     {
-        using (BotDatabase botDatabase = new BotDatabase())
+        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuild.Id);
+
+        if (serverConfig == default(GuildConfig)) return;
+
+        if (serverConfig.EnableLogging)
         {
-            GuildConfig? serverConfig = botDatabase.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuild.Id);
+            ISocketMessageChannel? loggingChannel = sourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
 
-            if (serverConfig == default(GuildConfig)) return;
-
-            if (serverConfig.EnableLogging)
+            if (loggingChannel != null)
             {
-                ISocketMessageChannel? loggingChannel = sourceGuild.GetChannel(serverConfig.LogChannel) as ISocketMessageChannel;
+                EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                if (loggingChannel != null)
+                replyEmbed.Title = "\u2705 User Unbanned";
+                replyEmbed.Description = "A user has been unbanned from the server.";
+                replyEmbed.WithColor(Constants.GoodColor);
+
+                replyEmbed.AddField("\U0001f464 User", unbannedUser.GetFullUsername());
+                replyEmbed.AddField("\U0001faaa User ID", unbannedUser.Id);
+                replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{unbannedUser.CreatedAt.ToUnixTimeSeconds()}:F>");
+
+                replyEmbed.WithFooter(x =>
                 {
-                    EmbedBuilder replyEmbed = new EmbedBuilder();
+                    x.Text = $"Server ID: {sourceGuild.Id}";
+                    x.IconUrl = sourceGuild.IconUrl;
+                });
+                replyEmbed.WithCurrentTimestamp();
 
-                    replyEmbed.Title = "\u2705 User Unbanned";
-                    replyEmbed.Description = "A user has been unbanned from the server.";
-                    replyEmbed.WithColor(Constants.GoodColor);
-
-                    replyEmbed.AddField("\U0001f464 User", unbannedUser.GetFullUsername());
-                    replyEmbed.AddField("\U0001faaa User ID", unbannedUser.Id);
-                    replyEmbed.AddField("\U0001f4c5 Creation Date", $"<t:{unbannedUser.CreatedAt.ToUnixTimeSeconds()}:F>");
-
-                    replyEmbed.WithFooter(x =>
-                    {
-                        x.Text = $"Server ID: {sourceGuild.Id}";
-                        x.IconUrl = sourceGuild.IconUrl;
-                    });
-                    replyEmbed.WithCurrentTimestamp();
-
-                    await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
-                }
+                await loggingChannel.SendMessageAsync(null, false, replyEmbed.Build());
             }
         }
     }

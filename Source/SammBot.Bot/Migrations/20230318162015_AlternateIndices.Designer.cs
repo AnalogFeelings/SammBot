@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SammBot.Bot.Database;
+using SammBot.Bot.Services;
 
 #nullable disable
 
 namespace SammBot.Bot.Migrations
 {
-    [DbContext(typeof(BotDatabase))]
+    [DbContext(typeof(DatabaseService))]
     [Migration("20230318162015_AlternateIndices")]
     partial class AlternateIndices
     {
