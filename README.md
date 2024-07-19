@@ -43,7 +43,7 @@ This is a list of all the people who maintain Samm-Bot's development.
 The .NET toolset will automatically pull all the required NuGet packages on build.  
 Samm-Bot has currently been tested on **x86-64** and **aarch64**.
 
-For Linux and macOS users, this [tiny script](https://gist.github.com/AnalogFeelings/7969c2af2f87d606b3fd8b72cd8c6432) should make it easier for you to pull and build automatically.
+For Linux and macOS users, this [tiny script](./Scripts/BuildSamm.sh) should make it easier for you to pull and build automatically.
 
 > [!NOTE]  
 > The script linked above requires Bash.
