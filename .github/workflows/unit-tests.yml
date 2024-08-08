@@ -24,7 +24,7 @@ jobs:
       packages: write
       contents: read
     env:
-      NUGET_PACKAGES: ${{ env.GITHUB_WORKSPACE }}/.nuget/packages    
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages    
 
     runs-on: ${{ matrix.os }}
 
@@ -40,7 +40,7 @@ jobs:
       - name: Check Dependency Cache
         uses: actions/cache@v4.0.2
         with:
-          path: ${{ env.GITHUB_WORKSPACE }}/.nuget/packages
+          path: ${{ github.workspace }}/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
