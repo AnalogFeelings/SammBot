@@ -34,6 +34,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using SammBot.Library.Models.Data;
+using SammBot.Library.Services;
 using Color = System.Drawing.Color;
 
 namespace SammBot.Bot.Services;
@@ -43,7 +44,7 @@ namespace SammBot.Bot.Services;
 /// </summary>
 public class StartupService
 {
-    private readonly CommandService _commandService;
+    private readonly ICommandService _commandService;
     private readonly DiscordShardedClient _shardedClient;
     private readonly InteractionService _interactionService;
     private readonly MatchaLogger _logger;
@@ -75,7 +76,7 @@ public class StartupService
     /// <param name="services">The current active service provider.</param>
     public StartupService(IServiceProvider services)
     {
-        _commandService = services.GetRequiredService<CommandService>();
+        _commandService = services.GetRequiredService<ICommandService>();
         _shardedClient = services.GetRequiredService<DiscordShardedClient>();
         _interactionService = services.GetRequiredService<InteractionService>();
         _logger = services.GetRequiredService<MatchaLogger>();

@@ -37,21 +37,21 @@ namespace SammBot.Bot.Services;
 /// </summary>
 public class HttpService
 {
-    /// <summary>
-    /// The client used for making HTTP requests inside the service.
-    /// </summary>
-    public HttpClient Client { get; init; }
-
+    private readonly HttpClient _client;
     private readonly ConcurrentDictionary<string, TaskQueue> _queueDictionary;
 
-    public HttpService(IServiceProvider provider)
+    /// <summary>
+    /// Creates a new <see cref="HttpService"/>.
+    /// </summary>
+    /// <param name="services">The current active service provider.</param>
+    public HttpService(IServiceProvider services)
     {
-        Client = new HttpClient();
+        _client = new HttpClient();
         _queueDictionary = new ConcurrentDictionary<string, TaskQueue>();
         
-        SettingsService settingsService = provider.GetRequiredService<SettingsService>();
+        SettingsService settingsService = services.GetRequiredService<SettingsService>();
 
-        Client.DefaultRequestHeaders.Add("User-Agent", settingsService.Settings.HttpUserAgent);
+        _client.DefaultRequestHeaders.Add("User-Agent", settingsService.Settings.HttpUserAgent);
     }
 
     /// <summary>
@@ -164,7 +164,7 @@ public class HttpService
 
         async Task<MemoryStream> GetStreamRemote()
         {
-            byte[] rawData = await Client.GetByteArrayAsync(uriBuilder.ToString());
+            byte[] rawData = await _client.GetByteArrayAsync(uriBuilder.ToString());
 
             return new MemoryStream(rawData);
         }
@@ -179,7 +179,7 @@ public class HttpService
     {
         string stringReply;
 
-        using (HttpResponseMessage responseMessage = await Client.GetAsync(remoteUrl))
+        using (HttpResponseMessage responseMessage = await _client.GetAsync(remoteUrl))
         {
             stringReply = await responseMessage.Content.ReadAsStringAsync();
         }

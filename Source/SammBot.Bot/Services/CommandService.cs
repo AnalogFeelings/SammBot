@@ -27,13 +27,14 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using SammBot.Library.Services;
 
 namespace SammBot.Bot.Services;
 
 /// <summary>
 /// Provides handling for incoming interactions.
 /// </summary>
-public class CommandService
+public class CommandService : ICommandService
 {
     private readonly DiscordShardedClient _shardedClient;
     private readonly IServiceProvider _serviceProvider;

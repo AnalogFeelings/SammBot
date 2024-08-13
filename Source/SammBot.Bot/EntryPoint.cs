@@ -136,7 +136,7 @@ public class EntryPoint
         serviceCollection.AddSingleton(_matchaLogger!);
         serviceCollection.AddSingleton(_settingsService!);
         serviceCollection.AddSingleton<HttpService>();
-        serviceCollection.AddSingleton<CommandService>();
+        serviceCollection.AddSingleton<ICommandService, CommandService>();
         serviceCollection.AddSingleton<StartupService>();
         serviceCollection.AddSingleton<InformationService>();
         serviceCollection.AddSingleton<RandomService>();
