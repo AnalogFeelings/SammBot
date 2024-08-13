@@ -12,6 +12,7 @@
 
 .footerTop {
     width: 100%;
+    color: var(--footer-foreground);
 }
 
 .footerHeader {

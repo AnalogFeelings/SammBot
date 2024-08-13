@@ -11,7 +11,7 @@
 /*NAVIGATION BAR (LOGO, BUTTONS)*/
 .navigationBarDiv {
     background-color: var(--navbar-background);
-    backdrop-filter: blur(16px);
+    color: var(--text-color-light);
 
     display: flex;
     justify-content: center;
@@ -58,7 +58,7 @@
 
     cursor: pointer;
 
-    color: var(--text-color);
+    color: var(--text-color-light);
     background-color: var(--navbar-button-bg);
 
     transition-duration: 0.3s;

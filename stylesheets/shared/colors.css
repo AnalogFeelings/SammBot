@@ -1,17 +1,16 @@
 :root
 {
-    --text-color: #cdd6f4;
-    --body-color: #242437;
-    --body-separator: #353551;
+    --text-color: #000;
+    --body-color: #FFF;
+    --body-separator: #373754;
+    --text-color-light: white;
 
-    --acrylic-color: rgba(8, 8, 8, 0.4);
-
-    --navbar-background: rgba(61, 61, 93, 0.5);
+    --navbar-background: rgba(61, 61, 93, 1);
     --navbar-thin-text-color: #a2a9c1;
 
     --navbar-button-bg: rgba(0, 0, 0, 0);
 
-    --separator-background: #565683;
+    --separator-background: #49496E;
 
     --button-normal: rgba(65, 65, 90, 0.4);
     --button-hover: rgba(107, 107, 164, 0.4);
@@ -27,10 +26,11 @@
 
     --scrollbar-background: #1b1b29;
 
+    --footer-foreground: white;
     --footer-background: #3d3d5d;
     --footer-link-hover: #a2a9c1;
     --footer-link-active: #777c8e;
-    --footer-link: #cdd6f4;
-    --footer-bottom-text: #a2a9c1;
+    --footer-link: lightgray;
+    --footer-bottom-text: darkgray;
 }
 

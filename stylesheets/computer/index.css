@@ -81,8 +81,12 @@
 		width: 345px;
 		height: 345px;
 
-		margin-right: 45px;
+		margin-right: 85px;
 		margin-bottom: 0;
+	}
+
+	.headerSideDiv {
+		max-width: 40vw;
 	}
 
 	.headerSideDiv > h1 {
