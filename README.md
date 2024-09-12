@@ -92,5 +92,5 @@ If your project or company has been very influential in the development of Samm-
   
   | Logo | Message |
   | ---- | ------- |
-  | <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains" width="128"/> | Thanks to **JetBrains** for providing an OSS license for their products! |
+  | <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg" alt="JetBrains" width="128"/> | Thanks to **JetBrains** for providing an OSS license for their products! |
 </div>
