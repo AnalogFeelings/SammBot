@@ -8,7 +8,6 @@ updates:
     target-branch: "master"
     labels:
       - "dependencies"
-      - "master"
       - "bot"
     assignees:
       - "analogfeelings"
@@ -39,7 +38,6 @@ updates:
     target-branch: "master"
     labels:
       - "dependencies"
-      - "master"
       - "library"
     assignees:
       - "analogfeelings"
@@ -70,7 +68,6 @@ updates:
     target-branch: "master"
     labels:
       - "dependencies"
-      - "master"
       - "tests"
     assignees:
       - "analogfeelings"
