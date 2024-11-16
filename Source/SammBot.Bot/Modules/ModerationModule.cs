@@ -103,6 +103,9 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(1, 2)]
     [RequireContext(ContextType.Guild)]
     [RequireUserPermission(GuildPermission.KickMembers)]
+    [RequireUserPermission(GuildPermission.BanMembers)]
+    [RequireBotPermission(GuildPermission.KickMembers)]
+    [RequireBotPermission(GuildPermission.BanMembers)]
     public async Task<RuntimeResult> WarnUserAsync
     (
         [Summary("User", "The user you want to warn.")]
@@ -111,8 +114,8 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
         string reason
     )
     {
-        if (reason.Length > 512)
-            return ExecutionResult.FromError("Warning reason must not exceed 512 characters.");
+        if (reason.Length > 32)
+            return ExecutionResult.FromError("Warning reason must not exceed 32 characters.");
 
         await DeferAsync();
 
@@ -129,20 +132,21 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             await databaseService.UserWarnings.AddAsync(newWarning);
             await databaseService.SaveChangesAsync();
 
-            EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
-                                                        .WithDescription($"Successfully warned user <@{targetUser.Id}>.");
+            EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context);
 
+            replyEmbed.Description = $"Successfully warned user {targetUser.Mention}.";
+            
             replyEmbed.AddField("\U0001f914 Reason", reason);
             replyEmbed.AddField("\U0001f6c2 Warn ID", newWarning.Id);
 
             //DM the user about it.
             try
             {
-                EmbedBuilder directMessageEmbed = new EmbedBuilder().BuildDefaultEmbed(Context)
-                                                                    .WithTitle("\u26A0\uFE0F You have been warned")
-                                                                    .WithDescription(
-                                                                        "You may see all of your warnings with the `/mod warns` command in the server.")
-                                                                    .WithColor(Constants.BadColor);
+                EmbedBuilder directMessageEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
+
+                directMessageEmbed.Title = "\u26A0\uFE0F You have been warned";
+                directMessageEmbed.Description = "You may see all of your warnings with the `/mod warns` command in the server.";
+                directMessageEmbed.Color = Constants.BadColor;
 
                 directMessageEmbed.AddField("\U0001faaa Server", Context.Guild.Name);
                 directMessageEmbed.AddField("\U0001f914 Reason", reason);
@@ -166,6 +170,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
     [RateLimit(1, 2)]
     [RequireContext(ContextType.Guild)]
     [RequireUserPermission(GuildPermission.KickMembers)]
+    [RequireUserPermission(GuildPermission.BanMembers)]
     public async Task<RuntimeResult> RemoveWarnAsync
     (
         [Summary("WarnId", "The ID of the warn you want to remove.")]
@@ -214,7 +219,6 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
             replyEmbed.Title = "\U0001f4c3 List of Warnings";
-            replyEmbed.Description = "Reasons longer than 48 characters will be truncated.\n\n";
 
             foreach (UserWarning warning in filteredWarnings)
             {
@@ -293,8 +297,9 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
         long untilDate = (DateTimeOffset.Now + duration).ToUnixTimeSeconds();
 
-        EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context)
-                                                    .WithDescription($"Successfully timed out user `{targetUser.GetFullUsername()}`.");
+        EmbedBuilder replyEmbed = new EmbedBuilder().BuildSuccessEmbed(Context);
+        
+        replyEmbed.Description = $"Successfully timed out user `{targetUser.GetFullUsername()}`.";
 
         replyEmbed.AddField("\U0001f914 Reason", muteReason);
         replyEmbed.AddField("\u23F1\uFE0F Duration", $"{days} day(s), {hours} hour(s), {minutes} minute(s) and {seconds} second(s).");
