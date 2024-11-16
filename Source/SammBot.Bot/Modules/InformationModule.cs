@@ -245,43 +245,15 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            switch (version.Major)
+            osName = version.Major switch
             {
-                case 10:
-                    switch (version.Minor)
-                    {
-                        case 15:
-                            osName = "macOS Catalina";
-
-                            break;
-                        default:
-                            osName = "Unknown macOS";
-
-                            break;
-                    }
-
-                    break;
-                case 11:
-                    osName = "macOS Big Sur";
-
-                    break;
-                case 12:
-                    osName = "macOS Monterey";
-
-                    break;
-                case 13:
-                    osName = "macOS Ventura";
-
-                    break;
-                case 14:
-                    osName = "macOS Sonoma";
-
-                    break;
-                default:
-                    osName = "Unknown macOS";
-
-                    break;
-            }
+                11 => "macOS Big Sur",
+                12 => "macOS Monterey",
+                13 => "macOS Ventura",
+                14 => "macOS Sonoma",
+                15 => "macOS Sequoia",
+                _ => "Unknown macOS"
+            };
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
