@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SammBot", "Source\SammBot.Bot\SammBot.Bot.csproj", "{5C9C0C3D-EE4A-4699-BC0D-5B1256EFC97C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SammBot", "Source\SammBot\SammBot.csproj", "{5C9C0C3D-EE4A-4699-BC0D-5B1256EFC97C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SammBot.Library", "Source\SammBot.Library\SammBot.Library.csproj", "{E93C6BE7-371F-4030-AE5C-CB4941B49759}"
 EndProject
