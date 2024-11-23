@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace SammBot.Services;
@@ -27,15 +28,27 @@ namespace SammBot.Services;
 public class InformationService
 {
     /// <summary>
+    /// A stopwatch that keeps track of the bot's uptime.
+    /// </summary>
+    public Stopwatch Uptime { get; } = new Stopwatch();
+    
+    /// <summary>
     /// The bot's current version.
     /// </summary>
     public string Version
     {
         get
         {
+            if (_version != null)
+                return _version;
+            
             Version botVersion = Assembly.GetEntryAssembly()!.GetName().Version!;
 
-            return botVersion.ToString(2);
+            _version = botVersion.ToString(2);
+
+            return _version;
         }
     }
+
+    private string? _version;
 }

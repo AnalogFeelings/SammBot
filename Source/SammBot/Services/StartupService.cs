@@ -102,8 +102,6 @@ public class StartupService
         _shardedClient.Log += DiscordLogAsync;
         _interactionService.Log += DiscordLogAsync;
 
-        Constants.RuntimeStopwatch.Stop();
-
         string botVersion = _informationService.Version;
 
         Console.Title = $"{Constants.BOT_NAME} v{botVersion}";
@@ -120,10 +118,12 @@ public class StartupService
         Console.WriteLine();
 
         await _logger.LogAsync(LogSeverity.Information, "Using Matcha {0}.", matchaVersion);
+        
+        _informationService.Uptime.Stop();
 
-        await _logger.LogAsync(LogSeverity.Information, "{0} took {1}ms to boot.", Constants.BOT_NAME, Constants.RuntimeStopwatch.ElapsedMilliseconds);
+        await _logger.LogAsync(LogSeverity.Information, "{0} took {1}ms to boot.", Constants.BOT_NAME, _informationService.Uptime.ElapsedMilliseconds);
 
-        Constants.RuntimeStopwatch.Restart();
+        _informationService.Uptime.Restart();
 
 #if DEBUG
         await _logger.LogAsync(LogSeverity.Warning, "{0} has been built on Debug configuration. Extra logging will be available.", Constants.BOT_NAME);

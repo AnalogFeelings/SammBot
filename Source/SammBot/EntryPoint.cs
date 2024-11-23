@@ -46,11 +46,10 @@ public class EntryPoint
     private InteractionService? _interactionService;
     private MatchaLogger? _matchaLogger;
     private SettingsService? _settingsService;
+    private InformationService? _informationService;
 
     public static async Task Main()
     {
-        Constants.RuntimeStopwatch.Start();
-
         EntryPoint entryPoint = new EntryPoint();
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
@@ -62,6 +61,9 @@ public class EntryPoint
     /// </summary>
     private async Task MainAsync()
     {
+        _informationService = new InformationService();
+        _informationService.Uptime.Start();
+        
         _settingsService = new SettingsService();
         if (!_settingsService.LoadConfiguration())
         {
@@ -135,12 +137,13 @@ public class EntryPoint
         serviceCollection.AddSingleton(_interactionService!);
         serviceCollection.AddSingleton(_matchaLogger!);
         serviceCollection.AddSingleton(_settingsService!);
+        serviceCollection.AddSingleton(_informationService!);
         serviceCollection.AddSingleton<HttpService>();
         serviceCollection.AddSingleton<ICommandService, CommandService>();
         serviceCollection.AddSingleton<StartupService>();
-        serviceCollection.AddSingleton<InformationService>();
         serviceCollection.AddSingleton<RandomService>();
         serviceCollection.AddSingleton<EventLoggingService>();
+        
         serviceCollection.AddScoped<IDatabaseService, DatabaseService>();
 
         return serviceCollection.BuildServiceProvider();

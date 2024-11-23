@@ -47,16 +47,11 @@ public static class Constants
     /// The bot's name.
     /// </summary>
     public const string BOT_NAME = "Samm-Bot";
-    
+
     /// <summary>
     /// The bot's config file's filename.
     /// </summary>
     public const string CONFIG_FILE = "config.json";
-    
-    /// <summary>
-    /// A stopwatch that keeps track of the bot's uptime.
-    /// </summary>
-    public static readonly Stopwatch RuntimeStopwatch = new Stopwatch();
     
     /// <summary>
     /// Allows only users to be notified from a message.

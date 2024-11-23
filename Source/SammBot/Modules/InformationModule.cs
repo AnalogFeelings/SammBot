@@ -58,9 +58,9 @@ public class InformationModule : InteractionModuleBase<ShardedInteractionContext
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         string elapsedUptime = string.Format("{0:00} days,\n{1:00} hours,\n{2:00} minutes",
-                                             Constants.RuntimeStopwatch.Elapsed.Days,
-                                             Constants.RuntimeStopwatch.Elapsed.Hours,
-                                             Constants.RuntimeStopwatch.Elapsed.Minutes);
+                                             _informationService.Uptime.Elapsed.Days,
+                                             _informationService.Uptime.Elapsed.Hours,
+                                             _informationService.Uptime.Elapsed.Minutes);
         long memoryUsage = Process.GetCurrentProcess().PrivateMemorySize64 / 1000000;
 
 #if DEBUG
