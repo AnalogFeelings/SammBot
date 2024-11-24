@@ -65,7 +65,7 @@ public class EntryPoint
         _informationService.Uptime.Start();
         
         _settingsService = new SettingsService();
-        if (!_settingsService.LoadConfiguration())
+        if (_settingsService.Settings == null)
         {
             Console.WriteLine($"Could not load {Constants.CONFIG_FILE}. Please check the documentation for an example configuration file.");
 

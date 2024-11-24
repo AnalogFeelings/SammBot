@@ -33,14 +33,15 @@ public class SettingsService
     /// <summary>
     /// The loaded settings in memory.
     /// </summary>
-    public BotConfig Settings { get; private set; } = null!;
+    public BotConfig? Settings { get; init; }
     
     /// <summary>
+    /// Initializes a new instance of <see cref="SettingsService"/>.
+    /// <para/>
     /// Loads the configuration from the bot's data directory into memory.
     /// </summary>
     /// <returns>True if the configuration was loaded successfully.</returns>
-    [MemberNotNullWhen(true, nameof(Settings))]
-    public bool LoadConfiguration()
+    public SettingsService()
     {
         string configFilePath = Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE);
 
@@ -49,22 +50,19 @@ public class SettingsService
             Directory.CreateDirectory(Constants.BotDataDirectory);
 
             if (!File.Exists(configFilePath)) 
-                return false;
+                return;
             
             string configContent = File.ReadAllText(configFilePath);
             BotConfig? config = JsonSerializer.Deserialize<BotConfig>(configContent, Constants.JsonSettings);
 
             if (config == default)
-                return false;
+                return;
             
-            Settings = config;
-
-            return true;
-
+            this.Settings = config;
         }
         catch (Exception)
         {
-            return false;
+            // Do nothing.
         }
     }
 }

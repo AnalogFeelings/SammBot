@@ -27,7 +27,7 @@
   "KillMessages": [
     "%victim% was walking on the street, when %murderer% stabbed them.",
     "%murderer% stabbed %victim%.",
-    "%murderer% shot %victim% in the head.",
+    "%murderer% shot %victim% in the head."
   ],
   "StatusList": [
     {
