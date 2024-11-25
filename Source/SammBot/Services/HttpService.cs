@@ -157,7 +157,7 @@ public class HttpService
         }
         
         // This domain has a queue.
-        if (_queueDictionary.TryGetValue(uriBuilder.Host, out TaskQueue? queue) && queue != default)
+        if (_queueDictionary.TryGetValue(uriBuilder.Host, out TaskQueue? queue))
             return await queue.Enqueue(GetStreamRemote, CancellationToken.None);
 
         return await GetStreamRemote();

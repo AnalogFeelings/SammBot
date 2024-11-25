@@ -13,21 +13,23 @@
 // GNU General Public License for more details.
 // 
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
 #endregion
 
 using System.Text.Json.Serialization;
 
 namespace SammBot.Library.Models.Animal;
 
-/// <summary>
-/// A record that contains a duck image from the random-d.uk API.
-/// </summary>
-public record DuckImage
+public record DogImage
 {
+    [JsonPropertyName("id")]
+    public required string Id;
+    
     [JsonPropertyName("url")]
-    public required string ImageUrl;
-
-    [JsonPropertyName("message")]
-    public required string Message;
+    public required string Url;
+    
+    [JsonPropertyName("width")]
+    public required int Width;
+    [JsonPropertyName("height")]
+    public required int Height;
 }

@@ -21,7 +21,7 @@ using System.Text.Json.Serialization;
 namespace SammBot.Library.Models.Animal;
 
 /// <summary>
-/// A class that contains a fox image from the Random Fox API.
+/// A record that contains a fox image from the Random Fox API.
 /// </summary>
 public record FoxImage
 {

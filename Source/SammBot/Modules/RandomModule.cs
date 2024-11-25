@@ -25,8 +25,6 @@ using SammBot.Library.Extensions;
 using SammBot.Library.Models;
 using SammBot.Library.Models.Animal;
 using SammBot.Library.Preconditions;
-using SharpCat.Types.Cat;
-using SharpCat.Types.Dog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,12 +38,10 @@ namespace SammBot.Modules;
 [ModuleEmoji("\U0001f3b0")]
 public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private readonly RandomService _randomService;
     private readonly HttpService _httpService;
 
     public RandomModule(IServiceProvider provider)
     {
-        _randomService = provider.GetRequiredService<RandomService>();
         _httpService = provider.GetRequiredService<HttpService>();
     }
 
@@ -56,27 +52,15 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
 
-        CatImageSearchParams searchParameters = new CatImageSearchParams()
-        {
-            has_breeds = true,
-            mime_types = "jpg,png,gif",
-            size = "small",
-            limit = 1
-        };
-
-        List<CatImage> retrievedImages = await _randomService.CatRequester.GetImageAsync(searchParameters);
-
+        List<CatImage>? retrievedImages = await _httpService.GetObjectFromJsonAsync<List<CatImage>>("https://api.thecatapi.com/v1/images/search");
+        
+        if (retrievedImages == null || retrievedImages.Count == 0)
+            return ExecutionResult.FromError("Could not retrieve a cat image! The service may be unavailable.");
+        
         CatImage retrievedImage = retrievedImages.First();
-        CatBreed? retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
-
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         replyEmbed.Title = "\U0001f431 Random Cat";
-        replyEmbed.Description = retrievedBreed != default(CatBreed)
-                                     ? $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
-                                       $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}"
-                                     : string.Empty;
-
         replyEmbed.Color = new Color(255, 204, 77);
         replyEmbed.ImageUrl = retrievedImage.Url;
 
@@ -92,27 +76,15 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
     {
         await DeferAsync();
 
-        DogImageSearchParams searchParameters = new DogImageSearchParams()
-        {
-            has_breeds = true,
-            mime_types = "jpg,png,gif",
-            size = "small",
-            limit = 1
-        };
-
-        List<DogImage> retrievedImages = await _randomService.DogRequester.GetImageAsync(searchParameters);
+        List<DogImage>? retrievedImages = await _httpService.GetObjectFromJsonAsync<List<DogImage>>("https://api.thedogapi.com/v1/images/search");
+        
+        if (retrievedImages == null || retrievedImages.Count == 0)
+            return ExecutionResult.FromError("Could not retrieve a dog image! The service may be unavailable.");
 
         DogImage retrievedImage = retrievedImages.First();
-        DogBreed? retrievedBreed = retrievedImage.Breeds?.FirstOrDefault();
-
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
         replyEmbed.Title = "\U0001f436 Random Dog";
-        replyEmbed.Description = retrievedBreed != default(DogBreed)
-                                     ? $"\U0001f43e **Breed**: {retrievedBreed.Name}\n" +
-                                       $"\u2764\uFE0F **Temperament**: {retrievedBreed.Temperament}"
-                                     : string.Empty;
-
         replyEmbed.Color = new Color(217, 158, 130);
         replyEmbed.ImageUrl = retrievedImage.Url;
 

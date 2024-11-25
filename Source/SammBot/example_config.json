@@ -3,8 +3,6 @@
   "WaitForDebugger": false,
   "OnlyOwnerMode": false,
   "BotToken": null,
-  "CatKey": null,
-  "DogKey": null,
   "OpenWeatherKey": null,
   "TwitchUrl": null,
   "OwnerUserId": null,

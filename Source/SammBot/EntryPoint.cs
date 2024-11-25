@@ -141,7 +141,6 @@ public class EntryPoint
         serviceCollection.AddSingleton<HttpService>();
         serviceCollection.AddSingleton<ICommandService, CommandService>();
         serviceCollection.AddSingleton<StartupService>();
-        serviceCollection.AddSingleton<RandomService>();
         serviceCollection.AddSingleton<EventLoggingService>();
         
         serviceCollection.AddScoped<IDatabaseService, DatabaseService>();

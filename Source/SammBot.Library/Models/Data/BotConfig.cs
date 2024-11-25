@@ -41,11 +41,8 @@ public record BotConfig
     public bool WaitForDebugger { get; set; } = false;
     public string TwitchUrl { get; set; } = "https://www.twitch.tv/coreaesthetics";
     public string CommandLogFormat { get; set; } = "Executing command \"{0}\". Channel: #{1}. User: @{2}.";
-
     public string HttpUserAgent { get; set; } = "Placeholder User Agent (.NET Application)";
 
     // API Tokens
     public string BotToken { get; set; } = string.Empty;
-    public string CatKey { get; set; } = string.Empty;
-    public string DogKey { get; set; } = string.Empty;
 }
