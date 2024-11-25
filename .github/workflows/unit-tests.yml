@@ -2,12 +2,12 @@
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "dev" ]
     paths:
       - '**.cs'
       - '**.csproj'
   pull_request:
-    branches: [ "master" ]
+    branches: [ "dev" ]
     paths:
       - '**.cs'
       - '**.csproj'
