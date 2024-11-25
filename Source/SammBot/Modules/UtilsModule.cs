@@ -19,17 +19,14 @@
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
 using SammBot.Library;
 using SammBot.Library.Attributes;
 using SammBot.Library.Extensions;
 using SammBot.Library.Models;
 using SammBot.Library.Preconditions;
 using SkiaSharp;
-using System;
 using System.IO;
 using System.Threading.Tasks;
-using SammBot.Services;
 
 namespace SammBot.Modules;
 
@@ -38,15 +35,6 @@ namespace SammBot.Modules;
 [ModuleEmoji("\U0001f527")]
 public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private readonly HttpService _httpService;
-    private readonly SettingsService _settingsService;
-
-    public UtilsModule(IServiceProvider provider)
-    {
-        _httpService = provider.GetRequiredService<HttpService>();
-        _settingsService = provider.GetRequiredService<SettingsService>();
-    }
-
     [SlashCommand("viewhex", "Displays a HEX color, and converts it in other formats.")]
     [DetailedDescription("Sends an image with the provided color as background, and a piece of text with the color written in the middle. " +
                          "Also converts it to RGB, CMYK, HSV and HSL.")]

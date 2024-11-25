@@ -51,7 +51,7 @@ public class HttpService
         
         SettingsService settingsService = services.GetRequiredService<SettingsService>();
 
-        _client.DefaultRequestHeaders.Add("User-Agent", settingsService.Settings.HttpUserAgent);
+        _client.DefaultRequestHeaders.Add("User-Agent", settingsService.Settings!.HttpUserAgent);
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public class HttpService
         }
 
         // This domain has a queue.
-        if (_queueDictionary.TryGetValue(uriBuilder.Host, out TaskQueue? queue) && queue != default)
+        if (_queueDictionary.TryGetValue(uriBuilder.Host, out TaskQueue? queue))
             return await queue.Enqueue(GetJsonRemote, CancellationToken.None);
 
         return await GetJsonRemote();

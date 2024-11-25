@@ -35,6 +35,7 @@ public class ObjectExtensionsTests
     }
 }
 
+// ReSharper disable UnusedMember.Local
 file class TestClass
 {
     [UglyName("testString")] 
@@ -43,3 +44,4 @@ file class TestClass
     [UglyName("testInt")] 
     public int TestInt { get; } = 2;
 }
+// ReSharper restore UnusedMember.Local

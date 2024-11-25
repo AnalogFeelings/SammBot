@@ -124,7 +124,7 @@ public class CommandService : ICommandService
     {
         ShardedInteractionContext context = new ShardedInteractionContext(_shardedClient, interaction);
 
-        if (_settingsService.Settings.OnlyOwnerMode)
+        if (_settingsService.Settings!.OnlyOwnerMode)
         {
             IApplication botApplication = await _shardedClient.GetApplicationInfoAsync();
 
@@ -137,7 +137,7 @@ public class CommandService : ICommandService
             ["username"] = interaction.User.GetFullUsername(),
             ["channelname"] = interaction.Channel.Name
         };
-        string formattedLog = _settingsService.Settings.CommandLogFormat.TemplateReplace(template);
+        string formattedLog = _settingsService.Settings!.CommandLogFormat.TemplateReplace(template);
 
         await _logger.LogAsync(LogSeverity.Debug, formattedLog);
 #endif

@@ -40,7 +40,7 @@ public class RandomService
     {
         SettingsService settingsService = services.GetRequiredService<SettingsService>();
         
-        CatRequester = new SharpCatRequester(settingsService.Settings.CatKey);
-        DogRequester = new SharpDogRequester(settingsService.Settings.DogKey);
+        CatRequester = new SharpCatRequester(settingsService.Settings!.CatKey);
+        DogRequester = new SharpDogRequester(settingsService.Settings!.DogKey);
     }
 }

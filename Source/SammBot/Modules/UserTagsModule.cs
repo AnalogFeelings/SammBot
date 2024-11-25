@@ -128,7 +128,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
         using (DatabaseService databaseService = new DatabaseService())
         {
             List<UserTag> allTags = await databaseService.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToListAsync();
-            List<UserTag> filteredTags = allTags.Where(x => searchTerm.DamerauDistance(x.Name, _settingsService.Settings.TagDistance) < int.MaxValue).Take(25).ToList();
+            List<UserTag> filteredTags = allTags.Where(x => searchTerm.DamerauDistance(x.Name, _settingsService.Settings!.TagDistance) < int.MaxValue).Take(25).ToList();
 
             if (!filteredTags.Any())
                 return ExecutionResult.FromError($"No tags found with a name similar to \"{searchTerm}\".");

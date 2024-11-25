@@ -88,7 +88,7 @@ public class StartupService
     public async Task StartAsync()
     {
         await _logger.LogAsync(LogSeverity.Information, "Logging in as a bot...");
-        await _shardedClient.LoginAsync(TokenType.Bot, _settingsService.Settings.BotToken);
+        await _shardedClient.LoginAsync(TokenType.Bot, _settingsService.Settings!.BotToken);
         await _shardedClient.StartAsync();
         await _logger.LogAsync(LogSeverity.Success, "Succesfully connected to web socket.");
 
@@ -175,7 +175,7 @@ public class StartupService
 
             if (_shardsReady == _shardedClient.Shards.Count)
             {
-                if (_settingsService.Settings.StatusList.Count > 0 && _settingsService.Settings.RotatingStatus)
+                if (_settingsService.Settings!.StatusList.Count > 0 && _settingsService.Settings.RotatingStatus)
                     _statusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 
                 await _interactionService.RegisterCommandsGloballyAsync();
@@ -213,9 +213,9 @@ public class StartupService
     {
         try
         {
-            BotStatus chosenStatus = _settingsService.Settings.StatusList.PickRandom();
+            BotStatus chosenStatus = _settingsService.Settings!.StatusList.PickRandom();
             ActivityType gameType = chosenStatus.Type;
-            string? gameUrl = gameType == ActivityType.Streaming ? _settingsService.Settings.TwitchUrl : null;
+            string? gameUrl = gameType == ActivityType.Streaming ? _settingsService.Settings!.TwitchUrl : null;
 
             if (gameType == ActivityType.CustomStatus)
                 await _shardedClient.SetCustomStatusAsync(chosenStatus.Content);

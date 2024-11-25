@@ -137,7 +137,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         SocketGuildUser targetUser
     )
     {
-        string chosenKaomoji = _settingsService.Settings.HugKaomojis.PickRandom();
+        string chosenKaomoji = _settingsService.Settings!.HugKaomojis.PickRandom();
 
         SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
 
@@ -195,7 +195,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     {
         SocketGuildUser authorUser = (Context.Interaction.User as SocketGuildUser)!;
 
-        string chosenMessage = _settingsService.Settings.KillMessages.PickRandom();
+        string chosenMessage = _settingsService.Settings!.KillMessages.PickRandom();
         Dictionary<string, object?> template = new Dictionary<string, object?>()
         {
             ["murderer"] = Format.Bold(authorUser.DisplayName),
@@ -316,20 +316,20 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             if (percentage < _shipSegments[i])
             {
                 if (i == 0)
-                    progressBar += _settingsService.Settings.ShipBarStartEmpty;
+                    progressBar += _settingsService.Settings!.ShipBarStartEmpty;
                 else if (i == _shipSegments.Length - 1)
-                    progressBar += _settingsService.Settings.ShipBarEndEmpty;
+                    progressBar += _settingsService.Settings!.ShipBarEndEmpty;
                 else
-                    progressBar += _settingsService.Settings.ShipBarHalfEmpty;
+                    progressBar += _settingsService.Settings!.ShipBarHalfEmpty;
             }
             else
             {
                 if (i == 0)
-                    progressBar += _settingsService.Settings.ShipBarStartFull;
+                    progressBar += _settingsService.Settings!.ShipBarStartFull;
                 else if (i == _shipSegments.Length - 1)
-                    progressBar += _settingsService.Settings.ShipBarEndFull;
+                    progressBar += _settingsService.Settings!.ShipBarEndFull;
                 else
-                    progressBar += _settingsService.Settings.ShipBarHalfFull;
+                    progressBar += _settingsService.Settings!.ShipBarHalfFull;
             }
         }
 
