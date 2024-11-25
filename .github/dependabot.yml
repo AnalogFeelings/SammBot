@@ -2,10 +2,10 @@ version: 2
 updates:
   # For the bot itself.
   - package-ecosystem: "nuget"
-    directory: "/Source/SammBot.Bot"
+    directory: "/Source/SammBot"
     schedule:
       interval: "daily"
-    target-branch: "master"
+    target-branch: "dev"
     labels:
       - "dependencies"
       - "bot"
@@ -35,7 +35,7 @@ updates:
     directory: "/Source/SammBot.Library"
     schedule:
       interval: "daily"
-    target-branch: "master"
+    target-branch: "dev"
     labels:
       - "dependencies"
       - "library"
@@ -65,7 +65,7 @@ updates:
     directory: "/Source/SammBot.Tests"
     schedule:
       interval: "daily"
-    target-branch: "master"
+    target-branch: "dev"
     labels:
       - "dependencies"
       - "tests"
