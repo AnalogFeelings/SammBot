@@ -7,9 +7,9 @@
 
  [![GitHub issues](https://img.shields.io/github/issues/analogfeelings/sammbot?style=flat-square&logo=github&label=Issues)](https://github.com/AnalogFeelings/sammbot/issues)
  [![GitHub pull requests](https://img.shields.io/github/issues-pr/analogfeelings/sammbot?label=Pull%20Requests&style=flat-square&logo=github)](https://github.com/AnalogFeelings/sammbot/pulls)
- [![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/analogfeelings/sammbot/unit-tests.yml?branch=master&label=Unit%20Tests&style=flat-square&logo=githubactions&logoColor=white)](https://github.com/AnalogFeelings/SammBot/actions)
+ [![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/analogfeelings/sammbot/unit-tests.yml?branch=dev&label=Unit%20Tests&style=flat-square&logo=githubactions&logoColor=white)](https://github.com/AnalogFeelings/SammBot/actions)
  [![GitHub](https://img.shields.io/github/license/analogfeelings/sammbot?label=License&style=flat-square&logo=opensourceinitiative&logoColor=white)](https://github.com/AnalogFeelings/sammbot/blob/master/LICENSE)
- [![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot/master?label=Commit%20Activity&style=flat-square&logo=github)](https://github.com/AnalogFeelings/sammbot/graphs/commit-activity)
+ [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/analogfeelings/sammbot?style=flat-square&logo=github&label=Commit%20Activity)](https://github.com/AnalogFeelings/sammbot/graphs/commit-activity)
  [![GitHub Repo stars](https://img.shields.io/github/stars/analogfeelings/sammbot?label=Stargazers&style=flat-square&logo=github)](https://github.com/AnalogFeelings/sammbot/stargazers)
  [![Mastodon Follow](https://img.shields.io/mastodon/follow/109309123442839534?domain=https%3A%2F%2Ftech.lgbt%2F&style=flat-square&logo=mastodon&logoColor=white&label=Follow%20Me!&color=6364ff)](https://tech.lgbt/@analog_feelings)
 
