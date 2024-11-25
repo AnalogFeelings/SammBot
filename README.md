@@ -1,8 +1,8 @@
 <div align="center">
 
  <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/Branding/Readme/SammBotDark.png"/>
-  <img alt="SammBot Logo" src="/Branding/Readme/SammBotLight.png"/>
+  <source media="(prefers-color-scheme: dark)" srcset="/Assets/Branding/Readme/SammBotDark.png"/>
+  <img alt="SammBot Logo" src="/Assets/Branding/Readme/SammBotLight.png"/>
  </picture>
 
  [![GitHub issues](https://img.shields.io/github/issues/analogfeelings/sammbot?style=flat-square&logo=github&label=Issues)](https://github.com/AnalogFeelings/sammbot/issues)
