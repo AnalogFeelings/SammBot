@@ -20,11 +20,9 @@ using AnalogFeelings.Matcha;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using Figgle;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
-using Pastel;
 using SammBot.Library;
 using SammBot.Library.Extensions;
 using System;
@@ -35,7 +33,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using SammBot.Library.Models.Data;
 using SammBot.Library.Services;
-using Color = System.Drawing.Color;
 
 namespace SammBot.Services;
 
@@ -103,21 +100,14 @@ public class StartupService
         _interactionService.Log += DiscordLogAsync;
 
         string botVersion = _informationService.Version;
-
-        Console.Title = $"{Constants.BOT_NAME} v{botVersion}";
-
-        string discordNetVersion = Assembly.GetAssembly(typeof(SessionStartLimit))!.GetName().Version!.ToString(3);
+        string discordNetVersion = DiscordConfig.Version;
         string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger))!.GetName().Version!.ToString(3);
 
+        Console.Title = $"{Constants.BOT_NAME} v{botVersion}";
         Console.Clear();
 
-        Console.Write(FiggleFonts.Slant.Render(Constants.BOT_NAME).Pastel(Color.SkyBlue));
-        Console.Write("===========".Pastel(Color.CadetBlue));
-        Console.Write($"Source code v{botVersion}, Discord.NET {discordNetVersion}".Pastel(Color.LightCyan));
-        Console.WriteLine("===========".Pastel(Color.CadetBlue));
-        Console.WriteLine();
-
-        await _logger.LogAsync(LogSeverity.Information, "Using Matcha {0}.", matchaVersion);
+        await _logger.LogAsync(LogSeverity.Information, "{0} v{1} - Copyright (C) 2021-2024 Analog Feelings", Constants.BOT_NAME, botVersion);
+        await _logger.LogAsync(LogSeverity.Information, "Using Matcha v{0}, Discord.NET v{1}.", matchaVersion, discordNetVersion);
         
         _informationService.Uptime.Stop();
 
@@ -125,15 +115,11 @@ public class StartupService
 
         _informationService.Uptime.Restart();
 
-#if DEBUG
-        await _logger.LogAsync(LogSeverity.Warning, "{0} has been built on Debug configuration. Extra logging will be available.", Constants.BOT_NAME);
-#endif
-
         if (_settingsService.Settings.OnlyOwnerMode)
             await _logger.LogAsync(LogSeverity.Warning, "Only Owner Mode is active. {0} will only handle commands sent by the bot account owner.", Constants.BOT_NAME);
 
         await _logger.LogAsync(LogSeverity.Information, "Thawing the bot database...");
-        _ = Task.Run(() => ThawBotDatabase());
+        _ = Task.Run(ThawBotDatabase);
 
         await _logger.LogAsync(LogSeverity.Information, "Initializing command handler...");
         await _commandService.InitializeHandlerAsync();
