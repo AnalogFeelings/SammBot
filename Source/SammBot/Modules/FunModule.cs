@@ -38,7 +38,7 @@ namespace SammBot.Modules;
 
 [PrettyName("Fun")]
 [Group("fun", "Games and fun!")]
-[ModuleEmoji("\U0001F3B2")]
+[ModuleEmoji(Constants.DIE_EMOJI)]
 public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpService _httpService;
@@ -253,27 +253,27 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         {
             case 0:
                 percentageText = "Incompatible!";
-                percentageEmoji = "\u274C";
+                percentageEmoji = Constants.CROSS_MARK_EMOJI;
 
                 break;
             case < 25:
                 percentageText = "Awful!";
-                percentageEmoji = "\U0001f494";
+                percentageEmoji = Constants.BROKEN_HEART_EMOJI;
 
                 break;
             case < 50:
                 percentageText = "Not Bad!";
-                percentageEmoji = "\u2764\uFE0F";
+                percentageEmoji = Constants.RED_HEART_EMOJI;
 
                 break;
             case < 75:
                 percentageText = "Decent!";
-                percentageEmoji = "\U0001f49d";
+                percentageEmoji = Constants.RIBBON_HEART_EMOJI;
 
                 break;
             case < 85:
                 percentageText = "True Love!";
-                percentageEmoji = "\U0001f496";
+                percentageEmoji = Constants.SPARKLE_HEART_EMOJI;
 
                 break;
             case < 100:

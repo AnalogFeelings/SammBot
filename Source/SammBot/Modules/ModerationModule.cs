@@ -144,7 +144,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
             {
                 EmbedBuilder directMessageEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-                directMessageEmbed.Title = "\u26A0\uFE0F You have been warned";
+                directMessageEmbed.Title = $"{Constants.WARNING_EMOJI} You have been warned";
                 directMessageEmbed.Description = "You may see all of your warnings with the `/mod warns` command in the server.";
                 directMessageEmbed.Color = Constants.BadColor;
 
@@ -222,7 +222,7 @@ public class ModerationModule : InteractionModuleBase<ShardedInteractionContext>
 
             foreach (UserWarning warning in filteredWarnings)
             {
-                replyEmbed.Description += $"\u26A0\uFE0F **ID**: `{warning.Id}`\n";
+                replyEmbed.Description += $"{Constants.WARNING_EMOJI} **ID**: `{warning.Id}`\n";
                 replyEmbed.Description += $"**· Creation Date**: <t:{warning.Date}:F>\n";
                 replyEmbed.Description += $"**· Reason**: {warning.Reason.Truncate(48)}\n\n";
             }
