@@ -59,7 +59,7 @@ public static class EmbedExtensions
     {
         EmbedBuilder defaultEmbed = builder.BuildDefaultEmbed(context);
         
-        defaultEmbed.Title = $"{Constants.WHITE_CHECKMARK_EMOJI} Success";
+        defaultEmbed.Title = "\u2705 Success";
         defaultEmbed.Color = Constants.GoodColor;
 
         return defaultEmbed;
@@ -75,7 +75,7 @@ public static class EmbedExtensions
     {
         EmbedBuilder defaultEmbed = builder.BuildDefaultEmbed(context);
         
-        defaultEmbed.Title = $"{Constants.WARNING_EMOJI} An error has occurred";
+        defaultEmbed.Title = "\u26A0\uFE0F An error has occurred";
         defaultEmbed.Color = Constants.BadColor;
 
         return defaultEmbed;

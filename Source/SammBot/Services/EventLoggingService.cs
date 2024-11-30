@@ -169,7 +169,7 @@ public class EventLoggingService
             {
                 EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                replyEmbed.Title = $"{Constants.CROSS_MARK_EMOJI} Message Deleted";
+                replyEmbed.Title = "\u274C Message Deleted";
                 replyEmbed.Description = "A message has been deleted.";
                 replyEmbed.WithColor(Constants.VeryBadColor);
 
@@ -236,7 +236,7 @@ public class EventLoggingService
             {
                 EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                replyEmbed.Title = $"{Constants.CROSS_MARK_EMOJI} Messages Bulk Deleted";
+                replyEmbed.Title = "\u274C Messages Bulk Deleted";
                 replyEmbed.Description = "Multiple messages have been deleted at once.";
                 replyEmbed.WithColor(Constants.VeryBadColor);
 
@@ -420,7 +420,7 @@ public class EventLoggingService
             {
                 EmbedBuilder replyEmbed = new EmbedBuilder();
 
-                replyEmbed.Title = $"{Constants.WHITE_CHECKMARK_EMOJI} User Unbanned";
+                replyEmbed.Title = "\u2705 User Unbanned";
                 replyEmbed.Description = "A user has been unbanned from the server.";
                 replyEmbed.WithColor(Constants.GoodColor);
 

@@ -35,7 +35,7 @@ namespace SammBot.Modules;
 
 [PrettyName("Random")]
 [Group("random", "Random crazyness!")]
-[ModuleEmoji(Constants.SLOT_MACHINE_EMOJI)]
+[ModuleEmoji("\U0001f3b0")]
 public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpService _httpService;
@@ -60,7 +60,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         CatImage retrievedImage = retrievedImages.First();
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-        replyEmbed.Title = $"{Constants.CAT_EMOJI} Random Cat";
+        replyEmbed.Title = "\U0001f431 Random Cat";
         replyEmbed.Color = new Color(255, 204, 77);
         replyEmbed.ImageUrl = retrievedImage.Url;
 
@@ -84,7 +84,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
         DogImage retrievedImage = retrievedImages.First();
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-        replyEmbed.Title = $"{Constants.DOG_EMOJI} Random Dog";
+        replyEmbed.Title = "\U0001f436 Random Dog";
         replyEmbed.Color = new Color(217, 158, 130);
         replyEmbed.ImageUrl = retrievedImage.Url;
 
@@ -107,7 +107,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-        replyEmbed.Title = $"{Constants.FOX_EMOJI} Random Fox";
+        replyEmbed.Title = "\U0001f98a Random Fox";
         replyEmbed.Color = new Color(241, 143, 38);
         replyEmbed.ImageUrl = repliedImage.ImageUrl;
 
@@ -130,7 +130,7 @@ public class RandomModule : InteractionModuleBase<ShardedInteractionContext>
 
         EmbedBuilder replyEmbed = new EmbedBuilder().BuildDefaultEmbed(Context);
 
-        replyEmbed.Title = $"{Constants.DUCK_EMOJI} Random Duck";
+        replyEmbed.Title = "\U0001f986 Random Duck";
         replyEmbed.Color = new Color(62, 114, 29);
         replyEmbed.ImageUrl = repliedImage.ImageUrl;
 

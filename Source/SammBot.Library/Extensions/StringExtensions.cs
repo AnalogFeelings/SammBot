@@ -51,6 +51,31 @@ public static class StringExtensions
 
         return targetString;
     }
+
+    /// <summary>
+    /// Converts a country code such as "ES" to its unicode emoji codepoint.
+    /// </summary>
+    /// <param name="countryCode">The country code string to convert.</param>
+    /// <returns>The unicode codepoint for the country's flag.</returns>
+    public static string CountryCodeToFlag(this string countryCode)
+    {
+        return string.Concat(countryCode.ToUpper().Select(x => char.ConvertFromUtf32(x + 0x1F1A5)));
+    }
+
+    /// <summary>
+    /// Makes the first letter of a string uppercase.
+    /// </summary>
+    /// <param name="target">The string to capitalize.</param>
+    /// <returns>The capitalized string.</returns>
+    /// <exception cref="ArgumentException">Thrown if the string is null or white-space.</exception>
+    public static string CapitalizeFirst(this string target)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(target, nameof(target));
+
+        string resultString = char.ToUpper(target.First()) + target.Substring(1).ToLower();
+
+        return resultString;
+    }
     
     /// <summary>
     /// Calculates the Damerau-Levenshtein distance between a source and a target

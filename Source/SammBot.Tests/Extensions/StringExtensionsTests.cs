@@ -49,6 +49,29 @@ public class StringExtensionsTests
     }
 
     [TestMethod]
+    public void CountryCodeToFlagTest()
+    {
+        string actualFirst = "ES".CountryCodeToFlag();
+        string expectedFirst = "\U0001f1ea\U0001f1f8";
+
+        Assert.IsTrue(actualFirst == expectedFirst, $"Expected \"{expectedFirst}\", got \"{actualFirst}\".");
+
+        string actualSecond = "US".CountryCodeToFlag();
+        string expectedSecond = "\U0001f1fa\U0001f1f8";
+
+        Assert.IsTrue(actualSecond == expectedSecond, $"Expected \"{expectedSecond}\", got \"{actualSecond}\".");
+    }
+
+    [TestMethod]
+    public void CapitalizeFirstTest()
+    {
+        string actual = "lorem ipsum".CapitalizeFirst();
+        string expected = "Lorem ipsum";
+
+        Assert.IsTrue(actual == expected, $"Expected \"{expected}\", got \"{actual}\".");
+    }
+
+    [TestMethod]
     public void DamerauDistanceTest()
     {
         int actualFirst = "lorem psum".DamerauDistance("lorem ipsum", 3);
