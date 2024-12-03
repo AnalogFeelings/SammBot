@@ -12,7 +12,7 @@
         <PackageReference Include="JetBrains.Annotations" Version="2024.3.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0"/>
-        <PackageReference Include="SkiaSharp" Version="2.88.9"/>
+        <PackageReference Include="SkiaSharp" Version="3.116.0"/>
     </ItemGroup>
 
 </Project>
