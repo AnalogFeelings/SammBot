@@ -67,7 +67,9 @@ public class EntryPoint
         _settingsService = new SettingsService();
         if (_settingsService.Settings == null)
         {
-            Console.WriteLine($"Could not load {Constants.CONFIG_FILE}. Please check the documentation for an example configuration file.");
+            string configPath = Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE);
+            
+            Console.WriteLine($"Could not load {configPath}. Please check the documentation for an example configuration file.");
 
             PromptExit(1);
         }
