@@ -26,7 +26,8 @@ My main motivation is because currently, most large bots are owned by money-hung
 I wanted to make a free and open-source bot that people could rely on for simple server-keeping tasks such as warnings, logging and more.
 
 > [!IMPORTANT]  
-> Currently, the bot is in a **beta** state and is very unpolished.
+> Currently, the bot is undergoing an important rewrite for modularization.  
+> Progress can be tracked in [here](https://github.com/users/AnalogFeelings/projects/3).
 
 ## :trophy: Maintainers
 
