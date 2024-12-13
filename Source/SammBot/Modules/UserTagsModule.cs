@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using SammBot.Library.Models.Data;
 using SammBot.Services;
 
 namespace SammBot.Modules;
@@ -41,11 +42,13 @@ namespace SammBot.Modules;
 [ModuleEmoji("\U0001f3f7\uFE0F")]
 public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
 {
-    private readonly SettingsService _settingsService;
+    private readonly BotConfig _botConfig;
 
     public UserTagsModule(IServiceProvider provider)
     {
-        _settingsService = provider.GetRequiredService<SettingsService>();
+        SettingsService settingsService = provider.GetRequiredService<SettingsService>();
+
+        _botConfig = settingsService.GetSettings<BotConfig>()!;
     }
 
     [SlashCommand("delete", "Deletes a user tag.")]
@@ -128,7 +131,7 @@ public class UserTagsModule : InteractionModuleBase<ShardedInteractionContext>
         using (DatabaseService databaseService = new DatabaseService())
         {
             List<UserTag> allTags = await databaseService.UserTags.Where(x => x.GuildId == Context.Guild.Id).ToListAsync();
-            List<UserTag> filteredTags = allTags.Where(x => searchTerm.DamerauDistance(x.Name, _settingsService.Settings!.TagDistance) < int.MaxValue).Take(25).ToList();
+            List<UserTag> filteredTags = allTags.Where(x => searchTerm.DamerauDistance(x.Name, _botConfig.TagDistance) < int.MaxValue).Take(25).ToList();
 
             if (!filteredTags.Any())
                 return ExecutionResult.FromError($"No tags found with a name similar to \"{searchTerm}\".");

@@ -48,9 +48,9 @@ public static class Constants
     public const string BOT_NAME = "Samm-Bot";
 
     /// <summary>
-    /// The bot's config file's filename.
+    /// The bot's config storage folder.
     /// </summary>
-    public const string CONFIG_FILE = "config.json";
+    public const string CONFIG_FOLDER = "Config";
     
     /// <summary>
     /// Allows only users to be notified from a message.
@@ -61,6 +61,11 @@ public static class Constants
     /// The path to the bot's data storage directory.
     /// </summary>
     public static readonly string BotDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), BOT_NAME);
+
+    /// <summary>
+    /// The path to the bot's config storage directory.
+    /// </summary>
+    public static readonly string BotConfigPath = Path.Combine(BotDataDirectory, CONFIG_FOLDER);
     
     /// <summary>
     /// Default JSON serialization settings.

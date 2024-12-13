@@ -29,6 +29,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Extensions.DependencyInjection;
+using SammBot.Library.Models.Data;
 
 namespace SammBot.Services;
 
@@ -50,8 +51,9 @@ public class HttpService
         _queueDictionary = new ConcurrentDictionary<string, TaskQueue>();
         
         SettingsService settingsService = services.GetRequiredService<SettingsService>();
+        BotConfig botConfig = settingsService.GetSettings<BotConfig>()!;
 
-        _client.DefaultRequestHeaders.Add("User-Agent", settingsService.Settings!.HttpUserAgent);
+        _client.DefaultRequestHeaders.Add("User-Agent", botConfig.HttpUserAgent);
     }
 
     /// <summary>

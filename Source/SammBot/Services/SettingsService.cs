@@ -17,51 +17,83 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using AnalogFeelings.Matcha;
 using SammBot.Library;
-using SammBot.Library.Models.Data;
 
 namespace SammBot.Services;
 
 /// <summary>
-/// Contains the bot's settings and functions to handle them.
+/// Contains methods to get configuration from JSON files.
 /// </summary>
 public class SettingsService
 {
-    /// <summary>
-    /// The loaded settings in memory.
-    /// </summary>
-    public BotConfig? Settings { get; init; }
+    private readonly MatchaLogger _matchaLogger;
+
+    private readonly Dictionary<Type, object> _settingsCache  = new Dictionary<Type, object>();
     
     /// <summary>
     /// Initializes a new instance of <see cref="SettingsService"/>.
-    /// <para/>
-    /// Loads the configuration from the bot's data directory into memory.
     /// </summary>
     /// <returns>True if the configuration was loaded successfully.</returns>
-    public SettingsService()
+    public SettingsService(MatchaLogger logger)
     {
-        string configFilePath = Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE);
+        _matchaLogger = logger;
+    }
+    
+    /// <summary>
+    /// Fetches the settings data for the specified settings container type.
+    /// </summary>
+    /// <typeparam name="T">The settings container's type.</typeparam>
+    /// <returns>A populated container, or null if no data was found.</returns>
+    public T? GetSettings<T>() where T : class
+    {
+        Type settingsType = typeof(T);
+        
+        if(_settingsCache.TryGetValue(settingsType, out object? value))
+            return value as T;
+        
+        string @namespace = settingsType.Namespace!;
+        string directory = Path.Combine(Constants.BotConfigPath, @namespace);;
+        string file = Path.Combine(directory, settingsType.Name + ".json");
 
         try
         {
-            Directory.CreateDirectory(Constants.BotDataDirectory);
-
-            if (!File.Exists(configFilePath)) 
-                return;
-            
-            string configContent = File.ReadAllText(configFilePath);
-            BotConfig? config = JsonSerializer.Deserialize<BotConfig>(configContent, Constants.JsonSettings);
-
-            if (config == default)
-                return;
-            
-            this.Settings = config;
+            Directory.CreateDirectory(directory);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // Do nothing.
+            _matchaLogger.Log(LogSeverity.Error, $"Could not create settings directory \"{directory}\". Check your filesystem permissions.");
+
+            return null;
         }
+
+        if (!File.Exists(file))
+        {
+            _matchaLogger.Log(LogSeverity.Error, $"Could not find settings file \"{file}\". Creating default settings.");
+
+            T defaultSettings = Activator.CreateInstance<T>();
+            string serializedDefaultSettings = JsonSerializer.Serialize(defaultSettings, Constants.JsonSettings);
+            
+            File.WriteAllText(file, serializedDefaultSettings);
+            
+            return null;
+        }
+
+        string serializedSettings = File.ReadAllText(file);
+        T? deserializedSettings = JsonSerializer.Deserialize<T>(serializedSettings, Constants.JsonSettings);
+
+        if (deserializedSettings == null)
+        {
+            _matchaLogger.Log(LogSeverity.Error, $"Could not deserialize settings file \"{directory}\".");
+            
+            return null;
+        }
+        
+        _settingsCache[settingsType] = deserializedSettings;
+        
+        return deserializedSettings;
     }
 }

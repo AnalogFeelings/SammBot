@@ -45,8 +45,9 @@ public class StartupService
     private readonly DiscordShardedClient _shardedClient;
     private readonly InteractionService _interactionService;
     private readonly MatchaLogger _logger;
-    private readonly SettingsService _settingsService;
     private readonly InformationService _informationService;
+
+    private readonly BotConfig _botConfig;
 
     [UsedImplicitly]
     private Timer? _statusTimer;
@@ -77,8 +78,11 @@ public class StartupService
         _shardedClient = services.GetRequiredService<DiscordShardedClient>();
         _interactionService = services.GetRequiredService<InteractionService>();
         _logger = services.GetRequiredService<MatchaLogger>();
-        _settingsService = services.GetRequiredService<SettingsService>();
         _informationService = services.GetRequiredService<InformationService>();
+        
+        SettingsService settingsService = services.GetRequiredService<SettingsService>();
+        
+        _botConfig = settingsService.GetSettings<BotConfig>()!;
     }
 
     /// <summary>
@@ -88,7 +92,7 @@ public class StartupService
     public async Task StartAsync()
     {
         await _logger.LogAsync(LogSeverity.Information, "Logging in as a bot...");
-        await _shardedClient.LoginAsync(TokenType.Bot, _settingsService.Settings!.BotToken);
+        await _shardedClient.LoginAsync(TokenType.Bot, _botConfig.BotToken);
         await _shardedClient.StartAsync();
         await _logger.LogAsync(LogSeverity.Success, "Succesfully connected to web socket.");
 
@@ -115,7 +119,7 @@ public class StartupService
 
         _informationService.Uptime.Restart();
 
-        if (_settingsService.Settings.OnlyOwnerMode)
+        if (_botConfig.OnlyOwnerMode)
             await _logger.LogAsync(LogSeverity.Warning, "Only Owner Mode is active. {0} will only handle commands sent by the bot account owner.", Constants.BOT_NAME);
 
         await _logger.LogAsync(LogSeverity.Information, "Thawing the bot database...");
@@ -175,7 +179,7 @@ public class StartupService
 
             if (_shardsReady == _shardedClient.Shards.Count)
             {
-                if (_settingsService.Settings!.StatusList.Count > 0 && _settingsService.Settings.RotatingStatus)
+                if (_botConfig.StatusList.Count > 0 && _botConfig.RotatingStatus)
                     _statusTimer = new Timer(RotateStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
 
                 await _interactionService.RegisterCommandsGloballyAsync();
@@ -213,9 +217,9 @@ public class StartupService
     {
         try
         {
-            BotStatus chosenStatus = _settingsService.Settings!.StatusList.PickRandom();
+            BotStatus chosenStatus = _botConfig.StatusList.PickRandom();
             ActivityType gameType = chosenStatus.Type;
-            string? gameUrl = gameType == ActivityType.Streaming ? _settingsService.Settings!.TwitchUrl : null;
+            string? gameUrl = gameType == ActivityType.Streaming ? _botConfig.TwitchUrl : null;
 
             if (gameType == ActivityType.CustomStatus)
                 await _shardedClient.SetCustomStatusAsync(chosenStatus.Content);

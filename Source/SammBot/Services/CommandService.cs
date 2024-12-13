@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using SammBot.Library.Models.Data;
 using SammBot.Library.Services;
 
 namespace SammBot.Services;
@@ -41,7 +42,8 @@ public class CommandService : ICommandService
     private readonly MatchaLogger _logger;
     private readonly InteractionService _interactionService;
     private readonly EventLoggingService _eventLoggingService;
-    private readonly SettingsService _settingsService;
+
+    private readonly BotConfig _botConfig;
 
     /// <summary>
     /// Creates a new <see cref="CommandService"/>.
@@ -55,7 +57,10 @@ public class CommandService : ICommandService
         _shardedClient = _serviceProvider.GetRequiredService<DiscordShardedClient>();
         _logger = _serviceProvider.GetRequiredService<MatchaLogger>();
         _eventLoggingService = _serviceProvider.GetRequiredService<EventLoggingService>();
-        _settingsService = _serviceProvider.GetRequiredService<SettingsService>();
+        
+        SettingsService settingsService = _serviceProvider.GetRequiredService<SettingsService>();
+
+        _botConfig = settingsService.GetSettings<BotConfig>()!;
     }
 
     /// <summary>
@@ -124,7 +129,7 @@ public class CommandService : ICommandService
     {
         ShardedInteractionContext context = new ShardedInteractionContext(_shardedClient, interaction);
 
-        if (_settingsService.Settings!.OnlyOwnerMode)
+        if (_botConfig.OnlyOwnerMode)
         {
             IApplication botApplication = await _shardedClient.GetApplicationInfoAsync();
 
@@ -137,7 +142,7 @@ public class CommandService : ICommandService
             ["username"] = interaction.User.GetFullUsername(),
             ["channelname"] = interaction.Channel.Name
         };
-        string formattedLog = _settingsService.Settings!.CommandLogFormat.TemplateReplace(template);
+        string formattedLog = _botConfig.CommandLogFormat.TemplateReplace(template);
 
         await _logger.LogAsync(LogSeverity.Debug, formattedLog);
 #endif
