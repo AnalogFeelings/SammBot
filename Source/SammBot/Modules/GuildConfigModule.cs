@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using SammBot.Library.Services;
 using SammBot.Services;
 
 namespace SammBot.Modules;

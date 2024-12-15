@@ -49,7 +49,7 @@ public class EventLoggingService
     /// <param name="newUser">The new user object.</param>
     public async Task OnUserJoinedAsync(SocketGuildUser newUser)
     {
-        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        DatabaseService databaseService = _serviceProvider.GetRequiredService<DatabaseService>();
         SocketGuild currentGuild = newUser.Guild;
 
         GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
@@ -109,7 +109,7 @@ public class EventLoggingService
     /// <param name="user">The user that left.</param>
     public async Task OnUserLeftAsync(SocketGuild currentGuild, SocketUser user)
     {
-        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        DatabaseService databaseService = _serviceProvider.GetRequiredService<DatabaseService>();
         GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
 
         if (serverConfig == default(GuildConfig)) return;
@@ -156,7 +156,7 @@ public class EventLoggingService
 
         SocketGuildChannel? targetChannel = cachedChannel.Value as SocketGuildChannel;
 
-        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        DatabaseService databaseService = _serviceProvider.GetRequiredService<DatabaseService>();
         GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
 
         if (serverConfig == default(GuildConfig)) return;
@@ -223,7 +223,7 @@ public class EventLoggingService
 
         SocketGuildChannel? targetChannel = cachedChannel.Value as SocketGuildChannel;
 
-        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        DatabaseService databaseService = _serviceProvider.GetRequiredService<DatabaseService>();
         GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == targetChannel!.Guild.Id);
 
         if (serverConfig == default(GuildConfig)) return;
@@ -262,7 +262,7 @@ public class EventLoggingService
     /// <param name="newRole">The new role data.</param>
     public async Task OnRoleCreated(SocketRole newRole)
     {
-        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        DatabaseService databaseService = _serviceProvider.GetRequiredService<DatabaseService>();
         GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == newRole.Guild.Id);
 
         if (serverConfig == default(GuildConfig)) return;
@@ -307,7 +307,7 @@ public class EventLoggingService
 
         SocketGuild currentGuild = updatedRole.Guild;
 
-        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        DatabaseService databaseService = _serviceProvider.GetRequiredService<DatabaseService>();
         GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == currentGuild.Id);
 
         if (serverConfig == default(GuildConfig)) return;
@@ -366,7 +366,7 @@ public class EventLoggingService
     /// <param name="sourceGuild">The guild where the ban happened.</param>
     public async Task OnUserBanned(SocketUser bannedUser, SocketGuild sourceGuild)
     {
-        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        DatabaseService databaseService = _serviceProvider.GetRequiredService<DatabaseService>();
         GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuild.Id);
 
         if (serverConfig == default(GuildConfig)) return;
@@ -407,7 +407,7 @@ public class EventLoggingService
     /// <param name="sourceGuild">The guild where the unban happened.</param>
     public async Task OnUserUnbanned(SocketUser unbannedUser, SocketGuild sourceGuild)
     {
-        IDatabaseService databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+        DatabaseService databaseService = _serviceProvider.GetRequiredService<DatabaseService>();
         GuildConfig? serverConfig = databaseService.GuildConfigs.FirstOrDefault(x => x.GuildId == sourceGuild.Id);
 
         if (serverConfig == default(GuildConfig)) return;
