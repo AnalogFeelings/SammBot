@@ -26,12 +26,15 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Library;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using SammBot.Library.Models;
 using SammBot.Library.Models.Data;
 using SammBot.Library.Services;
 using SammBot.Services;
@@ -48,6 +51,7 @@ public class EntryPoint
     private MatchaLogger? _matchaLogger;
     private SettingsService? _settingsService;
     private InformationService? _informationService;
+    private PluginService? _pluginService;
 
     public static async Task Main()
     {
@@ -77,6 +81,10 @@ public class EntryPoint
 
             PromptExit(1);
         }
+
+        _pluginService = new PluginService(_settingsService, _matchaLogger);
+        
+        _pluginService.LoadPlugins();
 
 #if DEBUG
         if (config.WaitForDebugger && !Debugger.IsAttached)
@@ -134,6 +142,9 @@ public class EntryPoint
     private ServiceProvider ConfigureServiceProvider()
     {
         ServiceCollection serviceCollection = new ServiceCollection();
+        
+        foreach(KeyValuePair<IPlugin, Assembly> plugin in _pluginService!.Plugins)
+            plugin.Key.Initialize(serviceCollection);
 
         // The previous objects are always initialized by this point,
         // so use a null-forgiving operator to shut the compiler up.
@@ -142,6 +153,7 @@ public class EntryPoint
         serviceCollection.AddSingleton(_matchaLogger!);
         serviceCollection.AddSingleton(_settingsService!);
         serviceCollection.AddSingleton(_informationService!);
+        serviceCollection.AddSingleton(_pluginService!);
         serviceCollection.AddSingleton<HttpService>();
         serviceCollection.AddSingleton<ICommandService, CommandService>();
         serviceCollection.AddSingleton<StartupService>();

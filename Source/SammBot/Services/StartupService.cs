@@ -108,9 +108,8 @@ public class StartupService
         string matchaVersion = Assembly.GetAssembly(typeof(MatchaLogger))!.GetName().Version!.ToString(3);
 
         Console.Title = $"{Constants.BOT_NAME} v{botVersion}";
-        Console.Clear();
 
-        await _logger.LogAsync(LogSeverity.Information, "{0} v{1} - Copyright (C) 2021-2024 Analog Feelings", Constants.BOT_NAME, botVersion);
+        await _logger.LogAsync(LogSeverity.Success, "{0} v{1} - Copyright (C) 2021-2024 Analog Feelings", Constants.BOT_NAME, botVersion);
         await _logger.LogAsync(LogSeverity.Information, "Using Matcha v{0}, Discord.NET v{1}.", matchaVersion, discordNetVersion);
         
         _informationService.Uptime.Stop();
