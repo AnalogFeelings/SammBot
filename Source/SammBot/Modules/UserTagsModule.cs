@@ -33,7 +33,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using SammBot.Library.Models.Data;
-using SammBot.Library.Services;
 using SammBot.Services;
 
 namespace SammBot.Modules;

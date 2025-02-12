@@ -3,21 +3,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SammBot.Library.Services;
+using SammBot.Services;
 
 #nullable disable
 
 namespace SammBot.Migrations
 {
     [DbContext(typeof(DatabaseService))]
-    [Migration("20230318162015_AlternateIndices")]
-    partial class AlternateIndices
+    [Migration("20230531234928_RemovePronouns")]
+    partial class RemovePronouns
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
 
             modelBuilder.Entity("SammBot.Database.Models.GuildConfig", b =>
                 {
@@ -70,47 +70,6 @@ namespace SammBot.Migrations
                         .IsUnique();
 
                     b.ToTable("GuildConfigs");
-                });
-
-            modelBuilder.Entity("SammBot.Database.Models.Pronoun", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("DependentPossessive")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("IndependentPossessive")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Object")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ReflexivePlural")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ReflexiveSingular")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<ulong>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Pronouns");
                 });
 
             modelBuilder.Entity("SammBot.Database.Models.UserTag", b =>

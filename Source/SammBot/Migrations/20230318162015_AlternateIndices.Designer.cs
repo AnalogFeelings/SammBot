@@ -3,21 +3,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SammBot.Library.Services;
+using SammBot.Services;
 
 #nullable disable
 
 namespace SammBot.Migrations
 {
     [DbContext(typeof(DatabaseService))]
-    [Migration("20230219194706_AddGeneratedIds")]
-    partial class AddGeneratedIds
+    [Migration("20230318162015_AlternateIndices")]
+    partial class AlternateIndices
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
 
             modelBuilder.Entity("SammBot.Database.Models.GuildConfig", b =>
                 {
@@ -66,6 +66,9 @@ namespace SammBot.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GuildId")
+                        .IsUnique();
+
                     b.ToTable("GuildConfigs");
                 });
 
@@ -103,6 +106,9 @@ namespace SammBot.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Pronouns");
                 });

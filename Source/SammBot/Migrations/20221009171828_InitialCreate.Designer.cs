@@ -3,68 +3,39 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SammBot.Library.Services;
+using SammBot.Services;
 
 #nullable disable
 
 namespace SammBot.Migrations
 {
     [DbContext(typeof(DatabaseService))]
-    [Migration("20221012182248_GuildConfig_LoggingWelcome")]
-    partial class GuildConfig_LoggingWelcome
+    [Migration("20221009171828_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
 
-            modelBuilder.Entity("SammBot.Database.GuildConfig", b =>
+            modelBuilder.Entity("SammBotNET.Database.GuildConfig", b =>
                 {
                     b.Property<ulong>("GuildId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("EnableLogging")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("EnableWelcome")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(false);
-
-                    b.Property<ulong>("LogChannel")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0ul);
-
                     b.Property<int>("WarningLimit")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(3);
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("WarningLimitAction")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(2);
-
-                    b.Property<ulong>("WelcomeChannel")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0ul);
-
-                    b.Property<string>("WelcomeMessage")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValue("{0}, welcome to {1}! Remember to read the rules before chatting!");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("GuildId");
 
                     b.ToTable("GuildConfigs");
                 });
 
-            modelBuilder.Entity("SammBot.Database.Pronoun", b =>
+            modelBuilder.Entity("SammBotNET.Database.Pronoun", b =>
                 {
                     b.Property<ulong>("UserId")
                         .ValueGeneratedOnAdd()
@@ -93,7 +64,7 @@ namespace SammBot.Migrations
                     b.ToTable("Pronouns");
                 });
 
-            modelBuilder.Entity("SammBot.Database.UserTag", b =>
+            modelBuilder.Entity("SammBotNET.Database.UserTag", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -118,7 +89,7 @@ namespace SammBot.Migrations
                     b.ToTable("UserTags");
                 });
 
-            modelBuilder.Entity("SammBot.Database.UserWarning", b =>
+            modelBuilder.Entity("SammBotNET.Database.UserWarning", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");

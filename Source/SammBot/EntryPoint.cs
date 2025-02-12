@@ -159,7 +159,7 @@ public class EntryPoint
         serviceCollection.AddSingleton<StartupService>();
         serviceCollection.AddSingleton<EventLoggingService>();
         
-        serviceCollection.AddScoped<DatabaseService>();
+        serviceCollection.AddScoped<IDatabaseService, DatabaseService>();
 
         return serviceCollection.BuildServiceProvider();
     }

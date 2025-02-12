@@ -3,21 +3,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SammBot.Library.Services;
+using SammBot.Services;
 
 #nullable disable
 
 namespace SammBot.Migrations
 {
     [DbContext(typeof(DatabaseService))]
-    [Migration("20230218141010_NewWelcomeFormat")]
-    partial class NewWelcomeFormat
+    [Migration("20221012182248_GuildConfig_LoggingWelcome")]
+    partial class GuildConfig_LoggingWelcome
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
 
             modelBuilder.Entity("SammBot.Database.GuildConfig", b =>
                 {
@@ -56,10 +55,9 @@ namespace SammBot.Migrations
                         .HasDefaultValue(0ul);
 
                     b.Property<string>("WelcomeMessage")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValue("%usermention%, welcome to %servername%! Remember to read the rules before chatting!");
+                        .HasDefaultValue("{0}, welcome to {1}! Remember to read the rules before chatting!");
 
                     b.HasKey("GuildId");
 
@@ -73,27 +71,21 @@ namespace SammBot.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("DependentPossessive")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IndependentPossessive")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Object")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ReflexivePlural")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ReflexiveSingular")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Subject")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("UserId");
@@ -116,11 +108,9 @@ namespace SammBot.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Reply")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -140,7 +130,6 @@ namespace SammBot.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Reason")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<ulong>("UserId")

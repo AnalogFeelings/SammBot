@@ -16,16 +16,19 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using System.IO;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using SammBot.Library;
 using SammBot.Library.Models.Database;
+using SammBot.Library.Services;
 
-namespace SammBot.Library.Services;
+namespace SammBot.Services;
 
 /// <summary>
 /// A service for accessing the bot's database tables.
 /// </summary>
-public class DatabaseService : DbContext
+public class DatabaseService : DbContext, IDatabaseService
 {
     public DbSet<UserTag> UserTags { get; set; }
     public DbSet<UserWarning> UserWarnings { get; set; }
