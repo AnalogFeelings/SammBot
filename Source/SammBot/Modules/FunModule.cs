@@ -32,7 +32,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SammBot.Library.Models.Data;
 using SammBot.Services;
 
 namespace SammBot.Modules;
@@ -43,8 +42,7 @@ namespace SammBot.Modules;
 public class FunModule : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpService _httpService;
-
-    private readonly BotConfig _botConfig;
+    private readonly SettingsService _settingsService;
 
     private readonly int[] _shipSegments =
     [
@@ -80,10 +78,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     public FunModule(IServiceProvider provider)
     {
         _httpService = provider.GetRequiredService<HttpService>();
-        
-        SettingsService settingsService = provider.GetRequiredService<SettingsService>();
-
-        _botConfig = settingsService.GetSettings<BotConfig>()!;
+        _settingsService = provider.GetRequiredService<SettingsService>();
     }
 
     [SlashCommand("8ball", "Ask the magic 8-ball!")]
@@ -142,7 +137,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
         SocketGuildUser targetUser
     )
     {
-        string chosenKaomoji = _botConfig.HugKaomojis.PickRandom();
+        string chosenKaomoji = _settingsService.Settings!.HugKaomojis.PickRandom();
 
         SocketGuildUser authorGuildUser = (Context.Interaction.User as SocketGuildUser)!;
 
@@ -200,7 +195,7 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
     {
         SocketGuildUser authorUser = (Context.Interaction.User as SocketGuildUser)!;
 
-        string chosenMessage = _botConfig.KillMessages.PickRandom();
+        string chosenMessage = _settingsService.Settings!.KillMessages.PickRandom();
         Dictionary<string, object?> template = new Dictionary<string, object?>()
         {
             ["murderer"] = Format.Bold(authorUser.DisplayName),
@@ -321,20 +316,20 @@ public class FunModule : InteractionModuleBase<ShardedInteractionContext>
             if (percentage < _shipSegments[i])
             {
                 if (i == 0)
-                    progressBar += _botConfig.ShipBarStartEmpty;
+                    progressBar += _settingsService.Settings!.ShipBarStartEmpty;
                 else if (i == _shipSegments.Length - 1)
-                    progressBar += _botConfig.ShipBarEndEmpty;
+                    progressBar += _settingsService.Settings!.ShipBarEndEmpty;
                 else
-                    progressBar += _botConfig.ShipBarHalfEmpty;
+                    progressBar += _settingsService.Settings!.ShipBarHalfEmpty;
             }
             else
             {
                 if (i == 0)
-                    progressBar += _botConfig.ShipBarStartFull;
+                    progressBar += _settingsService.Settings!.ShipBarStartFull;
                 else if (i == _shipSegments.Length - 1)
-                    progressBar += _botConfig.ShipBarEndFull;
+                    progressBar += _settingsService.Settings!.ShipBarEndFull;
                 else
-                    progressBar += _botConfig.ShipBarHalfFull;
+                    progressBar += _settingsService.Settings!.ShipBarHalfFull;
             }
         }
 

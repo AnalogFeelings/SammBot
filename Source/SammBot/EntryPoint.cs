@@ -32,7 +32,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using SammBot.Library.Models.Data;
 using SammBot.Library.Services;
 using SammBot.Services;
 
@@ -64,22 +63,23 @@ public class EntryPoint
     {
         _informationService = new InformationService();
         _informationService.Uptime.Start();
-
-        Console.WriteLine("Initializing logger...");
-
-        _matchaLogger = InitializeLogger();
-        _settingsService = new SettingsService(_matchaLogger);
-
-        BotConfig? config = _settingsService.GetSettings<BotConfig>();
-        if (config == null)
+        
+        _settingsService = new SettingsService();
+        if (_settingsService.Settings == null)
         {
-            await _matchaLogger.LogAsync(LogSeverity.Fatal, $"Could not load main bot settings. Please fill the template file.");
+            string configPath = Path.Combine(Constants.BotDataDirectory, Constants.CONFIG_FILE);
+            
+            Console.WriteLine($"Could not load {configPath}. Please check the documentation for an example configuration file.");
 
             PromptExit(1);
         }
 
+        Console.WriteLine("Initializing logger...");
+
+        _matchaLogger = InitializeLogger();
+
 #if DEBUG
-        if (config.WaitForDebugger && !Debugger.IsAttached)
+        if (_settingsService.Settings.WaitForDebugger && !Debugger.IsAttached)
         {
             await _matchaLogger.LogAsync(LogSeverity.Information, "Waiting for debugger to attach...");
 
@@ -97,7 +97,7 @@ public class EntryPoint
         DiscordSocketConfig socketConfig = new DiscordSocketConfig()
         {
             LogLevel = Discord.LogSeverity.Warning,
-            MessageCacheSize = config.MessageCacheSize,
+            MessageCacheSize = _settingsService.Settings.MessageCacheSize,
             AlwaysDownloadUsers = true,
             GatewayIntents = GatewayIntents.All,
             LogGatewayIntentWarnings = false
@@ -119,9 +119,7 @@ public class EntryPoint
         await _matchaLogger.LogAsync(LogSeverity.Success, "Configured service provider successfully.");
         await _matchaLogger.LogAsync(LogSeverity.Information, "Starting the startup service...");
 
-        StartupService startupService = serviceProvider.GetRequiredService<StartupService>();
-
-        await startupService.StartAsync();
+        await serviceProvider.GetRequiredService<StartupService>().StartAsync();
 
         // Never exit unless a critical exception occurs.
         await Task.Delay(-1);
