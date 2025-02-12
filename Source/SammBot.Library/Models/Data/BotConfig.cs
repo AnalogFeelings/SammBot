@@ -24,7 +24,6 @@ public record BotConfig
     public List<string> HugKaomojis { get; set; } = new List<string>();
     public List<string> KillMessages { get; set; } = new List<string>();
     public List<BotStatus> StatusList { get; set; } = new List<BotStatus>();
-    public List<string> Plugins { get; set; } = new List<string>();
 
     // Emojis
     public string ShipBarStartEmpty { get; set; } = string.Empty;

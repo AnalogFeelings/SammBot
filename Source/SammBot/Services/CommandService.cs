@@ -27,7 +27,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using SammBot.Library.Models;
 using SammBot.Library.Models.Data;
 using SammBot.Library.Services;
 
@@ -43,7 +42,6 @@ public class CommandService : ICommandService
     private readonly MatchaLogger _logger;
     private readonly InteractionService _interactionService;
     private readonly EventLoggingService _eventLoggingService;
-    private readonly PluginService _pluginService;
 
     private readonly BotConfig _botConfig;
 
@@ -59,7 +57,6 @@ public class CommandService : ICommandService
         _shardedClient = _serviceProvider.GetRequiredService<DiscordShardedClient>();
         _logger = _serviceProvider.GetRequiredService<MatchaLogger>();
         _eventLoggingService = _serviceProvider.GetRequiredService<EventLoggingService>();
-        _pluginService = _serviceProvider.GetRequiredService<PluginService>();
         
         SettingsService settingsService = _serviceProvider.GetRequiredService<SettingsService>();
 
@@ -72,9 +69,6 @@ public class CommandService : ICommandService
     public async Task InitializeHandlerAsync()
     {
         await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
-        
-        foreach(KeyValuePair<IPlugin, Assembly> plugin in _pluginService.Plugins)
-            await _interactionService.AddModulesAsync(plugin.Value, _serviceProvider);
 
         _shardedClient.InteractionCreated += HandleInteractionAsync;
         _interactionService.InteractionExecuted += OnInteractionExecutedAsync;
