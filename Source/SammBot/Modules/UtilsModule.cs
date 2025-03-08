@@ -55,24 +55,22 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
             using (SKPaint paint = new SKPaint())
             {
-                paint.TextSize = 48;
                 paint.IsAntialias = true;
-                paint.TextAlign = SKTextAlign.Center;
 
                 //Use black or white depending on background color.
-                if ((parsedColor.Red * 0.299f + parsedColor.Green * 0.587f + parsedColor.Blue * 0.114f) > 149)
+                if (parsedColor.Red * 0.299f + parsedColor.Green * 0.587f + parsedColor.Blue * 0.114f > 149)
                     paint.Color = SKColors.Black;
                 else
                     paint.Color = SKColors.White;
 
+                SKFont textFont = new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48);
+                
                 //thanks stack overflow lol
                 int textPosVertical = imageInfo.Height / 2;
                 float textX = imageInfo.Width / 2f;
-                float textY = textPosVertical + (((-paint.FontMetrics.Ascent + paint.FontMetrics.Descent) / 2) - paint.FontMetrics.Descent);
+                float textY = textPosVertical + ((-textFont.Metrics.Ascent + textFont.Metrics.Descent) / 2 - textFont.Metrics.Descent);
 
-                SKFont textFont = new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 48);
-
-                surface.Canvas.DrawText(parsedColor.ToHexString(), textX, textY, textFont, paint);
+                surface.Canvas.DrawText(parsedColor.ToHexString(), textX, textY, SKTextAlign.Center, textFont, paint);
             }
 
             using (SKImage image = surface.Snapshot())
@@ -124,24 +122,22 @@ public class UtilsModule : InteractionModuleBase<ShardedInteractionContext>
 
             using (SKPaint paint = new SKPaint())
             {
-                paint.TextSize = 42;
                 paint.IsAntialias = true;
-                paint.TextAlign = SKTextAlign.Center;
 
                 //Use black or white depending on background color.
-                if ((parsedColor.Red * 0.299f + parsedColor.Green * 0.587f + parsedColor.Blue * 0.114f) > 149)
+                if (parsedColor.Red * 0.299f + parsedColor.Green * 0.587f + parsedColor.Blue * 0.114f > 149)
                     paint.Color = SKColors.Black;
                 else
                     paint.Color = SKColors.White;
 
+                SKFont textFont = new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 42);
+                
                 //thanks stack overflow lol
                 int textPosVertical = imageInfo.Height / 2;
                 float textX = imageInfo.Width / 2f;
-                float textY = textPosVertical + (((-paint.FontMetrics.Ascent + paint.FontMetrics.Descent) / 2) - paint.FontMetrics.Descent);
+                float textY = textPosVertical + ((-textFont.Metrics.Ascent + textFont.Metrics.Descent) / 2 - textFont.Metrics.Descent);
 
-                SKFont textFont = new SKFont(SKTypeface.FromFamilyName("JetBrains Mono"), 42);
-
-                surface.Canvas.DrawText(parsedColor.ToRgbString(), textX, textY, textFont, paint);
+                surface.Canvas.DrawText(parsedColor.ToRgbString(), textX, textY, SKTextAlign.Center, textFont, paint);
             }
 
             using (SKImage image = surface.Snapshot())
