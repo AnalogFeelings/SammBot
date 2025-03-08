@@ -19,14 +19,13 @@
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using SammBot.Library;
-using SammBot.Library.Attributes;
-using SammBot.Library.Extensions;
-using SammBot.Library.Models;
-using SammBot.Library.Preconditions;
 using SkiaSharp;
 using System.IO;
 using System.Threading.Tasks;
+using SammBot.Attributes;
+using SammBot.Extensions;
+using SammBot.Models;
+using SammBot.Preconditions;
 
 namespace SammBot.Modules;
 

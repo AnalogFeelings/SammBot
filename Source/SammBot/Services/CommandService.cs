@@ -21,20 +21,18 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Library;
-using SammBot.Library.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using SammBot.Library.Services;
+using SammBot.Extensions;
 
 namespace SammBot.Services;
 
 /// <summary>
 /// Provides handling for incoming interactions.
 /// </summary>
-public class CommandService : ICommandService
+public class CommandService
 {
     private readonly DiscordShardedClient _shardedClient;
     private readonly IServiceProvider _serviceProvider;

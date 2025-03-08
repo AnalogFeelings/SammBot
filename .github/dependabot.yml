@@ -30,36 +30,6 @@ updates:
         patterns:
           - "MSTest*"
           - "Microsoft.NET.Test.Sdk"
-  # For the library.
-  - package-ecosystem: "nuget"
-    directory: "/Source/SammBot.Library"
-    schedule:
-      interval: "daily"
-    target-branch: "dev"
-    labels:
-      - "dependencies"
-      - "library"
-    assignees:
-      - "analogfeelings"
-    reviewers:
-      - "analogfeelings"
-    commit-message:
-      prefix: "[Library -> All]"
-      include: "scope"
-    groups:
-      ef-core:
-        patterns:
-          - "Microsoft.EntityFrameworkCore*"
-      extensions:
-        patterns:
-          - "Microsoft.Extensions*"
-      skia:
-        patterns:
-          - "SkiaSharp*"
-      ms-test:
-        patterns:
-          - "MSTest*"
-          - "Microsoft.NET.Test.Sdk"
   # For the tests.
   - package-ecosystem: "nuget"
     directory: "/Source/SammBot.Tests"

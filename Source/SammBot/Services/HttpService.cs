@@ -16,9 +16,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Library;
-using SammBot.Library.Components;
-using SammBot.Library.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -29,6 +26,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Extensions.DependencyInjection;
+using SammBot.Components;
+using SammBot.Extensions;
 
 namespace SammBot.Services;
 

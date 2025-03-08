@@ -16,32 +16,20 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Attributes;
-using SammBot.Extensions;
+namespace SammBot.Extensions;
 
-namespace SammBot.Tests.Extensions;
-
-[TestClass]
-public class ObjectExtensionsTests
+/// <summary>
+/// Contains extension methods for bool types.
+/// </summary>
+public static class BoolExtensions
 {
-    [TestMethod]
-    public void ToQueryStringTest()
+    /// <summary>
+    /// Converts <paramref name="boolean"/>'s value to "Yes" or "No".
+    /// </summary>
+    /// <param name="boolean">The bool to convert.</param>
+    /// <returns>The converted string.</returns>
+    public static string ToYesNo(this bool boolean)
     {
-        TestClass testObject = new TestClass();
-        string actual = testObject.ToQueryString();
-        string expected = "testString=hello!&testInt=2";
-        
-        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
+        return boolean ? "Yes" : "No";
     }
 }
-
-// ReSharper disable UnusedMember.Local
-file class TestClass
-{
-    [UglyName("testString")] 
-    public string TestString { get; } = "hello!";
-    
-    [UglyName("testInt")] 
-    public int TestInt { get; } = 2;
-}
-// ReSharper restore UnusedMember.Local

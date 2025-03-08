@@ -24,7 +24,6 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Library;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -32,7 +31,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using SammBot.Library.Services;
 using SammBot.Services;
 
 namespace SammBot;
@@ -141,11 +139,11 @@ public class EntryPoint
         serviceCollection.AddSingleton(_settingsService!);
         serviceCollection.AddSingleton(_informationService!);
         serviceCollection.AddSingleton<HttpService>();
-        serviceCollection.AddSingleton<ICommandService, CommandService>();
+        serviceCollection.AddSingleton<CommandService>();
         serviceCollection.AddSingleton<StartupService>();
         serviceCollection.AddSingleton<EventLoggingService>();
         
-        serviceCollection.AddScoped<IDatabaseService, DatabaseService>();
+        serviceCollection.AddScoped<DatabaseService>();
 
         return serviceCollection.BuildServiceProvider();
     }

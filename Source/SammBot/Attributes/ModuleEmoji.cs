@@ -16,32 +16,30 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Attributes;
-using SammBot.Extensions;
+using System;
 
-namespace SammBot.Tests.Extensions;
+namespace SammBot.Attributes;
 
-[TestClass]
-public class ObjectExtensionsTests
+/// <summary>
+/// An attribute used to denote a module's emoji to be used on
+/// the bot's help command.
+/// </summary>
+/// <remarks>
+/// Please use UTF escape sequences. Don't paste the emoji
+/// into the code directly.
+/// </remarks>
+[AttributeUsage(AttributeTargets.Class)]
+public class ModuleEmoji : Attribute
 {
-    [TestMethod]
-    public void ToQueryStringTest()
-    {
-        TestClass testObject = new TestClass();
-        string actual = testObject.ToQueryString();
-        string expected = "testString=hello!&testInt=2";
-        
-        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
-    }
-}
+    /// <summary>
+    /// The module emoji.
+    /// </summary>
+    public readonly string Emoji;
 
-// ReSharper disable UnusedMember.Local
-file class TestClass
-{
-    [UglyName("testString")] 
-    public string TestString { get; } = "hello!";
-    
-    [UglyName("testInt")] 
-    public int TestInt { get; } = 2;
+    /// <summary>
+    /// Creates a new instance of the <see cref="ModuleEmoji"/> class.
+    /// </summary>
+    /// <param name="emoji">The emoji to set.</param>
+    public ModuleEmoji(string emoji) => 
+        this.Emoji = emoji;
 }
-// ReSharper restore UnusedMember.Local

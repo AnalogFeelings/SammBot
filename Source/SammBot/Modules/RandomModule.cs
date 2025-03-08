@@ -19,16 +19,15 @@
 using Discord;
 using Discord.Interactions;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Library;
-using SammBot.Library.Attributes;
-using SammBot.Library.Extensions;
-using SammBot.Library.Models;
-using SammBot.Library.Models.Animal;
-using SammBot.Library.Preconditions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SammBot.Attributes;
+using SammBot.Extensions;
+using SammBot.Models;
+using SammBot.Models.Animal;
+using SammBot.Preconditions;
 using SammBot.Services;
 
 namespace SammBot.Modules;

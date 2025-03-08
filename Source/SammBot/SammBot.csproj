@@ -64,10 +64,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SammBot.Library\SammBot.Library.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <Folder Include="Resources\Twemoji\"/>
     </ItemGroup>
 

@@ -16,7 +16,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Library.Extensions;
+using SammBot.Extensions;
 using SkiaSharp;
 
 namespace SammBot.Tests.Extensions;

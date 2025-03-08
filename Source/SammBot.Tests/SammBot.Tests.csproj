@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SammBot.Library\SammBot.Library.csproj"/>
+      <ProjectReference Include="..\SammBot\SammBot.csproj" />
     </ItemGroup>
 
 </Project>

@@ -16,32 +16,25 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Attributes;
-using SammBot.Extensions;
+using Discord;
+using JetBrains.Annotations;
 
-namespace SammBot.Tests.Extensions;
+namespace SammBot.Models.Data;
 
-[TestClass]
-public class ObjectExtensionsTests
+/// <summary>
+/// Stores a custom status for Discord.
+/// </summary>
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+public record BotStatus
 {
-    [TestMethod]
-    public void ToQueryStringTest()
-    {
-        TestClass testObject = new TestClass();
-        string actual = testObject.ToQueryString();
-        string expected = "testString=hello!&testInt=2";
-        
-        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
-    }
-}
-
-// ReSharper disable UnusedMember.Local
-file class TestClass
-{
-    [UglyName("testString")] 
-    public string TestString { get; } = "hello!";
+    /// <summary>
+    /// The status content.
+    /// </summary>
+    /// <remarks>Does not include the prefix text.</remarks>
+    public required string Content;
     
-    [UglyName("testInt")] 
-    public int TestInt { get; } = 2;
+    /// <summary>
+    /// The status type.
+    /// </summary>
+    public required ActivityType Type;
 }
-// ReSharper restore UnusedMember.Local

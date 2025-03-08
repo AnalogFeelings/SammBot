@@ -21,12 +21,11 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Library;
-using SammBot.Library.Attributes;
-using SammBot.Library.Models;
-using SammBot.Library.Preconditions;
 using System;
 using System.Threading.Tasks;
+using SammBot.Attributes;
+using SammBot.Models;
+using SammBot.Preconditions;
 
 namespace SammBot.Modules;
 

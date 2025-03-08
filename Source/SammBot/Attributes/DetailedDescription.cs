@@ -16,32 +16,25 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Attributes;
-using SammBot.Extensions;
+using System;
 
-namespace SammBot.Tests.Extensions;
+namespace SammBot.Attributes;
 
-[TestClass]
-public class ObjectExtensionsTests
+/// <summary>
+/// An attribute that denotes the extended description of a method or property.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
+public class DetailedDescription : Attribute
 {
-    [TestMethod]
-    public void ToQueryStringTest()
-    {
-        TestClass testObject = new TestClass();
-        string actual = testObject.ToQueryString();
-        string expected = "testString=hello!&testInt=2";
-        
-        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
-    }
-}
+    /// <summary>
+    /// The description of the method or property.
+    /// </summary>
+    public readonly string Description;
 
-// ReSharper disable UnusedMember.Local
-file class TestClass
-{
-    [UglyName("testString")] 
-    public string TestString { get; } = "hello!";
-    
-    [UglyName("testInt")] 
-    public int TestInt { get; } = 2;
+    /// <summary>
+    /// Creates a new instance of the <see cref="DetailedDescription"/> class.
+    /// </summary>
+    /// <param name="description">The extended description of the method or property.</param>
+    public DetailedDescription(string description) => 
+        this.Description = description;
 }
-// ReSharper restore UnusedMember.Local

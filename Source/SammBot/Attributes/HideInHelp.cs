@@ -16,32 +16,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Attributes;
-using SammBot.Extensions;
+using System;
 
-namespace SammBot.Tests.Extensions;
+namespace SammBot.Attributes;
 
-[TestClass]
-public class ObjectExtensionsTests
+/// <summary>
+/// An attribute that denotes a module or command that should
+/// be hidden in the bot's help command.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public class HideInHelp : Attribute
 {
-    [TestMethod]
-    public void ToQueryStringTest()
-    {
-        TestClass testObject = new TestClass();
-        string actual = testObject.ToQueryString();
-        string expected = "testString=hello!&testInt=2";
-        
-        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
-    }
+    // No members.
 }
-
-// ReSharper disable UnusedMember.Local
-file class TestClass
-{
-    [UglyName("testString")] 
-    public string TestString { get; } = "hello!";
-    
-    [UglyName("testInt")] 
-    public int TestInt { get; } = 2;
-}
-// ReSharper restore UnusedMember.Local

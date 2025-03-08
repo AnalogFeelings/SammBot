@@ -16,32 +16,23 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Attributes;
-using SammBot.Extensions;
+using System.Text.Json.Serialization;
 
-namespace SammBot.Tests.Extensions;
+namespace SammBot.Models.Animal;
 
-[TestClass]
-public class ObjectExtensionsTests
+/// <summary>
+/// A record that contains a cat image from the Cat API.
+/// </summary>
+public record CatImage
 {
-    [TestMethod]
-    public void ToQueryStringTest()
-    {
-        TestClass testObject = new TestClass();
-        string actual = testObject.ToQueryString();
-        string expected = "testString=hello!&testInt=2";
-        
-        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
-    }
-}
-
-// ReSharper disable UnusedMember.Local
-file class TestClass
-{
-    [UglyName("testString")] 
-    public string TestString { get; } = "hello!";
+    [JsonPropertyName("id")]
+    public required string Id;
     
-    [UglyName("testInt")] 
-    public int TestInt { get; } = 2;
+    [JsonPropertyName("url")]
+    public required string Url;
+    
+    [JsonPropertyName("width")]
+    public required int Width;
+    [JsonPropertyName("height")]
+    public required int Height;
 }
-// ReSharper restore UnusedMember.Local

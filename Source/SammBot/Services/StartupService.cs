@@ -23,16 +23,14 @@ using Discord.WebSocket;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
-using SammBot.Library;
-using SammBot.Library.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using SammBot.Library.Models.Data;
-using SammBot.Library.Services;
+using SammBot.Extensions;
+using SammBot.Models.Data;
 
 namespace SammBot.Services;
 
@@ -41,7 +39,7 @@ namespace SammBot.Services;
 /// </summary>
 public class StartupService
 {
-    private readonly ICommandService _commandService;
+    private readonly CommandService _commandService;
     private readonly DiscordShardedClient _shardedClient;
     private readonly InteractionService _interactionService;
     private readonly MatchaLogger _logger;
@@ -73,7 +71,7 @@ public class StartupService
     /// <param name="services">The current active service provider.</param>
     public StartupService(IServiceProvider services)
     {
-        _commandService = services.GetRequiredService<ICommandService>();
+        _commandService = services.GetRequiredService<CommandService>();
         _shardedClient = services.GetRequiredService<DiscordShardedClient>();
         _interactionService = services.GetRequiredService<InteractionService>();
         _logger = services.GetRequiredService<MatchaLogger>();

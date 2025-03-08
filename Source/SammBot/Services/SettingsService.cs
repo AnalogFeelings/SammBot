@@ -19,8 +19,7 @@
 using System;
 using System.IO;
 using System.Text.Json;
-using SammBot.Library;
-using SammBot.Library.Models.Data;
+using SammBot.Models.Data;
 
 namespace SammBot.Services;
 

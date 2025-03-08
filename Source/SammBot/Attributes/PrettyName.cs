@@ -16,32 +16,28 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Attributes;
-using SammBot.Extensions;
+using System;
 
-namespace SammBot.Tests.Extensions;
+namespace SammBot.Attributes;
 
-[TestClass]
-public class ObjectExtensionsTests
+/// <summary>
+/// An attribute that denotes a "pretty" name for a property or class.
+/// <para/>
+/// This pretty name can contain spaces and other characters not allowed
+/// by the C# compiler.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
+public class PrettyName : Attribute
 {
-    [TestMethod]
-    public void ToQueryStringTest()
-    {
-        TestClass testObject = new TestClass();
-        string actual = testObject.ToQueryString();
-        string expected = "testString=hello!&testInt=2";
-        
-        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
-    }
-}
+    /// <summary>
+    /// The pretty name of the property or class.
+    /// </summary>
+    public readonly string Name;
 
-// ReSharper disable UnusedMember.Local
-file class TestClass
-{
-    [UglyName("testString")] 
-    public string TestString { get; } = "hello!";
-    
-    [UglyName("testInt")] 
-    public int TestInt { get; } = 2;
+    /// <summary>
+    /// Creates a new instance of the <see cref="PrettyName"/> class.
+    /// </summary>
+    /// <param name="name">The pretty name of the class or property.</param>
+    public PrettyName(string name) => 
+        this.Name = name;
 }
-// ReSharper restore UnusedMember.Local

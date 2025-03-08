@@ -16,32 +16,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using SammBot.Attributes;
-using SammBot.Extensions;
+namespace SammBot.Models.Database;
 
-namespace SammBot.Tests.Extensions;
-
-[TestClass]
-public class ObjectExtensionsTests
+public class UserWarning : DatabaseEntity
 {
-    [TestMethod]
-    public void ToQueryStringTest()
-    {
-        TestClass testObject = new TestClass();
-        string actual = testObject.ToQueryString();
-        string expected = "testString=hello!&testInt=2";
-        
-        Assert.IsTrue(actual == expected, $"Expected {expected}, got {actual}.");
-    }
+    public required ulong UserId { get; set; }
+    public required ulong GuildId { get; set; }
+    public required string Reason { get; set; }
+    public required long Date { get; set; }
 }
-
-// ReSharper disable UnusedMember.Local
-file class TestClass
-{
-    [UglyName("testString")] 
-    public string TestString { get; } = "hello!";
-    
-    [UglyName("testInt")] 
-    public int TestInt { get; } = 2;
-}
-// ReSharper restore UnusedMember.Local
