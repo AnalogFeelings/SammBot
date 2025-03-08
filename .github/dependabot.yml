@@ -30,6 +30,8 @@ updates:
         patterns:
           - "MSTest*"
           - "Microsoft.NET.Test.Sdk"
+      ignore:
+        update-types: [ "major" ]
   # For the tests.
   - package-ecosystem: "nuget"
     directory: "/Source/SammBot.Tests"
@@ -60,3 +62,5 @@ updates:
         patterns:
           - "MSTest*"
           - "Microsoft.NET.Test.Sdk"
+      ignore:
+        update-types: [ "major" ]
